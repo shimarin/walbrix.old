@@ -23,6 +23,10 @@ cp files/splash/640x480.cfg build/walbrix/wbui/etc/splash/wb/640x480.cfg
 cp files/splash/background-640x480.png build/walbrix/wbui/etc/splash/wb/images/background-640x480.png
 cp files/splash/verbose-640x480.png build/walbrix/wbui/etc/splash/wb/images/verbose-640x480.png
 
+# setup locale
+mkdir -p build/walbrix/locale/ja_JP/etc
+ln -sf ../usr/share/zoneinfo/Asia/Tokyo build/walbrix/locale/ja_JP/etc/localtime
+
 # some small info for grub2
 echo "set WALBRIX_VERSION=`./kernelver -n source/walbrix.x86_64/boot/kernel`" > build/walbrix/grubvars.cfg
 if [ -f .git/HEAD ]; then
