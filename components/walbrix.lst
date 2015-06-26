@@ -1,0 +1,54 @@
+$require system.lst
+$require kernel.lst
+$require xen.lst
+
+$require rescue.lst
+
+$require openssh.lst
+$require splashutils.lst
+
+$sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
+$sed /etc/inittab 's/tty1 linux/--noclear tty1 linux/'
+$sed /etc/inittab 's/^c\([2-6]\):/#c\1:/'
+
+$symlink /etc/init.d/net.eth0 net.lo
+$symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
+
+# splash
+/etc/splash/natural_gentoo
+
+# modify initramfs
+$mkdir /tmp/initramfs/etc/splash/wb/images
+$copy walbrix/init /tmp/initramfs/init.walbrix
+$copy splash/640x480.cfg /tmp/initramfs/etc/splash/wb/640x480.cfg
+$copy splash/background-640x480.png /tmp/initramfs/etc/splash/wb/images/background-640x480.png
+$copy splash/verbose-640x480.png /tmp/initramfs/etc/splash/wb/images/verbose-640x480.png
+$exec 'cd /tmp/initramfs && unxz -c /boot/initramfs | cpio -idm && mv /tmp/initramfs/init /tmp/initramfs/init.gentoo && mv /tmp/initramfs/init.walbrix /tmp/initramfs/init && (find .|cpio -o -H newc) | xz -c --check=crc32 > /boot/initramfs'
+$deltree /tmp/initramfs
+
+# openvpn
+$copy walbrix/ca.crt /etc/openvpn/ca.crt
+$copy walbrix/openvpn.conf /etc/openvpn/openvpn.conf
+
+# use eth0 as the default network bridge
+$sed /etc/xen/xl.conf 's/^#vif.default.bridge="xenbr0"$/vif.default.bridge=""/'
+
+# setup network-bridge
+$copy walbrix/network-bridge /etc/xen/scripts/network-bridge
+$copy walbrix/conf-net /etc/conf.d/net
+$copy walbrix/network-multi-bridge /etc/xen/scripts/network-multi-bridge
+$copy walbrix/network-bridge.init /etc/init.d/network-bridge
+$symlink /etc/runlevels/default/network-bridge /etc/init.d/network-bridge
+
+# fstab
+$copy walbrix/fstab /etc/fstab
+
+# prevent to get profile layer unmounted
+$copy walbrix/conf-localmount /etc/conf.d/localmount
+# to get profile layer properly ro-remounted
+$sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount,ro"/'
+
+$require walbrix-$(ARCH).lst
+
+# set default hostname (works as 'done' marker as well)
+$sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBFREE01"/'

@@ -1,0 +1,3 @@
+$package net-misc/openssh
+$symlink /etc/runlevels/default/sshd /etc/init.d/sshd
+

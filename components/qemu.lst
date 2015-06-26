@@ -1,0 +1,13 @@
+$require python27.lst
+$package sys-firmware/seabios
+#sys-libs/libseccomp
+$package sys-firmware/sgabios
+$package sys-firmware/vgabios
+#sys-apps/dtc
+#sys-libs/libcap-ng
+#dev-db/sqlite
+#x11-proto/xproto
+#x11-libs/pixman
+#media-libs/audiofile
+#media-libs/libsdl
+$package app-emulation/qemu

@@ -1,0 +1,10 @@
+/etc/env.d/00glibc
+/etc/gai.conf
+/etc/host.conf
+/etc/locale.gen
+/etc/nsswitch.conf
+/etc/rpc
+/lib/libnss_compat.so.2 
+/lib/libnss_files.so.2
+/lib/libnss_dns.so.2
+

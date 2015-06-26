@@ -1,0 +1,25 @@
+sys-devel/binutils multitarget
+sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc grub_platforms_xen
+
+sys-kernel/gentoo-sources symlink
+sys-apps/kmod lzma
+
+net-misc/openvpn threads passwordsave
+dev-lang/python sqlite
+dev-python/markdown -python_targets_python3_3
+dev-python/pypam -python_targets_python3_3
+dev-python/setuptools -python_targets_python3_3
+dev-python/lxml -python_targets_python3_3
+
+sys-libs/zlib static-libs
+media-libs/libjpeg-turbo static-libs
+virtual/jpeg static-libs
+app-arch/bzip2 static-libs
+media-libs/libpng static-libs
+media-libs/freetype static-libs
+app-emulation/xen efi
+app-emulation/xen-tools api pygrub xend hvm system-qemu system-seabios ocaml python ovmf
+sys-apps/kexec-tools lzma xen
+sys-cluster/drbd heartbeat pacemaker xen
+app-emulation/qemu xen
+

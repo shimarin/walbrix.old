@@ -1,0 +1,4 @@
+$package sys-apps/shadow
+/etc/passwd
+/etc/group
+/etc/shadow

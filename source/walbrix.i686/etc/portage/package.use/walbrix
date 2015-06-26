@@ -1,0 +1,15 @@
+sys-kernel/gentoo-sources symlink
+sys-apps/kmod lzma
+net-misc/openvpn threads passwordsave
+dev-python/markdown -python_targets_python3_3
+dev-python/pypam -python_targets_python3_3
+dev-python/setuptools -python_targets_python3_3
+dev-python/lxml -python_targets_python3_3
+
+sys-libs/zlib static-libs
+media-libs/libjpeg-turbo static-libs
+virtual/jpeg static-libs
+app-arch/bzip2 static-libs
+media-libs/libpng static-libs
+media-libs/freetype static-libs
+

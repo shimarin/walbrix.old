@@ -1,0 +1,25 @@
+#!/bin/sh
+source /etc/conf.d/net
+dir=$(dirname "$0")
+VIFCONFIGEXISTS=no
+
+for IFNAME in `awk 'NR>2 {print $1}' /proc/net/dev|sed 's/:.*$//'`
+do
+	VARNAME='$'xenvif_`echo $IFNAME | sed 's/\./_/'`
+	eval 'VIFNUM='$VARNAME
+	if [ -n "$VIFNUM" ]; then
+		"$dir/network-bridge" "$@" vifnum=$VIFNUM netdev=$IFNAME
+		VIFCONFIGEXISTS=yes
+	fi
+done
+
+if [ "$VIFCONFIGEXISTS" = "no" ]; then
+	"$dir/network-bridge" "$@" vifnum=0 netdev=eth0
+fi
+
+if [ -x /etc/init.d/dhcpd ]; then
+	if /etc/init.d/dhcpd --quiet status; then
+		/etc/init.d/dhcpd restart
+	fi
+fi
+

@@ -1,0 +1,7 @@
+/boot/kernel
+/boot/initramfs
+$kernel /boot/kernel
+/lib/modules/$(KERNEL_VERSION)
+/lib/firmware
+$exec "depmod $(KERNEL_VERSION)"
+

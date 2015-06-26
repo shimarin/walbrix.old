@@ -1,0 +1,22 @@
+#$package dev-lang/ocaml "^/usr/lib(64)?/ocaml/((ocamldoc|ocamlbuild|compiler-libs)/|.+\.(cmx|cmxa|ml|mli|a|h)$)"
+
+$require pypam.lst
+$require iproute2.lst
+#bridge-utils
+/sbin/brctl
+#xen init script needs awk
+/bin/awk
+$package dev-python/lxml
+
+$package app-emulation/xen
+$package app-emulation/xen-tools
+$package app-emulation/xen-pvgrub
+
+$require xen-$(ARCH).lst
+
+$symlink /etc/runlevels/default/xenstored /etc/init.d/xenstored
+$symlink /etc/runlevels/default/xenconsoled /etc/init.d/xenconsoled
+$symlink /etc/runlevels/default/xendomains /etc/init.d/xendomains
+
+$sed /lib/udev/rules.d/xen-backend.rules 's/^\(SUBSYSTEM=="net",.*\)"tap\*"\(.*\/etc\/xen\/scripts\/vif-setup.*\)$/\1"tap*.*"\2/'
+$sed /etc/rc.conf 's/^#rc_sys=""/rc_sys="xen0"/'

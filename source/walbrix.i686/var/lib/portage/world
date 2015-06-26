@@ -1,0 +1,7 @@
+app-emulation/xen
+app-emulation/xen-pvgrub
+media-gfx/splash-themes-gentoo
+net-misc/openvpn
+sys-apps/v86d
+sys-kernel/genkernel
+sys-kernel/gentoo-sources

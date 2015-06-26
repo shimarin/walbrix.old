@@ -1,0 +1,2 @@
+$package sys-apps/kmod-20
+$symlink /etc/runlevels/sysinit/kmod-static-nodes /etc/init.d/kmod-static-nodes

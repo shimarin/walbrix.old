@@ -1,0 +1,3 @@
+$package sys-apps/openrc
+$exec "cp -av /usr/share/openrc/runlevels /etc/"
+$mkdir /lib/rc/cache /lib/rc/console

@@ -1,0 +1,15 @@
+config_eth0="dhcp"
+fallback_eth0="apipa"
+
+## example for 3G PPP connection to DTI using HUAWEI 3G modem
+#config_ppp0="ppp"
+#link_ppp0="/dev/serial/by-id/usb-HUAWEI_Technology_HUAWEI_Mobile-if00-port0"
+#pppd_ppp0="call DTI"
+
+## example for prividing multiple ethernet devices for VMs
+#xenvif_eth0=0
+#xenvif_eth1=1
+#xenvif_eth2=2
+## vlan version
+#xenif_eth0_1=0
+#xenif_eth0_2=1

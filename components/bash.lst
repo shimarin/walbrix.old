@@ -1,0 +1,2 @@
+$package app-shells/bash
+$symlink /bin/sh bash

@@ -1,0 +1,80 @@
+$mkdir /proc
+$mkdir /run
+/tmp/.keep
+/root/.keep
+/home/.keep
+/sys/.keep
+/var/tmp/.keep
+/var/log/.keep
+/var/cache/.keep
+/var/lib/.keep
+/var/spool/.keep
+/mnt/.keep
+/usr/bin/ldd
+$package sys-apps/baselayout
+$symlink /etc/mtab /proc/self/mounts
+$require dev.lst
+$require glibc.lst
+$package app-arch/bzip2
+$package app-arch/cpio
+$package app-arch/gzip
+$package app-arch/tar
+$package app-arch/unzip
+$package app-arch/xz-utils
+$require nano.lst
+$package app-misc/ca-certificates
+$package app-misc/mime-types
+$package app-misc/pax-utils
+$require bash.lst
+$package dev-lang/perl
+$require python27.lst
+$package dev-lang/python-exec
+$package dev-libs/openssl
+$package dev-perl/Locale-gettext
+$package dev-perl/Module-Build
+$package dev-perl/SGMLSpm
+$package dev-perl/TermReadKey
+$package dev-perl/Text-CharWidth
+$package dev-perl/Text-WrapI18N
+$package dev-perl/XML-Parser
+$package net-firewall/iptables
+$package net-misc/iputils
+$package net-misc/netifrc
+$package net-misc/openssh
+$package net-misc/rsync
+$package net-misc/wget
+$package perl-core/Data-Dumper
+$package perl-core/File-Temp
+$package sys-apps/acl
+$package sys-apps/attr
+$package sys-apps/busybox
+$package sys-apps/coreutils
+$package sys-apps/debianutils
+$package sys-apps/diffutils
+$package sys-apps/file
+$package sys-apps/findutils
+$package sys-apps/gawk
+$package sys-apps/gentoo-functions
+$package sys-apps/grep
+$package sys-apps/hwids
+$package sys-apps/iproute2
+$package sys-apps/kbd
+$package sys-apps/kmod
+$package sys-apps/less
+$package sys-apps/net-tools
+$require openrc.lst
+$package sys-apps/sed
+$require shadow.lst
+$require sysvinit.lst
+$package sys-apps/util-linux
+$package sys-apps/which
+$package sys-auth/pambase
+$package sys-devel/make
+$package sys-devel/patch
+$package sys-fs/e2fsprogs
+$require udev.lst
+$package sys-libs/pam
+$package sys-libs/timezone-data
+$package sys-process/procps
+$package sys-process/psmisc
+
