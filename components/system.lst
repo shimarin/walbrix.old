@@ -14,6 +14,7 @@ $mkdir /run
 $package sys-apps/baselayout
 $symlink /etc/mtab /proc/self/mounts
 $require dev.lst
+$require bash.lst
 $require glibc.lst
 $package app-arch/bzip2
 $package app-arch/cpio
@@ -25,7 +26,6 @@ $require nano.lst
 $package app-misc/ca-certificates
 $package app-misc/mime-types
 $package app-misc/pax-utils
-$require bash.lst
 $package dev-lang/perl
 $require python27.lst
 $package dev-lang/python-exec

@@ -8,3 +8,10 @@
 /lib/libnss_files.so.2
 /lib/libnss_dns.so.2
 
+/etc/ld.so.conf
+/etc/ld.so.conf.d
+/sbin/ldconfig
+
+/usr/lib/gcc/$(ARCH)-pc-linux-gnu/4.8.4/libgcc_s.so
+
+$exec ldconfig
