@@ -2,3 +2,4 @@ $package app-editors/vim-core
 $package app-editors/vim
 $package app-vim/gentoo-syntax
 $symlink /usr/bin/vi vim
+$patch /etc/vim/vimrc walbrix/vimrc.patch

@@ -1,0 +1,19 @@
+--- build/walbrix/x86_64/etc/vim/vimrc	2015-06-27 14:01:27.140121995 +0900
++++ /tmp/vimrc	2015-06-27 19:50:29.601112704 +0900
+@@ -24,6 +24,7 @@
+ set ruler               " Show the cursor position all the time
+ 
+ set viminfo='20,\"500   " Keep a .viminfo file.
++set encoding=utf-8
+ 
+ " Don't use Ex mode, use Q for formatting
+ map Q gq
+@@ -56,7 +57,7 @@
+   set fileencodings=euc-kr
+   set guifontset=-*-*-medium-r-normal--16-*-*-*-*-*-*-*
+ elseif v:lang =~? "^ja_JP"
+-  set fileencodings=euc-jp
++  set fileencodings=utf-8
+   set guifontset=-misc-fixed-medium-r-normal--14-*-*-*-*-*-*-*
+ elseif v:lang =~? "^zh_TW"
+   set fileencodings=big5
