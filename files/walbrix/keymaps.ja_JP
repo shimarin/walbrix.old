@@ -1,0 +1,5 @@
+keymap="jp106"
+windowkeys="NO"
+#extended_keymaps="backspace keypad euro2"
+dumpkeys_charset=""
+fix_euro="NO"
