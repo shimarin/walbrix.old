@@ -13,5 +13,6 @@
 /sbin/ldconfig
 
 /usr/lib/gcc/$(ARCH)-pc-linux-gnu/4.8.4/libgcc_s.so
+/usr/lib/gcc/$(ARCH)-pc-linux-gnu/4.8.4/libstdc++.so
 
 $exec ldconfig
