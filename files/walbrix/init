@@ -139,12 +139,12 @@ fi
 
 rm -rf /mnt/profile/work # cleanup overlayfs workdir
 mkdir -p /mnt/profile/root /mnt/profile/work
-rm -rf /mnt/profile/root/tmp /mnt/profile/root/var/tmp # Cleanup /tmp
+rm -rf /mnt/profile/root/tmp /mnt/profile/root/var/tmp /mnt/profile/root/etc/mtab # Cleanup /tmp
 
 ARCH=`uname -m`
 LOCALE=ja_JP
 
-if ! mount -t overlay -o lowerdir=/mnt/system/${ARCH}:/mnt/system/locale/${LOCALE}:/mnt/system/wbui,upperdir=/mnt/profile/root,workdir=/mnt/profile/work overlay /newroot; then
+if ! mount -t overlay -o lowerdir=/mnt/system/locale/${LOCALE}:/mnt/system/wbui:/mnt/system/${ARCH},upperdir=/mnt/profile/root,workdir=/mnt/profile/work overlay /newroot; then
 	bad_msg "Unable to mount /newroot"
 fi
 
