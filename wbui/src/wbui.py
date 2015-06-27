@@ -272,7 +272,11 @@ def main(skip_splash = False):
     elif driver == "x11": pass
 
     global screen
-    screen = pygame.display.set_mode((640,480), displayMode)
+    try:
+        screen = pygame.display.set_mode((640,480), displayMode)
+    except pygame.error, e: # 何らかの理由で失敗した場合、引数前省略でset_modeする
+        screen = pygame.display.set_mode()
+
     gui.setScreen(screen)
 
     # ジョイスティックの検出
