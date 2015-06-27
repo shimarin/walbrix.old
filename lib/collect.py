@@ -247,6 +247,21 @@ def process_lstfile(context, lstfile):
         subprocess.check_call(["cp","-av",src, dest])
         os.chown(dest, 0, 0)
 
+    def patch(args):
+        if len(args) != 2: raise Exception("$patch directive gets 2 args")
+        if not args[0].startswith('/'): raise Exception("Target file/dirname must start with '/'")
+        target = os.path.normpath("%s%s" % (context.destination, context.apply_variables(args[0])))
+        patchfile = os.path.normpath("files/" + context.apply_variables(args[1]))
+        print "$patch applying '%s' to '%s'" % (patchfile, target)
+
+        statinfo = os.stat(target)
+        mode = stat.S_IMODE(statinfo[stat.ST_MODE])
+        uid = statinfo[stat.ST_UID]
+        gid = statinfo[stat.ST_GID]
+        subprocess.check_call(["patch","-p1","-i",patchfile,target])
+        os.chmod(target, mode)
+        os.chown(target, uid, gid)
+
     directives = {
         "$require":require,
         "$package":package,
@@ -258,7 +273,8 @@ def process_lstfile(context, lstfile):
         "$sed":sed,
         "$touch":touch,
         "$copy":copy,
-        "$mv":mv
+        "$mv":mv,
+        "$patch":patch
     }
     
     if context.is_lstfile_already_processed(lstfile): return
