@@ -309,7 +309,7 @@ def setup_keymap():
 def exec_console():
     if dialogbox.messagebox.execute(gui.res.string_linux_migration_desc, dialogbox.DialogBox.OKCANCEL(), gui.res.console_l) != "ok": return False
     pygame.quit()
-    os.execv("/usr/bin/openvt", ["openvt", "-wsl", "--", "/usr/bin/jfbterm", "-q", "-e", "/usr/sbin/wb", "console-with-message"])
+    os.execv("/usr/bin/openvt", ["openvt", "-wsl", "--", "/usr/bin/fbterm", "--", "/usr/sbin/wb", "console-with-message"])
 
 def refresh():
     global openvpn_enabled, utility_running, keymap

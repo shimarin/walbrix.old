@@ -676,7 +676,7 @@ class System:
             return None
 
     def isRunningAsGetty(self):
-        return self.getTtyName() == "/dev/console" and os.getppid() == 1
+        return self.getTtyName() == "/dev/console" # and os.getppid() == 1
 
     def getSystemKeymap(self):
         echo = subprocess.Popen("source /etc/conf.d/keymaps && echo $keymap", shell=True, stdout=subprocess.PIPE, close_fds=True)
