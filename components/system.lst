@@ -58,7 +58,6 @@ $package sys-apps/gentoo-functions
 $package sys-apps/grep
 $package sys-apps/hwids
 $package sys-apps/iproute2
-$package sys-apps/kbd
 $package sys-apps/kmod
 $package sys-apps/less
 $package sys-apps/net-tools

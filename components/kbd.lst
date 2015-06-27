@@ -1,0 +1,1 @@
+$package sys-apps/kbd # exclude ^/usr/share/consolefonts/
