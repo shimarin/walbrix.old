@@ -1,0 +1,6 @@
+$require udev.lst
+$package sys-block/thin-provisioning-tools
+$package sys-fs/lvm2
+$sed /etc/lvm/lvm.conf 's/snapshot_autoextend_threshold = 100/snapshot_autoextend_threshold = 80/'
+$sed /etc/lvm/lvm.conf 's/use_lvmetad = 0/use_lvmetad = 1/'
+$symlink /etc/runlevels/default/lvm /etc/init.d/lvm
