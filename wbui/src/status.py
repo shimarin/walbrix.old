@@ -114,7 +114,7 @@ def init():
     kernel_version = uname[2]
     kernel_arch = s.getArchitectureString()
     kernel_date_str = uname[3].replace('Darwin Kernel ', '').split()
-    kernel_date = gui.res.string_kernel_date % (kernel_date_str[7],{"Jan":1,"Feb":2,"Mar":3,"Apr":4,"May":5,"Jun":6,"Jul":7,"Aug":8,"Sep":9,"Oct":10,"Nov":11,"Dec":12}[kernel_date_str[3]],kernel_date_str[4])
+    kernel_date = gui.res.string_kernel_date % (kernel_date_str[7 if len(kernel_date_str) > 7 else 6],{"Jan":1,"Feb":2,"Mar":3,"Apr":4,"May":5,"Jun":6,"Jul":7,"Aug":8,"Sep":9,"Oct":10,"Nov":11,"Dec":12}[kernel_date_str[3]],kernel_date_str[4])
 
     try:
         ipaddress = system.get_ip_address_which_reaches_default_gateway()
