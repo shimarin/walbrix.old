@@ -1,4 +1,4 @@
 #!/bin/sh
-([ ! -x /usr/sbin/wb ] || egrep '\bwalbrix.noui\b' /proc/cmdline || ! (rc-service -e xenstored && service xenstored status)) && exec /sbin/agetty $@
+([ ! -x /usr/sbin/wb ] || egrep -q '\bwalbrix.noui\b' /proc/cmdline || ! (rc-service -e xenstored && service -q xenstored status)) && exec /sbin/agetty $@
 #else
 /usr/sbin/wb getty
