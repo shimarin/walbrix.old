@@ -1,5 +1,8 @@
+$require nvi.lst
+
 # protect /lib symlink from overlay upper layer
 $mv /lib /lib32
 $symlink /lib lib32
 $mv /usr/lib /usr/lib32
 $symlink /usr/lib lib32
+

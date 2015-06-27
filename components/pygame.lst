@@ -1,0 +1,13 @@
+$require python27.lst
+#media-libs/libogg
+#media-libs/libwebp
+$require alsa.lst
+#media-libs/libsdl alsa fbcon joystick sound video
+#media-libs/smpeg
+#media-libs/audiofile
+#media-libs/sdl-image jpeg png webp
+#media-libs/sdl-ttf
+$package dev-python/numpy
+#media-libs/libvorbis
+#media-libs/sdl-mixer vorbis wav
+$package dev-python/pygame

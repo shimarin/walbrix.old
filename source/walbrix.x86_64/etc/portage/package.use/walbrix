@@ -10,16 +10,31 @@ dev-python/markdown -python_targets_python3_3
 dev-python/pypam -python_targets_python3_3
 dev-python/setuptools -python_targets_python3_3
 dev-python/lxml -python_targets_python3_3
+app-editors/vim python -python_targets_python3_3
+dev-libs/boost -python_targets_python3_3
 
+# splash
 sys-libs/zlib static-libs
 media-libs/libjpeg-turbo static-libs
 virtual/jpeg static-libs
 app-arch/bzip2 static-libs
 media-libs/libpng static-libs
 media-libs/freetype static-libs
+
+# xen
 app-emulation/xen efi
 app-emulation/xen-tools api pygrub xend hvm system-qemu system-seabios ocaml python ovmf
 sys-apps/kexec-tools lzma xen
 sys-cluster/drbd heartbeat pacemaker xen
 app-emulation/qemu xen
 
+# wbui
+dev-python/numpy -python_targets_python3_3
+dev-python/pygame -python_targets_python3_3
+dev-python/pyalsaaudio -python_targets_python3_3
+media-libs/libsdl alsa fbcon
+media-libs/sdl-image jpeg png webp
+media-libs/sdl-mixer vorbis
+
+# dev
+dev-vcs/git -perl -gpg

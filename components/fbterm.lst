@@ -1,0 +1,3 @@
+#dev-libs/libx86
+$package media-fonts/liberation-fonts
+$package app-i18n/fbterm

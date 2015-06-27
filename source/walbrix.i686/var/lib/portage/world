@@ -1,7 +1,16 @@
+app-editors/nvi
 app-emulation/xen
 app-emulation/xen-pvgrub
+app-i18n/fbterm
+app-portage/gentoolkit
+dev-python/pyalsaaudio
+dev-python/pygame
+dev-util/strace
+media-fonts/vlgothic
 media-gfx/splash-themes-gentoo
 net-misc/openvpn
+sys-apps/fbset
 sys-apps/v86d
+sys-fs/lvm2
 sys-kernel/genkernel
 sys-kernel/gentoo-sources

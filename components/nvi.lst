@@ -1,0 +1,2 @@
+$package app-editors/nvi
+$symlink /usr/bin/vi nvi
