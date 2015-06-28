@@ -1,0 +1,2 @@
+$package sys-power/acpid
+$symlink /etc/runlevels/default/acpid /etc/init.d/acpid

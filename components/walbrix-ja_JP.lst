@@ -1,0 +1,18 @@
+$mkdir /etc/conf.d
+
+# set timezone to tokyo
+$symlink /etc/localtime ../usr/share/zoneinfo/Asia/Tokyo
+
+# set keymap to jp106
+/etc/conf.d/keymaps
+$sed /etc/conf.d/keymaps 's/^keymap="us"$/keymap="jp106"/'
+
+# set japanese ntp servers
+/etc/conf.d/ntp-client
+$sed /etc/conf.d/ntp-client 's/0\.gentoo\.pool\.ntp\.org 1\.gentoo.pool\.ntp.org \\/ntp1.jst.mfeed.ad.jp ntp2.jst.mfeed.ad.jp \\/'
+$sed /etc/conf.d/ntp-client 's/2\.gentoo\.pool\.ntp\.org 3\.gentoo.pool\.ntp.org"$/ntp3.jst.mfeed.ad.jp"/'
+/etc/ntp.conf
+$sed /etc/ntp.conf 's/^server 0\..\+/server ntp1.jst.mfeed.ad.jp/'
+$sed /etc/ntp.conf 's/^server 1\..\+/server ntp2.jst.mfeed.ad.jp/'
+$sed /etc/ntp.conf 's/^server 2\..\+/server ntp3.jst.mfeed.ad.jp/'
+$sed /etc/ntp.conf 's/^server 3\..\+//'

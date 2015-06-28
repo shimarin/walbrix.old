@@ -24,9 +24,7 @@ cp files/splash/background-640x480.png build/walbrix/wbui/etc/splash/wb/images/b
 cp files/splash/verbose-640x480.png build/walbrix/wbui/etc/splash/wb/images/verbose-640x480.png
 
 # setup locale
-mkdir -p build/walbrix/locale/ja_JP/etc/conf.d
-ln -sf ../usr/share/zoneinfo/Asia/Tokyo build/walbrix/locale/ja_JP/etc/localtime
-cp files/walbrix/keymaps.ja_JP build/walbrix/locale/ja_JP/etc/conf.d/keymaps
+./collect --source source/walbrix.x86_64 components/walbrix-ja_JP.lst build/walbrix/locale/ja_JP || exit
 
 # some small info for grub2
 echo "set WALBRIX_VERSION=`./kernelver -n source/walbrix.x86_64/boot/kernel`" > build/walbrix/grubvars.cfg

@@ -1,10 +1,13 @@
 $require sysvinit.lst
 $require openvpn.lst
 $require lvm.lst
+$require acpi.lst
+$require ntp.lst
 $sed /etc/inittab 's/^l4:\(.\+\) default/l4:\1 rescue/'
 $mkdir /etc/runlevels/rescue
-$symlink /etc/runlevels/rescue/acpid /etc/init.d/acpid
 $symlink /etc/runlevels/rescue/net.eth0 /etc/init.d/net.eth0
 $symlink /etc/runlevels/rescue/openvpn /etc/init.d/openvpn
 $symlink /etc/runlevels/rescue/sshd /etc/init.d/sshd
-$symlink /etc/runlevels/default/lvm /etc/init.d/lvm
+$symlink /etc/runlevels/rescue/lvm /etc/init.d/lvm
+$symlink /etc/runlevels/rescue/acpid /etc/init.d/acpid
+$symlink /etc/runlevels/rescue/ntp-client /etc/init.d/ntp-client

@@ -1,0 +1,3 @@
+#dev-libs/libevent
+$package net-misc/ntp
+$symlink /etc/runlevels/default/ntpd /etc/init.d/ntpd

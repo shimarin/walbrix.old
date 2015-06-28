@@ -306,7 +306,7 @@ def parse_var(arg):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=str, default="/", help="source directory")
-    parser.add_argument("--var", type=str, action="append", help="variable")
+    parser.add_argument("--var", type=str, action="append", default=[], help="variable")
     parser.add_argument("lstfile", type=str, help=".lst file")
     parser.add_argument("destination", type=str, help="destination directory")
     args = parser.parse_args()
