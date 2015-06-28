@@ -16,6 +16,9 @@ find wbui/src -name '*.pyc' -exec rm {} \;
 python2.7 -m compileall -q wbui/src
 (cd wbui/src && find . themes/default -name 'themes' -prune -o -name '*.pyc' -o -name '*.png' -o -name '*.ogg' -o -name '*.css' -o -name '*.html' |cpio -o -H newc) | (cd build/walbrix/wbui/usr/share/wbui && cpio -idmv --no-preserve-owner)
 cp files/walbrix/wb build/walbrix/wbui/usr/sbin/wb
+if [ -f .git/HEAD ]; then
+    git rev-parse HEAD|head -c 8 >> build/walbrix/wbui/usr/share/wbui/commit-id
+fi
 
 # setup splash
 mkdir -p build/walbrix/wbui/etc/splash/wb/images
@@ -26,10 +29,13 @@ cp files/splash/verbose-640x480.png build/walbrix/wbui/etc/splash/wb/images/verb
 # setup locale
 ./collect --source source/walbrix.x86_64 components/walbrix-ja_JP.lst build/walbrix/locale/ja_JP || exit
 
-# some small info for grub2
+# something worth for grub2
 echo "set WALBRIX_VERSION=`./kernelver -n source/walbrix.x86_64/boot/kernel`" > build/walbrix/grubvars.cfg
-if [ -f .git/HEAD ]; then
-    echo "set WALBRIX_BUILD_ID=`git rev-parse HEAD|head -c 8`" >> build/walbrix/grubvars.cfg
+if [ -f build/walbrix/wbui/usr/share/wbui/commit-id ]; then
+    echo "set WALBRIX_BUILD_ID=`cat build/walbrix/wbui/usr/share/wbui/commit-id`" >> build/walbrix/grubvars.cfg
 fi
+cp files/walbrix/grub.cfg build/walbrix/
 
 mksquashfs build/walbrix walbrix.squashfs -noappend
+
+#s3cmd put -P walbrix.squashfs s3://dist.walbrix.net/walbrix
