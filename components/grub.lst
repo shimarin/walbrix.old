@@ -1,0 +1,6 @@
+#sys-libs/efivar
+$package sys-apps/pciutils
+#sys-boot/efibootmgr
+$package sys-boot/grub # USE="device-mapper grub_platforms_efi-64 grub_platforms_pc grub_platforms_xen"
+/usr/sbin/efibootmgr
+/usr/bin/efivar
