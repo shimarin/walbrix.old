@@ -71,9 +71,8 @@ def run(options, args):
 
     pygame.quit()
 
-    if os.path.exists("/usr/bin/jfbterm"):
-    	os.execv("/usr/bin/openvt", ("openvt", "-ws", "--", "/usr/bin/jfbterm", "-qe", "wb", "show_message_and_wait", encoded_msg)) 
-    	#os.execv("/usr/bin/jfbterm", ("jfbterm", "-qe", "wb", "show_message_and_wait", encoded_msg)) 
+    if os.path.exists("/usr/bin/fbterm"):
+    	os.execv("/usr/bin/openvt", ("openvt", "-ws", "--", "/usr/bin/fbterm", "--", "wb", "show_message_and_wait", encoded_msg)) 
     else:
-        os.execv("/usr/sbin/wb", ("wb", "show_message_and_exit", encoded_msg))
+        os.execv("/usr/sbin/wb", ("wb", "show_message_and_wait", encoded_msg))
 
