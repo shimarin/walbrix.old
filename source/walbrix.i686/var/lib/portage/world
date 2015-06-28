@@ -12,8 +12,12 @@ net-misc/ntp
 net-misc/openvpn
 sys-apps/fbset
 sys-apps/v86d
+sys-block/parted
 sys-boot/grub
+sys-fs/dosfstools
+sys-fs/lsscsi
 sys-fs/lvm2
+sys-fs/xfsprogs
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
 sys-power/acpid

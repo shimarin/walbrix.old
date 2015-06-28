@@ -1,0 +1,2 @@
+#>=sys-fs/udev-214 # due to weird behaviour at "udevadm settle"
+

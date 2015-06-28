@@ -2,7 +2,9 @@
 
 # execute original initrc script if "walbrix.boot" is not specified
 mount -t proc -o noexec,nosuid,nodev proc /proc >/dev/null 2>&1
-/bin/busybox grep -q '\bwalbrix.boot=' /proc/cmdline || (umount /proc && exec ./init.gentoo $@)
+if ! /bin/busybox grep -q '\bwalbrix.boot=' /proc/cmdline; then
+    busybox umount /proc && exec ./init.gentoo $@
+fi
 
 . /etc/initrd.defaults
 . /etc/initrd.scripts
@@ -121,17 +123,42 @@ mkdir /mnt/boot
 mkdir /mnt/system
 mkdir /mnt/profile
 
+# determine devices
+good_msg 'Determining boot device ...'
+if echo "${BOOT_PARTITION}" | grep -qs '^\(LABEL\|UUID\)='; then
+    BOOT_PARTITION=`busybox findfs "${BOOT_PARTITION}"`
+fi
+
+if [ -z "${BOOT_PARTITION}" ]; then
+    bad_msg "Unable to determine boot partition (specified by walbrix.boot= kernel arg)"
+    exec sh
+fi
+
+if echo "${PROFILE_PARTITION}" | grep -qs '^\(LABEL\|UUID\)='; then
+    PROFILE_PARTITION=`busybox findfs "${PROFILE_PARTITION}"`
+fi
+
 if ! mount -r "${BOOT_PARTITION}" /mnt/boot; then
-	bad_msg "Unable to mount $BOOT_PARTITION"
+    bad_msg "Unable to mount $BOOT_PARTITION"
+    exec sh
 fi
 
 if ! mount -o loop,ro /mnt/boot/walbrix /mnt/system; then
-	bad_msg "Unable to mount $BOOT_PARTITION/walbrix"
+    bad_msg "Unable to mount $BOOT_PARTITION/walbrix"
+    exec sh
 fi
 
-if [ -n "${PROFILE_PARTITION}" ]; then
-    mount "${PROFILE_PARTITION}" /mnt/profile || bad_msg "Unable to mount $PROFILE_PARTITION. Attempting tmpfs"
+if [ -z "${PROFILE_PARTITION}" ]; then
+    BOOT_PARTITION_UUID=`blkid -o value -s UUID $BOOT_PARTITION`
+    if [ -n "${BOOT_PARTITION_UUID}" ]; then
+        PROFILE_PARTITION=/dev/wbvg-${BOOT_PARTITION_UUID}/profile
+    fi
+    if [ -z "${PROFILE_PARTITION}" -o ! -b "${PROFILE_PARTITION}" ]; then
+        PROFILE_PARTITION=/dev/wbvg/profile
+    fi
 fi
+
+mount "${PROFILE_PARTITION}" /mnt/profile || bad_msg "Unable to mount $PROFILE_PARTITION. Attempting tmpfs"
 
 if ! grep -qs '/mnt/profile' /proc/mounts; then
     mount -t tmpfs tmpfs /mnt/profile || bad_msg "Unable to mount tmpfs"

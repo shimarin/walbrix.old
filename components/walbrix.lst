@@ -18,6 +18,12 @@ $require fbterm.lst
 /usr/bin/fbset
 $copy walbrix/wbgetty /usr/sbin/wbgetty
 
+# used by wbui and tools
+$package sys-fs/dosfstools
+$package sys-fs/lsscsi
+$package sys-fs/xfsprogs
+$package sys-block/parted
+
 # tools
 /usr/bin/strace
 
