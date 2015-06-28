@@ -1,5 +1,5 @@
 #!/bin/sh
-WBUI_BASE=/usr/share/wbui
+WBUI_BASE=`dirname @0`/src
 
 [ $# -eq 0 ] && PYTHONPATH=${WBUI_BASE} exec python2.7 -m cli2
 
@@ -12,3 +12,5 @@ fi
 
 #else (for backward compatibility)
 exec /usr/bin/python2.7 ${WBUI_BASE}/wb.pyc $@
+
+
