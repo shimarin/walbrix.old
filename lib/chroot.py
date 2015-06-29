@@ -1,4 +1,4 @@
-import os,argparse,struct,subprocess
+import os,argparse,struct,subprocess,sys
 import tempmount
 
 def getExecutableBitWidth(filename):
@@ -11,15 +11,15 @@ def getExecutableBitWidth(filename):
     #else
     raise Exception("Neither 32/64 bit")
 
-def chroot(target):
+def chroot(target, command):
     bw = getExecutableBitWidth("%s/bin/sh" % target)
     print("Chrooting %s" % target)
     if bw == 32:
-        return subprocess.call(["i386","chroot",target])
+        return subprocess.call(["i386","chroot",target] + command)
     else:
-        return subprocess.call(["chroot",target])
+        return subprocess.call(["chroot",target] + command)
 
-def run(target):
+def run(target, command):
     if not os.path.isdir(target): raise Exception("Target directory '%s' doesn't exist" % target)
     if not os.path.isfile("%s/bin/sh" % target): raise Exception("/bin/sh not found under '%s'" % target)
 
@@ -47,10 +47,10 @@ def run(target):
             with tempmount.do("tmpfs", "%s/dev/shm" % (target)):
                 with tempmount.do("/dev/pts", "%s/dev/pts" % (target), "bind"):
                     if os.path.exists("%s/usr/portage/metadata/timestamp" % target) or not os.path.isdir("%s/usr/portage" % target) or portage == None:
-                        rst = chroot(target)
+                        rst = chroot(target, command)
                     else:
                         with tempmount.do(portage, "%s/usr/portage" % (target), "bind"):
-                            rst = chroot(target)
+                            rst = chroot(target, command)
 
     print("Cleanup chroot env")
     ## it harms /var/tmp/tomcat-*
@@ -61,7 +61,8 @@ def run(target):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("dir", type=str, help="target dir")
+    parser.add_argument("command", type=str, nargs=argparse.REMAINDER, default=["/bin/sh"], help="command to execute")
     args = parser.parse_args()
 
     if os.getuid() != 0: raise Exception("You must be a root user.")
-    run(args.dir)
+    run(args.dir, args.command)

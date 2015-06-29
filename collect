@@ -1,2 +1,2 @@
 #!/bin/sh
-PYTHONPATH=`dirname $0`/lib exec python2.7 -m `basename $0` $@
+PYTHONPATH=`dirname $0`/lib exec python2.7 -m `basename $0` "$@"
