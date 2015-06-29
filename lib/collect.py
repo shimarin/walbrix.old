@@ -183,10 +183,30 @@ def process_lstfile(context, lstfile):
         print("KERNEL_VERSION set to %s" % kernel_version)
         
     def execute(args):
-        if len(args) != 1: raise Exception("$exec directive gets 1 argument")
-        command = context.apply_variables(args[0])
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--overlay", action="store_true", help="use overlay")
+        parser.add_argument("command", type=str, help="command to execute inside chroot")
+        args = parser.parse_args(args)
+        command = context.apply_variables(args.command)
         print "$exec '%s'" % command
-        subprocess.check_call(["chroot", context.destination, "/bin/sh", "-c", command])
+        if args.overlay:
+            print "Using overlay"
+            overlay_dir = os.path.normpath(context.destination) + ".overlay"
+            overlay_root = overlay_dir + "/root"
+            overlay_work = overlay_dir + "/work"
+            mkdir_p(overlay_root)
+            mkdir_p(overlay_work)
+            try:
+                overlayfs_opts = "lowerdir=%s,upperdir=%s,workdir=%s" % (context.source,context.destination,overlay_work)
+                subprocess.check_call(["mount","-t","overlay","overlay","-o",overlayfs_opts,overlay_root])
+                try:
+                    subprocess.check_call(["chroot", overlay_root, "/bin/sh", "-c", command])
+                finally:
+                    subprocess.check_call(["umount", overlay_root])
+            finally:
+                shutil.rmtree(overlay_dir)
+        else:
+            subprocess.check_call(["chroot", context.destination, "/bin/sh", "-c", command])
 
     def mkdir(args):
         if len(args) < 1: raise Exception("$mkdir directive gets at least 1 argument")
@@ -304,6 +324,8 @@ def parse_var(arg):
     return (kv[0].strip(), kv[1].strip())
 
 if __name__ == '__main__':
+    if os.getuid() != 0: raise Exception("You must be a root user.")
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=str, default="/", help="source directory")
     parser.add_argument("--var", type=str, action="append", default=[], help="variable")
