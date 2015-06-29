@@ -38,3 +38,7 @@ media-libs/sdl-mixer vorbis
 
 # dev
 dev-vcs/git -perl -gpg
+
+# networks
+net-dns/avahi -introspection
+

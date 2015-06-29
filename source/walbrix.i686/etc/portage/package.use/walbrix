@@ -23,3 +23,7 @@ dev-python/pyalsaaudio -python_targets_python3_3
 media-libs/libsdl alsa fbcon
 media-libs/sdl-image jpeg png webp
 media-libs/sdl-mixer vorbis
+
+# networks
+net-dns/avahi -introspection
+

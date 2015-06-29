@@ -9,6 +9,7 @@ dev-util/strace
 dev-vcs/git
 media-fonts/vlgothic
 media-gfx/splash-themes-gentoo
+net-dns/avahi
 net-misc/ntp
 net-misc/openvpn
 sys-apps/fbset

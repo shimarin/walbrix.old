@@ -1,0 +1,5 @@
+#dev-libs/libdaemon
+$package net-dns/avahi
+$symlink /etc/runlevels/default/avahi-daemon /etc/init.d/avahi-daemon
+
+

@@ -8,6 +8,7 @@ $require rescue.lst
 $require openssh.lst
 $require splashutils.lst
 $require grub.lst
+$require avahi.lst
 
 # wbui
 $require pygame.lst

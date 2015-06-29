@@ -3,6 +3,7 @@ $require openvpn.lst
 $require lvm.lst
 $require acpi.lst
 $require ntp.lst
+$require avahi.lst
 $sed /etc/inittab 's/^l4:\(.\+\) default/l4:\1 rescue/'
 $mkdir /etc/runlevels/rescue
 $symlink /etc/runlevels/rescue/net.eth0 /etc/init.d/net.eth0
@@ -11,3 +12,4 @@ $symlink /etc/runlevels/rescue/sshd /etc/init.d/sshd
 $symlink /etc/runlevels/rescue/lvm /etc/init.d/lvm
 $symlink /etc/runlevels/rescue/acpid /etc/init.d/acpid
 $symlink /etc/runlevels/rescue/ntp-client /etc/init.d/ntp-client
+$symlink /etc/runlevels/rescue/avahi-daemon /etc/init.d/avahi-daemon
