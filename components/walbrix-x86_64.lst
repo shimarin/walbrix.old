@@ -1,2 +1,8 @@
 $require vim.lst
 $package dev-vcs/git
+
+# to self-build walbrix
+/usr/bin/file
+$package dev-python/python-magic
+$package dev-python/chardet
+$package sys-fs/squashfs-tools

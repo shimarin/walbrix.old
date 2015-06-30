@@ -3,8 +3,10 @@ app-emulation/xen
 app-emulation/xen-pvgrub
 app-i18n/fbterm
 app-portage/gentoolkit
+dev-python/chardet
 dev-python/pyalsaaudio
 dev-python/pygame
+dev-python/python-magic
 dev-util/strace
 dev-vcs/git
 media-fonts/vlgothic
@@ -19,6 +21,7 @@ sys-boot/grub
 sys-fs/dosfstools
 sys-fs/lsscsi
 sys-fs/lvm2
+sys-fs/squashfs-tools
 sys-fs/xfsprogs
 sys-kernel/genkernel
 sys-kernel/gentoo-sources

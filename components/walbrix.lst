@@ -5,9 +5,14 @@ $require kbd.lst
 
 $require rescue.lst
 
-$require openssh.lst
+# boot
 $require splashutils.lst
+/etc/splash/natural_gentoo
 $require grub.lst
+$copy walbrix/fstab /etc/fstab
+
+# net
+$require openssh.lst
 $require avahi.lst
 
 # wbui
@@ -35,9 +40,6 @@ $sed /etc/inittab 's/\/sbin\/agetty 38400 tty1 linux/\/usr\/sbin\/wbgetty 38400 
 $symlink /etc/init.d/net.eth0 net.lo
 $symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
 
-# splash
-/etc/splash/natural_gentoo
-
 # modify initramfs
 $mkdir /tmp/initramfs/etc/splash/wb/images
 $copy walbrix/init /tmp/initramfs/init.walbrix
@@ -61,9 +63,6 @@ $copy walbrix/network-multi-bridge /etc/xen/scripts/network-multi-bridge
 $copy walbrix/network-bridge.init /etc/init.d/network-bridge
 $symlink /etc/runlevels/default/network-bridge /etc/init.d/network-bridge
 
-# fstab
-$copy walbrix/fstab /etc/fstab
-
 # prevent to get profile layer unmounted
 $copy walbrix/conf-localmount /etc/conf.d/localmount
 # to get profile layer properly ro-remounted
@@ -73,3 +72,4 @@ $require walbrix-$(ARCH).lst
 
 # set default hostname (works as 'done' marker as well)
 $sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBFREE01"/'
+
