@@ -132,7 +132,7 @@ def process_file(context, filename):
 
 def process_package(context, contents_file): # todo: support exclude patterns
     def is_needed(filename):
-        exclude_prefixes = ["/usr/share/doc/", "/usr/share/info/", "/usr/share/gtk-doc/", "/usr/share/man/", "/usr/include/", "/usr/lib/pkgconfig/", "/usr/lib64/pkgconfig/","/dev/"]
+        exclude_prefixes = ["/usr/share/doc/", "/usr/share/info/", "/usr/share/gtk-doc/", "/usr/share/man/", "/usr/include/", "/usr/lib/pkgconfig/", "/usr/lib64/pkgconfig/","/dev/","/etc/portage/"]
         for pfx in exclude_prefixes:
             if filename.startswith(pfx): return False
 
