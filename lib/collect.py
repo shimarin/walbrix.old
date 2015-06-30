@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
-import os,re,glob,struct,stat,shutil,subprocess,argparse,shlex,chardet
+import os,re,glob,struct,stat,shutil,subprocess,argparse,shlex
+import chardet # emerge dev-python/chardet
 import magic # emerge python-magic
 import kernelver
 
@@ -317,6 +318,12 @@ def run(lstfile, context):
     print "lstfile=%s, source=%s, destination=%s" % (lstfile, context.source, context.destination)
     mkdir_p(context.destination)
     process_lstfile(context, lstfile)
+
+    # execute ldconfig if exists
+    ldconfig = "%s/sbin/ldconfig" % context.destination
+    if os.path.isfile(ldconfig) and os.access(ldconfig, os.X_OK):
+        print "Executing /sbin/ldconfig..."
+        subprocess.check_call(["chroot", context.destination, "/sbin/ldconfig"])
 
 def parse_var(arg):
     kv = arg.split('=', 1)
