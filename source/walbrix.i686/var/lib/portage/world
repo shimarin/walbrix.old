@@ -21,4 +21,5 @@ sys-fs/lvm2
 sys-fs/xfsprogs
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
+sys-kernel/vanilla-sources
 sys-power/acpid

@@ -23,6 +23,7 @@ sys-fs/lsscsi
 sys-fs/lvm2
 sys-fs/squashfs-tools
 sys-fs/xfsprogs
+sys-kernel/aufs-sources
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
 sys-power/acpid
