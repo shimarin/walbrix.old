@@ -1,0 +1,52 @@
+$require domU.lst
+$require cron.lst
+$require apache.lst
+$require mysql.lst
+$require postfix.lst
+$require samba.lst
+$require ffmpeg.lst
+$require php54.lst
+$require pecl-imagick.lst
+#require components/libreoffice.lst
+$package dev-php/xcache
+$package dev-php/pecl-apcu
+#copy owncloud/smb.conf /etc/samba/smb.conf
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1owncloud\2/'
+#$set OWNCLOUD_DOWNLOAD_ORIGIN https://download.owncloud.org/community
+$set OWNCLOUD_DOWNLOAD_ORIGIN http://wbrxcorp.s3.amazonaws.com
+$exec "wget -O - $(OWNCLOUD_DOWNLOAD_ORIGIN)/owncloud-8.1.0.tar.bz2 | tar jxvf - -C /var/www/localhost"
+$exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/owncloud /var/www/localhost/htdocs"
+#copy owncloud/config.php /var/www/localhost/htdocs/config/config.php
+
+# replace font
+$exec "mv /var/www/localhost/htdocs/core/fonts/OpenSans-Regular.ttf /var/www/localhost/htdocs/core/fonts/OpenSans-Regular.ttf.orig"
+/usr/share/fonts/vlgothic/VL-PGothic-Regular.ttf
+$symlink /var/www/localhost/htdocs/core/fonts/OpenSans-Regular.ttf /usr/share/fonts/vlgothic/VL-PGothic-Regular.ttf
+
+# create database
+$mkdir /tmp/mysql
+$copy mysql/operate.sh /tmp/mysql/operate.sh
+$exec "/tmp/mysql/operate.sh createdb owncloud"
+
+# <after installation>
+$copy owncloud/config.php /var/www/localhost/htdocs/config/config.php   # make trusted_domains empty array and overwrite.cli.url=http://localhost
+$copy owncloud/htaccess /var/www/localhost/htdocs/.htaccess
+$exec "mkdir -p /var/www/localhost/htdocs/data/admin/cache && touch /var/www/localhost/htdocs/data/index.html /var/www/localhost/htdocs/data/.ocdata"
+$copy owncloud/data-htaccess /var/www/localhost/htdocs/data/.htaccess
+$exec "cp -a /var/www/localhost/htdocs/core/skeleton /var/www/localhost/htdocs/data/admin/files"
+$copy owncloud/initial-database.sql /tmp/mysql/initial-database.sql
+$copy owncloud/initial-database-custom.sql /tmp/mysql/initial-database-custom.sql
+$exec '/tmp/mysql/operate.sh exec owncloud "source /tmp/mysql/initial-database.sql" "source /tmp/mysql/initial-database-custom.sql"'
+# </after installation>
+
+$deltree /tmp/mysql
+$mkdir /var/lib/owncloud
+$exec "chown -R apache.apache /var/www/localhost /var/lib/owncloud"
+
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^upload_max_filesize.\+$/upload_max_filesize = 512M/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^post_max_size.\+$/post_max_size = 768M/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^memory_limit.\+$/memory_limit=512M/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;mbstring.func_overload.\+$/mbstring.func_overload=0/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;always_populate_raw_post_data.\+$/always_populate_raw_post_data=-1/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;default_charset.\+$/default_charset="UTF-8"/'
+$write /var/spool/cron/crontabs/apache '*/15  *  *  *  * php -f /var/www/localhost/htdocs/cron.php'

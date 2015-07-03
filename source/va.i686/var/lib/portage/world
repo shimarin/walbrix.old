@@ -6,6 +6,7 @@ app-arch/zip
 app-portage/gentoolkit
 dev-db/mysql
 dev-lang/php
+dev-php/pecl-apcu
 dev-php/pecl-imagick
 dev-php/xcache
 dev-util/strace
