@@ -101,6 +101,10 @@ def process_file(context, filename):
                 process_file(context, os.path.join(root, file)[len(context.source):])
         return
 
+    if os.path.isdir(dest):
+        if os.path.islink(dest): os.unlink(dest)
+        else: shutil.rmtree(dest)
+
     subprocess.check_call(["cp","-av",src, dest])
     context.mark_file_as_collected(filename)
 
@@ -308,7 +312,9 @@ def process_lstfile(context, lstfile):
         if args.type == "b": mode |= stat.S_IFCHR
         elif args.type == "c": mode |= stat.S_IFBLK
         else: raise Exception("Unknown device type '%s'" % args.type)
-        os.mknod("%s%s" % (context.destination, args.name), mode, os.makedev(args.major, args.minor))
+        name = "%s%s" % (context.destination, args.name)
+        if os.path.exists(name): os.unlink(name)
+        os.mknod(name, mode, os.makedev(args.major, args.minor))
 
     directives = {
         "$require":require,
