@@ -56,13 +56,12 @@ $require shadow.lst
 $require sysvinit.lst
 $package sys-apps/util-linux
 $package sys-apps/which
-$package sys-auth/pambase
 $package sys-devel/make
 $package sys-devel/patch
 $package sys-fs/e2fsprogs
 $require udev.lst
-$package sys-libs/pam
 $package sys-libs/timezone-data
 $package sys-process/procps
 $package sys-process/psmisc
+$require pam.lst
 
