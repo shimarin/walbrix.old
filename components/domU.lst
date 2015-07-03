@@ -5,6 +5,7 @@ $require bash.lst
 $require glibc.lst
 $package sys-apps/coreutils
 $require openrc.lst
+$package net-misc/netifrc
 $package sys-apps/util-linux
 $package sys-apps/net-tools
 $require shadow.lst
