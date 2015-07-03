@@ -1,2 +1,0 @@
-no_umounts="/.overlay/boot|/.overlay/profile"
-
