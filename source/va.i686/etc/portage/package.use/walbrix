@@ -18,3 +18,5 @@ media-gfx/imagemagick perl jpeg jpeg2k png truetype webp
 dev-php/pecl-imagick php_targets_php5-4 -php_targets_php5-5
 dev-php/xcache php_targets_php5-4 -php_targets_php5-5
 dev-php/pecl-apcu php_targets_php5-4 -php_targets_php5-5
+dev-php/pecl-memcached php_targets_php5-4 -php_targets_php5-5
+

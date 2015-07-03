@@ -1,0 +1,3 @@
+$require memcached.lst
+#dev-libs/libmemcached
+$package dev-php/pecl-memcached

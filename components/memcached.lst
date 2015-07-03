@@ -1,0 +1,2 @@
+$package net-misc/memcached
+$symlink /etc/runlevels/default/memcached /etc/init.d/memcached
