@@ -5,9 +5,9 @@
 $package sys-libs/tdb
 $require mit-krb5.lst
 #sys-libs/tevent
-$package net-nds/openldap
+$package net-nds/openldap # USE="-tcpd samba"
 $package net-fs/cifs-utils
-$package net-fs/samba
+$package net-fs/samba # USE="ldap"
 
 $symlink /etc/init.d/samba.nmbd samba 
 $symlink /etc/init.d/samba.smbd samba
