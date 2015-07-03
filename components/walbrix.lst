@@ -9,7 +9,7 @@ $require rescue.lst
 $require splashutils.lst
 /etc/splash/natural_gentoo
 $require grub.lst
-$copy walbrix/fstab /etc/fstab
+$write /etc/fstab 'overlay\t/\toverlay\tdefaults\t0 0'
 
 # net
 $require openssh.lst
@@ -64,7 +64,7 @@ $copy walbrix/network-bridge.init /etc/init.d/network-bridge
 $symlink /etc/runlevels/default/network-bridge /etc/init.d/network-bridge
 
 # prevent to get profile layer unmounted
-$copy walbrix/conf-localmount /etc/conf.d/localmount
+$write /etc/conf.d/localmount 'no_umounts="/.overlay/boot|/.overlay/profile"'
 # to get profile layer properly ro-remounted
 $sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount,ro"/'
 

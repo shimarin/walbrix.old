@@ -258,6 +258,19 @@ def process_lstfile(context, lstfile):
             print "$touch '%s'" % arg
             subprocess.check_call(["/usr/bin/touch", name])
 
+    def write(args):
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--append", action="store_true", help="append instead of overwrite")
+        parser.add_argument("name", type=str, help="filename")
+        parser.add_argument("text", type=str, help="text to write to file (in echo -e format)")
+        args = parser.parse_args(args)
+        if not args.name.startswith('/'): raise Exception("File name must start with '/'")
+        name = "%s%s" % (context.destination, context.apply_variables(args.name))
+        text = context.apply_variables(args.text)
+        print "$write '%s' to '%s" % (text, name)
+        with open(name, "a" if args.append else "w") as f:
+            subprocess.check_call(["echo","-e",text], stdout=f)
+
     def copy(args):
         if len(args) != 2: raise Exception("$copy directive gets 2 args")
         src = os.path.normpath("files/" + context.apply_variables(args[0]))
@@ -290,7 +303,7 @@ def process_lstfile(context, lstfile):
         parser.add_argument("major", type=int, help="major device number")
         parser.add_argument("minor", type=int, help="minor device number")
         args = parser.parse_args(args)
-        if not args.name.startswith('/'): raise Exception("Device file name must starts with '/'")
+        if not args.name.startswith('/'): raise Exception("Device file name must start with '/'")
         mode = 0600
         if args.type == "b": mode |= stat.S_IFCHR
         elif args.type == "c": mode |= stat.S_IFBLK
@@ -307,6 +320,7 @@ def process_lstfile(context, lstfile):
         "$symlink":symlink,
         "$sed":sed,
         "$touch":touch,
+        "$write":write,
         "$copy":copy,
         "$mv":mv,
         "$patch":patch,
