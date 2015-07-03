@@ -4,6 +4,7 @@ app-admin/sudo
 app-admin/sysklogd
 app-arch/zip
 app-portage/gentoolkit
+dev-db/mysql
 dev-util/strace
 media-fonts/vlgothic
 net-analyzer/traceroute

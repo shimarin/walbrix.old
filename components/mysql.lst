@@ -1,0 +1,15 @@
+$package dev-lang/perl # for mysql_install_db
+
+#dev-libs/libaio
+#app-arch/libarchive
+$package dev-db/mysql # exclude /var/run/
+$sed /etc/mysql/my.cnf 's/^log-bin$/#log-bin/'  # disable binary log
+
+/usr/include/mysql/mysql_version.h
+/usr/include/mysql/my_config.h
+
+$package dev-db/mysql-init-scripts
+$symlink /etc/runlevels/default/mysql /etc/init.d/mysql
+
+$copy mysql/setup_mysql.sh /setup_mysql.sh
+$exec "sh /setup_mysql.sh && rm /setup_mysql.sh"
