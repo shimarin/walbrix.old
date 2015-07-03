@@ -1,6 +1,9 @@
+app-admin/apache-tools
+app-admin/logrotate
 app-admin/sudo
 app-admin/sysklogd
 app-arch/zip
+app-portage/gentoolkit
 dev-util/strace
 media-fonts/vlgothic
 net-analyzer/traceroute
@@ -10,8 +13,12 @@ net-misc/curl
 net-misc/ntp
 net-misc/openvpn
 sys-auth/nss-mdns
+sys-auth/nss-myhostname
 sys-fs/fuse
 sys-fs/xfsprogs
 sys-kernel/genkernel
 sys-kernel/vanilla-sources
 sys-process/vixie-cron
+www-apache/mod_authnz_external
+www-apache/mod_extract_forwarded
+www-servers/apache
