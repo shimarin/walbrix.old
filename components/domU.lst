@@ -1,4 +1,5 @@
 $require rootfs.lst
+/usr/bin/ldd
 $require dev.lst
 $require bash.lst
 $require glibc.lst
