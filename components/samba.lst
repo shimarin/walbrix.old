@@ -2,8 +2,16 @@
 #dev-libs/libev
 #dev-libs/libverto
 #sys-libs/talloc
-#sys-libs/tdb
+$package sys-libs/tdb
 $require mit-krb5.lst
 #sys-libs/tevent
+$package net-nds/openldap
 $package net-fs/cifs-utils
 $package net-fs/samba
+
+$symlink /etc/init.d/samba.nmbd samba 
+$symlink /etc/init.d/samba.smbd samba
+$symlink /etc/conf.d/samba.nmbd samba
+$symlink /etc/conf.d/samba.smbd samba
+$symlink /etc/runlevels/default/samba.nmbd /etc/init.d/samba.nmbd
+$symlink /etc/runlevels/default/samba.smbd /etc/init.d/samba.smbd

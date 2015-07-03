@@ -9,3 +9,5 @@ www-servers/apache apache2_modules_proxy_connect apache2_modules_proxy apache2_m
 www-apache/mod_extract_forwarded mod_proxy
 
 mail-mta/postfix sasl
+net-fs/samba ldap
+net-nds/openldap -tcpd samba
