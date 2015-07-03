@@ -27,6 +27,7 @@ $package sys-apps/diffutils
 $package sys-apps/findutils
 $package sys-apps/coreutils
 $package app-arch/xz-utils
+$package app-misc/ca-certificates
 $require pam.lst
 $require udev.lst
 $sed /etc/rc.conf 's/^#rc_sys.\+$/rc_sys="xenU"/'
@@ -50,7 +51,6 @@ $sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
 
 $package net-analyzer/traceroute
 $package sys-fs/fuse
-/etc/ssl/certs/ca-certificates.crt
 
 $symlink /etc/init.d/net.eth0 net.lo
 $symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
