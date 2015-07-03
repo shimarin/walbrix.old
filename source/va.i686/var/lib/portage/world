@@ -1,2 +1,17 @@
+app-admin/sudo
+app-admin/sysklogd
+app-arch/zip
+dev-util/strace
+media-fonts/vlgothic
+net-analyzer/traceroute
+net-analyzer/zabbix
+net-fs/samba
+net-misc/curl
+net-misc/ntp
+net-misc/openvpn
+sys-auth/nss-mdns
+sys-fs/fuse
+sys-fs/xfsprogs
 sys-kernel/genkernel
 sys-kernel/vanilla-sources
+sys-process/vixie-cron

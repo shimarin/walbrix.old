@@ -1,2 +1,8 @@
 sys-kernel/vanilla-sources symlink
+net-misc/openvpn passwordsave
+app-admin/sudo -sendmail
+net-analyzer/zabbix agent
+net-dns/avahi -introspection
+dev-util/strace -perl
+
 

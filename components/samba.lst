@@ -1,0 +1,9 @@
+#sys-libs/libcap-ng
+#dev-libs/libev
+#dev-libs/libverto
+#sys-libs/talloc
+#sys-libs/tdb
+$require mit-krb5.lst
+#sys-libs/tevent
+$package net-fs/cifs-utils
+$package net-fs/samba

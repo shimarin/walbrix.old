@@ -1,0 +1,1 @@
+$write --append /etc/profile.env "export LANG=ja_JP.utf8"

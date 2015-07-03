@@ -1,0 +1,98 @@
+$require rootfs.lst
+$require dev.lst
+$require bash.lst
+$require glibc.lst
+$package sys-apps/coreutils
+$require openrc.lst
+$package sys-apps/util-linux
+$package sys-apps/net-tools
+$require shadow.lst
+$package sys-apps/attr
+$package sys-process/procps
+$require openssh.lst
+$package dev-libs/openssl
+$package sys-libs/timezone-data
+$package sys-apps/file
+$package app-arch/bzip2
+$package app-arch/cpio
+$package sys-apps/grep
+$package app-arch/gzip
+$package net-misc/iputils
+$package sys-apps/sed
+$package app-arch/tar
+$package sys-apps/sysvinit
+$package sys-apps/diffutils
+$package sys-apps/findutils
+$package sys-apps/coreutils
+$package app-arch/xz-utils
+$require pam.lst
+$require udev.lst
+$sed /etc/rc.conf 's/^#rc_sys.\+$/rc_sys="xenU"/'
+/bin/awk
+/bin/busybox
+
+/boot/kernel
+
+$require sudo.lst
+$require zabbix-agent.lst
+$require nano.lst
+$require openvpn.lst
+$require ntp.lst
+$require nss-mdns.lst
+$package app-admin/sysklogd
+
+
+$write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
+$write /etc/conf.d/net 'config_eth0="noop\ndhcp"'
+$sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
+
+$package net-analyzer/traceroute
+$package sys-fs/fuse
+/etc/ssl/certs/ca-certificates.crt
+
+$symlink /etc/init.d/net.eth0 net.lo
+$symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
+
+/usr/bin/ar
+/usr/bin/curl
+/usr/bin/getent
+/usr/bin/iconv
+$symlink /usr/bin/less ../../bin/busybox
+/usr/bin/locale
+/usr/bin/make
+/usr/bin/rsync
+/usr/bin/strace
+/usr/bin/strings
+/usr/bin/unzip
+#symlink /usr/bin/vi ../../bin/busybox
+/usr/bin/wget
+/usr/bin/which
+/usr/bin/zip
+/usr/lib/cracklib_dict.pwd
+/usr/lib/cracklib_dict.pwi
+/usr/sbin/xfs_growfs
+$write /etc/locale.gen 'en_US.UTF-8 UTF-8\nen_GB.UTF-8 UTF-8\nja_JP.UTF-8 UTF-8'
+$exec --overlay /usr/sbin/locale-gen
+
+# nmbd
+/usr/sbin/nmbd
+/var/log/samba/.keep_net-fs_samba-0
+/usr/lib/samba/charset/CP437.so
+/usr/lib/samba/charset/CP850.so
+/etc/samba/lmhosts
+$write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15'
+/etc/conf.d/samba
+/etc/init.d/samba
+$symlink /etc/init.d/samba.nmbd samba
+$symlink /etc/conf.d/samba.nmbd samba 
+$symlink /etc/runlevels/default/samba.nmbd /etc/init.d/samba.nmbd
+
+# timezone
+$require timezone-$(REGION).lst
+
+# locale
+$require locale-$(REGION).lst
+
+# zram swap
+$patch /etc/init.d/swap swap.init.patch
+$write /etc/fstab '/dev/zram0\tnone\tswap\tsw,pri=1\t0 0'

@@ -1,0 +1,3 @@
+$package sys-process/cronbase
+$package sys-process/vixie-cron
+$symlink /etc/runlevels/default/vixie-cron /etc/init.d/vixie-cron
