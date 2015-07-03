@@ -8,6 +8,7 @@ dev-db/mysql
 dev-util/strace
 mail-mta/postfix
 media-fonts/vlgothic
+media-video/ffmpeg
 net-analyzer/traceroute
 net-analyzer/zabbix
 net-fs/samba
