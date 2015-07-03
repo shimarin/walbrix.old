@@ -14,6 +14,7 @@ $write /etc/fstab 'overlay\t/\toverlay\tdefaults\t0 0'
 # net
 $require openssh.lst
 $require avahi.lst
+$write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
 
 # wbui
 $require pygame.lst
