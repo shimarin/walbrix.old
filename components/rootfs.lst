@@ -1,0 +1,13 @@
+$mkdir /proc
+$mkdir /run
+$mkdir /etc
+/tmp/.keep
+/root/.keep
+/home/.keep
+/sys/.keep
+$mkdir /var/lib
+/var/tmp/.keep
+/var/log/.keep
+/var/cache/.keep
+/var/spool/.keep
+/mnt/.keep
