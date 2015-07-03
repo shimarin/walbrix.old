@@ -172,7 +172,7 @@ def process_lstfile(context, lstfile):
 
     def package(args):
         if len(args) != 1: raise Exception("$package directive gets 1 argument")
-        target_package = args[0]
+        target_package = context.apply_variables(args[0])
         match = glob.glob(os.path.normpath("%s/var/db/pkg/%s/CONTENTS" % (context.source, target_package)))
         if len(match) < 1:
             match = glob.glob(os.path.normpath("%s/var/db/pkg/%s-[0-9]*/CONTENTS" % (context.source, target_package)))
@@ -321,6 +321,10 @@ def process_lstfile(context, lstfile):
         if os.path.exists(name): os.unlink(name)
         os.mknod(name, mode, os.makedev(args.major, args.minor))
 
+    def setvar(args):
+        if len(args) != 2: raise Exception("$set directive gets 2 args")
+        context.set_variable(args[0], context.apply_variables(args[1]))
+
     directives = {
         "$require":require,
         "$package":package,
@@ -335,7 +339,8 @@ def process_lstfile(context, lstfile):
         "$copy":copy,
         "$mv":mv,
         "$patch":patch,
-        "$device":device
+        "$device":device,
+        "$set":setvar
     }
     
     if context.is_lstfile_already_processed(lstfile): return
