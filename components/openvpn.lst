@@ -1,0 +1,2 @@
+#dev-libs/lzo
+$package net-misc/openvpn # USE="passwordsave"

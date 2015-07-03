@@ -1,5 +1,5 @@
 $require sysvinit.lst
-$package net-misc/openvpn
+$require openvpn.lst
 $require lvm.lst
 $require acpi.lst
 $require ntp.lst
