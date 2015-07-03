@@ -6,6 +6,7 @@ app-arch/zip
 app-portage/gentoolkit
 dev-db/mysql
 dev-util/strace
+mail-mta/postfix
 media-fonts/vlgothic
 net-analyzer/traceroute
 net-analyzer/zabbix

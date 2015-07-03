@@ -1,0 +1,4 @@
+#dev-libs/icu
+$package net-mail/mailbase
+$package dev-libs/cyrus-sasl
+$package mail-mta/postfix # USE="sasl"

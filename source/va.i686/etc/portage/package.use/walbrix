@@ -8,3 +8,4 @@ dev-util/strace -perl
 www-servers/apache apache2_modules_proxy_connect apache2_modules_proxy apache2_modules_proxy_http apache2_modules_proxy_ajp
 www-apache/mod_extract_forwarded mod_proxy
 
+mail-mta/postfix sasl
