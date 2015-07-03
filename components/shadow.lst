@@ -2,3 +2,4 @@ $package sys-apps/shadow
 /etc/passwd
 /etc/group
 /etc/shadow
+$sed /etc/securetty 's/^ttyS0$/ttyS0\nhvc0/'
