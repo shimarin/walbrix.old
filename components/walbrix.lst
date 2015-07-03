@@ -70,6 +70,6 @@ $sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount
 
 $require walbrix-$(ARCH).lst
 
-# set default hostname (works as 'done' marker as well)
+# set default hostname
 $sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBFREE01"/'
 
