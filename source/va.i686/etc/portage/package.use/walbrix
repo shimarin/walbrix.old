@@ -14,3 +14,6 @@ net-nds/openldap -tcpd samba
 media-video/ffmpeg mp3 xvid x264 x265 cpudetection faac aac mmx mmxext theora threads truetype vorbis webp cpu_flags_x86_3dnow cpu_flags_x86_3dnowext cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_sse3 cpu_flags_x86_mmx cpu_flags_x86_mmxext cpu_flags_x86_ssse3
 dev-lang/php apache2 gd mysql mysqli postgres xslt zip pdo truetype xmlwriter bcmath xmlreader pcntl sysvipc sockets curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap
 app-eselect/eselect-php apache2
+media-gfx/imagemagick perl jpeg jpeg2k png truetype webp
+dev-php/pecl-imagick php_targets_php5-4 -php_targets_php5-5
+dev-php/xcache php_targets_php5-4 -php_targets_php5-5

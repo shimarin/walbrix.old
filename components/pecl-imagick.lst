@@ -1,0 +1,2 @@
+$require imagemagick.lst
+$package dev-php/pecl-imagick

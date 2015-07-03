@@ -1,0 +1,5 @@
+#media-libs/lcms
+#media-libs/tiff
+$package media-fonts/urw-fonts
+#media-libs/openjpeg
+$package media-gfx/imagemagick # USE="perl jpeg jpeg2k png truetype webp"
