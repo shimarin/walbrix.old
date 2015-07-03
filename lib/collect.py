@@ -44,6 +44,9 @@ def copy_up(context, path):
     subprocess.check_call(["touch","-ahc",path])
     context.mark_path_as_copied_up(path)
 
+def is_executable(filename):
+    return os.path.isfile(filename) and os.access(filename, os.X_OK)
+
 def finish_path(context, path, stack):
     def touch(context, path):
         if path == None or path == "": return
@@ -205,12 +208,14 @@ def process_lstfile(context, lstfile):
                 overlayfs_opts = "lowerdir=%s,upperdir=%s,workdir=%s" % (context.source,context.destination,overlay_work)
                 subprocess.check_call(["mount","-t","overlay","overlay","-o",overlayfs_opts,overlay_root])
                 try:
+                    if is_executable("%s/sbin/ldconfig" % overlay_root): subprocess.check_call(["chroot", overlay_root, "/sbin/ldconfig"])
                     subprocess.check_call(["chroot", overlay_root, "/bin/sh", "-c", command])
                 finally:
                     subprocess.check_call(["umount", overlay_root])
             finally:
                 shutil.rmtree(overlay_dir)
         else:
+            if is_executable("%s/sbin/ldconfig" % context.destination): subprocess.check_call(["chroot", context.destination, "/sbin/ldconfig"])
             subprocess.check_call(["chroot", context.destination, "/bin/sh", "-c", command])
 
     def mkdir(args):
@@ -356,7 +361,7 @@ def run(lstfile, context):
 
     # execute ldconfig if exists
     ldconfig = "%s/sbin/ldconfig" % context.destination
-    if os.path.isfile(ldconfig) and os.access(ldconfig, os.X_OK):
+    if is_executable(ldconfig):
         print "Executing /sbin/ldconfig..."
         subprocess.check_call(["chroot", context.destination, "/sbin/ldconfig"])
 
