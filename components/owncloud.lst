@@ -12,8 +12,7 @@ $package dev-php/xcache
 $package dev-php/pecl-apcu
 #copy owncloud/smb.conf /etc/samba/smb.conf
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1owncloud\2/'
-#$set OWNCLOUD_DOWNLOAD_ORIGIN https://download.owncloud.org/community
-$set OWNCLOUD_DOWNLOAD_ORIGIN http://wbrxcorp.s3.amazonaws.com
+$set OWNCLOUD_DOWNLOAD_ORIGIN https://download.owncloud.org/community
 $exec "wget -O - $(OWNCLOUD_DOWNLOAD_ORIGIN)/owncloud-8.1.0.tar.bz2 | tar jxvf - -C /var/www/localhost"
 $exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/owncloud /var/www/localhost/htdocs"
 #copy owncloud/config.php /var/www/localhost/htdocs/config/config.php
