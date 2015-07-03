@@ -1,4 +1,5 @@
-/dev/core
-/dev/null
-/dev/console
-/dev/urandom
+/dev/.keep
+$symlink /dev/core /proc/kcore
+$device c /dev/null 1 3
+$device c /dev/console 5 1
+$device c /dev/urandom 1 9

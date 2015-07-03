@@ -283,6 +283,20 @@ def process_lstfile(context, lstfile):
         os.chmod(target, mode)
         os.chown(target, uid, gid)
 
+    def device(args):
+        parser = argparse.ArgumentParser()
+        parser.add_argument("type", type=str, help="device type(b or c)")
+        parser.add_argument("name", type=str, help="device filename")
+        parser.add_argument("major", type=int, help="major device number")
+        parser.add_argument("minor", type=int, help="minor device number")
+        args = parser.parse_args(args)
+        if not args.name.startswith('/'): raise Exception("Device file name must starts with '/'")
+        mode = 0600
+        if args.type == "b": mode |= stat.S_IFCHR
+        elif args.type == "c": mode |= stat.S_IFBLK
+        else: raise Exception("Unknown device type '%s'" % args.type)
+        os.mknod("%s%s" % (context.destination, args.name), mode, os.makedev(args.major, args.minor))
+
     directives = {
         "$require":require,
         "$package":package,
@@ -295,7 +309,8 @@ def process_lstfile(context, lstfile):
         "$touch":touch,
         "$copy":copy,
         "$mv":mv,
-        "$patch":patch
+        "$patch":patch,
+        "$device":device
     }
     
     if context.is_lstfile_already_processed(lstfile): return
