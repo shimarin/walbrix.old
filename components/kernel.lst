@@ -3,5 +3,5 @@
 $kernel /boot/kernel
 /lib/modules/$(KERNEL_VERSION)
 /lib/firmware
-$exec "depmod $(KERNEL_VERSION)"
+$exec "/sbin/depmod $(KERNEL_VERSION)"
 
