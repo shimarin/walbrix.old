@@ -10,6 +10,7 @@ $require pecl-imagick.lst
 #require components/libreoffice.lst
 $package dev-php/xcache
 $package dev-php/pecl-apcu
+#$require pecl-memcached.lst
 #copy owncloud/smb.conf /etc/samba/smb.conf
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1owncloud\2/'
 $set OWNCLOUD_DOWNLOAD_ORIGIN https://download.owncloud.org/community
