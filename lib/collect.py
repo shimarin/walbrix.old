@@ -227,7 +227,7 @@ def process_lstfile(context, lstfile):
             mkdir_p(name)
 
     def deltree(args):
-        if len(args) != 1: raise Exception("$deltree directive gets at least 1 argument")
+        if len(args) < 1: raise Exception("$deltree directive gets at least 1 argument")
         for arg in args:
             if not arg.startswith('/'): raise Exception("Directory name must start with '/'")
             name = "%s%s" % (context.destination, context.apply_variables(arg))
