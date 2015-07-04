@@ -1,2 +1,11 @@
+$set PGSQL_VERSION 9.4
 #app-eselect/eselect-postgresql
-$package dev-db/postgresql
+$package dev-db/postgresql-$(PGSQL_VERSION).3 # --exclude=^/usr/share/postgresql-9.4/man/
+
+$exec "ln -sf /usr/lib/postgresql-$(PGSQL_VERSION)/bin/* /usr/bin/"
+
+$copy postgresql/operate.sh /operate.sh
+$exec "/operate.sh initdb && rm /operate.sh"
+$symlink /etc/runlevels/default/postgresql-$(PGSQL_VERSION) /etc/init.d/postgresql-$(PGSQL_VERSION)
+
+$sed /etc/conf.d/postgresql-$(PGSQL_VERSION) 's/^#PGOPTS="-N 512 -B 1024"$/PGOPTS="-i -N 512 -B 1024"/'
