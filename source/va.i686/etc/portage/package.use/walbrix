@@ -21,5 +21,6 @@ dev-php/pecl-apcu php_targets_php5-4 -php_targets_php5-5
 dev-php/pecl-memcached php_targets_php5-4 -php_targets_php5-5
 
 dev-java/java-config -python_targets_python3_3
-dev-java/icedtea-bin -X -alsa -cups cjk
+dev-java/icedtea-bin -X -alsa cups cjk
 gnome-base/gsettings-desktop-schemas -introspection
+app-text/ghostscript-gpl cups
