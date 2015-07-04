@@ -307,19 +307,24 @@ def process_lstfile(context, lstfile):
 
     def device(args):
         parser = argparse.ArgumentParser()
+        parser.add_argument("--nonroot-friendly", action="store_true", help="make its mode 0666")
         parser.add_argument("type", type=str, help="device type(b or c)")
         parser.add_argument("name", type=str, help="device filename")
         parser.add_argument("major", type=int, help="major device number")
         parser.add_argument("minor", type=int, help="minor device number")
         args = parser.parse_args(args)
         if not args.name.startswith('/'): raise Exception("Device file name must start with '/'")
-        mode = 0600
-        if args.type == "b": mode |= stat.S_IFCHR
-        elif args.type == "c": mode |= stat.S_IFBLK
+        mode = 0666 if args.nonroot_friendly else 0600
+        if args.type == "b": mode |= stat.S_IFBLK
+        elif args.type == "c": mode |= stat.S_IFCHR
         else: raise Exception("Unknown device type '%s'" % args.type)
         name = "%s%s" % (context.destination, args.name)
         if os.path.exists(name): os.unlink(name)
         os.mknod(name, mode, os.makedev(args.major, args.minor))
+        if args.nonroot_friendly:
+            # According to https://www.soljerome.com/blog/2011/08/26/python-umask-inconsistencies/ , os.mknod is affected by running process' umask so we need to adjust its mode afterwards
+            os.chmod(name, 0666)
+        
 
     def setvar(args):
         if len(args) != 2: raise Exception("$set directive gets 2 args")
