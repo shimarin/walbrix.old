@@ -64,7 +64,7 @@ if [ "$CMD" = "initdb" ]; then
     /usr/bin/mysql_tzinfo_to_sql /usr/share/zoneinfo | /usr/bin/mysql --socket=$SOCKET -uroot mysql
 elif [ "$CMD" = "createdb" ]; then
     /usr/bin/mysql --socket=$SOCKET -u root -e "create database \`$DATABASE\`" || FAIL=1
-    if [ -n "$PASSWORD" ]; then
+    if [ -z "$PASSWORD" ]; then
         /usr/bin/mysql --socket=$SOCKET -u root -e "grant all privileges on \`$DATABASE\`.* to \`$USERNAME\`@localhost" || FAIL=1
     else
         /usr/bin/mysql --socket=$SOCKET -u root -e "grant all privileges on \`$DATABASE\`.* to \`$USERNAME\`@localhost identified by '$PASSWORD'" || FAIL=1
