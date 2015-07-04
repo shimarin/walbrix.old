@@ -1,0 +1,11 @@
+--- i686/etc/apache2/vhosts.d/default_vhost.include
++++ default_vhost.include
+@@ -70,4 +70,8 @@
+ 	Allow from all
+ </Directory>
+ 
++RewriteEngine on
++RewriteRule ^/$ /aipo/ [R=301,L]
++ProxyPass / ajp://localhost/
++
+ # vim: ts=4 filetype=apache

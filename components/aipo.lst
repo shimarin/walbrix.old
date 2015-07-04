@@ -1,0 +1,29 @@
+$require domU.lst
+$require cron.lst
+$require apache.lst
+$require postgresql.lst
+$require tomcat.lst
+$require postfix.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1aipo\2/'
+$exec "wget -O - https://aipo.googlecode.com/files/aipo7020ja_linux64.tar.gz | tar zxvf - -C /tmp && tar zxvf /tmp/aipo7020ja_linux/aipo7020.tar.gz -C /root && rm -rf /tmp/aipo7020ja_linux"
+$exec "cd /root && wget http://iij.dl.sourceforge.jp/aipo/60038/aipo7020ja_src.zip"
+$exec "rm -rf /var/lib/tomcat-8/webapps/ROOT && mv /root/aipo/src/webapps/* /var/lib/tomcat-8/webapps/"
+$mkdir /usr/local/aipo
+$exec "mv /root/aipo/license /root/aipo/logs /root/aipo/src/bin /root/aipo/src/tomcat_diff /usr/local/aipo/"
+$sed /var/lib/tomcat-8/webapps/aipo/WEB-INF/datasource/dbcp-org001.properties 's/cayenne.dbcp.username=postgres/cayenne.dbcp.username=aipo_postgres/g'
+$sed /var/lib/tomcat-8/webapps/ROOT/WEB-INF/datasource/dbcp-org001.properties 's/cayenne.dbcp.username=postgres/cayenne.dbcp.username=aipo_postgres/g'
+$sed /var/lib/tomcat-8/webapps/aipo/WEB-INF/conf/AipoResources.properties 's/aipo.webappserver.port=8080/aipo.webappserver.port=80/g'
+$exec "cp -a /root/aipo/src/initdata/psml /var/lib/tomcat-8/webapps/aipo/WEB-INF/"
+$exec "cp -a /root/aipo/src/initdata/files /var/lib/tomcat-8/webapps/aipo/WEB-INF/"
+$exec "cp -a /root/aipo/src/initdata/mail /var/lib/tomcat-8/webapps/aipo/WEB-INF/"
+$exec "dd if=/dev/urandom bs=16 count=1|base64 > /var/lib/tomcat-8/webapps/aipo/WEB-INF/conf/securityTokenKey.txt && cp /var/lib/tomcat-8/webapps/aipo/WEB-INF/conf/securityTokenKey.txt /var/lib/tomcat-8/webapps/ROOT/WEB-INF/classes/aipo/"
+$exec "wget -O /var/lib/tomcat-8/webapps/aipo/WEB-INF/conf/holidays_default.properties 'http://sourceforge.jp/frs/redir.php?m=jaist&f=%2Faipo%2F60038%2Fholidays_default.properties'"
+$exec "chown -R tomcat.tomcat /var/lib/tomcat-$(TOMCAT_VERSION)"
+$sed /etc/conf.d/tomcat-$(TOMCAT_VERSION) 's/^#JAVA_OPTS=.\+/JAVA_OPTS="-server -Xmx512M -Xms64M -Xss256k -Dsun.nio.cs.map=x-windows-iso2022jp\/ISO-2022-JP"/'
+$mkdir /tmp/postgresql
+$copy postgresql/operate.sh /tmp/postgresql/operate.sh
+$copy aipo/initial-database.sql /tmp/postgresql/initial-database.sql
+$exec "/tmp/postgresql/operate.sh createdb org001 aipo_postgres"
+$exec "/tmp/postgresql/operate.sh exec org001 '\i /root/aipo/src/initdata/sql/org001.sql' '\i /root/aipo/src/initdata/sql/sample.sql' '\i /tmp/postgresql/initial-database.sql'"
+$patch /etc/apache2/vhosts.d/default_vhost.include aipo/default_vhost.patch
+$deltree /tmp/postgresql /root/aipo

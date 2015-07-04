@@ -1,0 +1,16 @@
+{
+    "id":"aipo",
+    "version":"7.0.2",
+    "title":"Aipo 7.0.2",
+    "images":[{"url":"http://va.walbrix.net/img/aipo01.png"}],	
+    "tarball":"http://dist.walbrix.net/va/aipo-7.0.2-i686-jp.tar.xz",
+    "description":"オープンソースグループウェア 『アイポ』は、スケジュール管理機能、Webメール機能、 ワークフロー機能のほか、ブログ、掲示板機能などを搭載した、無料で利用できるグループウェアです。",
+    "minimum_ram":256,
+    "minimum_hd":3,
+
+    "uuid":"763aeaeb-5e7b-4e19-9f7c-e492b3e71c95",
+    "instruction":{
+        "ja":"デフォルトの管理者ユーザー名とパスワードは admin/adminです",
+        "en":"The initial admin ID and password is admin/admin"
+    }
+}
