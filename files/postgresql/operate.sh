@@ -27,11 +27,13 @@ elif [ "$CMD" = "createdb" ];then
         PASSWORD=$3
     fi
 elif [ "$CMD" = "exec" ]; then
-    if [ $# -lt 2 ]; then
-        echo "$0 exec DATABASE SQL [SQL...]"
+    if [ $# -lt 3 ]; then
+        echo "$0 exec DATABASE USERNAME SQL [SQL...]"
         exit -1
     fi
     DATABASE=$1
+    USERNAME=$2
+    shift
     shift
 else
     echo "Invalid command"
@@ -73,7 +75,7 @@ if [ "$CMD" = "createdb" ]; then
 elif [ "$CMD" = "exec" ]; then
     IFS=$'\t'
     for sql in $@; do
-        psql -U postgres -d "$DATABASE" -c "$sql"
+        psql -U postgres -d "$DATABASE" -U "$USERNAME" -c "$sql"
     done
 fi
 
