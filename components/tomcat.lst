@@ -1,0 +1,28 @@
+$require java.lst
+$set TOMCAT_VERSION 8
+$package dev-java/ant-core
+$package dev-java/commons-pool  # < 2
+
+$package dev-java/slf4j-api  # needed by jdbc-mysql
+$package dev-java/jdbc-mysql
+
+$package dev-java/jdbc-postgresql
+
+$package dev-java/glassfish-transaction-api # needed by commons-dbcp
+$package dev-java/commons-dbcp
+
+$package dev-java/tomcat-servlet-api
+$package dev-java/eclipse-ecj
+$package dev-java/ant-eclipse-ecj
+$package dev-java/sun-javamail
+$package www-servers/tomcat-$(TOMCAT_VERSION).0.23-r1
+
+$exec "/usr/share/tomcat-$(TOMCAT_VERSION)/gentoo/tomcat-instance-manager.bash --create"
+
+$sed /etc/tomcat-$(TOMCAT_VERSION)/server.xml 's/redirectPort="8443" /redirectPort="8443" URIEncoding="UTF-8" /'
+$copy tomcat/context.xml /etc/tomcat-$(TOMCAT_VERSION)/context.xml
+$exec "chmod g+w /var/lib/tomcat-$(TOMCAT_VERSION)/webapps"
+$sed /etc/conf.d/tomcat-$(TOMCAT_VERSION) 's/^#TOMCAT_EXTRA_JARS=""/TOMCAT_EXTRA_JARS="commons-dbcp,commons-pool,jdbc-mysql,jdbc-postgresql,sun-javamail"/'
+$patch /etc/tomcat-$(TOMCAT_VERSION)/server.xml tomcat/server.xml.patch
+
+$symlink /etc/runlevels/default/tomcat-$(TOMCAT_VERSION) /etc/init.d/tomcat-$(TOMCAT_VERSION)

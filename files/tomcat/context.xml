@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+  <!-- MySQL example -->
+  <!--
+  <Resource name="jdbc/EXAMPLE" auth="Container"
+            type="javax.sql.DataSource"
+            maxActive="100" maxIdle="30" maxWait="10000"
+            username="EXAMPLE" password="SECRET"
+            driverClassName="com.mysql.jdbc.Driver"
+            factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+            url="jdbc:mysql://localhost:3306/EXAMPLE?autoReconnect=true"/>
+  -->
+
+  <!-- H2 Database example -->
+  <!--
+  <Resource name="jdbc/EXAMPLE" auth="Container"
+            type="javax.sql.DataSource"
+            driverClassName="org.h2.Driver"
+            factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+            url="jdbc:h2:/var/lib/tomcat7/db/EXAMPLE;MVCC=true"
+            username="sa" password=""
+            maxActive="5" maxIdle="2" maxWait="1000" />
+  -->
+
+  <!-- localhost SMTP session example -->
+  <!--
+  <Resource name="mail/Session" auth="Container"
+            type="javax.mail.Session" mail.smtp.host="localhost"/>
+  -->
+
+  <!-- gmail session example -->
+  <!--
+  <Resource name="mail/Session"
+            type="javax.mail.Session"
+            auth="Container"
+            mail.smtp.user="EXAMPLE@gmail.com"
+            password="SECRET"
+            mail.transport.protocol="smtp"
+            mail.host="smtp.gmail.com"
+            mail.smtp.auth="true"
+            mail.smtp.host="smtp.gmail.com"
+            mail.smtp.port="465"
+            mail.debug="true"
+            mail.smtp.socketFactory.port="465"
+            mail.smtp.socketFactory.class="javax.net.ssl.SSLSocketFactory"
+            mail.smtp.socketFactory.fallback="false"/>
+  -->
+</Context>

@@ -1,0 +1,10 @@
+--- server.xml.orig	2015-05-07 12:05:18.979317587 +0900
++++ server.xml	2015-05-07 12:05:46.099133265 +0900
+@@ -136,6 +136,7 @@
+                prefix="localhost_access_log" suffix=".txt"
+                pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+ 
++	<Valve className="org.apache.catalina.valves.RemoteIpValve" protocolHeader="x-forwarded-proto"/>
+       </Host>
+     </Engine>
+   </Service>
