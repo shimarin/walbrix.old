@@ -2,3 +2,5 @@
 $package net-mail/mailbase
 $package dev-libs/cyrus-sasl
 $package mail-mta/postfix # USE="sasl"
+$symlink /etc/runlevels/default/postfix /etc/init.d/postfix
+$exec /usr/bin/newaliases
