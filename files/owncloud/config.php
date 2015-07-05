@@ -8,6 +8,7 @@ $CONFIG = array (
   ),
   'datadirectory' => '/var/www/localhost/htdocs/data',
   'overwrite.cli.url' => 'http://localhost',
+  'memcache.local' => '\OC\Memcache\APCu',
   'dbtype' => 'mysql',
   'version' => '8.1.0.8',
   'dbname' => 'owncloud',

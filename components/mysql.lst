@@ -2,7 +2,7 @@ $package dev-lang/perl # for mysql_install_db
 
 #dev-libs/libaio
 #app-arch/libarchive
-$package dev-db/mysql # exclude /var/run/
+$package dev-db/mysql --exclude='/var/run/'
 $sed /etc/mysql/my.cnf 's/^log-bin$/#log-bin/'  # disable binary log
 
 /usr/include/mysql/mysql_version.h
