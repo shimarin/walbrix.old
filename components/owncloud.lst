@@ -43,7 +43,6 @@ $copy owncloud/initial-database-custom.sql /tmp/mysql/initial-database-custom.sq
 $exec '/tmp/mysql/operate.sh exec owncloud "source /tmp/mysql/initial-database.sql" "source /tmp/mysql/initial-database-custom.sql"'
 # </after installation>
 
-$deltree /tmp/mysql
 $mkdir /var/lib/owncloud
 $exec "chown -R apache.apache /var/www/localhost /var/lib/owncloud"
 
