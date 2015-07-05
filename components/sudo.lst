@@ -1,1 +1,1 @@
-$package app-admin/sudo # USE="-sendmail"
+$package app-admin/sudo --exclude='^/usr/share/examples/' --use='-sendmail pam'

@@ -1,4 +1,4 @@
-import argparse,json
+import argparse,json,sys
 import lxml.etree
 
 def run(catalog):
@@ -17,11 +17,12 @@ def run(catalog):
             instruction = lxml.etree.Element("instruction")
             instruction.text = catalog["instruction"]
             root.append(instruction)
-                
-    print lxml.etree.tostring(root, pretty_print=True, encoding='UTF-8', xml_declaration=True)
+    return lxml.etree.ElementTree(root)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("catalog", type=str, help="catalog file")
     args = parser.parse_args()
-    run(json.load(open(args.catalog)))
+    etree = run(json.load(open(args.catalog)))
+    etree.write(sys.stdout, pretty_print=True, encoding='UTF-8', xml_declaration=True)
+

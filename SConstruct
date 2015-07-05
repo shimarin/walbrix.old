@@ -36,10 +36,9 @@ env.Command("upload", "walbrix", "s3cmd put -P $SOURCE s3://dist.walbrix.net/wal
 def define_va_target(artifact, arch, region):
     build_dir = "build/%s-%s-%s" % (artifact, arch, region)
     source_dir = "source/va.%s" % arch
-    variables = "--var=ARCH=%s --var=REGION=%s --var=LANGUAGE=%s" % (arch, region, region_to_locale[region]["language"])
+    variables = "--var=ARTIFACT=%s --var=ARCH=%s --var=REGION=%s --var=LANGUAGE=%s" % (artifact, arch, region, region_to_locale[region]["language"])
     lstfile = "components/%s.lst" % artifact
-    env.Command("%s/etc/wb-va.xml" % build_dir, "catalog/%s-%s-%s.json" % (artifact, arch, region), "rm -rf %s && mkdir -p %s/etc && ./catalog2vadesc $SOURCE > $TARGET" % (build_dir, build_dir))
-    env.Command("%s-%s-%s.tar.xz" % (artifact,arch,region), ["components/%s.lst" % artifact, "%s/etc/wb-va.xml" % build_dir], "./collect --source %s %s %s %s && tar Jcvpf $TARGET -C %s ." % (source_dir, variables, lstfile, build_dir, build_dir))
+    env.Command("%s-%s-%s.tar.xz" % (artifact,arch,region), ["components/%s.lst" % artifact], "./collect --source %s %s %s %s && tar Jcvpf $TARGET -C %s ." % (source_dir, variables, lstfile, build_dir, build_dir))
 
 ## end rule defs ##
 
@@ -55,4 +54,3 @@ if len(COMMAND_LINE_TARGETS) > 0:
         if va_match:
             (artifact, arch, region) = va_match.groups()
             define_va_target(artifact, arch, region)
-

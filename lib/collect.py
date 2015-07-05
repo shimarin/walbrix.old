@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
-import os,re,glob,struct,stat,shutil,subprocess,argparse,shlex
+import os,re,glob,struct,stat,shutil,subprocess,argparse,shlex,json
 import chardet # emerge dev-python/chardet
 import magic # emerge python-magic
-import kernelver
+import lxml.etree
+import kernelver,catalog2vadesc
 
 _elf = re.compile('.*ELF.+dynamically linked.*')
 
@@ -28,6 +29,8 @@ class Context:
         self.copied_up_paths.add(path)
     def set_variable(self, key, value):
         self.vars[key] = value
+    def get_variable(self, key):
+        return self.vars.get(key)
     def apply_variables(self, str):
         if str == None: return None
         for key, value in self.vars.iteritems():
@@ -137,19 +140,24 @@ def process_file(context, filename):
         except Exception as e:
             print(e)
 
-def process_package(context, contents_file): # todo: support exclude patterns
-    def is_needed(filename):
-        exclude_prefixes = ["/usr/share/doc/", "/usr/share/info/", "/usr/share/gtk-doc/", "/usr/share/man/", "/usr/include/", "/usr/lib/pkgconfig/", "/usr/lib64/pkgconfig/","/dev/","/etc/portage/"]
+def process_package(context, package_dir, exclude_patterns, expected_use_flags):
+    def is_needed(filename, exclude_patterns):
+        exclude_prefixes = ["/usr/share/doc/", "/usr/share/info/", "/usr/share/gtk-doc/", "/usr/share/man/", "/usr/include/", "/usr/lib/pkgconfig/", "/usr/lib64/pkgconfig/","/usr/share/pkgconfig/","/dev/","/etc/portage/"]
         for pfx in exclude_prefixes:
             if filename.startswith(pfx): return False
 
-        exclude_patterns = [r"^/usr/lib(64)?/.*lib.+\.a$",r"^/usr/share/locale/(?!ja).+?/"]
-        # todo: support exclude patterns
-        for ptn in exclude_patterns:
+        for ptn in exclude_patterns + [r"^/usr/lib(64)?/.*lib.+\.a$",r"^/usr/share/locale/(?!ja).+?/"]:
             if re.compile(ptn).match(filename): return False
         return True
 
-    with open(contents_file) as f:
+    # Check USE flag requirements
+    use_flags = open("%s/USE" % package_dir).read().split()
+    for u in expected_use_flags:
+        if u.startswith('-'):
+            if u[1:] in use_flags: raise Exception("USE flag %s is set when it shouldn't be." % u[1:])
+        elif u not in use_flags: raise Exception("USE flag %s is missing when it should be." % u)
+
+    with open("%s/CONTENTS" % package_dir) as f:
         line = f.readline()
         while line:
             splitted = line.strip().split(' ')
@@ -159,7 +167,7 @@ def process_package(context, contents_file): # todo: support exclude patterns
                 filename = ' '.join(splitted[1:-2])
             elif ent_type == "sym":
                 filename = ' '.join(splitted[1:-1]).split(" -> ")[0]
-            if filename is not None and is_needed(filename):
+            if filename is not None and is_needed(filename, exclude_patterns):
                 process_file(context, filename)
             line = f.readline()
 
@@ -171,8 +179,12 @@ def process_lstfile(context, lstfile):
         process_lstfile(context, required_lstfile)
 
     def package(args):
-        if len(args) != 1: raise Exception("$package directive gets 1 argument")
-        target_package = context.apply_variables(args[0])
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--exclude", action="append", default=[], help="exclude pattern(can be used multiple times)")
+        parser.add_argument("--use", type=str, default="", help="USE flags to be expected")
+        parser.add_argument("package", type=str, help="package name")
+        args = parser.parse_args(args)
+        target_package = context.apply_variables(args.package)
         match = glob.glob(os.path.normpath("%s/var/db/pkg/%s/CONTENTS" % (context.source, target_package)))
         if len(match) < 1:
             match = glob.glob(os.path.normpath("%s/var/db/pkg/%s-[0-9]*/CONTENTS" % (context.source, target_package)))
@@ -180,7 +192,7 @@ def process_lstfile(context, lstfile):
             raise Exception("Package doesn't match: '%s'" % target_package)
         elif len(match) > 1:
             raise Exception("Package anbiguous: '%s', %d packages match" % (target_package, len(match)))
-        process_package(context, match[0])
+        process_package(context, os.path.dirname(match[0]), args.exclude, args.use.split())
         
     def kernel(args):
         if len(args) != 1: raise Exception("$kernel directive gets 1 argument")
@@ -324,11 +336,34 @@ def process_lstfile(context, lstfile):
         if args.nonroot_friendly:
             # According to https://www.soljerome.com/blog/2011/08/26/python-umask-inconsistencies/ , os.mknod is affected by running process' umask so we need to adjust its mode afterwards
             os.chmod(name, 0666)
-        
 
     def setvar(args):
         if len(args) != 2: raise Exception("$set directive gets 2 args")
         context.set_variable(args[0], context.apply_variables(args[1]))
+
+    def vadesc(args):
+        if len(args) != 0: raise Exception("$vadesc directive doesn't take args")
+        catalog_file = "catalog/%s-%s-%s.json" % (context.get_variable("ARTIFACT"), context.get_variable("ARCH"), context.get_variable("REGION"))
+        catalog = json.load(open(catalog_file))
+        etree = catalog2vadesc.run(catalog)
+        with open("%s/etc/wb-va.xml" % context.destination, "w") as f:
+            etree.write(f, pretty_print=True, encoding='UTF-8', xml_declaration=True)
+
+    def download(args):
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--filename", type=str, help="filename to save")
+        parser.add_argument("url", type=str, help="URL to download")
+        args = parser.parse_args(args)
+        url = context.apply_variables(args.url)
+        filename = os.path.basename(url) if args.filename is None else args.filename
+        cache_file = "download_cache/%s" % filename
+        progress_file = "download_cache/_download_in_progress"
+        if not os.path.exists(cache_file):
+            mkdir_p("download_cache")
+            subprocess.check_call(["wget","-O",progress_file,url])
+            os.rename(progress_file, cache_file)
+        mkdir_p("%s/tmp/download" % context.destination)
+        shutil.copy(cache_file, "%s/tmp/download/%s" % (context.destination, filename))
 
     directives = {
         "$require":require,
@@ -345,7 +380,9 @@ def process_lstfile(context, lstfile):
         "$mv":mv,
         "$patch":patch,
         "$device":device,
-        "$set":setvar
+        "$set":setvar,
+        "$vadesc":vadesc,
+        "$download":download
     }
     
     if context.is_lstfile_already_processed(lstfile): return
@@ -369,6 +406,12 @@ def run(lstfile, context):
     mkdir_p(context.destination)
     process_lstfile(context, lstfile)
 
+    # Cleanup /tmp
+    for item in os.listdir("%s/tmp" % context.destination):
+        filename = "%s/tmp/%s" % (context.destination, item)
+        if os.path.islink(filename) or not os.path.isdir(filename): os.unlink(filename)
+        else: shutil.rmtree(filename)
+
     # execute ldconfig if exists
     ldconfig = "%s/sbin/ldconfig" % context.destination
     if is_executable(ldconfig):
@@ -381,13 +424,18 @@ def parse_var(arg):
     return (kv[0].strip(), kv[1].strip())
 
 if __name__ == '__main__':
-    if os.getuid() != 0: raise Exception("You must be a root user.")
-
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=str, default="/", help="source directory")
     parser.add_argument("--var", type=str, action="append", default=[], help="variable")
     parser.add_argument("lstfile", type=str, help=".lst file")
     parser.add_argument("destination", type=str, help="destination directory")
     args = parser.parse_args()
-    context = Context(args.source, args.destination, dict(map(lambda x:parse_var(x), args.var)))
+
+    if os.getuid() != 0: raise Exception("You must be a root user.")
+
+    destination = args.destination
+    if destination.strip() == "": destination = "."
+    if os.path.abspath(destination) in ["/", "//"]: raise Exception("Setting system root directory as destination is totally insane.")
+
+    context = Context(args.source, destination, dict(map(lambda x:parse_var(x), args.var)))
     run(args.lstfile, context)
