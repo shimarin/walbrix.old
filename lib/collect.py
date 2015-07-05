@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import os,re,glob,struct,stat,shutil,subprocess,argparse,shlex,json
+import os,re,glob,struct,stat,shutil,subprocess,argparse,shlex,json,base64,hashlib
 import chardet # emerge dev-python/chardet
 import magic # emerge python-magic
 import lxml.etree
@@ -370,10 +370,25 @@ def process_lstfile(context, lstfile):
         parser.add_argument("--include", type=str, help="additional packages(comma separated)")
         parser.add_argument("dist", type=str, help="name of distribution such as 'jessie'")
         args = parser.parse_args(args)
+        dist = context.apply_variables(args.dist)
+        include = context.apply_variables(args.include)
         arch = {"x86_64":"amd64","i686":"i386"}[context.get_variable("ARCH")]
-        new_env = os.environ.copy()
-        new_env["PATH"] = "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin"
-        subprocess.check_call(["debootstrap","--no-check-gpg","--arch=%s" % arch,"--include=%s" % args.include,args.dist,context.destination], env=new_env)
+        include_hash = "none" if include is None else base64.b32encode(hashlib.sha1(include).digest())[:8]
+        cache_file = "download_cache/debootstrap-%s-%s-%s.tar.gz" % (dist, arch, include_hash)
+        if not os.path.isfile(cache_file):
+            debootstrap_dir = os.path.normpath(context.destination) + ".debootstrap"
+            mkdir_p(debootstrap_dir)
+            try:
+                new_env = os.environ.copy()
+                new_env["PATH"] = "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin"
+                subprocess.check_call(["debootstrap","--no-check-gpg","--arch=%s" % arch,"--include=%s" % args.include,dist,debootstrap_dir], env=new_env)
+                subprocess.check_call(["chroot", debootstrap_dir, "apt-get","clean"])
+                progress_file = "download_cache/_debootstrap_in_progress"
+                subprocess.check_call(["tar","zcvpf",progress_file,"-C",debootstrap_dir,"."])
+                os.rename(progress_file, cache_file)
+            finally:
+                shutil.rmtree(debootstrap_dir)
+        subprocess.check_call(["tar","zxvpf",cache_file,"-C",context.destination])
 
     directives = {
         "$require":require,
