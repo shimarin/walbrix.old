@@ -365,6 +365,16 @@ def process_lstfile(context, lstfile):
         mkdir_p("%s/tmp/download" % context.destination)
         shutil.copy(cache_file, "%s/tmp/download/%s" % (context.destination, filename))
 
+    def debootstrap(args):
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--include", type=str, help="additional packages(comma separated)")
+        parser.add_argument("dist", type=str, help="name of distribution such as 'jessie'")
+        args = parser.parse_args(args)
+        arch = {"x86_64":"amd64","i686":"i386"}[context.get_variable("ARCH")]
+        new_env = os.environ.copy()
+        new_env["PATH"] = "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin"
+        subprocess.check_call(["debootstrap","--no-check-gpg","--arch=%s" % arch,"--include=%s" % args.include,args.dist,context.destination], env=new_env)
+
     directives = {
         "$require":require,
         "$package":package,
@@ -382,7 +392,8 @@ def process_lstfile(context, lstfile):
         "$device":device,
         "$set":setvar,
         "$vadesc":vadesc,
-        "$download":download
+        "$download":download,
+        "$debootstrap":debootstrap
     }
     
     if context.is_lstfile_already_processed(lstfile): return
