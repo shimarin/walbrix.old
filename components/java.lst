@@ -1,9 +1,8 @@
 $set JAVA_VERSION 7
 $require python-exec.lst
-$package dev-java/java-config # --exclude=^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)
+$package dev-java/java-config --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
 $package dev-java/java-config-wrapper
-$package dev-java/icedtea-bin-$(JAVA_VERSION).2.5.5 # --exclude=^\/opt\/.+\/man\/  USE="-X -alsa cups cjk"
-# icedtea(-bin) depends on libcups.so no matter if cups USE flag is set
+$package dev-java/icedtea-bin-$(JAVA_VERSION).2.5.5 --exclude='^\/opt\/.+\/man\/' --use="-X -alsa cups cjk" # icedtea(-bin) depends on libcups.so no matter if cups USE flag is set
 
 #sys-apps/baselayout-java
 #gnome-base/gsettings-desktop-schemas  / ignored as it only needed for desktop app

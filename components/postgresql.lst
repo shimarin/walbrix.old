@@ -1,6 +1,6 @@
 $set PGSQL_VERSION 9.4
 #app-eselect/eselect-postgresql
-$package dev-db/postgresql-$(PGSQL_VERSION).3 # --exclude=^/usr/share/postgresql-9.4/man/
+$package dev-db/postgresql-$(PGSQL_VERSION).3 --exclude='^/usr/share/postgresql-.+/man/'
 
 $exec "ln -sf /usr/lib/postgresql-$(PGSQL_VERSION)/bin/* /usr/bin/"
 

@@ -1,1 +1,1 @@
-$package sys-apps/kbd # exclude ^/usr/share/consolefonts/
+$package sys-apps/kbd --exclude='^/usr/share/consolefonts/'
