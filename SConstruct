@@ -25,12 +25,14 @@ mkdir -p build/walbrix/wbui/usr/sbin && cp files/walbrix/wb build/walbrix/wbui/u
 git rev-parse HEAD|head -c 8 > $TARGET
 """)
 
+env.Command("build/walbrix/locale", "components/walbrix-ja_JP.lst", "./collect --source source/walbrix.x86_64 $SOURCE build/walbrix/locale/ja_JP")
+
 env.Command("build/walbrix/grubvars.cfg", marker_file_wbui, """
 echo "set WALBRIX_VERSION=`./kernelver -n source/walbrix.x86_64/boot/kernel`" > $TARGET
 echo "set WALBRIX_BUILD_ID=`cat $SOURCE`" >> $TARGET
 """)
     
-env.Command("walbrix", [marker_file_system["x86_64"], marker_file_system["i686"], marker_file_wbui, "build/walbrix/grubvars.cfg"], "mksquashfs build/walbrix $TARGET -noappend")
+env.Command("walbrix", [marker_file_system["x86_64"], marker_file_system["i686"], marker_file_wbui, "build/walbrix/locale", "build/walbrix/grubvars.cfg"], "mksquashfs build/walbrix $TARGET -noappend")
 env.Command("upload", "walbrix", "s3cmd put -P $SOURCE s3://dist.walbrix.net/walbrix")
 
 def define_va_target(artifact, arch, region):
