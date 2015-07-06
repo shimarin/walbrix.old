@@ -1,3 +1,6 @@
+/boot/kernel-genkernel-x86_64-3.14.46-aufs
+$symlink /boot/vmlinuz.domU kernel-genkernel-x86_64-3.14.46-aufs
+
 $require vim.lst
 $package dev-vcs/git
 

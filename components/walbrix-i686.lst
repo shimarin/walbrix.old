@@ -1,4 +1,7 @@
-$require nvi.lst
+/boot/kernel-genkernel-x86-3.2.69
+$symlink /boot/vmlinuz.domU kernel-genkernel-x86-3.2.69
+
+$require nvi.lst  # on i686, use nvi instead of vim
 
 # protect /lib symlink from overlay upper layer
 $mv /lib /lib32
