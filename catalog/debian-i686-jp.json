@@ -1,0 +1,13 @@
+{
+    "id": "debian",
+    "version": "8.1",
+    "title": "Debian GNU/Linux 8.1(jessie)", 
+    "description": "1993年発足の老舗 Linuxディストリビューションです。他の多くのディストリビューションの派生元にもなっていることから、その安定性・完成度の高さが伺えます。（サーバ向けのヘッドレス仕様で作成されます。GUIはありません）", 
+    "images": [{"url": "http://va.walbrix.net/img/debian01.png"}],
+    "tarball": "http://dist.walbrix.net/va/debian-8.1-i686.tar.xz",
+    "minimum_hd": 2,
+    "minimum_ram": 96,
+
+    "uuid":"e727c334-be0f-4d42-b214-dfe4e32ae3ab",
+    "instruction": "SSHを使って root権限でログインしてください。初期パスワードは Walbrixのシリアルナンバー(未設定の場合WBFREE01)です。"
+}
