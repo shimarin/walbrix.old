@@ -433,10 +433,12 @@ def run(lstfile, context):
     process_lstfile(context, lstfile)
 
     # Cleanup /tmp
-    for item in os.listdir("%s/tmp" % context.destination):
-        filename = "%s/tmp/%s" % (context.destination, item)
-        if os.path.islink(filename) or not os.path.isdir(filename): os.unlink(filename)
-        else: shutil.rmtree(filename)
+    tmpdir = "%s/tmp" % context.destination
+    if os.path.isdir(tmpdir):
+        for item in os.listdir(tmpdir):
+            filename = "%s/%s" % (tmpdir, item)
+            if os.path.islink(filename) or not os.path.isdir(filename): os.unlink(filename)
+            else: shutil.rmtree(filename)
 
     # execute ldconfig if exists
     ldconfig = "%s/sbin/ldconfig" % context.destination
