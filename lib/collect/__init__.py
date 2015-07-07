@@ -5,6 +5,8 @@ import magic # emerge python-magic
 import lxml.etree
 import kernelver,catalog2vadesc
 
+import execute
+
 _elf = re.compile('.*ELF.+dynamically linked.*')
 
 class Context:
@@ -50,6 +52,11 @@ def copy_up(context, path):
 def is_executable(filename):
     return os.path.isfile(filename) and os.access(filename, os.X_OK)
 
+def env_with_root_path():
+    new_env = os.environ.copy()
+    new_env["PATH"] = "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin"
+    return new_env
+
 def finish_path(context, path, stack):
     def touch(context, path):
         if path == None or path == "": return
@@ -81,7 +88,7 @@ def finish_path(context, path, stack):
             os.chown(path, uid, gid)
             print("%s(%s)->%s" % (d[1], str(mode), path))
 
-def process_path(srcpath, dstpath, stack = None):
+def process_path(context, srcpath, dstpath, stack = None):
     if stack == None: stack = []
     if os.path.isdir(dstpath) or dstpath == "":
         finish_path(context, dstpath, stack)
@@ -90,7 +97,7 @@ def process_path(srcpath, dstpath, stack = None):
     srcleft, srcright = os.path.split(srcpath)
     dstleft, dstright = os.path.split(dstpath)
     stack.append((dstright,srcpath))
-    process_path(srcleft, dstleft, stack)
+    process_path(context, srcleft, dstleft, stack)
         
 def process_file(context, filename):
     if context.is_file_already_collected(filename): return
@@ -99,7 +106,7 @@ def process_file(context, filename):
     dest = os.path.normpath("%s%s" % (context.destination, filename))
     if not os.path.lexists(src): raise Exception("%s:file not found" % (src))
     
-    process_path(os.path.normpath(os.path.dirname(src)), os.path.normpath(os.path.dirname(dest)))
+    process_path(context, os.path.normpath(os.path.dirname(src)), os.path.normpath(os.path.dirname(dest)))
 
     if os.path.isdir(src) and not os.path.islink(src): # process directory recursively
         for root, dirs, files in os.walk(src):
@@ -202,33 +209,8 @@ def process_lstfile(context, lstfile):
         context.set_variable("KERNEL_VERSION", kernel_version)
         print("KERNEL_VERSION set to %s" % kernel_version)
         
-    def execute(args):
-        parser = argparse.ArgumentParser()
-        parser.add_argument("--overlay", action="store_true", help="use overlay")
-        parser.add_argument("command", type=str, help="command to execute inside chroot")
-        args = parser.parse_args(args)
-        command = context.apply_variables(args.command)
-        print "$exec '%s'" % command
-        if args.overlay:
-            print "Using overlay"
-            overlay_dir = os.path.normpath(context.destination) + ".overlay"
-            overlay_root = overlay_dir + "/root"
-            overlay_work = overlay_dir + "/work"
-            mkdir_p(overlay_root)
-            mkdir_p(overlay_work)
-            try:
-                overlayfs_opts = "lowerdir=%s,upperdir=%s,workdir=%s" % (context.source,context.destination,overlay_work)
-                subprocess.check_call(["mount","-t","overlay","overlay","-o",overlayfs_opts,overlay_root])
-                try:
-                    if is_executable("%s/sbin/ldconfig" % overlay_root): subprocess.check_call(["chroot", overlay_root, "/sbin/ldconfig"])
-                    subprocess.check_call(["chroot", overlay_root, "/bin/sh", "-c", command])
-                finally:
-                    subprocess.check_call(["umount", overlay_root])
-            finally:
-                shutil.rmtree(overlay_dir)
-        else:
-            if is_executable("%s/sbin/ldconfig" % context.destination): subprocess.check_call(["chroot", context.destination, "/sbin/ldconfig"])
-            subprocess.check_call(["chroot", context.destination, "/bin/sh", "-c", command])
+    def _execute(args):
+        execute.apply(context, args)
 
     def mkdir(args):
         if len(args) < 1: raise Exception("$mkdir directive gets at least 1 argument")
@@ -379,9 +361,7 @@ def process_lstfile(context, lstfile):
             debootstrap_dir = os.path.normpath(context.destination) + ".debootstrap"
             mkdir_p(debootstrap_dir)
             try:
-                new_env = os.environ.copy()
-                new_env["PATH"] = "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin"
-                subprocess.check_call(["debootstrap","--no-check-gpg","--arch=%s" % arch,"--include=%s" % args.include,dist,debootstrap_dir], env=new_env)
+                subprocess.check_call(["debootstrap","--no-check-gpg","--arch=%s" % arch,"--include=%s" % args.include,dist,debootstrap_dir], env=env_with_root_path())
                 subprocess.check_call(["chroot", debootstrap_dir, "apt-get","clean"])
                 progress_file = "download_cache/_debootstrap_in_progress"
                 subprocess.check_call(["tar","zcvpf",progress_file,"-C",debootstrap_dir,"."])
@@ -394,7 +374,7 @@ def process_lstfile(context, lstfile):
         "$require":require,
         "$package":package,
         "$kernel":kernel,
-        "$exec":execute,
+        "$exec":_execute,
         "$mkdir":mkdir,
         "$deltree":deltree,
         "$symlink":symlink,
@@ -445,25 +425,3 @@ def run(lstfile, context):
     if is_executable(ldconfig):
         print "Executing /sbin/ldconfig..."
         subprocess.check_call(["chroot", context.destination, "/sbin/ldconfig"])
-
-def parse_var(arg):
-    kv = arg.split('=', 1)
-    if len(kv) < 2: raise Exception("Invalid variable format (KEY=VALUE expected)")
-    return (kv[0].strip(), kv[1].strip())
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--source", type=str, default="/", help="source directory")
-    parser.add_argument("--var", type=str, action="append", default=[], help="variable")
-    parser.add_argument("lstfile", type=str, help=".lst file")
-    parser.add_argument("destination", type=str, help="destination directory")
-    args = parser.parse_args()
-
-    if os.getuid() != 0: raise Exception("You must be a root user.")
-
-    destination = args.destination
-    if destination.strip() == "": destination = "."
-    if os.path.abspath(destination) in ["/", "//"]: raise Exception("Setting system root directory as destination is totally insane.")
-
-    context = Context(args.source, destination, dict(map(lambda x:parse_var(x), args.var)))
-    run(args.lstfile, context)
