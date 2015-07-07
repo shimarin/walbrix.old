@@ -14,6 +14,8 @@ env['MKISOFS_OPTS'] = "-J -r -b boot/boot.img -no-emul-boot -boot-load-size 4 -b
 
 ## begin rule defs ##
 
+env.Decider('timestamp-newer')
+
 region_to_locale = {
     "jp":{"locale":"ja_JP","language":"ja"}
 }
@@ -42,7 +44,7 @@ env.Command("build/walbrix/grubvars.cfg", "$WBUI_MARKER", """
 echo "set WALBRIX_VERSION=`./kernelver -n source/walbrix.x86_64/boot/kernel`" > $TARGET
 echo "set WALBRIX_BUILD_ID=`cat $SOURCE`" >> $TARGET
 """)
-    
+
 env.Command("walbrix", ["$SYSTEM_64_MARKER", "$SYSTEM_32_MARKER", "$WBUI_MARKER", "build/walbrix/locale", "build/walbrix/grubvars.cfg"], "mksquashfs build/walbrix $TARGET -noappend")
 env.Command("upload", "walbrix", "s3cmd put -P $SOURCE s3://dist.walbrix.net/walbrix")
 
