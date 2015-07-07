@@ -1,7 +1,6 @@
 $require system.lst
 $require kernel.lst
 $require xen.lst
-$require kbd.lst
 
 $require rescue.lst
 
@@ -17,19 +16,7 @@ $require avahi.lst
 $write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
 
 # wbui
-$require pygame.lst
-$require pyalsaaudio.lst
-$require vlgothic.lst
-$require fbterm.lst
-/usr/bin/curl
-/usr/bin/fbset
-$copy walbrix/wbgetty /usr/sbin/wbgetty
-
-# used by wbui and tools
-$package sys-fs/dosfstools
-$package sys-fs/lsscsi
-$package sys-fs/xfsprogs
-$package sys-block/parted
+$require wbui-deps.lst
 
 # tools
 /usr/bin/strace

@@ -1,0 +1,14 @@
+$require pygame.lst
+$package dev-python/pypam
+$require pyalsaaudio.lst
+$require vlgothic.lst
+$require fbterm.lst
+/usr/bin/curl
+/usr/bin/fbset
+$copy walbrix/wbgetty /usr/sbin/wbgetty
+
+# used by wbui and tools
+$package sys-fs/dosfstools
+$package sys-fs/lsscsi
+$package sys-fs/xfsprogs
+$package sys-block/parted
