@@ -1,5 +1,12 @@
-import argparse,subprocess,shutil,os,contextlib
+import argparse,subprocess,shutil,os,contextlib,time
 import collect
+
+def patient_unmount(path):
+    for i in [1,2,3,4,5]:
+        if subprocess.call(["umount",path]) == 0: return
+        print "Unmounting %s failed. retrying..." % path
+        time.sleep(3)
+    raise Exception("Unmounting %s failed despite retrying.")
 
 @contextlib.contextmanager
 def proc_dev(root):
@@ -8,15 +15,15 @@ def proc_dev(root):
     mount_proc = os.path.isdir(proc)
     mount_dev = os.path.isdir(dev)
 
-    if mount_proc: subprocess.check_call(["mount","-o","bind","/proc","%s/proc" % root])
+    if mount_proc: subprocess.check_call(["mount","-o","bind","/proc",proc])
     try:
-        if mount_dev: subprocess.check_call(["mount","-o","bind","/dev","%s/dev" % root])
+        if mount_dev: subprocess.check_call(["mount","-o","bind","/dev",dev])
         try:
             yield
         finally:
-            if mount_dev: subprocess.check_call(["umount","%s/dev" % root])
+            if mount_dev: patient_unmount(dev)
     finally:
-        if mount_proc: subprocess.check_call(["umount","%s/proc" % root])
+        if mount_proc: patient_unmount(proc)
 
 def apply(context, args):
     parser = argparse.ArgumentParser()
