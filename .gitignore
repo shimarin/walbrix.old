@@ -5,4 +5,5 @@ download_cache/
 .sconsign.dblite
 walbrix
 *.xz
+*.iso
 
