@@ -1,7 +1,4 @@
 /boot/kernel
 /boot/initramfs
-$kernel /boot/kernel
-/lib/modules/$(KERNEL_VERSION)
-/lib/firmware
-$exec "/sbin/depmod $(KERNEL_VERSION)"
+$require kernel-modules.lst
 
