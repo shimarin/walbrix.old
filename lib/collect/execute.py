@@ -3,15 +3,20 @@ import collect
 
 @contextlib.contextmanager
 def proc_dev(root):
-    subprocess.check_call(["mount","-o","bind","/proc","%s/proc" % root])
+    proc = "%s/proc" % root
+    dev = "%s/dev" % root
+    mount_proc = os.path.isdir(proc)
+    mount_dev = os.path.isdir(dev)
+
+    if mount_proc: subprocess.check_call(["mount","-o","bind","/proc","%s/proc" % root])
     try:
-        subprocess.check_call(["mount","-o","bind","/dev","%s/dev" % root])
+        if mount_dev: subprocess.check_call(["mount","-o","bind","/dev","%s/dev" % root])
         try:
             yield
         finally:
-            subprocess.check_call(["umount","%s/dev" % root])
+            if mount_dev: subprocess.check_call(["umount","%s/dev" % root])
     finally:
-        subprocess.check_call(["umount","%s/proc" % root])
+        if mount_proc: subprocess.check_call(["umount","%s/proc" % root])
 
 def apply(context, args):
     parser = argparse.ArgumentParser()
