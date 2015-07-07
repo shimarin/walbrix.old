@@ -1,0 +1,14 @@
+$require system.lst
+$require kernel-modules.lst
+$require wbui-deps.lst
+
+$sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBINSTALL"/'
+
+$sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
+$sed /etc/inittab 's/tty1 linux/--noclear --autologin root tty1 linux/'
+
+$symlink /etc/init.d/net.eth0 net.lo
+$symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
+
+$copy installer/init /init
+$write /etc/fstab 'tmpfs\t/\tmpfs\tdefaults\t0 0'

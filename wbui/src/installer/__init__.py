@@ -517,7 +517,11 @@ def main(options, args):
     if driver == "directfb": displayMode = pygame.FULLSCREEN
     elif driver == "fbcon": displayMode |= pygame.FULLSCREEN
 
-    screen = pygame.display.set_mode((640,480), displayMode)
+    try:
+        screen = pygame.display.set_mode((640,480), displayMode)
+    except pygame.error, e: # 何らかの理由で失敗した場合、引数全省略でset_modeする
+        screen = pygame.display.set_mode()
+
     clock = pygame.time.Clock()
 
     joystick = pygame.joystick.Joystick(0) if pygame.joystick.get_count() > 0 else None

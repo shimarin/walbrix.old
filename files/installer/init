@@ -1,0 +1,23 @@
+#!/bin/sh
+mount -t proc -o noexec,nosuid,nodev proc /proc >/dev/null 2>&1
+CMDLINE=$(cat /proc/cmdline)
+umount /proc
+
+LOCALE='ja_JP'
+
+for x in ${CMDLINE}
+do
+	case "${x}" in
+		walbrix.locale=*)
+			LOCALE=${x#*=}
+		;;
+	esac
+done
+
+mount -o remount,rw / >/dev/null 2>&1
+
+if [ -n "$LOCALE" ]; then
+    cp -a /.locale/$LOCALE/. /
+fi
+
+exec /sbin/init $@
