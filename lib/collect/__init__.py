@@ -5,7 +5,7 @@ import magic # emerge python-magic
 import lxml.etree
 import kernelver,catalog2vadesc
 
-import execute
+import execute,kernel
 
 _elf = re.compile('.*ELF.+dynamically linked.*')
 
@@ -201,13 +201,8 @@ def process_lstfile(context, lstfile):
             raise Exception("Package anbiguous: '%s', %d packages match" % (target_package, len(match)))
         process_package(context, os.path.dirname(match[0]), args.exclude, args.use.split())
         
-    def kernel(args):
-        if len(args) != 1: raise Exception("$kernel directive gets 1 argument")
-        kernelfile = os.path.normpath("%s/%s" % (context.source, context.apply_variables(args[0])))
-        print("Getting KERNEL_VERSION from %s" % kernelfile)
-        kernel_version = kernelver.get_kernel_version_string(kernelfile)
-        context.set_variable("KERNEL_VERSION", kernel_version)
-        print("KERNEL_VERSION set to %s" % kernel_version)
+    def _kernel(args):
+        kernel.apply(context, args)
         
     def _execute(args):
         execute.apply(context, args)
@@ -373,7 +368,7 @@ def process_lstfile(context, lstfile):
     directives = {
         "$require":require,
         "$package":package,
-        "$kernel":kernel,
+        "$kernel":_kernel,
         "$exec":_execute,
         "$mkdir":mkdir,
         "$deltree":deltree,
