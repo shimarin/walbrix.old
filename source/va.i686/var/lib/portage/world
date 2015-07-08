@@ -3,6 +3,7 @@ app-admin/logrotate
 app-admin/sudo
 app-admin/sysklogd
 app-arch/zip
+app-editors/nvi
 app-portage/gentoolkit
 dev-db/mysql
 dev-java/commons-dbcp
