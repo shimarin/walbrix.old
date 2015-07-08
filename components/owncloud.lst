@@ -19,7 +19,7 @@ $download https://download.owncloud.org/community/$(OWNCLOUD_TAR)
 $exec "tar jxvf /tmp/download/$(OWNCLOUD_TAR) -C /var/www/localhost"
 $exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/owncloud /var/www/localhost/htdocs"
 
-# patch
+# file disappeared in oc 8.1
 #$patch /var/www/localhost/htdocs/apps/files_texteditor/ajax/loadfile.php owncloud/loadfile.php.patch
 
 # replace font
@@ -32,16 +32,11 @@ $mkdir /tmp/mysql
 $copy mysql/operate.sh /tmp/mysql/operate.sh
 $exec "/tmp/mysql/operate.sh createdb owncloud"
 
-# <after installation>
-$copy owncloud/config.php /var/www/localhost/htdocs/config/config.php   # make trusted_domains empty array, overwrite.cli.url=http://localhost and use APCu
-$copy owncloud/htaccess /var/www/localhost/htdocs/.htaccess
-$exec "mkdir -p /var/www/localhost/htdocs/data/admin/cache && touch /var/www/localhost/htdocs/data/index.html /var/www/localhost/htdocs/data/.ocdata"
-$copy owncloud/data-htaccess /var/www/localhost/htdocs/data/.htaccess
-$exec "cp -a /var/www/localhost/htdocs/core/skeleton /var/www/localhost/htdocs/data/admin/files"
-$copy owncloud/initial-database.sql /tmp/mysql/initial-database.sql
-$copy owncloud/initial-database-custom.sql /tmp/mysql/initial-database-custom.sql
-$exec '/tmp/mysql/operate.sh exec owncloud "source /tmp/mysql/initial-database.sql" "source /tmp/mysql/initial-database-custom.sql"'
-# </after installation>
+$write /etc/conf.d/app-init 'rc_after="mysql"\nrc_before="apache2"'
+$copy owncloud/app-init /etc/init.d/app-init
+$symlink /etc/runlevels/default/app-init /etc/init.d/app-init
+
+$copy owncloud/config.php /var/www/localhost/htdocs/config/config.php
 
 $mkdir /var/lib/owncloud
 $exec "chown -R apache.apache /var/www/localhost /var/lib/owncloud"
