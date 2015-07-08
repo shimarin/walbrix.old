@@ -1,0 +1,9 @@
+[Unit]
+Description=Setup Zram
+Before=dev-zram0.swap
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/bin/sh -c "/usr/bin/grep MemTotal: /proc/meminfo | /usr/bin/awk '{print $2*1024}' > /sys/block/zram0/disksize"
+ExecStart=/usr/sbin/mkswap /dev/zram0

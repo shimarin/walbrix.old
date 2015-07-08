@@ -1,0 +1,47 @@
+<html lang="ja" ng-app="MyApp">
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>CentOS - Walbrix仮想アプライアンス</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
+    <script language="JavaScript">
+      angular.module("MyApp", [])
+      .run(["$rootScope","$location", function($scope, $location) {
+        $scope.hostname=$location.host();
+      }]);
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://www.walbrix.net">Walbrixについて</a></li>
+        </ul>
+        <h3 class="text-muted">Walbrix 仮想アプライアンス</h3>
+      </div>
+      <div class="jumbotron">
+	<h1>CentOS</h1>
+	<p>Apache, MySQL, PHPがインストール済みの CentOSサーバ環境です</p>
+	<p>オフィシャルサイト: <a href="http://www.centos.org">http://www.centos.org</a></p>
+      </div>
+      <h3>MySQLについて</h3>
+      <p><a href="/phpmyadmin/">phpMyAdmin</a>で MySQLの管理を行うことができます。<br/>
+      MySQLには管理者 (root) で、パスワードは無しでログインできます。設定により、パスワードなしでログインできるのは LAN内からのアクセスのみですので、必要に応じてパスワードを設定してください。</p>
+      <h3>Webコンテンツの編集</h3>
+      <p>Windows共有で下記の共有フォルダへアクセスすることが出来ます。htmlファイル、phpファイル、画像、css、JavaScriptなどをここに保存することで、Webブラウザからアクセス可能になります。</p>
+      <ul>
+	<li>¥¥{{hostname}}¥html - Webサーバのコンテンツを配置する場所(このページもここにあります)</li>
+      </ul>
+      <h3>PHPについて</h3>
+      <p>標準で　GDライブラリが組み込まれており、mbstringも有効になっています。</p>
+      <h3>SSHによるログイン</h3>
+      <p>sshでログインすることもできます。rootの初期パスワードは Walbrixのシリアルナンバー（未登録の場合 WBFREE01）です。</p>
+
+      <div class="footer">
+	<p>© <a href="http://www.walbrix.com/jp/">Walbrix Corporation</a> 2009-2015</p>
+      </div>
+    </div>
+</html>

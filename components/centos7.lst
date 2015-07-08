@@ -1,0 +1,50 @@
+$rpmbootstrap 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/7.1.1503/os/x86_64/Packages/centos-release-7-1.1503.el7.centos.2.8.x86_64.rpm' --include='vim-minimal less initscripts passwd tar net-tools'
+
+$require domU-kernel.lst
+
+$write /etc/yum.conf --append 'exclude=kernel,kernel-firmware'
+$write /etc/rpm/platform "$(ARCH)-centos-linux"
+$sed /etc/sysconfig/init 's/^ACTIVE_CONSOLES=.*$/ACTIVE_CONSOLES=\/dev\/hvc0/'
+$write /etc/sysconfig/network-scripts/ifcfg-eth0 'DEVICE="eth0"\nBOOTPROTO=dhcp\nONBOOT=yes\nTYPE="Ethernet"'
+$write /etc/hostname "centos"
+$copy systemd/setup-zram0.service /etc/systemd/system/setup-zram0.service
+$mkdir /etc/systemd/system/dev-zram0.swap.wants
+$symlink /etc/systemd/system/dev-zram0.swap.wants/setup-zram0.service ../setup-zram0.service
+$sed /etc/shadow 's/^\(root:\)[^:]*\(:.*\)$/\1\2/'
+$write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
+$write /etc/selinux/config "SELINUX=disabled"
+$write /etc/fstab '/dev/xvda1 /                       xfs     defaults        1 1\n/dev/zram0 swap                    swap    defaults        0 0'
+$exec "mkdir /root/.ssh && chmod 700 /root/.ssh && touch /root/.ssh/authorized_keys"
+$exec "yum install -y samba4 avahi ntp lzo dhclient openssh-server openssh-clients rsyslog xfsprogs NetworkManager"
+$sed /etc/avahi/avahi-daemon.conf 's/^#disallow-other-stacks=no$/disallow-other-stacks=yes/'
+$exec "systemctl enable nmb.service"
+$exec "systemctl enable ntpd.service"
+$exec "yum clean -y all"
+
+# LAMP stack
+$exec "yum install -y php-mysql mariadb-server httpd vsftpd php php-mbstring php-mcrypt php-gd wget xz"
+$exec "yum clean -y all"
+$exec "systemctl enable smb.service"
+$exec "systemctl enable httpd.service"
+$exec "systemctl enable mariadb.service"
+$exec "systemctl enable vsftpd.service"
+$write /etc/httpd/conf.d/remoteip.conf '<IfModule remoteip_module>\n    RemoteIPHeader X-Forwarded-For\n    RemoteIPTrustedProxy 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 169.254.0.0/16 127.0.0.0/8\n</IfModule>'
+$sed /etc/httpd/conf/httpd.conf 's/LogFormat "%h/LogFormat "%a/'
+$copy centos/index.html /var/www/html/index.html
+
+$download https://files.phpmyadmin.net/phpMyAdmin/4.4.11/phpMyAdmin-4.4.11-all-languages.tar.xz
+$exec "tar Jxvf /tmp/download/phpMyAdmin-*.xz -C /var/www/html && mv /var/www/html/phpMyAdmin-* /var/www/html/phpmyadmin"
+$copy phpmyadmin/config.inc.php /var/www/html/phpmyadmin/config.inc.php
+$exec "chown -R apache.apache /var/www /var/log/httpd"
+#patchsinglefile /etc/my.cnf centos/my.cnf.patch
+$copy centos/smb.conf /etc/samba/smb.conf
+
+$download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/o/openvpn-2.3.7-1.el7.x86_64.rpm
+$download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/p/pkcs11-helper-1.11-3.el7.x86_64.rpm
+$exec "rpm -ivh /tmp/download/*.rpm"
+
+$require centos-$(REGION).lst
+
+$symlink /etc/systemd/system/default.target /usr/lib/systemd/system/multi-user.target
+
+$vadesc

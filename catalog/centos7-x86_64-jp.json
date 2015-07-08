@@ -1,0 +1,16 @@
+{
+    "id": "centos",
+    "version":"7.1",
+    "title": "CentOS 7.1 (64bit)",
+    "description": "レンタルサーバなどでおなじみの CentOSを、定番の Webサイト構築環境 LAMP(Linux+Apache+MySQL+PHP) がすぐに使えるように設定済みで提供しています。",
+    "images": [{"url": "http://va.walbrix.net/img/centos01.png"}],
+    "tarball": "http://dist.walbrix.net/va/centos-7.1.1503-x86_64-jp.tar.xz",
+    "minimum_ram": 256, 
+    "minimum_hd": 2,
+
+    "uuid":"543e4d6e-5ac7-4636-9568-ac6a28968a11",
+    "instruction":{
+        "ja":"Webブラウザでアクセスすると使用法を確認できます。",
+        "en":"Please access using web browser to confirm the usage"
+    }
+}
