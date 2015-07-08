@@ -1,0 +1,16 @@
+{
+    "id": "centos",
+    "version":"6.6",
+    "title": "CentOS 6.6",
+    "description": "レンタルサーバなどでおなじみの CentOSを、定番の Webサイト構築環境 LAMP(Linux+Apache+MySQL+PHP) がすぐに使えるように設定済みで提供しています。",
+    "images": [{"url": "http://va.walbrix.net/img/centos01.png"}],
+    "tarball": "http://dist.walbrix.net/va/centos-6.6-i686-jp.tar.xz",
+    "minimum_ram": 256, 
+    "minimum_hd": 2,
+
+    "uuid":"d635b084-6e72-4091-9e86-f7f576d72f46",
+    "instruction":{
+        "ja":"Webブラウザでアクセスすると使用法を確認できます。",
+        "en":"Please access using web browser to confirm the usage"
+    }
+}

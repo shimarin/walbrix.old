@@ -1,0 +1,10 @@
+6a7
+> character-set-server=utf8
+10a12,18
+> 
+> [mysqldump]
+> default-character-set=utf8
+> 
+> [mysql]
+> default-character-set=utf8
+> 

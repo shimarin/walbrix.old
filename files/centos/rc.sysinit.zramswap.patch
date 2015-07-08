@@ -1,0 +1,13 @@
+--- rc.sysinit	2013-12-03 00:08:33.000000000 +0900
++++ /etc/rc.d/rc.sysinit	2013-12-02 23:49:51.679895626 +0900
+@@ -633,6 +633,10 @@
+ 
+ # Start up swapping.
+ update_boot_stage RCswap
++if [ -d /sys/block/zram0 ] && grep -qs '^/dev/zram0.*swap.*sw' /etc/fstab; then
++	grep MemTotal: /proc/meminfo | awk '{print $2*1024}' > /sys/block/zram0/disksize
++	mkswap /dev/zram0
++fi
+ action $"Enabling /etc/fstab swaps: " swapon -a -e
+ if [ "$AUTOSWAP" = "yes" ]; then
+ 	curswap=$(awk '/^\/dev/ { print $1 }' /proc/swaps | while read x; do get_numeric_dev dec $x ; echo -n " "; done)

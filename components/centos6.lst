@@ -1,0 +1,50 @@
+$rpmbootstrap --arch=i686 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/6.6/os/i386/Packages/centos-release-6-6.el6.centos.12.2.i686.rpm' --include='vim-minimal less initscripts passwd tar net-tools'
+$rpmbootstrap --arch=x86_64 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/6.6/os/x86_64/Packages/centos-release-6-6.el6.centos.12.2.x86_64.rpm' --include='vim-minimal less initscripts passwd tar net-tools'
+
+$require domU-kernel.lst
+
+$write /etc/yum.conf --append 'exclude=kernel,kernel-firmware'
+$write /etc/rpm/platform "$(ARCH)-centos-linux"
+$sed /etc/sysconfig/init 's/^ACTIVE_CONSOLES=.*$/ACTIVE_CONSOLES=\/dev\/hvc0/'
+$write /etc/sysconfig/network-scripts/ifcfg-eth0 'DEVICE="eth0"\nBOOTPROTO=dhcp\nONBOOT=yes\nTYPE="Ethernet"'
+
+$write /etc/securetty --append "hvc0"
+$exec "rm /etc/init/serial.conf"
+$write /etc/sysconfig/network "NETWORKING=yes\nHOSTNAME=centos"
+$patch /etc/rc.d/rc.sysinit centos/rc.sysinit.zramswap.patch
+$sed /etc/shadow 's/^\(root:\)[^:]*\(:.*\)$/\1\2/'
+$write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
+$write /etc/selinux/config "SELINUX=disabled"
+$copy centos/fstab /etc/fstab
+$exec "mkdir /root/.ssh && chmod 700 /root/.ssh && touch /root/.ssh/authorized_keys"
+$exec "chkconfig iptables off"
+$exec "yum install -y samba4 avahi ntp lzo dhclient openssh-server openssh-clients rsyslog telnet"
+$sed /etc/avahi/avahi-daemon.conf 's/^#disallow-other-stacks=no$/disallow-other-stacks=yes/'
+$exec "chkconfig nmb on"
+$exec "chkconfig ntpd on"
+
+# LAMP stack
+$exec "yum install -y php-mysql mysql-server httpd vsftpd php php-mbstring php-mcrypt php-gd wget xz postfix"
+$exec "chkconfig smb on"
+$exec "chkconfig httpd on"
+$exec "chkconfig mysqld on"
+$exec "chkconfig vsftpd on"
+$copy centos/index.html /var/www/html/index.html
+$download https://files.phpmyadmin.net/phpMyAdmin/4.1.14.8/phpMyAdmin-4.1.14.8-all-languages.tar.xz
+$exec "tar Jxvf /tmp/download/phpMyAdmin-*.xz -C /var/www/html && mv /var/www/html/phpMyAdmin-* /var/www/html/phpmyadmin"
+$copy phpmyadmin/config.inc.php /var/www/html/phpmyadmin/config.inc.php
+$exec "chown -R apache.apache /var/www /var/log/httpd"
+$patch /etc/my.cnf centos/my.cnf.patch
+$copy centos/smb.conf /etc/samba/smb.conf
+
+# update and cleanup
+$exec "yum update -y && yum clean -y all"
+
+$require centos-$(ARCH).lst
+$require centos-$(REGION).lst
+
+$sed /etc/httpd/conf.d/mod_extract_forwarded.conf 's/^# MEFaccept .*/MEFaccept all/'
+
+$exec "chkconfig openvpn on"
+
+$vadesc
