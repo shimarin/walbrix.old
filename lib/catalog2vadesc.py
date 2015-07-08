@@ -8,6 +8,12 @@ def run(catalog):
     root.append(version)
     if "instruction" in catalog:
         if isinstance(catalog["instruction"], dict):
+            if "ja" in catalog["instruction"]:
+                instruction = lxml.etree.Element("instruction")
+                instruction.attrib["{http://www.w3.org/XML/1998/namespace}lang"] = "ja"
+                instruction.text = catalog["instruction"]["ja"]
+                root.append(instruction)
+                del catalog["instruction"]["ja"]
             for lang, text in catalog["instruction"].iteritems():
                 instruction = lxml.etree.Element("instruction")
                 instruction.attrib["{http://www.w3.org/XML/1998/namespace}lang"] = lang

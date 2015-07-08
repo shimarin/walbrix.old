@@ -3,9 +3,9 @@ import os,re,glob,struct,stat,shutil,subprocess,argparse,shlex,json,base64,hashl
 import chardet # emerge dev-python/chardet
 import magic # emerge python-magic
 import lxml.etree
-import kernelver,catalog2vadesc
+import kernelver
 
-import execute,kernel,rpmbootstrap
+import execute,kernel,rpmbootstrap,vadesc
 
 _elf = re.compile('.*ELF.+dynamically linked.*')
 
@@ -318,13 +318,8 @@ def process_lstfile(context, lstfile):
         if len(args) != 2: raise Exception("$set directive gets 2 args")
         context.set_variable(args[0], context.apply_variables(args[1]))
 
-    def vadesc(args):
-        if len(args) != 0: raise Exception("$vadesc directive doesn't take args")
-        catalog_file = "catalog/%s-%s-%s.json" % (context.get_variable("ARTIFACT"), context.get_variable("ARCH"), context.get_variable("REGION"))
-        catalog = json.load(open(catalog_file))
-        etree = catalog2vadesc.run(catalog)
-        with open("%s/etc/wb-va.xml" % context.destination, "w") as f:
-            etree.write(f, pretty_print=True, encoding='UTF-8', xml_declaration=True)
+    def _vadesc(args):
+        vadesc.apply(context, args)
 
     def download(args):
         parser = argparse.ArgumentParser()
@@ -383,7 +378,7 @@ def process_lstfile(context, lstfile):
         "$patch":patch,
         "$device":device,
         "$set":setvar,
-        "$vadesc":vadesc,
+        "$vadesc":_vadesc,
         "$download":download,
         "$debootstrap":debootstrap,
         "$rpmbootstrap":_rpmbootstrap
