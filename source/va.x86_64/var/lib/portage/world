@@ -1,6 +1,7 @@
 app-admin/sudo
 app-admin/sysklogd
 app-arch/zip
+app-emulation/docker
 dev-util/strace
 media-fonts/vlgothic
 net-analyzer/traceroute

@@ -4,4 +4,6 @@ net-analyzer/zabbix agent
 app-admin/sudo -sendmail
 net-dns/avahi -introspection
 dev-util/strace -perl
+app-emulation/docker -device-mapper aufs vim-syntax
+dev-vcs/git -perl -gpg
 

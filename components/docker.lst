@@ -1,0 +1,4 @@
+#dev-lang/go
+#dev-db/sqlite
+$require git.lst
+$package app-emulation/docker --use="aufs -device-mapper vim-syntax"
