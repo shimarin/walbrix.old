@@ -3,9 +3,11 @@ import collect
 
 def apply(context, args):
     parser = argparse.ArgumentParser()
+    parser.add_argument("--arch", type=str, help="target architecture (this directive is ignored if arch differents from $(ARCH))")
     parser.add_argument("--include", type=str, help="additional packages(space separated)")
     parser.add_argument("releaserpm", type=str, help="URL of release rpm") # e.g. http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/7.1.1503/os/x86_64/Packages/centos-release-7-1.1503.el7.centos.2.8.x86_64.rpm
     args = parser.parse_args(args)
+    if args.arch is not None and args.arch != context.get_variable("ARCH"): return
     releaserpm = context.apply_variables(args.releaserpm)
     include = context.apply_variables(args.include)
     prefix = ["i386"] if context.get_variable("ARCH") == "i686" else []
