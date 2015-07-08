@@ -1,10 +1,13 @@
 /boot/kernel-genkernel-x86_64-3.14.46-aufs
 $symlink /boot/vmlinuz.domU kernel-genkernel-x86_64-3.14.46-aufs
 
-$require vim.lst
+# 32-bit compat
+$require lib32.lst
+
 $package dev-vcs/git
 
 # to self-build walbrix
 $require python-magic.lst
 $package dev-python/chardet
 $package sys-fs/squashfs-tools
+/usr/bin/xorriso
