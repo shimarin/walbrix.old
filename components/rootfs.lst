@@ -11,3 +11,4 @@ $mkdir /var/lib
 /var/cache/.keep
 /var/spool/.keep
 /mnt/.keep
+$symlink /etc/mtab /proc/self/mounts

@@ -1,7 +1,6 @@
 $require rootfs.lst
 /usr/bin/ldd
 $package sys-apps/baselayout
-$symlink /etc/mtab /proc/self/mounts
 $require dev.lst
 $require bash.lst
 $require glibc.lst
