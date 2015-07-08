@@ -1,11 +1,6 @@
 import argparse,subprocess,json,time,readline,shlex,sys,tempfile,shutil,os
 import docker
 
-def exec_command(client, container_id, command):
-    exec_id = client.exec_create(container_id, cmd=command, tty=True)["Id"]
-    for n in client.exec_start(exec_id, stream=True):
-        sys.stdout.write(n)
-
 def run(tarball):
     c = docker.Client()
     print "Importing image..."
@@ -19,12 +14,8 @@ def run(tarball):
         try:
             c.start(container_id)
             print "Container %s started. tmpdir=%s" % (container_id[:8], tmpdir)
-            while True:
-                line = shlex.split(raw_input("> "), True)
-                if not line or len(line) == 0: continue
-                if line[0] in ["quit","exit"]: break
-                #else
-                exec_command(c, container_id, line)
+            term = os.environ["TERM"] if "TERM" in os.environ else "dumb"
+            subprocess.call(["docker","exec","-ti",container_id,"env","TERM=%s" % term,"/bin/bash"])
         finally:
             print "Stopping container..."
             c.stop(container_id)
