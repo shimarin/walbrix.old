@@ -3,8 +3,10 @@ $package dev-python/pypam
 $require pyalsaaudio.lst
 $require vlgothic.lst
 $require fbterm.lst
+$require lvm.lst
 /usr/bin/curl
 /usr/bin/fbset
+/usr/bin/isoinfo
 $copy walbrix/wbgetty /usr/sbin/wbgetty
 
 # used by wbui and tools
