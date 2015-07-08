@@ -70,7 +70,7 @@ def define_va_target(artifact, arch, region):
     source_dir = "source/va.%s" % arch
     variables = "--var=ARTIFACT=%s --var=ARCH=%s --var=REGION=%s --var=LANGUAGE=%s" % (artifact, arch, region, region_to_locale[region]["language"])
     lstfile = "components/%s.lst" % artifact
-    env.Command("%s-%s-%s.tar.xz" % (artifact,arch,region), ["components/%s.lst" % artifact], "./collect --source %s %s %s %s && tar Jcvpf $TARGET -C %s ." % (source_dir, variables, lstfile, build_dir, build_dir))
+    env.Command("%s-%s-%s.tar.xz" % (artifact,arch,region), ["components/%s.lst" % artifact], "rm -rf %s && ./collect --source %s %s %s %s && tar Jcvpf $TARGET -C %s ." % (build_dir, source_dir, variables, lstfile, build_dir, build_dir))
 
 ## end rule defs ##
 
