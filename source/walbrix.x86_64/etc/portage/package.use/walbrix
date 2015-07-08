@@ -5,6 +5,7 @@ sys-kernel/gentoo-sources symlink
 sys-apps/kmod lzma
 
 net-misc/openvpn threads passwordsave
+dev-libs/libxml2 python
 dev-lang/python sqlite
 dev-python/markdown -python_targets_python3_3
 dev-python/pypam -python_targets_python3_3
@@ -15,6 +16,7 @@ dev-libs/boost -python_targets_python3_3
 dev-python/python-magic -python_targets_python3_3
 dev-python/setuptools -python_targets_python3_3
 dev-python/chardet -python_targets_python3_3
+dev-python/pycurl -python_targets_python3_3
 
 # splash
 sys-libs/zlib static-libs

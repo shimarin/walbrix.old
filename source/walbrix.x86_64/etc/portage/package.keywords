@@ -5,7 +5,14 @@
 =sys-fs/aufs-util-3.19_p20150420 
 =sys-kernel/aufs-sources-3.14.46
 
+# yum
+=dev-python/pyliblzma-0.5.3-r1
+=sys-apps/yum-3.4.3_p20130218-r1
+
+# xen
 =app-emulation/xen-4.5.1
 =app-emulation/xen-tools-4.5.1
 =app-emulation/xen-pvgrub-4.5.1
 =dev-lang/ocaml-4.01.0
+
+

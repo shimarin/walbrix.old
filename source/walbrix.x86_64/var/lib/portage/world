@@ -7,6 +7,7 @@ dev-python/chardet
 dev-python/pyalsaaudio
 dev-python/pygame
 dev-python/python-magic
+dev-util/debootstrap
 dev-util/strace
 dev-vcs/git
 media-fonts/vlgothic
@@ -16,6 +17,7 @@ net-misc/ntp
 net-misc/openvpn
 sys-apps/fbset
 sys-apps/v86d
+sys-apps/yum
 sys-block/parted
 sys-boot/grub
 sys-fs/dosfstools
