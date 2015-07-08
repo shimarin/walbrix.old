@@ -5,7 +5,7 @@ import magic # emerge python-magic
 import lxml.etree
 import kernelver,catalog2vadesc
 
-import execute,kernel
+import execute,kernel,rpmbootstrap
 
 _elf = re.compile('.*ELF.+dynamically linked.*')
 
@@ -364,6 +364,8 @@ def process_lstfile(context, lstfile):
             finally:
                 shutil.rmtree(debootstrap_dir)
         subprocess.check_call(["tar","zxvpf",cache_file,"-C",context.destination])
+    def _rpmbootstrap(args):
+        rpmbootstrap.apply(context, args)
 
     directives = {
         "$require":require,
@@ -383,7 +385,8 @@ def process_lstfile(context, lstfile):
         "$set":setvar,
         "$vadesc":vadesc,
         "$download":download,
-        "$debootstrap":debootstrap
+        "$debootstrap":debootstrap,
+        "$rpmbootstrap":_rpmbootstrap
     }
     
     if context.is_lstfile_already_processed(lstfile): return
