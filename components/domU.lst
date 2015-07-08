@@ -78,8 +78,6 @@ $symlink /usr/bin/less ../../bin/busybox
 /usr/lib/cracklib_dict.pwd
 /usr/lib/cracklib_dict.pwi
 /usr/sbin/xfs_growfs
-$write /etc/locale.gen 'en_US.UTF-8 UTF-8\nen_GB.UTF-8 UTF-8\nja_JP.UTF-8 UTF-8'
-$exec --overlay /usr/sbin/locale-gen
 
 # nmbd
 /usr/sbin/nmbd
