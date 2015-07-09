@@ -44,8 +44,9 @@ env.Command("build/walbrix/grubvars.cfg", "$WBUI_MARKER", """
 echo "set WALBRIX_VERSION=`./kernelver -n source/walbrix.x86_64/boot/kernel`" > $TARGET
 echo "set WALBRIX_BUILD_ID=`cat $SOURCE`" >> $TARGET
 """)
+env.Command("build/walbrix/grub.cfg", "files/walbrix/grub.cfg", "cp $SOURCE $TARGET")
 
-env.Command("walbrix", ["$SYSTEM_64_MARKER", "$SYSTEM_32_MARKER", "$WBUI_MARKER", "build/walbrix/locale", "build/walbrix/grubvars.cfg"], "mksquashfs build/walbrix $TARGET -noappend")
+env.Command("walbrix", ["$SYSTEM_64_MARKER", "$SYSTEM_32_MARKER", "$WBUI_MARKER", "build/walbrix/locale", "build/walbrix/grubvars.cfg", "build/walbrix/grub.cfg"], "mksquashfs build/walbrix $TARGET -noappend")
 env.Command("upload", "walbrix", "s3cmd put -P $SOURCE s3://dist.walbrix.net/walbrix")
 
 env.Command("$INSTALLER_64_MARKER", ["components/installer.lst","$LOCALE_MARKER"], "rm -rf build/installer/x86_64 && ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/installer.lst build/installer/x86_64 && cp -av build/walbrix/locale build/installer/x86_64/.locale")
