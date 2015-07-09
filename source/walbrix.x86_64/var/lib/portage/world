@@ -18,7 +18,6 @@ dev-libs/libisoburn
 dev-python/chardet
 dev-python/pyalsaaudio
 dev-python/pygame
-dev-python/python-magic
 dev-util/debootstrap
 dev-util/strace
 dev-vcs/git

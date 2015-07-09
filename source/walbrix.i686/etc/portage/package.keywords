@@ -6,3 +6,6 @@
 =net-analyzer/snort-2.9.7.3
 =net-libs/daq-2.0.2
 =sys-fs/bcache-tools-1.0.5
+=net-misc/s3cmd-1.5.2-r1
+=dev-python/python-magic-0.4.6-r1
+

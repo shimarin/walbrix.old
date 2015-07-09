@@ -28,6 +28,10 @@ dev-python/httplib2 -python_targets_python3_3
 dev-python/pyasn1 -python_targets_python3_3
 dev-python/markupsafe -python_targets_python3_3
 dev-python/jinja -python_targets_python3_3
+dev-python/python-magic -python_targets_python3_3
+dev-python/six -python_targets_python3_3
+dev-python/python-dateutil -python_targets_python3_3
+
  
 sys-libs/zlib static-libs
 media-libs/libjpeg-turbo static-libs
