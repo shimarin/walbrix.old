@@ -3,8 +3,8 @@ import os,re,shutil
 
 env = Environment()
 
-env['SYSTEM_64_MARKER'] = "build/walbrix/x86_64/etc/ld.so.cache"
-env['SYSTEM_32_MARKER'] = "build/walbrix/i686/etc/ld.so.cache"
+env['SYSTEM_64_MARKER'] = "build/walbrix/x86_64/etc/profile.env"
+env['SYSTEM_32_MARKER'] = "build/walbrix/i686/etc/profile.env"
 env['INSTALLER_64_MARKER'] = "build/installer/x86_64/etc/ld.so.cache"
 env['INSTALLER_32_MARKER'] = "build/installer/i686/etc/ld.so.cache"
 env['WBUI_MARKER'] = "build/walbrix/wbui/usr/share/wbui/commit-id"

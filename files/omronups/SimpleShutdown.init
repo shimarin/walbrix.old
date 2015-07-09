@@ -1,0 +1,22 @@
+#!/sbin/runscript
+
+BINPATH=/usr/lib/ssd/master
+PROGNAME=ssdService
+ 
+start() {
+    ebegin "Starting" ${SVCNAME}
+    $BINPATH/$PROGNAME
+    eend $?
+}
+ 
+stop() {
+    ebegin "Stopping" ${SVCNAME}
+    $BINPATH/AgentManager stop || true
+    eend $?
+}
+
+restart() {
+    svc_stop
+    sleep 4
+    svc_start
+}

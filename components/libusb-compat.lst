@@ -1,0 +1,2 @@
+$package dev-libs/libusb-compat --no-copy
+/usr/lib/libusb.so

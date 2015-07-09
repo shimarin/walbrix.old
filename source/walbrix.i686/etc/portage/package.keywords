@@ -1,3 +1,8 @@
 =sys-kernel/gentoo-sources-4.1.0
 =app-i18n/fbterm-1.7-r1
 =sys-kernel/vanilla-sources-3.2.69
+=app-crypt/chntpw-140201
+=net-analyzer/barnyard2-1.9
+=net-analyzer/snort-2.9.7.3
+=net-libs/daq-2.0.2
+=sys-fs/bcache-tools-1.0.5

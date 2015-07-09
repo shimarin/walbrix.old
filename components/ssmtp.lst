@@ -1,0 +1,2 @@
+$package net-mail/mailbase
+$package mail-mta/ssmtp

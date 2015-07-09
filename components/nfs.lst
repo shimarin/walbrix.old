@@ -1,0 +1,8 @@
+#sys-apps/tcp-wrappers
+$package sys-apps/keyutils
+$package net-libs/libnfsidmap
+$package net-libs/libtirpc
+$package net-nds/rpcbind
+$package net-fs/nfs-utils
+
+$exec "rm -rf /var/lib/nfs && cp -av /usr/lib/nfs /var/lib/"

@@ -4,9 +4,9 @@
 #sys-libs/talloc
 $package sys-libs/tdb
 $require mit-krb5.lst
+$package net-fs/cifs-utils
 #sys-libs/tevent
 $package net-nds/openldap --use="-tcpd samba"
-$package net-fs/cifs-utils
 $package net-fs/samba --use="ldap"
 
 $symlink /etc/init.d/samba.nmbd samba 

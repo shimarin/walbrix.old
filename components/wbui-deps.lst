@@ -4,9 +4,9 @@ $require pyalsaaudio.lst
 $require vlgothic.lst
 $require fbterm.lst
 $require lvm.lst
+$require cdrkit.lst
 /usr/bin/curl
 /usr/bin/fbset
-/usr/bin/isoinfo
 $copy walbrix/wbgetty /usr/sbin/wbgetty
 
 # used by wbui and tools
@@ -14,3 +14,6 @@ $package sys-fs/dosfstools
 $package sys-fs/lsscsi
 $package sys-fs/xfsprogs
 $package sys-block/parted
+$package media-gfx/fbgrab
+
+$mkdir /var/cache/wb

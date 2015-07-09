@@ -11,6 +11,6 @@ $require python-magic.lst
 $package dev-python/chardet
 $package sys-fs/squashfs-tools
 $package dev-util/scons
-/usr/bin/xorriso
+$package dev-libs/libisoburn  # for /usr/bin/xorriso
 $require debootstrap.lst
 $require yum.lst

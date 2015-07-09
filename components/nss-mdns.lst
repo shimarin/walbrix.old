@@ -1,3 +1,4 @@
 $require avahi.lst
 $package sys-auth/nss-mdns
+/etc/nsswitch.conf
 $sed /etc/nsswitch.conf 's/^\(hosts:.* \)dns\( *\)/\1mdns_minimal [NOTFOUND=return] dns mdns\2/'

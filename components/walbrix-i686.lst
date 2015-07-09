@@ -1,11 +1,5 @@
 /boot/kernel-genkernel-x86-3.2.69
 $symlink /boot/vmlinuz.domU kernel-genkernel-x86-3.2.69
 
-$require nvi.lst  # on i686, use nvi instead of vim
-
-# protect /lib symlink from overlay upper layer
-$mv /lib /lib32
-$symlink /lib lib32
-$mv /usr/lib /usr/lib32
-$symlink /usr/lib lib32
-
+$package sys-apps/memtest86+ --no-copy
+/boot/memtest86plus/memtest

@@ -1,3 +1,3 @@
 /etc/nsswitch.conf
-/usr/lib/libnss_myhostname.so.2
+$package sys-auth/nss-myhostname
 $sed /etc/nsswitch.conf 's/^\(hosts:.*files \)/\1myhostname /'

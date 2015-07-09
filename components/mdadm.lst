@@ -1,0 +1,2 @@
+$package sys-fs/mdadm
+$symlink /etc/runlevels/default/mdraid /etc/init.d/mdraid

@@ -1,3 +1,4 @@
+$package dev-util/ctags
 $package app-editors/vim-core
 $package app-editors/vim
 $package app-vim/gentoo-syntax

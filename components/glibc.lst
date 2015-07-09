@@ -12,6 +12,7 @@
 /etc/ld.so.conf.d
 /sbin/ldconfig
 
+/usr/bin/locale
 /usr/bin/localedef
 /usr/sbin/locale-gen
 

@@ -1,0 +1,5 @@
+$require libusb-compat.lst
+$mkdir /usr/lib/ssd/master
+$copy omronups/SimpleShutdown.init /etc/init.d/SimpleShutdown
+$copy omronups/Shutdown.cfg /usr/lib/ssd/master/Shutdown.cfg
+$write /usr/lib/ssd/master/BINARIES_TO_BE_PLACED_HERE "AgentManager\nUsbPort-HID.so.1.0.0\nUsbPort-Libusb.so.1.0.0\nconfig.sh\nomronctl\nssdDaemon\nssdService"

@@ -1,0 +1,3 @@
+#dev-libs/libcdio
+#dev-libs/libcdio-paranoia
+$package app-cdr/cdrkit

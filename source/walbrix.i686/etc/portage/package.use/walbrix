@@ -3,12 +3,32 @@ sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc
 sys-kernel/gentoo-sources symlink
 sys-apps/kmod lzma
 net-misc/openvpn threads passwordsave
+net-fs/cifs-utils -acl -ads -caps 
+sys-apps/usb_modeswitch jimtcl
+app-admin/testdisk ntfs
+app-admin/sudo -sendmail pam
+net-analyzer/zabbix sqlite agent proxy curl
+sys-apps/smartmontools minimal
+net-fs/samba -server -aio -netapi
+dev-db/mysql -perl
+sys-power/nut usb
+sys-cluster/drbd heartbeat pacemaker xen
+
+app-editors/vim python -python_targets_python3_3
 dev-python/markdown -python_targets_python3_3
 dev-python/pypam -python_targets_python3_3
 dev-python/setuptools -python_targets_python3_3
 dev-python/lxml -python_targets_python3_3
 dev-libs/boost -python_targets_python3_3
-
+dev-libs/libnl -python_targets_python3_3
+sys-fs/cryptsetup -python_targets_python3_3
+dev-python/pycrypto -python_targets_python3_3
+dev-python/pyyaml -python_targets_python3_3
+dev-python/httplib2 -python_targets_python3_3
+dev-python/pyasn1 -python_targets_python3_3
+dev-python/markupsafe -python_targets_python3_3
+dev-python/jinja -python_targets_python3_3
+ 
 sys-libs/zlib static-libs
 media-libs/libjpeg-turbo static-libs
 virtual/jpeg static-libs

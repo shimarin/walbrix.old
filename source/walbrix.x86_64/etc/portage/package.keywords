@@ -4,6 +4,15 @@
 =sys-fs/aufs-headers-3.19_p20150420 
 =sys-fs/aufs-util-3.19_p20150420 
 =sys-kernel/aufs-sources-3.14.46
+=app-crypt/chntpw-140201
+=sys-cluster/drbd-8.4.3
+=sys-fs/bcache-tools-1.0.5
+
+#snort
+=net-analyzer/snort-2.9.7.3 
+=net-analyzer/barnyard2-1.9
+=net-libs/daq-2.0.2
+
 
 # yum
 =dev-python/pyliblzma-0.5.3-r1

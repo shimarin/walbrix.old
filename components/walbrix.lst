@@ -8,22 +8,15 @@ $require rescue.lst
 $require splashutils.lst
 /etc/splash/natural_gentoo
 $require grub.lst
-$write /etc/fstab 'overlay\t/\toverlay\tdefaults\t0 0'
-
-# net
-$require openssh.lst
-$require avahi.lst
+$package sys-apps/kexec-tools
+$write /etc/fstab 'overlay\t/\toverlay\tdefaults\t0 0\n/dev/zram0\tnone\tswap\tsw,pri=1\t0 0'
 $write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
-
-# wbui
-$require wbui-deps.lst
-
-# tools
-/usr/bin/strace
-
+$package sys-apps/v86d
 $sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
 $sed /etc/inittab 's/\/sbin\/agetty 38400 tty1 linux/\/usr\/sbin\/wbgetty 38400 --noclear tty1 linux/'
 #$sed /etc/inittab 's/^c\([2-6]\):/#c\1:/'
+$sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBFREE01"/' # set default hostname
+$patch /etc/init.d/swap walbrix/swap.init.patch # enable zramswap
 
 $symlink /etc/init.d/net.eth0 net.lo
 $symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
@@ -37,9 +30,16 @@ $copy splash/verbose-640x480.png /tmp/initramfs/etc/splash/wb/images/verbose-640
 $exec 'cd /tmp/initramfs && unxz -c /boot/initramfs | cpio -idm && mv /tmp/initramfs/init /tmp/initramfs/init.gentoo && mv /tmp/initramfs/init.walbrix /tmp/initramfs/init && (find .|cpio -o -H newc) | xz -c --check=crc32 > /boot/initramfs'
 $deltree /tmp/initramfs
 
+# wbui
+$require wbui-deps.lst
+
 # openvpn
 $copy walbrix/ca.crt /etc/openvpn/ca.crt
 $copy walbrix/openvpn.conf /etc/openvpn/openvpn.conf
+
+# system services
+$require cron.lst
+$require sysklogd.lst
 
 # use eth0 as the default network bridge
 $sed /etc/xen/xl.conf 's/^#vif.default.bridge="xenbr0"$/vif.default.bridge=""/'
@@ -56,8 +56,100 @@ $write /etc/conf.d/localmount 'no_umounts="/.overlay/boot|/.overlay/profile"'
 # to get profile layer properly ro-remounted
 $sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount,ro"/'
 
+# backup cron scripts
+$mkdir /etc/wb
+$write /etc/wb/backup "#BACKUP_ROOT=rsync://backup.local/backup"
+$copy walbrix/backup /etc/cron.daily/backup
+$symlink /etc/cron.weekly/backup ../cron.daily/backup
+$symlink /etc/cron.monthly/backup ../cron.daily/backup
+
+# storage and filesystems
+$require mdadm.lst
+$require nfs.lst
+$package sys-fs/multipath-tools
+$package sys-fs/btrfs-progs
+$require exfat.lst
+$package net-fs/cifs-utils --use="-acl -ads -caps"
+$package sys-fs/xfsdump
+$require ntfs3g.lst
+$package sys-fs/cryptsetup
+$package sys-block/nbd
+$require sg3_utils.lst
+$package sys-apps/hdparm
+$require ddrescue.lst
+$package sys-fs/safecopy
+$package app-admin/testdisk --use="ntfs"
+$package sys-apps/gptfdisk
+$package app-backup/fsarchiver
+$require s3cmd.lst
+$require s3fs.lst
+$package sys-apps/cciss_vol_status
+$require drbd.lst
+$patch /etc/xen/scripts/block-drbd xen/block-drbd.patch
+$package sys-block/open-iscsi
+$package sys-fs/bcache-tools
+$package sys-apps/smartmontools --use="minimal"
+
+# networks
+$require openssh.lst
+$package net-dns/bind-tools
+$require nss-mdns.lst
+$require nss-myhostname.lst
+$package net-analyzer/traceroute
+$require rp-pppoe.lst
+$require wireless-tools.lst
+$require tcpdump.lst
+$require nmap.lst
+$package net-analyzer/netcat
+$package net-misc/wakeonlan
+$package net-misc/ifenslave
+$package net-misc/vconfig
+$package net-misc/wol
+$package sys-apps/ethtool
+$require zabbix-agent.lst
+$require zabbix-proxy.lst
+$require snort.lst
+$package net-misc/dhcp
+$require ssmtp.lst
+$require smbclient.lst
+$require cu.lst
+
+# complementary PPP configs
+$mkdir /etc/chatscripts
+$copy ppp/chatscript-3g /etc/chatscripts/3g
+$copy ppp/pap-secrets /etc/ppp/pap-secrets
+$mkdir /etc/ppp/peers
+$copy ppp/peer-DTI /etc/ppp/peers/DTI
+$copy ppp/ip-up.route.sh /etc/ppp/ip-up.d/route.sh
+$copy ppp/ip-down.route.sh /etc/ppp/ip-down.d/route.sh
+
+# tools
+$require binutils.lst
+$require vim.lst
+$require sudo.lst
+/usr/bin/strace
+$package app-misc/screen
+$package app-editors/bvi
+$package app-admin/sysstat
+$package app-crypt/chntpw
+$package sys-process/lsof
+$require mysqldump.lst
+$require ansible.lst
+
+# hardware
+$require usb_modeswitch.lst
+$package sys-apps/usbutils
+$package sys-apps/dmidecode
+$require bluez.lst
+$package sys-apps/lm_sensors
+$package sys-power/cpupower
+$package sys-apps/lshw
+$require nut.lst
+$require omronups.lst
+
+# arch specific
 $require walbrix-$(ARCH).lst
 
-# set default hostname
-$sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBFREE01"/'
-
+$exec --overlay "env-update"
+$deltree /var/lib/portage
+$require renamelib-$(ARCH).lst

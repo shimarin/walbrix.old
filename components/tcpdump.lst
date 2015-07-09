@@ -1,0 +1,3 @@
+#sys-libs/libcap-ng
+#net-libs/libpcap
+$package net-analyzer/tcpdump

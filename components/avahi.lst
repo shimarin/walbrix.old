@@ -1,5 +1,5 @@
 #dev-libs/libdaemon
-$package net-dns/avahi
+$package net-dns/avahi --use="-introspection"
 $symlink /etc/runlevels/default/avahi-daemon /etc/init.d/avahi-daemon
 
 

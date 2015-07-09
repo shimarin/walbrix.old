@@ -1,0 +1,3 @@
+$package dev-lang/perl
+$package sys-apps/debianutils
+$package app-admin/sysklogd

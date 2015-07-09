@@ -1,2 +1,4 @@
+#dev-libs/libev
+#dev-libs/libverto
 $package sys-apps/keyutils
 $package app-crypt/mit-krb5

@@ -1,0 +1,3 @@
+$package dev-lang/jimtcl
+#dev-libs/libusb
+$package sys-apps/usb_modeswitch --use="jimtcl"

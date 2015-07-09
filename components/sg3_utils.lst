@@ -1,0 +1,3 @@
+$package sys-apps/rescan-scsi-bus
+$package app-admin/killproc
+$package sys-apps/sg3_utils

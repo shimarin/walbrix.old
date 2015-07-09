@@ -1,3 +1,6 @@
 $package net-misc/openssh
 $symlink /etc/runlevels/default/sshd /etc/init.d/sshd
+$mkdir /root/.ssh
+$touch /root/.ssh/authorized_keys
+$exec "chmod 700 /root/.ssh"
 
