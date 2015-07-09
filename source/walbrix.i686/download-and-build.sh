@@ -8,8 +8,8 @@ ROOTDIR=`dirname $0`
 CHROOT="../../chroot ${ROOTDIR}"
 wget -O - `../../find_latest_stage3 i686` | tar jxvpf - -C "${ROOTDIR}" -k -P
 
-USERADD="useradd -R `readlink -f ${ROOTDIR}`"
-GROUPADD="groupadd -R `readlink -f ${ROOTDIR}`"
+USERADD="$CHROOT useradd"
+GROUPADD="$CHROOT groupadd"
 
 $GROUPADD -g 124 postmaster
 $USERADD -c "added by portage for mailbase" -d /var/spool/mail -u 14 -g 124 -s /sbin/nologin postmaster
