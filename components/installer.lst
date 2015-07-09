@@ -1,5 +1,6 @@
 $require system.lst
 $require kernel-modules.lst
+$exec "find /lib/modules/$(KERNEL_VERSION) -name '*.ko' | xargs xz"
 $require wbui-deps.lst
 
 $sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBINSTALL"/'
