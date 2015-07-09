@@ -197,8 +197,8 @@ def start(domain):
 def console(domain):
     if dialogbox.messagebox.execute(gui.res.string_vm_connect_desc % (domain["name"]), dialogbox.DialogBox.OKCANCEL()) != "ok": return False
     pygame.quit()
-    if os.path.exists("/usr/bin/jfbterm"):
-        os.system("/usr/bin/openvt -wsl -- /usr/bin/jfbterm -q -e /usr/sbin/wb xen_console_with_message %s" % domain["name"])
+    if os.path.exists("/usr/bin/fbterm"):
+        os.system("/usr/bin/openvt -wsl -- /usr/bin/fbterm -- /usr/sbin/wb xen_console_with_message %s" % domain["name"])
     else:
         os.system("clear")
         os.system("/usr/bin/openvt -wsl -- /usr/sbin/xl console %s" % domain["name"])
