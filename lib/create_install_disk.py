@@ -86,7 +86,7 @@ def run(image, device):
             os.makedirs("%s/EFI/BOOT" % tmpdir)
 
             if bios_compatible: subprocess.check_call(["grub2-install","--target=i386-pc","--recheck","--boot-directory=%s/boot" % tmpdir,device])
-            subprocess.check_call(["grub2-mkimage","-o","%s/EFI/BOOT/bootx64.efi" % tmpdir,"-O","x86_64-efi","xfs","fat","part_gpt","part_msdos","normal","linux","echo","all_video","test","multiboot","multiboot2","search","iso9660","gzio","lvm","chain","configfile","cpuid","minicmd","gfxterm","font","terminal"])
+            subprocess.check_call(["grub2-mkimage","-o","%s/EFI/BOOT/bootx64.efi" % tmpdir,"-O","x86_64-efi","xfs","fat","part_gpt","part_msdos","normal","linux","echo","all_video","test","multiboot","multiboot2","search","iso9660","gzio","lvm","chain","configfile","cpuid","minicmd","gfxterm","font","terminal","squash4","loopback","videoinfo","videotest"])
 
             # boot config
             with open("%s/boot/grub/grub.cfg" % tmpdir, "w") as f:
