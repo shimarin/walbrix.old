@@ -1,4 +1,5 @@
 import argparse,array,fcntl,glob,os,subprocess,shutil,struct,sys,tempfile
+import tempmount
 
 DEFAULT_SYSTEM_IMAGE="/.overlay/boot/walbrix"
 MINIMUM_DISK_SIZE_IN_GB=3.5
@@ -99,33 +100,42 @@ def run(args):
     subprocess.check_call(["lvcreate","--yes","--addtag=@wbprofile","-n",lvname,"-L","1G",vgname], close_fds=True)
     sync_udev()
 
-    tmpdir = tempfile.mkdtemp()
-    try:
-        subprocess.check_call(["mount","-t","vfat",boot_partition,tmpdir])
-        try:
-            # install bootloader
-            os.mkdir("%s/boot" % tmpdir)
-            os.makedirs("%s/EFI/BOOT" % tmpdir)
+    with tempmount.apply(boot_partition, "rw", "vfat") as tmpdir:
+        # install bootloader
+        os.mkdir("%s/boot" % tmpdir)
+        os.makedirs("%s/EFI/BOOT" % tmpdir)
 
-            if bios_compatible: subprocess.check_call(["grub2-install","--target=i386-pc","--recheck","--boot-directory=%s/boot" % tmpdir,device])
-            subprocess.check_call(["grub2-mkimage","-o","%s/EFI/BOOT/bootx64.efi" % tmpdir,"-O","x86_64-efi","xfs","fat","part_gpt","part_msdos","normal","linux","echo","all_video","test","multiboot","multiboot2","search","iso9660","gzio","lvm","chain","configfile","cpuid","minicmd","gfxterm","font","terminal","squash4","loopback","videoinfo","videotest"])
+        if bios_compatible: subprocess.check_call(["grub2-install","--target=i386-pc","--recheck","--boot-directory=%s/boot" % tmpdir,device])
+        subprocess.check_call(["grub2-mkimage","-o","%s/EFI/BOOT/bootx64.efi" % tmpdir,"-O","x86_64-efi","xfs","fat","part_gpt","part_msdos","normal","linux","echo","all_video","test","multiboot","multiboot2","search","iso9660","gzio","lvm","chain","configfile","cpuid","minicmd","gfxterm","font","terminal","squash4","loopback","videoinfo","videotest"])
 
-            # boot config
-            with open("%s/boot/grub/grub.cfg" % tmpdir, "w") as f:
-                f.write("loopback loop /walbrix\n")
-                f.write("configfile (loop)/grub.cfg\n")
-            with open("%s/boot/grub/walbrix.cfg" % tmpdir, "w") as f:
-                f.write("set WALBRIX_BOOT=UUID=%s\n" % boot_partition_uuid)
+        # boot config
+        with open("%s/boot/grub/grub.cfg" % tmpdir, "w") as f:
+            f.write("loopback loop /walbrix\n")
+            f.write("source (loop)/grub.cfg\n")
+        with open("%s/boot/grub/walbrix.cfg" % tmpdir, "w") as f:
+            f.write("set WALBRIX_BOOT=UUID=%s\n" % boot_partition_uuid)
             
-            # copy system image
-            shutil.copy(image, "%s/walbrix" % tmpdir)
+        # copy system image
+        print "Installing Walbrix..."
+        shutil.copy(image, "%s/walbrix" % tmpdir)
+        subprocess.call(["sync"])
 
-            # TODO: setup pure efi boot using x86_64/usr/lib64/efi/xen.efi, x86_64/boot/kernel, x86_64/boot/initramfs
-        finally:
-            print "Syncing..."
-            subprocess.check_call(["umount",tmpdir])
-    finally:
-        os.rmdir(tmpdir)
+        print "Installing EFI xen..."
+        os.makedirs("%s/EFI/Walbrix" % tmpdir)
+
+        with tempmount.apply(image, "-o ro,loop", "squashfs") as squashfs:
+            shutil.copy("%s/x86_64/usr/lib64/efi/xen.efi" % squashfs, "%s/EFI/Walbrix/xen.efi" % tmpdir)
+            shutil.copy("%s/x86_64/boot/kernel" % squashfs, "%s/EFI/Walbrix/kernel" % tmpdir)
+            shutil.copy("%s/x86_64/boot/initramfs" % squashfs, "%s/EFI/Walbrix/initramfs" % tmpdir)
+
+        with open("%s/EFI/Walbrix/xen.cfg" % tmpdir, "w") as f:
+            f.write("[global]\ndefault=Walbrix\n\n")
+            f.write("[Walbrix]\n")
+            f.write("options=dom0_mem=512M,max:512M\n")
+            f.write("kernel=kernel dolvm domdadm scandelay edd=off walbrix.boot=UUID=%s splash=silent,theme:wb console=tty1 quiet nomodeset\n" % boot_partition_uuid)
+            f.write("ramdisk=initramfs\n")
+
+        subprocess.call(["sync"])
 
     # format profile volume
     subprocess.check_call(["mkfs.xfs","-q","/dev/%s/profile" % vgname])
