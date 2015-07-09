@@ -1,0 +1,20 @@
+--- block-drbd.orig	2015-07-09 10:43:37.196463162 +0900
++++ block-drbd	2015-07-09 10:44:01.315898071 +0900
+@@ -248,6 +248,8 @@
+     fi
+ 
+     case $t in 
++      phy)
++        ;&
+       drbd)
+         drbd_resource=$p
+         drbd_role="$(/sbin/drbdadm role $drbd_resource)"
+@@ -276,6 +278,8 @@
+ 
+   remove)
+     case $t in 
++      phy)
++        ;&
+       drbd)
+         p=$(xenstore_read "$XENBUS_PATH/params")
+         drbd_resource=$p
