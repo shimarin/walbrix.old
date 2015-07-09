@@ -9,7 +9,7 @@ env['INSTALLER_64_MARKER'] = "build/installer/x86_64/etc/ld.so.cache"
 env['INSTALLER_32_MARKER'] = "build/installer/i686/etc/ld.so.cache"
 env['WBUI_MARKER'] = "build/walbrix/wbui/usr/share/wbui/commit-id"
 env['LOCALE_MARKER'] = "build/walbrix/locale/.done"
-env['MKISOFS_OPTS'] = "-J -r -b boot/boot.img -no-emul-boot -boot-load-size 4 -boot-info-table -graft-points -eltorito-alt-boot -e boot/efiboot.img"
+env['MKISOFS_OPTS'] = "-f -J -r -b boot/boot.img -no-emul-boot -boot-load-size 4 -boot-info-table -graft-points -eltorito-alt-boot -e boot/efiboot.img"
 #grub2-mkimage -o files/iso9660/boot.img -O i386-pc-eltorito loopback xfs fat part_gpt part_msdos normal linux echo all_video test multiboot multiboot2 search iso9660 gzio lvm chain configfile cpuid minicmd gfxterm font terminal ata biosdisk squash4
 
 ## begin rule defs ##
@@ -61,9 +61,9 @@ env.Command("portage.tar.xz", "/usr/portage/metadata/timestamp.chk", "tar Jcvpf 
 
 for region in ["jp"]:
     # CD
-    iso9660_deps = ["walbrix","files/iso9660/grub.cfg","build/installer/install.64","build/installer/install.32","build/installer/wbui"] + boot_iso9660
-    iso9660_files = "boot/boot.img=build/boot-iso9660/boot.img boot/efiboot.img=build/boot-iso9660/efiboot.img boot/grub/grub.cfg=files/iso9660/grub.cfg EFI/BOOT/bootx64.efi=build/boot-iso9660/bootx64.efi walbrix=walbrix install.64=build/installer/install.64 install.32=build/installer/install.32 wbui=build/installer/wbui"
-    env.Command("walbrix-%s.iso" % region, iso9660_deps, "xorriso -as mkisofs  $MKISOFS_OPTS -V WBINSTALL -o $TARGET %s" % iso9660_files)
+    iso9660_deps = ["walbrix","$SYSTEM_64_MARKER","files/iso9660/grub.cfg","build/installer/install.64","build/installer/install.32","build/installer/wbui"] + boot_iso9660
+    iso9660_files = "boot/boot.img=build/boot-iso9660/boot.img boot/efiboot.img=build/boot-iso9660/efiboot.img boot/grub/grub.cfg=files/iso9660/grub.cfg EFI/BOOT/bootx64.efi=build/boot-iso9660/bootx64.efi walbrix=walbrix install.64=build/installer/install.64 install.32=build/installer/install.32 wbui=build/installer/wbui EFI/Walbrix/kernel=build/walbrix/x86_64/boot/kernel EFI/Walbrix/initramfs=build/walbrix/x86_64/boot/initramfs"
+    env.Command("walbrix-%s.iso" % region, iso9660_deps, "xorriso -as mkisofs $MKISOFS_OPTS -V WBINSTALL -o $TARGET %s" % iso9660_files)
     env.Command("walbrix-%s-DVD.iso" % region, iso9660_deps + ["portage.tar.xz"], "xorriso -as mkisofs  $MKISOFS_OPTS -V WBINSTALLDVD -o $TARGET %s portage.tar.xz=portage.tar.xz distfiles=/usr/portage/distfiles" % iso9660_files)
 
 def define_va_target(artifact, arch, region):
