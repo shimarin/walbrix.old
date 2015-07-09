@@ -5,7 +5,7 @@ import magic # emerge python-magic
 import lxml.etree
 import kernelver
 
-import execute,kernel,rpmbootstrap,vadesc
+import execute,kernel,rpmbootstrap,vadesc,package,stage3
 
 _elf = re.compile('.*ELF.+dynamically linked.*')
 
@@ -147,37 +147,6 @@ def process_file(context, filename):
         except Exception as e:
             print(e)
 
-def process_package(context, package_dir, exclude_patterns, expected_use_flags):
-    def is_needed(filename, exclude_patterns):
-        exclude_prefixes = ["/usr/share/doc/", "/usr/share/info/", "/usr/share/gtk-doc/", "/usr/share/man/", "/usr/include/", "/usr/lib/pkgconfig/", "/usr/lib64/pkgconfig/","/usr/share/pkgconfig/","/dev/","/etc/portage/"]
-        for pfx in exclude_prefixes:
-            if filename.startswith(pfx): return False
-
-        for ptn in exclude_patterns + [r"^/usr/lib(64)?/.*lib.+\.a$",r"^/usr/share/locale/(?!ja).+?/"]:
-            if re.compile(ptn).match(filename): return False
-        return True
-
-    # Check USE flag requirements
-    use_flags = open("%s/USE" % package_dir).read().split()
-    for u in expected_use_flags:
-        if u.startswith('-'):
-            if u[1:] in use_flags: raise Exception("USE flag %s is set when it shouldn't be." % u[1:])
-        elif u not in use_flags: raise Exception("USE flag %s is missing when it should be." % u)
-
-    with open("%s/CONTENTS" % package_dir) as f:
-        line = f.readline()
-        while line:
-            splitted = line.strip().split(' ')
-            ent_type = splitted[0] if len(splitted) > 0 else None
-            filename = None
-            if ent_type == "obj":
-                filename = ' '.join(splitted[1:-2])
-            elif ent_type == "sym":
-                filename = ' '.join(splitted[1:-1]).split(" -> ")[0]
-            if filename is not None and is_needed(filename, exclude_patterns):
-                process_file(context, filename)
-            line = f.readline()
-
 def process_lstfile(context, lstfile):
     def require(args):
         dirname = os.path.dirname(lstfile)
@@ -185,22 +154,9 @@ def process_lstfile(context, lstfile):
         if dirname != "": required_lstfile = os.path.normpath(dirname + "/" + required_lstfile)
         process_lstfile(context, required_lstfile)
 
-    def package(args):
-        parser = argparse.ArgumentParser()
-        parser.add_argument("--exclude", action="append", default=[], help="exclude pattern(can be used multiple times)")
-        parser.add_argument("--use", type=str, default="", help="USE flags to be expected")
-        parser.add_argument("package", type=str, help="package name")
-        args = parser.parse_args(args)
-        target_package = context.apply_variables(args.package)
-        match = glob.glob(os.path.normpath("%s/var/db/pkg/%s/CONTENTS" % (context.source, target_package)))
-        if len(match) < 1:
-            match = glob.glob(os.path.normpath("%s/var/db/pkg/%s-[0-9]*/CONTENTS" % (context.source, target_package)))
-        if len(match) < 1:
-            raise Exception("Package doesn't match: '%s'" % target_package)
-        elif len(match) > 1:
-            raise Exception("Package anbiguous: '%s', %d packages match" % (target_package, len(match)))
-        process_package(context, os.path.dirname(match[0]), args.exclude, args.use.split())
-        
+    def _package(args):
+        package.apply(context, args)
+
     def _kernel(args):
         kernel.apply(context, args)
         
@@ -359,12 +315,16 @@ def process_lstfile(context, lstfile):
             finally:
                 shutil.rmtree(debootstrap_dir)
         subprocess.check_call(["tar","zxvpf",cache_file,"-C",context.destination])
+
     def _rpmbootstrap(args):
         rpmbootstrap.apply(context, args)
 
+    def _stage3(args):
+        stage3.apply(context, args)
+
     directives = {
         "$require":require,
-        "$package":package,
+        "$package":_package,
         "$kernel":_kernel,
         "$exec":_execute,
         "$mkdir":mkdir,
@@ -381,7 +341,8 @@ def process_lstfile(context, lstfile):
         "$vadesc":_vadesc,
         "$download":download,
         "$debootstrap":debootstrap,
-        "$rpmbootstrap":_rpmbootstrap
+        "$rpmbootstrap":_rpmbootstrap,
+        "$stage3":_stage3
     }
     
     if context.is_lstfile_already_processed(lstfile): return
@@ -399,7 +360,12 @@ def process_lstfile(context, lstfile):
                 if filename != "": process_file(context, context.apply_variables(filename))
             line = f.readline()
     context.mark_lstfile_as_processed(lstfile)
-        
+
+def parse_var(arg):
+    kv = arg.split('=', 1)
+    if len(kv) < 2: raise Exception("Invalid variable format (KEY=VALUE expected)")
+    return (kv[0].strip(), kv[1].strip())
+
 def run(lstfile, context):
     print "lstfile=%s, source=%s, destination=%s" % (lstfile, context.source, context.destination)
     mkdir_p(context.destination)

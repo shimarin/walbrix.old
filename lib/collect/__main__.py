@@ -1,11 +1,6 @@
 import argparse,os
 import collect
 
-def parse_var(arg):
-    kv = arg.split('=', 1)
-    if len(kv) < 2: raise Exception("Invalid variable format (KEY=VALUE expected)")
-    return (kv[0].strip(), kv[1].strip())
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=str, default="/", help="source directory")
@@ -20,5 +15,5 @@ if __name__ == '__main__':
     if destination.strip() == "": destination = "."
     if os.path.abspath(destination) in ["/", "//"]: raise Exception("Setting system root directory as destination is totally insane.")
 
-    context = collect.Context(args.source, destination, dict(map(lambda x:parse_var(x), args.var)))
+    context = collect.Context(args.source, destination, dict(map(lambda x:collect.parse_var(x), args.var)))
     collect.run(args.lstfile, context)

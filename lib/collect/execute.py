@@ -21,8 +21,10 @@ def proc_dev(root):
         try:
             yield
         finally:
+            print "Unmounting %s" % dev
             if mount_dev: patient_unmount(dev)
     finally:
+        print "Unmounting %s" % proc
         if mount_proc: patient_unmount(proc)
 
 def apply(context, args):

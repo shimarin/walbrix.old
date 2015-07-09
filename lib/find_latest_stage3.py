@@ -14,12 +14,12 @@ def run(arch, baseurl):
         autobuilds_base = baseurl + "/releases/amd64/autobuilds"
         latest_file = autobuilds_base + "/latest-stage3-amd64.txt"
 
-    print "%s/%s" % (autobuilds_base, read_latest_file(latest_file))
+    return "%s/%s" % (autobuilds_base, read_latest_file(latest_file))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-b", "--baseurl", help="Base URL which points gentoo mirror", default="http://ftp.kddilabs.jp/pub/Linux/distributions/gentoo")
     parser.add_argument("arch", type=str, nargs='?', default="x86_64", help="architecture")
     args = parser.parse_args()
-    run(args.arch, args.baseurl)
+    print run(args.arch, args.baseurl)
 
