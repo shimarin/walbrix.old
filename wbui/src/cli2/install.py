@@ -51,7 +51,7 @@ def get_partition(device, number):
 def shutdown_vgs():
     subprocess.check_call(["vgchange","-an"], close_fds=True)
 
-def run(args):
+def run(args, no_bios = False):
     image = args.image
     device = args.device
     if not os.path.isfile(image): raise Exception("System image file(%s) does not exist." % image)
@@ -65,7 +65,7 @@ def run(args):
 
     shutdown_vgs() # deactivate all VGs as target device might have belonged to some of them
     
-    bios_compatible = (sector_size == 512 and device_size <= 2199023255552) # 512 * 2**32
+    bios_compatible = (sector_size == 512 and device_size <= 2199023255552) and not no_bios # 512 * 2**32 = 2199023255552
 
     # create partition table
     execute_parted_command(device, "mklabel %s" % ("msdos" if bios_compatible else "gpt"))
@@ -102,7 +102,7 @@ def run(args):
 
     with tempmount.apply(boot_partition, "rw", "vfat") as tmpdir:
         # install bootloader
-        os.mkdir("%s/boot" % tmpdir)
+        os.makedirs("%s/boot/grub" % tmpdir)
         os.makedirs("%s/EFI/BOOT" % tmpdir)
 
         if bios_compatible: subprocess.check_call(["grub2-install","--target=i386-pc","--recheck","--boot-directory=%s/boot" % tmpdir,device])
@@ -145,7 +145,7 @@ def run(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--image", type=str, default=DEFAULT_SYSTEM_IMAGE, help="System image file to install")
+    parser.add_argument("--no-bios", action="store_true", help="Don't install bootloader for BIOS(UEFI only)")
     parser.add_argument("device", type=str, help="target device")
     args = parser.parse_args()
-    if not run(args): sys.exit(1)
-
+    if not run(args, args.no_bios): sys.exit(1)
