@@ -3,7 +3,7 @@
 build/
 download_cache/
 .sconsign.dblite
-walbrix
+/walbrix
 *.xz
 *.iso
 

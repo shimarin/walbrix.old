@@ -1,0 +1,35 @@
+#!/bin/sh
+INTERVAL=daily
+if [[ "$0" =~ ^/etc/cron\.(.+)/ ]]; then
+        INTERVAL=${BASH_REMATCH[1]}
+fi
+
+# Enabling backup: lvchange --addtag=backup-$INTERVAL /dev/wbvg/lvname
+BACKUP_TAG=@backup-$INTERVAL
+
+LOGFILE=/var/log/backup.log
+DONE_FILE=/run/backup.done
+FAIL_FILE=/run/backup.fail
+HOSTNAME=`hostname`
+
+rm -f $DONE_FILE
+
+[ -f /etc/wb/backup ] || exit
+source /etc/wb/backup
+[ -z "$BACKUP_ROOT" ] && exit
+tty -s || exec >$LOGFILE 2>&1
+
+lvs --noheadings --nameprefixes -o lv_name,lv_path $BACKUP_TAG | while read line; do
+	eval $line
+	if [ -z "$LVM2_LV_NAME" -o -z "$LVM2_LV_PATH" ]; then
+		echo `date` $LVM2_LV_PATH "invalid vars" >> $FAIL_FILE
+		continue
+	fi
+	wb rsync -v --delete $LVM2_LV_PATH $BACKUP_ROOT/$LVM2_LV_NAME || echo `date` $LVM2_LV_PATH "rsync fail" >> $FAIL_FILE
+done
+
+if [[ "$INTERVAL" == "daily" ]]; then
+	wb rsync -v --delete / $BACKUP_ROOT/$HOSTNAME || echo `date` $HOSTNAME "rsync fail" >> $FAIL_FILE
+fi
+
+date > $DONE_FILE
