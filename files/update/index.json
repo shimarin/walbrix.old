@@ -1,0 +1,7 @@
+{
+    "latest_stable":"4.1.0",
+    "releases":[
+        { "version":"4.1.0", "image_url":"http://dist.walbrix.net/walbrix" }
+    ],
+    "upload_command":"s3cmd put -P index.json s3://update.walbrix.net/"
+}
