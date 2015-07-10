@@ -40,12 +40,12 @@ def get_release_info(update_info, version):
     #else
     return None
 
-def run(version = None): # None == latest stable
+def run(specified_version = None): # None == latest stable
     print "Checking update info..."
     update_info = json.load(urllib2.urlopen(UPDATE_INFO_URL))
-    if version is None: version = update_info["latest_stable"]
-    release_info = get_release_info(update_info, version)
-    if release_info is None: raise Exception("No such version: %s" % version)
+    if specified_version is None: specified_version = update_info["latest_stable"]
+    release_info = get_release_info(update_info, specified_version)
+    if release_info is None: raise Exception("No such version: %s" % specified_version)
 
     available_version = release_info["version"]
     print "Available version: %s" % available_version
@@ -54,7 +54,7 @@ def run(version = None): # None == latest stable
     current_version = version.read(SYSTEM_IMAGE)["WALBRIX_VERSION"]
     print "Currently installed version: %s" % current_version
 
-    if avaibale_version == current_version:
+    if available_version == current_version:
         print "No need to update."
         return
 
