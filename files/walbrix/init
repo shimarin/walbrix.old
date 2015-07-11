@@ -138,10 +138,16 @@ if echo "${PROFILE_PARTITION}" | grep -qs '^\(LABEL\|UUID\)='; then
     PROFILE_PARTITION=`busybox findfs "${PROFILE_PARTITION}"`
 fi
 
-if ! mount -r "${BOOT_PARTITION}" /mnt/boot; then
+if ! mount -t vfat -o rw "${BOOT_PARTITION}" /mnt/boot; then
     bad_msg "Unable to mount $BOOT_PARTITION"
     exec sh
 fi
+
+# https://github.com/wbrxcorp/walbrix/issues/8
+[ -f /mnt/boot/walbrix.cur ] && mv -f /mnt/boot/walbrix.cur /mnt/boot/walbrix.old
+
+# make boot partition readonly
+mount -o remount,ro /mnt/boot
 
 if ! mount -o loop,ro /mnt/boot/walbrix /mnt/system; then
     bad_msg "Unable to mount $BOOT_PARTITION/walbrix"
@@ -178,6 +184,8 @@ fi
 mkdir -p /newroot/.overlay/boot && mount --move /mnt/boot /newroot/.overlay/boot
 #mkdir -p /newroot/mnt/system && mount --move /mnt/system /newroot/mnt/system
 mkdir -p /newroot/.overlay/profile && mount --move /mnt/profile /newroot/.overlay/profile
+
+# https://github.com/wbrxcorp/walbrix/blob/master/wbui/src/cli2/update.py#L4
 touch /newroot/.overlay/.lock
 
 if [ `grep '/newroot/.overlay/profile' /proc/mounts | awk '{print $1}'` = "tmpfs" ]; then

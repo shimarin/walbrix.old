@@ -53,7 +53,8 @@ def run(specified_version = None): # None == latest stable
         with rw_mount(BOOT_PARTITION):
             print "Downloading the system image..."
             subprocess.check_call(["wget","-O",SYSTEM_IMAGE + ".new", release_info["image_url"]])
-            shutil.move(SYSTEM_IMAGE, SYSTEM_IMAGE + ".old") # rename system image currently running
+            if not os.path.isfile(SYSTEM_IMAGE + ".cur"):
+                shutil.move(SYSTEM_IMAGE, SYSTEM_IMAGE + ".cur") # rename system image currently running
             shutil.move(SYSTEM_IMAGE + ".new",SYSTEM_IMAGE)
             if os.path.isdir("%s/EFI/Walbrix" % BOOT_PARTITION): upgrade_efi_xen()
 
