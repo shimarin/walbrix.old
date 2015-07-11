@@ -147,7 +147,7 @@ def print_disk_info(disks):
         return "%dTB" % (size / 1000000000000)
     row_format ="{:>15} {:>8} {:>12} {:>20} {:>10}"
     print row_format.format("NAME","SIZE","VENDOR","MODEL","BOOT TYPE")
-    print "----------------------------------------------------------------"
+    print "---------------------------------------------------------------------"
     for disk in disks:
         print row_format.format(disk["name"],size_to_str(disk["size"]),'"' + disk["vendor"] + '"','"' + disk["model"] + '"',"BIOS+UEFI" if disk["bios_compatible"] else "UEFI")
     
