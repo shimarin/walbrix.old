@@ -224,40 +224,8 @@ def exec_install(device, image = None, yes = False):
 
         # boot config
         with open("%s/boot/grub/grub.cfg" % tmpdir, "w") as f:
-            f.write("""set gfxmode='640x480x32'
-set gfxpayload='keep'
-insmod gfxterm
-insmod vbe
-terminal_output gfxterm
-
-loopback loop /walbrix
-source /boot/grub/walbrix.cfg
-source (loop)/grubvars.cfg
-
-if cpuid -l; then
-
-menuentry 'Rescue 64bit' {
-	echo 'Loading kernel...'
-	linux (loop)/x86_64/boot/kernel scandelay nomodeset i915.modeset=0 nouveau.modeset=0 edd=off walbrix.boot=$WALBRIX_BOOT walbrix.locale=ja_JP softlevel=rescue
-	echo 'Loading initramfs...'
-	initrd (loop)/x86_64/boot/initramfs
-}
-
-fi
-
-menuentry 'Rescue 32bit' {
-	echo 'Loading kernel...'
-	linux (loop)/i686/boot/kernel scandelay nomodeset i915.modeset=0 nouveau.modeset=0 edd=off walbrix.boot=$WALBRIX_BOOT walbrix.locale=ja_JP softlevel=rescue
-	echo 'Loading initramfs...'
-	initrd (loop)/i686/boot/initramfs
-}
-
-if [ "${grub_platform}" = "pc" ]; then
-	menuentry 'memtest86+' {
-		linux16 (loop)/i686/boot/memtest86plus/memtest
-	}
-fi
-""")
+            f.write("loopback loop /walbrix\n")
+            f.write("source (loop)/install.cfg\n")
         with open("%s/boot/grub/walbrix.cfg" % tmpdir, "w") as f:
             f.write("set WALBRIX_BOOT=UUID=%s\n" % boot_partition_uuid)
             
