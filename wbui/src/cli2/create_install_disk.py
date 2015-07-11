@@ -145,7 +145,7 @@ def print_disk_info(disks):
         elif size < 1000000000000: return "%dGB" % (size / 1000000000)
         #else
         return "%dTB" % (size / 1000000000000)
-    row_format ="{:>15} {:>8} {:>12} {:>20} {:>10}"
+    row_format ="{:<15} {:>8} {:>12} {:>20} {:>10}"
     print row_format.format("NAME","SIZE","VENDOR","MODEL","BOOT TYPE")
     print "---------------------------------------------------------------------"
     for disk in disks:
