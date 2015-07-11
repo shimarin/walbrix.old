@@ -27,8 +27,8 @@ def run(device, image, no_bios = False):
 
     # create boot partition
     create_install_disk.execute_parted_command(device, "mkpart primary 1MiB 2GiB")
-    create_install_disk.execute_parted_command(device, "toggle 1 boot")
-    if bios_compatible: subprocess.check_call(["sfdisk","-q","--change-id",device,"1","ef"])
+    create_install_disk.execute_parted_command(device, "set 1 boot on")
+    if bios_compatible: create_install_disk.execute_parted_command(device, "set 1 esp on")
 
     # create lvm physical volume (for profile and virtual machines)
     create_install_disk.execute_parted_command(device, "mkpart primary 2GiB, -1")

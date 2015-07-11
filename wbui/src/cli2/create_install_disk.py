@@ -151,9 +151,9 @@ def print_disk_info(disks):
     for disk in disks:
         print row_format.format(disk["name"],size_to_str(disk["size"]),'"' + disk["vendor"] + '"','"' + disk["model"] + '"',"BIOS+UEFI" if disk["bios_compatible"] else "UEFI")
     
-def print_usable_disks():
+def print_usable_disks(minimum_disk_size = 1000000000):
     print "Target disk(like /dev/sdX) must be specified.  Usable disks are:"
-    print_disk_info(usable_disks(MINIMUM_DISK_SIZE_IN_GB * 1000000000))
+    print_disk_info(usable_disks(minimum_disk_size))
     print "Disks you're going to use aren't listed above? Unmount them first."
 
 def get_partition_uuid(partition):
@@ -176,7 +176,7 @@ def search_command(name, altname = None):
             if os.path.isfile(fullpath): return fullpath
     return None
 
-def run(device, image = None, yes = False):
+def exec_install(device, image = None, yes = False):
     if image is not None:
         if not os.path.isfile(image): raise Exception("Image file '%s' not found." % image)
     else:
@@ -194,15 +194,15 @@ def run(device, image = None, yes = False):
 
     if disk_size < MINIMUM_DISK_SIZE_IN_GB * 1000000000: raise Exception("Insufficient device capacity. %.1fGB required(%.1fGB)" % (MINIMUM_DISK_SIZE_IN_GB, disk_size / 1000000000.0))
     print_disk_info([disk_info])
-    if not yes and raw_input("Are you sure to destroy all existing data on %s? ('yes' if sure): " % device) != "yes": return False
+    if not yes and raw_input("Are you sure to destroy all existing data on %s? ('yes' if sure): " % device) != "yes": return None
 
     # create partition table
     execute_parted_command(device, "mklabel %s" % ("msdos" if bios_compatible else "gpt"))
 
     # create boot partition
     execute_parted_command(device, "mkpart primary 1MiB %s" % ("-1" if disk_size <= MAX_BIOS_FRIENDLY_DISK_SIZE else "2TiB"))
-    execute_parted_command(device, "toggle 1 boot")
-    if bios_compatible: subprocess.check_call(["sfdisk","-q","--change-id",device,"1","ef"])
+    execute_parted_command(device, "set 1 boot on")
+    if bios_compatible: execute_parted_command(device, "set 1 esp on")
 
     # wait for udev to refresh partition info
     sync_udev()
@@ -270,14 +270,24 @@ fi
         print "Syncing..."
 
     print "Done."
-    return True
+    return boot_partition
+
+def copy_sources(partition):
+    if not os.path.isdir("/usr/portage/distfiles"): raise Exception("Portage doesn't exist(/usr/portage/distfiles)")
+    print "Cleaning distfiles..."
+    subprocess.check_call(["eclean-dist"])
+    with tempmount(partition, None, "vfat") as tmpdir:
+        print "Archiving portage tree..."
+        subprocess.check_call(["tar","Jcf","%s/portage.tar.xz" % tmpdir,"--exclude=portage/metadata/cache","--exclude=portage/packages","--exclude=portage/distfiles","-C","/usr","portage"])
+        print "Copying distfiles...."
+        subprocess.check_call(["cp","-r","/usr/portage/distfiles","%s/" % tmpdir])
+        print "Syncing..."
 
 def check_prereqs():
     arch = os.uname()[4]
     if arch != "x86_64": print "WARNING: The system architecture(%s) is not x86_64" % arch
     if search_command("parted") is None: print "WARNING: parted command is missing"
     if search_command("udevadm") is None: print "WARNING: udevadm command is missing"
-    if search_command("sfdisk") is None: print "WARNING: sfdisk command is missing"
     if search_command("mkfs.fat", "mkfs.msdos") is None: print "WARNING: mkfs.fat(mkfs.msdos) command is missing"
     if search_command("wget") is None: print "WARNING: wget command is missing (You prefer curl instead? sorry.)"
     if search_command("blkid") is None: print "WARNING: blkid command is missing"
@@ -290,13 +300,18 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--image", type=str, help="System image file to install")
     parser.add_argument("--yes", "-y", action="store_true", help="Proceed without confirmation")
+    parser.add_argument("--sources", action="store_true", help="Copy portage tree")
     parser.add_argument("device", type=str, nargs='?', help="Target device")
     args = parser.parse_args()
 
     check_prereqs()
     
     if args.device is None:
-        print_usable_disks()
+        print_usable_disks(MINIMUM_DISK_SIZE_IN_GB * 1000000000)
         sys.exit(1)
     #else
-    if not run(args.device, args.image, args.yes): sys.exit(1)
+    boot_partition = exec_install(args.device, args.image, args.yes)
+    if boot_partition is None: sys.exit(1)
+
+    if args.sources:
+        copy_sources(boot_partition)
