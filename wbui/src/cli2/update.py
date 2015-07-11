@@ -1,7 +1,6 @@
-import argparse,fcntl,os,subprocess,shutil,urllib2,json,contextlib
-import tempmount,version
+import argparse,fcntl,os,subprocess,shutil,contextlib
+import version,create_install_disk
 
-UPDATE_INFO_URL="http://update.walbrix.net"
 LOCK_FILE="/.overlay/.lock" # Walbrix's initramfs creates this lock file when system boots
 BOOT_PARTITION="/.overlay/boot"
 SYSTEM_IMAGE=BOOT_PARTITION + "/walbrix"
@@ -26,7 +25,7 @@ def rw_mount(mountpoint):
 
 def upgrade_efi_xen():
     print "Extracting EFI Xen image..."
-    with tempmount.apply(SYSTEM_IMAGE, "-o ro,loop", "squashfs") as squashfs:
+    with create_install_disk.tempmount(SYSTEM_IMAGE, "-o ro,loop", "squashfs") as squashfs:
         shutil.copy("%s/x86_64/usr/lib64/efi/xen.efi" % squashfs, "%s/EFI/Walbrix/xen.new" % BOOT_PARTITION)
         shutil.copy("%s/x86_64/boot/kernel" % squashfs, "%s/EFI/Walbrix/kernel.new" % BOOT_PARTITION)
         shutil.copy("%s/x86_64/boot/initramfs" % squashfs, "%s/EFI/Walbrix/initramfs.new" % BOOT_PARTITION)
@@ -34,18 +33,9 @@ def upgrade_efi_xen():
     shutil.move("%s/EFI/Walbrix/kernel.new" % BOOT_PARTITION, "%s/EFI/Walbrix/kernel" % BOOT_PARTITION)
     shutil.move("%s/EFI/Walbrix/initramfs.new" % BOOT_PARTITION, "%s/EFI/Walbrix/initramfs" % BOOT_PARTITION)
 
-def get_release_info(update_info, version):
-    for v in update_info["releases"]:
-        if v["version"] == version: return v
-    #else
-    return None
-
 def run(specified_version = None): # None == latest stable
     print "Checking update info..."
-    update_info = json.load(urllib2.urlopen(UPDATE_INFO_URL))
-    if specified_version is None: specified_version = update_info["latest_stable"]
-    release_info = get_release_info(update_info, specified_version)
-    if release_info is None: raise Exception("No such version: %s" % specified_version)
+    release_info = create_install_disk.get_release_info(specified_version)
 
     available_version = release_info["version"]
     print "Available version: %s" % available_version

@@ -1,12 +1,12 @@
 import argparse,re,os,json,sys
-import tempmount
+import create_install_disk
 
 DEFAULT_SYSTEM_IMAGE="/.overlay/boot/walbrix"
 VAR_MATCH = re.compile(r'^set (.+?)=(.+)$')
 
 def read(image):
     vars = {}
-    with tempmount.apply(image, "loop,ro","squashfs") as tmpdir:
+    with create_install_disk.tempmount(image, "loop,ro","squashfs") as tmpdir:
         with open("%s/grubvars.cfg" % tmpdir) as f:
             while True:
                 line = f.readline()
