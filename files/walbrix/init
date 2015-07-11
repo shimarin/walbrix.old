@@ -138,16 +138,10 @@ if echo "${PROFILE_PARTITION}" | grep -qs '^\(LABEL\|UUID\)='; then
     PROFILE_PARTITION=`busybox findfs "${PROFILE_PARTITION}"`
 fi
 
-if ! mount -t vfat -o rw "${BOOT_PARTITION}" /mnt/boot; then
+if ! mount -r "${BOOT_PARTITION}" /mnt/boot; then
     bad_msg "Unable to mount $BOOT_PARTITION"
     exec sh
 fi
-
-# https://github.com/wbrxcorp/walbrix/issues/8
-[ -f /mnt/boot/walbrix.cur ] && mv -f /mnt/boot/walbrix.cur /mnt/boot/walbrix.old
-
-# make boot partition readonly
-mount -o remount,ro /mnt/boot
 
 if ! mount -o loop,ro /mnt/boot/walbrix /mnt/system; then
     bad_msg "Unable to mount $BOOT_PARTITION/walbrix"
@@ -187,6 +181,12 @@ mkdir -p /newroot/.overlay/profile && mount --move /mnt/profile /newroot/.overla
 
 # https://github.com/wbrxcorp/walbrix/blob/master/wbui/src/cli2/update.py#L4
 touch /newroot/.overlay/.lock
+
+# https://github.com/wbrxcorp/walbrix/issues/8
+if [ -f /newroot/.overlay/boot/walbrix.cur ];then
+     mount -o remount,rw /newroot/.overlay/boot && mv -f /newroot/.overlay/boot/walbrix.cur /newroot/.overlay/boot/walbrix.old
+     mount -o remount,ro /newroot/.overlay/boot
+fi
 
 if [ `grep '/newroot/.overlay/profile' /proc/mounts | awk '{print $1}'` = "tmpfs" ]; then
     # some useful modification for rescue environment
