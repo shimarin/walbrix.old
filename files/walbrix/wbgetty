@@ -1,4 +1,20 @@
 #!/bin/sh
-([ ! -x /usr/sbin/wb ] || egrep -q '\bwalbrix.noui\b' /proc/cmdline || ! (rc-service -e xenstored && service -q xenstored status)) && exec /sbin/agetty $@
+if egrep -q '\bwalbrix.noui\b' /proc/cmdline; then
+    # boot parameter 'walbrix.noui' specified
+    exec /sbin/agetty $@
+fi
+if [ ! -x /usr/sbin/wb -o ! -d /usr/share/wbui ]; then
+    echo "WBUI not found. Falling back to normal login."
+    exec /sbin/agetty $@
+fi
+if [ ! -e /dev/fb0 ]; then
+    echo "Framebuffer device /dev/fb0 is not available. Falling back to normal login."
+    exec /sbin/agetty $@
+fi
+if [ ! -f /sys/hypervisor/type ]; then
+    echo "Hypervisor is not present. Falling back to normal login."
+    exec /sbin/agetty $@
+fi
+
 #else
 /usr/sbin/wb getty
