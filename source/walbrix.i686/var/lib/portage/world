@@ -7,6 +7,7 @@ app-backup/fsarchiver
 app-cdr/cdrkit
 app-crypt/chntpw
 app-editors/bvi
+app-editors/nano
 app-editors/nvi
 app-editors/vim
 app-emulation/xen
