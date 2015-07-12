@@ -6,7 +6,7 @@ MINIMUM_DISK_SIZE_IN_GB=3.5
 def shutdown_vgs():
     subprocess.check_call(["vgchange","-an"], close_fds=True)
 
-def run(device, image, no_bios = False):
+def run(device, image, no_bios = False, xen_vga = None):
     if not os.path.isfile(image): raise Exception("System image file(%s) does not exist." % image)
 
     disk_info = create_install_disk.get_disk_info(device)
@@ -69,6 +69,7 @@ def run(device, image, no_bios = False):
             f.write("source (loop)/grub.cfg\n")
         with open("%s/boot/grub/walbrix.cfg" % tmpdir, "w") as f:
             f.write("set WALBRIX_BOOT=UUID=%s\n" % boot_partition_uuid)
+            if xen_vga is not None: f.write("set WALBRIX_XEN_VGA=%s\n" % xen_vga)
             
         # copy system image
         print "Installing Walbrix..."
@@ -101,9 +102,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--image", type=str, default=create_install_disk.DEFAULT_SYSTEM_IMAGE, help="System image file to install")
     parser.add_argument("--no-bios", action="store_true", help="Don't install bootloader for BIOS(UEFI only)")
+    parser.add_argument("--xen-vga", type=str, nargs='?', const="gfx-640x480x32", help="Specify Xen's vga= option")
     parser.add_argument("device", type=str, nargs='?', help="target device")
     args = parser.parse_args()
     if args.device is None:
         create_install_disk.print_usable_disks()
         sys.exit(1)
-    if not run(args.device, args.image, args.no_bios): sys.exit(1)
+    if not run(args.device, args.image, args.no_bios, args.xen_vga): sys.exit(1)
