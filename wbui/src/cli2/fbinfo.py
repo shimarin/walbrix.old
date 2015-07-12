@@ -15,8 +15,8 @@ def apply(fbdev):
         try:
             var = array.array('B', [0] * FB_VAR_SCREENINFO_SZ)
             fix = array.array('c', [chr(0)] * FB_FIX_SCREENINFO_SZ)
-            fcntl.ioctl(fd, 0x4600, var, 1)
-            fcntl.ioctl(fd, 0x4602, fix, 1)
+            fcntl.ioctl(fd, FBIOGET_VSCREENINFO, var, 1)
+            fcntl.ioctl(fd, FBIOGET_FSCREENINFO, fix, 1)
         finally:
             os.close(fd)
     except:
