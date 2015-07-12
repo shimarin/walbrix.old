@@ -1,10 +1,18 @@
 import argparse,glob,os,subprocess,shutil,sys,tempfile
-import create_install_disk
+import create_install_disk,fbinfo
 
 MINIMUM_DISK_SIZE_IN_GB=3.5
+DEFAULT_XEN_VGA="gfx-640x480x32"
 
 def shutdown_vgs():
     subprocess.check_call(["vgchange","-an"], close_fds=True)
+
+def determine_xen_vga_mode():
+    # https://github.com/wbrxcorp/walbrix/issues/20
+    info = fbinfo.apply()
+    if info is None or len(info) == 0: return DEFAULT_XEN_VGA
+    if info[0] not in ["EFI VGA", "VESA VGA"]: return None
+    return "gfx-%dx%dx%d" % (info[1],info[2],info[3])
 
 def run(device, image, no_bios = False, xen_vga = None):
     if not os.path.isfile(image): raise Exception("System image file(%s) does not exist." % image)
@@ -55,6 +63,9 @@ def run(device, image, no_bios = False, xen_vga = None):
     subprocess.check_call(["lvcreate","--yes","--addtag=@wbprofile","-n",lvname,"-L","1G",vgname], close_fds=True)
     create_install_disk.sync_udev()
 
+    # detect vga mode if necessary
+    if xen_vga == "DETECT": xen_vga = determine_xen_vga_mode()
+    
     with create_install_disk.tempmount(boot_partition, "rw", "vfat") as tmpdir:
         # install bootloader
         os.makedirs("%s/boot/grub" % tmpdir)
@@ -102,7 +113,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--image", type=str, default=create_install_disk.DEFAULT_SYSTEM_IMAGE, help="System image file to install")
     parser.add_argument("--no-bios", action="store_true", help="Don't install bootloader for BIOS(UEFI only)")
-    parser.add_argument("--xen-vga", type=str, nargs='?', const="gfx-640x480x32", help="Specify Xen's vga= option")
+    parser.add_argument("--xen-vga", type=str, nargs='?', const="DETECT", help="Specify Xen's vga= option")
     parser.add_argument("device", type=str, nargs='?', help="target device")
     args = parser.parse_args()
     if args.device is None:

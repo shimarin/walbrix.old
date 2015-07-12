@@ -9,7 +9,7 @@ FB_FIX_SCREENINFO_SZ = 68
 
 DEFAULT_FBDEV="/dev/fb0"
 
-def apply(fbdev):
+def apply(fbdev = DEFAULT_FBDEV):
     try:
         fd = os.open(fbdev, os.O_RDONLY)
         try:
@@ -33,5 +33,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
     rst = apply(args.fbdev)
     print json.dumps([] if rst is None else rst)
-
-
