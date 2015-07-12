@@ -1,6 +1,6 @@
 Copyright (c) 2010-2015 Walbrix Corporation
 
-The code is PROPRIETARY except modules which contain individual LICENSE.txt or equivalent.
+The code is PROPRIETARY except modules which contain individual LICENSE.txt, copyright notice or equivalent.
 
 You MAY copy/modify the proprietary code for your own use, at your own risk.
 You MAY NOT redistribute the proprietary code with or without modification.
