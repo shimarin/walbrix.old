@@ -166,7 +166,9 @@ fi
 
 rm -rf /mnt/profile/work # cleanup overlayfs workdir
 mkdir -p /mnt/profile/root /mnt/profile/work
-rm -rf /mnt/profile/root/tmp /mnt/profile/root/var/tmp /mnt/profile/root/etc/mtab # Cleanup /tmp
+rm -rf /mnt/profile/root/tmp /mnt/profile/root/var/tmp # cleanup temporary dirs
+rm -f /mnt/profile/root/etc/mtab # mtab should always point /proc/mounts
+rm -f /mnt/profile/root/etc/ld.so.cache # https://github.com/wbrxcorp/walbrix/issues/16
 
 ARCH=`uname -m`
 LOCALE=ja_JP
