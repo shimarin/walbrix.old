@@ -1,3 +1,4 @@
+$package sys-apps/kmod
 $kernel /boot/kernel
 /lib/modules/$(KERNEL_VERSION)
 /lib/firmware

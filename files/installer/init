@@ -1,7 +1,17 @@
 #!/bin/sh
 mount -t proc -o noexec,nosuid,nodev proc /proc >/dev/null 2>&1
 CMDLINE=$(cat /proc/cmdline)
-umount /proc
+
+CONSOLE='/dev/console'
+
+splash() {
+	return 0
+}
+
+[ -e /usr/share/splashutils/initrd.splash ] && . /usr/share/splashutils/initrd.splash
+
+# Clean input/output
+exec >${CONSOLE} <${CONSOLE} 2>&1
 
 LOCALE='ja_JP'
 
@@ -13,6 +23,10 @@ do
 		;;
 	esac
 done
+
+splash 'init'
+
+umount /proc  # this can't be done before the first call to 'splash' function
 
 mount -o remount,rw / >/dev/null 2>&1
 

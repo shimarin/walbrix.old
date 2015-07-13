@@ -29,6 +29,7 @@ echo 1 > /proc/sys/kernel/printk
 CMDLINE=$(cat /proc/cmdline)
 
 BOOT_PARTITION=/dev/sda1
+LOCALE=ja_JP
 PROFILE_PARTITION=''
 INIT_OPTS=''
 QUIET=''
@@ -41,6 +42,9 @@ do
 		;;
 		walbrix.profile=*)
 			PROFILE_PARTITION=${x#*=}
+		;;
+		walbrix.locale=*)
+			LOCALE=${x#*=}
 		;;
 	        scandelay=*)
 			SDELAY=${x#*=}
@@ -125,6 +129,10 @@ mkdir /mnt/profile
 
 # determine devices
 good_msg 'Determining boot device ...'
+if [ "${BOOT_PARTITION}" = "CDROM" ]; then
+    BOOT_PARTITION=`blkid | grep -e 'LABEL="WBINSTALL.*".\+TYPE="iso9660"' | cut -d ':' -f 1`
+fi
+
 if echo "${BOOT_PARTITION}" | grep -qs '^\(LABEL\|UUID\)='; then
     BOOT_PARTITION=`busybox findfs "${BOOT_PARTITION}"`
 fi
@@ -158,7 +166,9 @@ if [ -z "${PROFILE_PARTITION}" ]; then
     fi
 fi
 
-mount "${PROFILE_PARTITION}" /mnt/profile || bad_msg "Unable to mount $PROFILE_PARTITION. Attempting tmpfs"
+if [ "${SOFTLEVEL}" != "rescue" -a  "${SOFTLEVEL}" != "install" ]; then # https://github.com/wbrxcorp/walbrix/issues/22
+    mount "${PROFILE_PARTITION}" /mnt/profile || bad_msg "Unable to mount $PROFILE_PARTITION. Attempting tmpfs"
+fi
 
 if ! grep -qs '/mnt/profile' /proc/mounts; then
     mount -t tmpfs tmpfs /mnt/profile || bad_msg "Unable to mount tmpfs"
@@ -171,7 +181,6 @@ rm -f /mnt/profile/root/etc/mtab # mtab should always point /proc/mounts
 rm -f /mnt/profile/root/etc/ld.so.cache # https://github.com/wbrxcorp/walbrix/issues/16
 
 ARCH=`uname -m`
-LOCALE=ja_JP
 
 if ! mount -t overlay -o lowerdir=/mnt/system/locale/${LOCALE}:/mnt/system/wbui:/mnt/system/${ARCH},upperdir=/mnt/profile/root,workdir=/mnt/profile/work overlay /newroot; then
 	bad_msg "Unable to mount /newroot"
@@ -192,11 +201,16 @@ fi
 
 if [ `grep '/newroot/.overlay/profile' /proc/mounts | awk '{print $1}'` = "tmpfs" ]; then
     # some useful modification for rescue environment
+    sed -i 's/\/usr\/sbin\/wbgetty/\/sbin\/agetty/' /newroot/etc/inittab
     sed -i 's/tty1 linux/--autologin root tty1 linux/' /newroot/etc/inittab
     echo 'hostname="rescue"' > /newroot/etc/conf.d/hostname
     if [ -f /newroot/.overlay/boot/walbrix.emg ]; then
         # extract emergency files (typically hostname, openssh, openvpn files and authorized_keys)
         tar xvf /newroot/.overlay/boot/walbrix.emg -C /newroot
+    fi
+    if [ "${SOFTLEVEL}" == "install" ]; then
+        echo -e '#!/bin/sh\n[ `tty` == "/dev/tty1" ] && exec fbterm -- wb installer' > /newroot/root/.profile
+        chmod 755 /newroot/root/.profile
     fi
 fi
 

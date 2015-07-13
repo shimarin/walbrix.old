@@ -1,16 +1,42 @@
-$require system.lst
+$require rootfs.lst
+/usr/bin/ldd
+$package sys-apps/baselayout
+$require dev.lst
+$require glibc.lst
+$require nano.lst
+$package app-misc/ca-certificates
+$require bash.lst
+$require kbd.lst
+$package sys-apps/net-tools
+$package sys-apps/sed
+$require openrc.lst
+$require splashutils.lst
+/usr/share/splashutils/initrd.splash
+
 $require kernel-modules.lst
+
+# compress kernel modules
+$package sys-apps/findutils
+$package app-arch/xz-utils
 $exec "find /lib/modules/$(KERNEL_VERSION) -name '*.ko' | xargs xz"
+
 $require wbui-deps.lst
 
 $sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBINSTALL"/'
 
-$sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
-#$sed /etc/inittab 's/tty1 linux/--noclear --autologin root tty1 linux/'
-$sed /etc/inittab 's/\/sbin\/agetty 38400 tty1 linux/\/usr\/sbin\/wb install_wb/'
+$sed /etc/shadow 's/^root:\*:/root::/' # Empty root passwordj
+$sed /etc/inittab 's/tty1 linux/--noclear --autologin root tty1 linux/'
+
+$exec "rm -f /etc/runlevels/default/netmount"
+
+$write /root/.profile '#!/bin/sh\n[ `tty` == "/dev/tty1" ] && exec fbterm -- wb installer'
+$exec "chmod 755 /root/.profile"
 
 $symlink /etc/init.d/net.eth0 net.lo
-$symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
+#$symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
 
 $copy installer/init /init
 $write /etc/fstab 'tmpfs\t/\tmpfs\tdefaults\t0 0'
+
+$exec --overlay "env-update"
+$deltree /var/lib/portage

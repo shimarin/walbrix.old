@@ -1,0 +1,8 @@
+# softlevel 'install'
+$require rescue.lst
+
+$mkdir /etc/runlevels/install
+#$symlink /etc/runlevels/install/net.eth0 /etc/init.d/net.eth0
+$symlink /etc/runlevels/install/acpid /etc/init.d/acpid
+$symlink /etc/runlevels/install/lvmetad /etc/init.d/lvmetad
+#$symlink /etc/runlevels/install/ntp-client /etc/init.d/ntp-client

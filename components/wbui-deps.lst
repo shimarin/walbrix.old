@@ -1,20 +1,38 @@
+$require python27.lst
+$require bash.lst # bash
 $require pygame.lst
 $package dev-python/pypam
 $package dev-python/python-magic
 $require pyalsaaudio.lst
 $require vlgothic.lst
 $require fbterm.lst
-$require lvm.lst
-$require cdrkit.lst
+$require cdrkit.lst # isoinfo
+$require grub.lst # for grub2-install, grub2-mkimage
+$require udev.lst # udevadm
 /usr/bin/curl
 /usr/bin/fbset
 $copy walbrix/wbgetty /usr/sbin/wbgetty
 
 # used by wbui and tools
-$package sys-fs/dosfstools
-$package sys-fs/lsscsi
-$package sys-fs/xfsprogs
-$package sys-block/parted
-$package media-gfx/fbgrab
+$package sys-apps/file  # file
+$package sys-apps/coreutils # chroot, sync, cp
+$package sys-apps/util-linux # mount, umount, blkid, lscpu, blkid
+$package sys-fs/dosfstools # mkfs.vfar
+$package sys-fs/xfsprogs # mkfs.xfs, xfs_growfs
+$package sys-block/parted # parted
+$package media-gfx/fbgrab # fbgrab
+$package sys-apps/dmidecode # dmidecode
+$package net-misc/wget # wget
+$package app-arch/tar # tar
+$package app-arch/bzip2
+$package app-arch/cpio
+$package app-arch/gzip
+$package app-arch/unzip
+$package app-arch/xz-utils
+$package sys-apps/grep # grep, egrep
+$package sys-process/procps # free
+$package dev-libs/openssl # openssl
+$package dev-libs/libcdio # iso-read
+$package sys-fs/lvm2 # for lvs vgs pvs...
 
 $mkdir /var/cache/wb

@@ -1,10 +1,12 @@
+# softlevel 'rescue'
+
 $require sysvinit.lst
 $require openvpn.lst
 $require lvm.lst
 $require acpi.lst
 $require ntp.lst
 $require avahi.lst
-$sed /etc/inittab 's/^l4:\(.\+\) default/l4:\1 rescue/'
+#$sed /etc/inittab 's/^l4:\(.\+\) default/l4:\1 rescue/'
 $mkdir /etc/runlevels/rescue
 $symlink /etc/runlevels/rescue/net.eth0 /etc/init.d/net.eth0
 $symlink /etc/runlevels/rescue/openvpn /etc/init.d/openvpn

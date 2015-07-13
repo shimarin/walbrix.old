@@ -27,7 +27,6 @@ $package dev-perl/Text-WrapI18N
 $package dev-perl/XML-Parser
 $package net-firewall/iptables
 $package net-misc/iputils
-$package net-misc/netifrc
 $package net-misc/openssh
 $package net-misc/rsync
 $package net-misc/wget
@@ -46,14 +45,10 @@ $package sys-apps/gentoo-functions
 $package sys-apps/grep
 $package sys-apps/hwids
 $package sys-apps/iproute2
-$package sys-apps/kmod
 $package sys-apps/less
 $package sys-apps/net-tools
 $require openrc.lst
 $package sys-apps/sed
-$require shadow.lst
-$require sysvinit.lst
-$package sys-apps/util-linux
 $package sys-apps/which
 $package sys-devel/make
 $package sys-devel/patch
@@ -61,6 +56,4 @@ $package sys-fs/e2fsprogs
 $require udev.lst
 $package sys-libs/timezone-data
 $package sys-process/procps
-$package sys-process/psmisc
-$require pam.lst
 $require kbd.lst

@@ -1,7 +1,8 @@
+$package sys-apps/util-linux
+$package sys-apps/kmod
 $package sys-fs/udev
 $package sys-fs/udev-init-scripts
 $mkdir /etc/udev/rules.d
 $touch /etc/udev/rules.d/80-net-setup-link.rules
 $touch /etc/udev/rules.d/80-net-name-slot.rules
 $symlink /etc/runlevels/sysinit/udev /etc/init.d/udev
-

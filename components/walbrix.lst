@@ -2,7 +2,7 @@ $require system.lst
 $require kernel.lst
 $require xen.lst
 
-$require rescue.lst
+$require install.lst  # defines softlevel 'rescue' and 'install'
 
 # boot
 $require splashutils.lst
@@ -139,7 +139,6 @@ $require ansible.lst
 # hardware
 $require usb_modeswitch.lst
 $package sys-apps/usbutils
-$package sys-apps/dmidecode
 $require bluez.lst
 $package sys-apps/lm_sensors
 $package sys-power/cpupower

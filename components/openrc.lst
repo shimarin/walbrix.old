@@ -1,3 +1,9 @@
+$require pam.lst
+$package sys-process/psmisc
+$package net-misc/netifrc
+$require sysvinit.lst
+
 $package sys-apps/openrc
+$package sys-apps/coreutils
 $exec "cp -av /usr/share/openrc/runlevels /etc/"
 $mkdir /lib/rc/cache /lib/rc/console
