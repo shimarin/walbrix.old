@@ -19,24 +19,23 @@ def ioctl_read_uint64(fd, req):
     return struct.unpack('L',buf)[0]
 
 def get_device_capacity(device):
-    BLKGETSIZE=0x1260
-    BLKGETSIZE64=0x80081272
     BLKSSZGET=0x1268
 
-    entire_size_in_bytes = None
+    if isinstance(device, tuple): major, minor = device
+    else:
+        disk_rdev = os.stat(device).st_rdev
+        major, minor = (os.major(disk_rdev), os.minor(disk_rdev))
+
+    device_dir = "/sys/dev/block/%d:%d" % (major, minor)
+
     logical_sector_size = None
     fd = os.open(device, os.O_RDONLY)
     try:
         logical_sector_size = ioctl_read_uint32(fd, BLKSSZGET)
-        try:
-            entire_size_in_bytes = ioctl_read_uint64(fd, BLKGETSIZE64)
-        except IOError as e: # Some platform doesn't support BLKGETSIZE64
-            if e.errno in (errno.EINVAL,errno.ENOTTY):
-                entire_size_in_bytes = ioctl_read_uint32(fd, BLKGETSIZE) * logical_sector_size
-            else: raise
     finally:
         os.close(fd)
-    return (entire_size_in_bytes, logical_sector_size)
+    number_of_512b_sectors = int(open("%s/size" % device_dir).read()) # unbelievably, "size" always is based on 512-bytes block no matter what its sector size is.
+    return (number_of_512b_sectors * 512, logical_sector_size)
 
 def get_disk_from_partition(partition):
     if isinstance(partition, tuple): major, minor = partition
