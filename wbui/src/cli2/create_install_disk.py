@@ -1,5 +1,5 @@
 #!/usr/bin/python2.7
-import argparse,array,fcntl,glob,os,subprocess,shutil,struct,sys,tempfile,re,json,urllib2,contextlib,time
+import argparse,array,fcntl,glob,os,subprocess,shutil,struct,sys,tempfile,re,json,urllib2,contextlib,time,errno
 
 UPDATE_INFO_URL="http://update.walbrix.net"
 DEFAULT_SYSTEM_IMAGE="/.overlay/boot/walbrix"
@@ -83,7 +83,7 @@ def get_disk_info(device):
         rst["size"] = device_capacity[0]
         rst["sector_size"] = device_capacity[1]
         rst["bios_compatible"] = rst["sector_size"] == 512 and rst["size"] <= MAX_BIOS_FRIENDLY_DISK_SIZE
-    except OSError, e:
+    except OSError:
         pass   # e.g. unloaded cd-rom drive
     return rst
 

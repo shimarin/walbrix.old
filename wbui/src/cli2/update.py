@@ -7,7 +7,7 @@ SYSTEM_IMAGE=BOOT_PARTITION + "/walbrix"
 
 @contextlib.contextmanager
 def file_lock(lockfile):
-    with open(LOCK_FILE) as f:
+    with open(lockfile) as f:
         fcntl.flock(f,fcntl.LOCK_EX)
         try:
             yield

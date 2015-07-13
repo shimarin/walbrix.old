@@ -1,0 +1,3 @@
+#!/bin/sh
+WBUI_BASE=`dirname @0`/src
+PYTHONPATH="${WBUI_BASE}" pylint -rn -dC cli2

@@ -1,10 +1,10 @@
-import argparse,re,os,json,sys
+import argparse,re,os,json
 import create_install_disk
 
 DEFAULT_SYSTEM_IMAGE="/.overlay/boot/walbrix"
 VAR_MATCH = re.compile(r'^set (.+?)=(.+)$')
 
-def read(image):
+def read(image=DEFAULT_SYSTEM_IMAGE):
     vars = {}
     with create_install_disk.tempmount(image, "loop,ro","squashfs") as tmpdir:
         with open("%s/grubvars.cfg" % tmpdir) as f:
@@ -17,11 +17,11 @@ def read(image):
                 vars[key] = value
     return vars
 
-def run(image):
-    if not os.path.isfile(args.image): raise Exception("%s not found" % args.image)
+def run(image=DEFAULT_SYSTEM_IMAGE):
+    if not os.path.isfile(image): raise Exception("%s not found" % image)
     print read(image)["WALBRIX_VERSION"]
 
-def run_async(image):
+def run_async(image=DEFAULT_SYSTEM_IMAGE):
     try:
         vars = read(image)
         rst = {"version":vars["WALBRIX_VERSION"]}
