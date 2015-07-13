@@ -1,4 +1,5 @@
-import argparse,glob,os,subprocess,shutil,sys,tempfile
+import argparse,os,subprocess,shutil,sys,stat
+import magic
 import create_install_disk,fbinfo
 
 MINIMUM_DISK_SIZE_IN_GB=3.5
@@ -14,8 +15,13 @@ def determine_xen_vga_mode():
     if info[0] not in ["EFI VGA", "VESA VGA"]: return None
     return "gfx-%dx%dx%d" % (info[1],info[2],info[3])
 
-def run(device, image, no_bios = False, xen_vga = None):
-    if not os.path.isfile(image): raise Exception("System image file(%s) does not exist." % image)
+def get_system_product_name():
+    dmidecode = create_install_disk.search_command("dmidecode")
+    if dmidecode is None: return None
+    return subprocess.check_output(["dmidecode","-s","system-product-name"]).strip()
+
+def run(device, image, no_bios = False, xen_vga = None): # image can be device like /dev/sr0
+    if not os.path.exists(image): raise Exception("System image file(%s) does not exist." % image)
 
     disk_info = create_install_disk.get_disk_info(device)
     device_size = disk_info["size"]
@@ -28,7 +34,7 @@ def run(device, image, no_bios = False, xen_vga = None):
 
     shutdown_vgs() # deactivate all VGs as target device might have belonged to some of them
     
-    bios_compatible = disk_info["bios_compatible"]
+    bios_compatible = not no_bios and disk_info["bios_compatible"]
 
     # create partition table
     create_install_disk.execute_parted_command(device, "mklabel %s" % ("msdos" if bios_compatible else "gpt"))
@@ -64,6 +70,7 @@ def run(device, image, no_bios = False, xen_vga = None):
     create_install_disk.sync_udev()
 
     # detect vga mode if necessary
+    if xen_vga is None and get_system_product_name() == "VirtualBox": xen_vga="DETECT"
     if xen_vga == "DETECT": xen_vga = determine_xen_vga_mode()
     
     with create_install_disk.tempmount(boot_partition, "rw", "vfat") as tmpdir:
@@ -84,13 +91,21 @@ def run(device, image, no_bios = False, xen_vga = None):
             
         # copy system image
         print "Installing Walbrix..."
-        shutil.copy(image, "%s/walbrix" % tmpdir)
+
+        image_dest = "%s/walbrix" % tmpdir
+        if magic.from_buffer(open(image).read(65536)).startswith("ISO 9660"):
+            subprocess.check_call(["iso-read","-i",image,"-e","/walbrix","-o",image_dest])
+            if stat.S_ISBLK(os.stat(device)[stat.ST_MODE]):
+                print "Done. Ejecting install disk..."
+                subprocess.call(["eject",image])
+        else:
+            shutil.copy(image, image_dest)
         subprocess.call(["sync"])
 
         print "Installing EFI xen..."
         os.makedirs("%s/EFI/Walbrix" % tmpdir)
 
-        with create_install_disk.tempmount(image, "-o ro,loop", "squashfs") as squashfs:
+        with create_install_disk.tempmount(image_dest, "-o ro,loop", "squashfs") as squashfs:
             shutil.copy("%s/x86_64/usr/lib64/efi/xen.efi" % squashfs, "%s/EFI/Walbrix/xen.efi" % tmpdir)
             shutil.copy("%s/x86_64/boot/kernel" % squashfs, "%s/EFI/Walbrix/kernel" % tmpdir)
             shutil.copy("%s/x86_64/boot/initramfs" % squashfs, "%s/EFI/Walbrix/initramfs" % tmpdir)
@@ -111,12 +126,33 @@ def run(device, image, no_bios = False, xen_vga = None):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--image", type=str, default=create_install_disk.DEFAULT_SYSTEM_IMAGE, help="System image file to install")
+    parser.add_argument("--image", type=str, help="System image file to install")
     parser.add_argument("--no-bios", action="store_true", help="Don't install bootloader for BIOS(UEFI only)")
     parser.add_argument("--xen-vga", type=str, nargs='?', const="DETECT", help="Specify Xen's vga= option")
     parser.add_argument("device", type=str, nargs='?', help="target device")
     args = parser.parse_args()
-    if args.device is None:
-        create_install_disk.print_usable_disks()
-        sys.exit(1)
-    if not run(args.device, args.image, args.no_bios, args.xen_vga): sys.exit(1)
+    device = args.device
+    if device is None:
+        usable_disks = create_install_disk.usable_disks(int(MINIMUM_DISK_SIZE_IN_GB * 1000000000))
+        num_disk = len(usable_disks)
+        if num_disk < 1:
+            print "There are not usable disks on this system."
+            sys.exit(1)
+        elif num_disk > 1:
+            print "Target disk(typically /dev/sda) must be specified.  Usable disks are:"
+            create_install_disk.print_disk_info(usable_disks)
+            sys.exit(1)
+        else:
+            device = usable_disks[0]["name"]
+    image = args.image
+    if image is None:
+        image = create_install_disk.DEFAULT_SYSTEM_IMAGE
+        if not os.path.isfile(image):
+            # search CD-ROM
+            for line in subprocess.check_output(["lsblk","-nd","--raw","-o","NAME,FSTYPE"]).splitlines():
+                line = line.split()
+                if len(line) > 1 and line[1] == "iso9660":
+                    image = "/dev/%s" % line[0]
+                    break
+        
+    if not run(device, image, args.no_bios, args.xen_vga): sys.exit(1)
