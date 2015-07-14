@@ -1,5 +1,5 @@
 #!/usr/bin/python2.7
-import argparse,array,fcntl,glob,os,subprocess,shutil,struct,sys,tempfile,re,json,urllib2,contextlib,time,errno
+import argparse,array,fcntl,glob,os,subprocess,shutil,struct,sys,tempfile,re,json,urllib2,contextlib,time
 
 UPDATE_INFO_URL="http://update.walbrix.net"
 DEFAULT_SYSTEM_IMAGE="/.overlay/boot/walbrix"
@@ -76,7 +76,7 @@ def get_disk_info(device):
         if not os.path.isfile(filename): return None
         return open(filename).read().strip()
 
-    rst = {"name":device, "identical_name":"/dev/block/%d:%d" % (major, minor),"device_dir":device_dir, "major":major, "minor":minor, "ro":int(read("ro")),"removable":int(read("removable")),"vendor":read("device/vendor"),"model":read("device/model")}
+    rst = {"name":device, "identical_name":"/dev/block/%d:%d" % (major, minor),"device_dir":device_dir, "major":major, "minor":minor, "ro":int(read("ro")),"removable":int(read("removable")),"vendor":read("device/vendor") or read("device/oemid"),"model":read("device/model") or read("device/name")}
     try:
         device_capacity = get_device_capacity(device)
         rst["size"] = device_capacity[0]
@@ -148,7 +148,7 @@ def print_disk_info(disks):
     print row_format.format("NAME","SIZE","VENDOR","MODEL","BOOT TYPE")
     print "---------------------------------------------------------------------"
     for disk in disks:
-        print row_format.format(disk["name"],size_to_str(disk["size"]),'"' + disk["vendor"] + '"','"' + disk["model"] + '"',"BIOS+UEFI" if disk["bios_compatible"] else "UEFI")
+        print row_format.format(disk["name"],size_to_str(disk["size"]),'"' + (disk["vendor"] or "UNKNOWN") + '"','"' + (disk["model"] or "UNKNOWN") + '"',"BIOS+UEFI" if disk["bios_compatible"] else "UEFI")
     
 def print_usable_disks(minimum_disk_size = 1000000000):
     print "Target disk(like /dev/sdX) must be specified.  Usable disks are:"
