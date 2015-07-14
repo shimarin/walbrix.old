@@ -1,3 +1,5 @@
+/usr/lib/cracklib_dict.pwd
+/usr/lib/cracklib_dict.pwi
 $package sys-apps/shadow
 /etc/passwd
 /etc/group

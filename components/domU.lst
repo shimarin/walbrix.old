@@ -75,8 +75,6 @@ $symlink /usr/bin/less ../../bin/busybox
 /usr/bin/wget
 /usr/bin/which
 /usr/bin/zip
-/usr/lib/cracklib_dict.pwd
-/usr/lib/cracklib_dict.pwi
 /usr/sbin/xfs_growfs
 
 # nmbd
