@@ -49,7 +49,7 @@ env.Command("build/walbrix/background.png", "files/walbrix/background.png", "cp 
 env.Command("build/walbrix/install.cfg", "files/walbrix/install.cfg", "cp $SOURCE $TARGET")
 
 env.Command("walbrix", ["$SYSTEM_64_MARKER", "$SYSTEM_32_MARKER", "$WBUI_MARKER", "build/walbrix/locale", "build/walbrix/grubvars.cfg", "build/walbrix/grub.cfg","build/walbrix/install.cfg","build/walbrix/background.png"], "mksquashfs build/walbrix $TARGET -noappend")
-env.Command("upload", "walbrix", "s3cmd put -P $SOURCE s3://dist.walbrix.net/walbrix")
+env.Command("upload", "walbrix", "s3cmd put -P $SOURCE s3://dist.walbrix.net/walbrix-`./kernelver -n source/walbrix.x86_64/boot/kernel`")
 
 env.Command("$INSTALLER_64_MARKER", ["components/installer.lst","$LOCALE_MARKER"], "rm -rf build/installer/x86_64 && ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/installer.lst build/installer/x86_64 && cp -av build/walbrix/locale build/installer/x86_64/.locale")
 env.Command("$INSTALLER_32_MARKER", ["components/installer.lst","$LOCALE_MARKER"], "rm -rf build/installer/i686 && ./collect --source source/walbrix.i686 --var=ARCH=i686 components/installer.lst build/installer/i686 && cp -av build/walbrix/locale build/installer/i686/.locale")
