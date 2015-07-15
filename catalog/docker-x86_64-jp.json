@@ -1,0 +1,14 @@
+{
+    "id": "docker",
+    "version":"1.7.0",
+    "title": "Docker 1.7.0 (64bit)",
+    "description": "Dockerは、サーバーアプリケーションの配備を簡単に行うためのプラットフォームです。",
+    "tarball": "http://dist.walbrix.net/va/docker-1.7.0-x86_64-jp.tar.xz",
+    "minimum_ram": 512, 
+    "minimum_hd": 2,
+
+    "uuid":"e3fb5fb7-742b-42d6-8fb1-70154ee732bd",
+    "instruction":"システムにSSHなどで直接ログインして Dockerを操作してください。",
+
+    "upload_command":"s3cmd put -P docker-x86_64-jp.json s3://va.walbrix.net/x86_64/"
+}

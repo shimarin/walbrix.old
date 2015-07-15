@@ -1,4 +1,12 @@
+$require domU.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1owncloud\2/'
+
+$package sys-fs/aufs-util
 #dev-lang/go
 #dev-db/sqlite
+$package net-firewall/iptables
 $require git.lst
 $package app-emulation/docker --use="aufs -device-mapper vim-syntax"
+$symlink /etc/runlevels/default/docker /etc/init.d/docker
+
+$vadesc
