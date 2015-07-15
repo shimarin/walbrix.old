@@ -19,6 +19,7 @@ $require kernel-modules.lst
 $package sys-apps/findutils
 $package app-arch/xz-utils
 $exec "find /lib/modules/$(KERNEL_VERSION) -name '*.ko' | xargs xz"
+$exec "/sbin/depmod $(KERNEL_VERSION)" # depmod again
 
 $require wbui-deps.lst
 
