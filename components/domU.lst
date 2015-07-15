@@ -70,6 +70,7 @@ $symlink /usr/bin/less ../../bin/busybox
 /usr/bin/rsync
 /usr/bin/strace
 /usr/bin/strings
+/usr/bin/telnet
 /usr/bin/unzip
 #symlink /usr/bin/vi ../../bin/busybox
 /usr/bin/wget

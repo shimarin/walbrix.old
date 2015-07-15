@@ -1,6 +1,7 @@
 app-admin/sudo
 app-admin/sysklogd
 app-arch/zip
+app-editors/nvi
 app-emulation/docker
 dev-util/strace
 media-fonts/vlgothic
@@ -8,6 +9,7 @@ net-analyzer/traceroute
 net-analyzer/zabbix
 net-fs/samba
 net-misc/curl
+net-misc/netkit-telnetd
 net-misc/ntp
 net-misc/openvpn
 sys-auth/nss-mdns

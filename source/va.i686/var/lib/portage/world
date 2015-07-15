@@ -25,6 +25,7 @@ net-analyzer/traceroute
 net-analyzer/zabbix
 net-fs/samba
 net-misc/curl
+net-misc/netkit-telnetd
 net-misc/ntp
 net-misc/openvpn
 sys-auth/nss-mdns
