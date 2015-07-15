@@ -14,3 +14,6 @@ $package dev-util/scons
 $package dev-libs/libisoburn  # for /usr/bin/xorriso
 $require debootstrap.lst
 $require yum.lst
+
+# zfs
+$exec --overlay "emerge -1 zfs"
