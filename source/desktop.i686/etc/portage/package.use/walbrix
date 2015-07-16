@@ -2,3 +2,10 @@ sys-kernel/gentoo-sources symlink
 net-misc/openvpn threads passwordsave
 net-dns/avahi -introspection
 sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc
+
+media-libs/mesa xa
+x11-libs/libdrm libkms
+x11-libs/gtk+ X
+x11-libs/cairo X
+media-fonts/liberation-fonts X
+media-fonts/vlgothic X

@@ -22,7 +22,7 @@ region_to_locale = {
 
 env.Command("$SYSTEM_64_MARKER", "source/walbrix.x86_64", "rm -rf build/walbrix/x86_64 && ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/walbrix.lst build/walbrix/x86_64")
 env.Command("$SYSTEM_32_MARKER", "source/walbrix.i686", "rm -rf build/walbrix/i686 && ./collect --source source/walbrix.i686 --var=ARCH=i686 components/walbrix.lst build/walbrix/i686")
-env.Command("$DESKTOP_32_MARKER", "source/desktop.i686", "rm -rf build/desktop/i686 && ./collect --source source/desktop.i686 --var=ARCH=i686 components/desktop.lst build/desktop/i686")
+env.Command("$DESKTOP_32_MARKER", ["source/desktop.i686","components/desktop.lst"], "rm -rf build/desktop/i686 && ./collect --source source/desktop.i686 --var=ARCH=i686 components/desktop.lst build/desktop/i686")
 env.Command("$WBUI_MARKER", [Glob("wbui/src/*.py"),Glob("wbui/src/*/*.py"), "files/walbrix/wb",".git/HEAD"], """
 rm -rf build/wbui
 python2.7 -m compileall -q wbui/src

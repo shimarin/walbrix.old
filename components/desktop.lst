@@ -97,9 +97,9 @@ $sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount
 
 # tools
 #$require binutils.lst
-#$require vim.lst
+$require vim.lst
 #$require sudo.lst
-#/usr/bin/strace
+/usr/bin/strace
 #$package app-misc/screen
 #$package app-editors/bvi
 #$package app-admin/sysstat
@@ -114,6 +114,11 @@ $sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount
 #$package sys-apps/lshw
 #$require nut.lst
 #$require omronups.lst
+
+$require xorg.lst
+$require sakura.lst
+#$package media-fonts/vlgothic
+#$sed /etc/X11/xinit/xinitrc 's/xterm (\-name login|-geometry [0-9x\\+\-]\+)/sakura/'
 
 $exec --overlay "env-update"
 $deltree /var/lib/portage

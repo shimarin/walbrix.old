@@ -1,0 +1,88 @@
+#sys-libs/mtdev
+#x11-proto/xproto-7.0.27  USE="-doc" 
+#x11-proto/xextproto-7.3.0  USE="-doc" 
+#x11-proto/videoproto-2.3.2 
+#x11-libs/libpciaccess-0.13.3  USE="zlib -minimal -static-libs" 
+#x11-proto/fontsproto-2.1.3  USE="-doc" 
+#x11-proto/randrproto-1.4.0-r1 
+#x11-proto/xineramaproto-1.2.1-r1 
+#x11-proto/renderproto-0.11.1-r1 
+#x11-proto/dri2proto-2.8-r1 
+#x11-proto/xf86driproto-2.1.1-r1 
+#x11-proto/glproto-1.4.17 
+#x11-proto/kbproto-1.0.6-r1 
+#x11-proto/inputproto-2.3.1 
+#x11-libs/xtrans-1.3.5  USE="-doc" 
+#x11-misc/util-macros-1.19.0 
+#media-fonts/font-util-1.3.0 
+#x11-proto/dri3proto-1.0 
+#x11-libs/pixman-0.32.6  USE="(-altivec) (-iwmmxt) (-loongson2f) (-neon) -static-libs" CPU_FLAGS_X86="-mmxext -sse2 -ssse3" 
+#x11-proto/xf86vidmodeproto-2.3.1-r1 
+#x11-proto/presentproto-1.0 
+#x11-proto/damageproto-1.2.1-r1 
+#x11-proto/xf86dgaproto-2.1-r2 
+#x11-proto/resourceproto-1.2.0 
+#dev-libs/libpthread-stubs-0.3-r1  USE="-static-libs" 
+#x11-proto/trapproto-3.4.3 
+#x11-proto/compositeproto-0.4.2-r1 
+#x11-proto/bigreqsproto-1.1.2  USE="-doc" 
+#x11-proto/xf86rushproto-1.1.2-r1 
+#x11-misc/xbitmaps-1.1.1 
+#x11-proto/recordproto-1.14.2-r1  USE="-doc" 
+#x11-proto/xcmiscproto-1.2.2  USE="-doc" 
+#media-libs/freetype-2.5.5  USE="adobe-cff bindist bzip2 -X -auto-hinter -debug -doc -fontforge -harfbuzz -infinality -png -static-libs -utils" 
+#x11-proto/scrnsaverproto-1.2.2-r1  USE="-doc" 
+#dev-libs/libevdev-1.3  USE="-static-libs" 
+#x11-proto/xf86bigfontproto-1.2.0-r1 
+#x11-proto/xcb-proto-1.11  PYTHON_TARGETS="python2_7 python3_3 -python3_4" 
+#x11-libs/libdrm-2.4.59  USE="libkms -static-libs" VIDEO_CARDS="intel nouveau radeon vmware (-exynos) (-freedreno) (-omap) (-tegra)" 
+#x11-libs/libXau-1.0.8  USE="-static-libs" 
+#x11-libs/libICE-1.0.9  USE="ipv6 -doc -static-libs" 
+#x11-libs/libxshmfence-1.2  USE="-static-libs" 
+#x11-libs/libXdmcp-1.1.1-r1  USE="-doc -static-libs" 
+#x11-proto/fixesproto-5.0-r1 
+#x11-apps/rgb-1.0.6 
+#x11-libs/libfontenc-1.1.2  USE="-static-libs" 
+#x11-libs/libxcb-1.11-r1  USE="-doc (-selinux) -static-libs {-test} -xkb" 
+#x11-libs/libXfont-1.5.1  USE="bzip2 ipv6 -doc -static-libs -truetype" 
+#x11-apps/iceauth-1.0.7 
+#x11-libs/libSM-1.2.2-r1  USE="ipv6 uuid -doc -static-libs" 
+#x11-libs/libX11-1.6.2  USE="ipv6 -doc -static-libs {-test}" 
+#x11-libs/libXext-1.3.3  USE="-doc -static-libs" 
+#x11-libs/libxkbfile-1.0.8  USE="-static-libs" 
+#x11-libs/libXfixes-5.0.1  USE="-static-libs" 
+#x11-libs/libXt-1.1.4  USE="-static-libs" 
+$package x11-apps/xkbcomp
+#x11-libs/libXv-1.0.10  USE="-static-libs" 
+#x11-libs/libXmu-1.1.2  USE="ipv6 -doc -static-libs" 
+#x11-libs/libXdamage-1.1.4-r1  USE="-static-libs" 
+#x11-libs/libXxf86vm-1.1.4  USE="-static-libs" 
+$package x11-apps/xauth
+$package x11-misc/xkeyboard-config
+#x11-libs/libXvMC-1.0.8  USE="-static-libs" 
+$package x11-apps/xrdb
+$package x11-apps/xinit
+#media-libs/mesa-10.3.7-r1  USE="bindist classic dri3 egl gallium gbm llvm nptl udev xa -debug -gles1 -gles2 -opencl -openmax -openvg -osmesa -pax_kernel -pic (-selinux) -vdpau -wayland -xvmc" VIDEO_CARDS="intel nouveau radeon vmware (-freedreno) -i915 -i965 -ilo -r100 -r200 -r300 -r600 -radeonsi" 
+$package x11-base/xorg-server
+$package x11-drivers/xf86-input-keyboard
+$package x11-drivers/xf86-video-vmware
+$package x11-drivers/xf86-video-mach64
+$package x11-drivers/xf86-video-nouveau
+$package x11-drivers/xf86-video-openchrome
+$package x11-drivers/xf86-video-intel
+$package x11-drivers/xf86-video-r128
+$package x11-drivers/xf86-video-fbdev
+$package x11-drivers/xf86-video-tdfx
+$package x11-drivers/xf86-video-savage
+$package x11-drivers/xf86-video-mga
+$package x11-drivers/xf86-input-mouse
+$package x11-drivers/xf86-video-v4l
+$package x11-drivers/xf86-video-dummy
+$package x11-drivers/xf86-video-vesa
+$package x11-drivers/xf86-video-trident
+$package x11-drivers/xf86-input-evdev
+$package x11-drivers/xf86-video-nv
+$package x11-drivers/xf86-video-glint
+#x11-libs/glamor
+$package x11-drivers/xf86-video-ati
+
