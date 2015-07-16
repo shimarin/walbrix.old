@@ -5,5 +5,7 @@ $require sysvinit.lst
 
 $package sys-apps/openrc
 $package sys-apps/coreutils
+# some init scriprs need awk
+/bin/awk
 $exec "cp -av /usr/share/openrc/runlevels /etc/"
 $mkdir /lib/rc/cache /lib/rc/console
