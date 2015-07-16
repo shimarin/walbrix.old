@@ -34,5 +34,7 @@ $package sys-process/procps # free
 $package dev-libs/openssl # openssl
 $package dev-libs/libcdio # iso-read
 $package sys-fs/lvm2 # for lvs vgs pvs...
+$package sys-apps/pciutils # lspci
+$package sys-apps/kmod # modinfo
 
 $mkdir /var/cache/wb
