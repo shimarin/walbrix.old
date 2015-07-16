@@ -5,6 +5,7 @@ env = Environment()
 
 env['SYSTEM_64_MARKER'] = "build/walbrix/x86_64/etc/profile.env"
 env['SYSTEM_32_MARKER'] = "build/walbrix/i686/etc/profile.env"
+env['DESKTOP_32_MARKER'] = "build/desktop/i686/etc/profile.env"
 env['INSTALLER_64_MARKER'] = "build/installer/x86_64/etc/profile.env"
 env['INSTALLER_32_MARKER'] = "build/installer/i686/etc/profile.env"
 env['WBUI_MARKER'] = "build/walbrix/wbui/usr/share/wbui/commit-id"
@@ -21,6 +22,7 @@ region_to_locale = {
 
 env.Command("$SYSTEM_64_MARKER", "source/walbrix.x86_64", "rm -rf build/walbrix/x86_64 && ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/walbrix.lst build/walbrix/x86_64")
 env.Command("$SYSTEM_32_MARKER", "source/walbrix.i686", "rm -rf build/walbrix/i686 && ./collect --source source/walbrix.i686 --var=ARCH=i686 components/walbrix.lst build/walbrix/i686")
+env.Command("$DESKTOP_32_MARKER", "source/desktop.i686", "rm -rf build/desktop/i686 && ./collect --source source/desktop.i686 --var=ARCH=i686 components/desktop.lst build/desktop/i686")
 env.Command("$WBUI_MARKER", [Glob("wbui/src/*.py"),Glob("wbui/src/*/*.py"), "files/walbrix/wb",".git/HEAD"], """
 rm -rf build/walbrix/wbui
 python2.7 -m compileall -q wbui/src
@@ -43,11 +45,19 @@ env.Command("build/walbrix/grubvars.cfg", "$WBUI_MARKER", """
 echo "set WALBRIX_VERSION=`./kernelver -n source/walbrix.x86_64/boot/kernel`" > $TARGET
 echo "set WALBRIX_BUILD_ID=`cat $SOURCE`" >> $TARGET
 """)
+env.Command("build/desktop/walbrix.cfg", "$WBUI_MARKER", """
+echo "set WALBRIX_VERSION=`./kernelver -n source/desktop.i686/boot/kernel`" > $TARGET
+echo "set WALBRIX_BUILD_ID=`cat $SOURCE`" >> $TARGET
+""")
 env.Command("build/walbrix/grub.cfg", "files/walbrix/grub.cfg", "cp $SOURCE $TARGET")
+env.Command("build/desktop/grub.cfg", "files/desktop/grub.cfg", "cp $SOURCE $TARGET")
 env.Command("build/walbrix/background.png", "files/walbrix/background.png", "cp $SOURCE $TARGET")
+env.Command("build/desktop/background.png", "files/walbrix/background.png", "cp $SOURCE $TARGET")
 env.Command("build/walbrix/install.cfg", "files/walbrix/install.cfg", "cp $SOURCE $TARGET")
+env.Command("build/desktop/install.cfg", "files/desktop/install.cfg", "cp $SOURCE $TARGET")
 
 env.Command("walbrix", ["$SYSTEM_64_MARKER", "$SYSTEM_32_MARKER", "$WBUI_MARKER", "build/walbrix/locale", "build/walbrix/grubvars.cfg", "build/walbrix/grub.cfg","build/walbrix/install.cfg","build/walbrix/background.png"], "mksquashfs build/walbrix $TARGET -noappend")
+env.Command("desktop", ["$DESKTOP_32_MARKER", "$WBUI_MARKER", "build/walbrix/locale", "build/desktop/walbrix.cfg", "build/desktop/grub.cfg","build/desktop/install.cfg","build/desktop/background.png"], "mksquashfs build/desktop $TARGET -noappend")
 env.Command("upload", "walbrix", "s3cmd put -P $SOURCE s3://dist.walbrix.net/walbrix-`./kernelver -n source/walbrix.x86_64/boot/kernel`")
 
 env.Command("$INSTALLER_64_MARKER", ["components/installer.lst","$LOCALE_MARKER"], "rm -rf build/installer/x86_64 && ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/installer.lst build/installer/x86_64 && cp -av build/walbrix/locale build/installer/x86_64/.locale")
@@ -62,10 +72,11 @@ env.Command("portage.tar.xz", "/usr/portage/metadata/timestamp.chk", "tar Jcvpf 
 
 for region in ["jp"]:
     # CD
-    iso9660_deps = ["walbrix","$SYSTEM_64_MARKER","files/iso9660/grub.cfg","build/installer/install.32","build/installer/wbui"] + boot_iso9660
-    iso9660_files = "boot/boot.img=build/boot-iso9660/boot.img boot/efiboot.img=build/boot-iso9660/efiboot.img boot/grub/grub.cfg=files/iso9660/grub.cfg boot/grub/fonts/unicode.pf2=build/walbrix/i686/usr/share/grub/unicode.pf2 EFI/BOOT/bootx64.efi=build/boot-iso9660/bootx64.efi walbrix=walbrix kernel.32=build/walbrix/i686/boot/kernel install.32=build/installer/install.32 wbui=build/installer/wbui EFI/Walbrix/kernel=build/walbrix/x86_64/boot/kernel EFI/Walbrix/initramfs=build/walbrix/x86_64/boot/initramfs"
-    env.Command("walbrix-%s.iso" % region, iso9660_deps, "xorriso -as mkisofs $MKISOFS_OPTS -V WBINSTALL -o $TARGET %s" % iso9660_files)
-    env.Command("walbrix-%s-DVD.iso" % region, iso9660_deps + ["portage.tar.xz"], "xorriso -as mkisofs  $MKISOFS_OPTS -V WBINSTALLDVD -o $TARGET %s portage.tar.xz=portage.tar.xz distfiles=/usr/portage/distfiles" % iso9660_files)
+    iso9660_deps = ["$SYSTEM_64_MARKER","files/iso9660/grub.cfg","build/installer/install.32","build/installer/wbui"] + boot_iso9660
+    iso9660_files = "boot/boot.img=build/boot-iso9660/boot.img boot/efiboot.img=build/boot-iso9660/efiboot.img boot/grub/grub.cfg=files/iso9660/grub.cfg boot/grub/fonts/unicode.pf2=build/walbrix/i686/usr/share/grub/unicode.pf2 EFI/BOOT/bootx64.efi=build/boot-iso9660/bootx64.efi kernel.32=build/walbrix/i686/boot/kernel install.32=build/installer/install.32 wbui=build/installer/wbui EFI/Walbrix/kernel=build/walbrix/x86_64/boot/kernel EFI/Walbrix/initramfs=build/walbrix/x86_64/boot/initramfs"
+    env.Command("walbrix-%s.iso" % region, iso9660_deps + ["walbrix"], "xorriso -as mkisofs $MKISOFS_OPTS -V WBINSTALL -o $TARGET %s walbrix=walbrix" % iso9660_files)
+    env.Command("desktop-%s.iso" % region, iso9660_deps + ["desktop"], "xorriso -as mkisofs $MKISOFS_OPTS -V WBINSTALL -o $TARGET %s walbrix=desktop" % iso9660_files)
+    env.Command("walbrix-%s-DVD.iso" % region, iso9660_deps + ["walbrix" + "portage.tar.xz"], "xorriso -as mkisofs  $MKISOFS_OPTS -V WBINSTALLDVD -o $TARGET %s walbrix=walbrix portage.tar.xz=portage.tar.xz distfiles=/usr/portage/distfiles" % iso9660_files)
 
 def define_va_target(artifact, arch, region):
     build_dir = "build/%s-%s-%s" % (artifact, arch, region)

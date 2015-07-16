@@ -1,0 +1,10 @@
+app-arch/cpio
+net-dns/avahi
+net-misc/ntp
+net-misc/openvpn
+sys-boot/grub
+sys-fs/lvm2
+sys-kernel/genkernel
+sys-kernel/gentoo-sources
+sys-power/acpi
+sys-power/acpid

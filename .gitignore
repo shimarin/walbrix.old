@@ -4,6 +4,7 @@ build/
 download_cache/
 .sconsign.dblite
 /walbrix
+/desktop
 *.xz
 *.iso
 *.img
