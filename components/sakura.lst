@@ -22,15 +22,20 @@ $package media-libs/fontconfig
 #x11-libs/cairo
 #x11-libs/libXft
 $package x11-libs/gdk-pixbuf
-#dev-libs/atk
-#app-accessibility/at-spi2-core
+$package dev-libs/atk # /usr/lib64/girepository-1.0/Atk-1.0.typelib
+$package app-accessibility/at-spi2-core # /usr/share/dbus-1/services/org.a11y.Bus.service
 #media-libs/harfbuzz
 $package x11-libs/pango
 /usr/lib/pango/1.8.0/modules.cache
 #app-accessibility/at-spi2-atk
 $package dev-util/gtk-update-icon-cache
-#gnome-base/librsvg
+$package gnome-base/librsvg # /usr/lib/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-svg.so
 $package x11-themes/adwaita-icon-theme
-#x11-libs/gtk+
+$package dev-libs/glib # /usr/share/glib-2.0/schemas
+/usr/share/glib-2.0/schemas/gschemas.compiled
+$package x11-misc/shared-mime-info # /usr/share/mime/packages/freedesktop.org.xml
+/usr/share/mime/mime.cache
+$package x11-libs/gtk+-2.24.28-r1 # /usr/lib64/girepository-1.0/Gtk-2.0.typelib
+$package x11-libs/gtk+-3.14.13 # /usr/lib64/girepository-1.0/Gtk-3.0.typelib
 #x11-libs/vte
 $package x11-terms/sakura

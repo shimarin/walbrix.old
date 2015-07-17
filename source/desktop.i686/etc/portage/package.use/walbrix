@@ -13,4 +13,12 @@ media-libs/harfbuzz icu
 sys-libs/zlib minizip
 dev-libs/libxml2 icu
 media-libs/libvpx postproc
-
+sys-apps/dbus X
+app-i18n/mozc emacs fcitx renderer linguas_ja -qt4
+x11-libs/pango X
+app-i18n/fcitx gtk gtk3 -qt4
+app-editors/emacs X alsa dbus gif gtk jpeg png sound dvg tiff
+app-emacs/emacs-common-gentoo X
+app-text/iso-codes linguas_ja
+app-i18n/ibus gtk
+x11-wm/icewm truetype

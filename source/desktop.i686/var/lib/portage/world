@@ -1,5 +1,7 @@
 app-arch/cpio
 app-editors/vim
+app-i18n/mozc
+app-portage/gentoolkit
 dev-util/strace
 media-fonts/vlgothic
 net-dns/avahi
@@ -14,3 +16,4 @@ sys-power/acpid
 www-client/chromium
 x11-base/xorg-server
 x11-terms/sakura
+x11-wm/icewm
