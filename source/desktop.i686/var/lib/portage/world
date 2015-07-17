@@ -15,5 +15,6 @@ sys-power/acpi
 sys-power/acpid
 www-client/chromium
 x11-base/xorg-server
+x11-misc/lightdm
 x11-terms/sakura
 x11-wm/icewm

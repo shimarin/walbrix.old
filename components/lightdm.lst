@@ -1,0 +1,14 @@
+#sys-devel/autoconf-archive-2015.02.04 
+$package gnome-base/gnome-common
+#app-arch/zip-3.0-r3  USE="bzip2 crypt unicode -natspec" 
+$package x11-themes/gnome-icon-theme
+$package dev-lang/spidermonkey
+$package x11-libs/libxklavier # /usr/lib/girepository-1.0/Xkl-1.0.typelib
+$package gnome-base/gsettings-desktop-schemas
+$package x11-themes/gnome-themes-standard
+$package sys-auth/polkit
+$package sys-auth/consolekit
+$package sys-apps/accountsservice
+$package x11-misc/lightdm
+$package x11-misc/lightdm-gtk-greeter
+$sed /etc/conf.d/xdm 's/^DISPLAYMANAGER=.\+/DISPLAYMANAGER="lightdm"/'

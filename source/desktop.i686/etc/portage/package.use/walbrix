@@ -22,3 +22,4 @@ app-emacs/emacs-common-gentoo X
 app-text/iso-codes linguas_ja
 app-i18n/ibus gtk
 x11-wm/icewm truetype
+sys-auth/consolekit policykit
