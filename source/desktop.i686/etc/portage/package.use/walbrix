@@ -9,3 +9,8 @@ x11-libs/gtk+ X
 x11-libs/cairo X
 media-fonts/liberation-fonts X
 media-fonts/vlgothic X
+media-libs/harfbuzz icu
+sys-libs/zlib minizip
+dev-libs/libxml2 icu
+media-libs/libvpx postproc
+

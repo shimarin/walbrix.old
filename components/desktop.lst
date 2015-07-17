@@ -117,7 +117,8 @@ $require vim.lst
 
 $require xorg.lst
 $require sakura.lst
-#$package media-fonts/vlgothic
+$require chromium.lst
+$package media-fonts/vlgothic
 #$sed /etc/X11/xinit/xinitrc 's/xterm (\-name login|-geometry [0-9x\\+\-]\+)/sakura/'
 
 $exec --overlay "env-update"

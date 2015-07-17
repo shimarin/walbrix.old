@@ -1,0 +1,32 @@
+#media-libs/libogg-1.3.1  USE="-static-libs" 
+#dev-libs/re2-0_p20140304 
+#media-sound/gsm-1.0.13-r1 
+#dev-libs/dotconf-1.3 
+#sys-libs/zlib-1.2.8-r1  USE="minizip*" 
+#dev-libs/icu-55.1  USE="-debug -doc -examples -static-libs" 
+#media-libs/libjpeg-turbo-1.3.1  USE="-java -static-libs" 
+#dev-libs/nspr-4.10.8  USE="-debug" 
+#app-arch/snappy-1.1.2-r1  USE="-static-libs" 
+$package media-libs/alsa-lib
+#dev-db/sqlite-3.8.10.2  USE="readline -debug -doc -icu -secure-delete -static-libs -tcl {-test} -tools" 
+#media-libs/libwebp-0.4.0  USE="jpeg png -experimental -gif -opengl -static-libs -swap-16bit-csp -tiff" 
+$package dev-libs/nss # libsoftokn3.so
+#x11-libs/libXScrnSaver-1.2.2-r1  USE="-static-libs" 
+#x11-libs/libXinerama-1.1.3  USE="-static-libs" 
+#media-libs/speex-1.2_rc1-r2  USE="-ogg -static-libs" CPU_FLAGS_X86="-sse" 
+$package x11-apps/xprop
+$package x11-apps/xset
+#media-libs/libvorbis-1.3.4  USE="-static-libs" 
+#media-sound/sox-14.4.1  USE="openmp -alsa -amr -ao -debug -encode -ffmpeg -flac -id3tag -ladspa -mad -ogg -oss -png -pulseaudio -sndfile -static-libs -twolame -wavpack" 
+#dev-libs/libxml2-2.9.2-r1  USE="icu*" 
+$package app-accessibility/espeak
+#media-libs/flac-1.3.1-r1  USE="cxx (-altivec) -debug -ogg -static-libs" CPU_FLAGS_X86="-sse" 
+$package media-libs/libexif
+#media-libs/libvpx-1.4.0  USE="postproc threads (-altivec) -doc -static-libs {-test}" CPU_FLAGS_X86="-avx -avx2 -mmx -sse -sse2 -sse3 -sse4_1 -ssse3" 
+#media-libs/libsndfile-1.0.25-r1  USE="-alsa -minimal -sqlite -static-libs {-test}" 
+$package x11-misc/xdg-utils
+#dev-libs/jsoncpp-0.10.2-r1  USE="-doc {-test}" 
+$package app-accessibility/speech-dispatcher
+#media-libs/harfbuzz
+#x11-libs/gtk+-2.24.28-r1
+$package www-client/chromium # kernel needs USER_NS

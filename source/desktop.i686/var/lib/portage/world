@@ -11,5 +11,6 @@ sys-kernel/genkernel
 sys-kernel/gentoo-sources
 sys-power/acpi
 sys-power/acpid
+www-client/chromium
 x11-base/xorg-server
 x11-terms/sakura
