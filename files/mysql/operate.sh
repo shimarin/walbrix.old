@@ -78,6 +78,7 @@ fi
 
 kill `cat $PIDFILE`
 rm -f $PIDFILE
+wait
 while [[ -S "$SOCKET" ]] ; do
 	echo -n "."
 	sleep 1
