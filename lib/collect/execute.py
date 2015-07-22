@@ -1,5 +1,13 @@
-import argparse,subprocess,shutil,os,contextlib,errno
+import argparse,subprocess,shutil,os,contextlib,errno,time
 import collect
+
+def patient_umount(mountpoint):
+    for i in range(10):
+        if subprocess.call(["umount",mountpoint]) == 0: return
+        # else
+        print "Unmounting failed. waiting for something running in background to stop..."
+        time.sleep(1)
+    raise Exception("%s couldn't be unmounted despite retries." % mountpoint)
 
 @contextlib.contextmanager
 def bind_mount_if_both_exist(src, dst):
@@ -9,11 +17,11 @@ def bind_mount_if_both_exist(src, dst):
         yield
     finally:
         try:
-            print "Waiting for subprocesses to terminate..."
             os.wait()
         except OSError, e:
             if e.errno != errno.ECHILD: raise
-        if exists: subprocess.call(["umount",dst])
+        finally:
+            if exists: patient_umount(dst)
 
 def do_chroot(target_dir, command):
     if collect.is_executable("%s/sbin/ldconfig" % target_dir): subprocess.check_call(["chroot", target_dir, "/sbin/ldconfig"])
