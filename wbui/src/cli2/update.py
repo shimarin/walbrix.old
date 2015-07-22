@@ -35,14 +35,17 @@ def upgrade_efi_xen():
 
 def run(specified_version = None): # None == latest stable
     print "Checking update info..."
-    release_info = create_install_disk.get_release_info(specified_version)
+
+    if not os.path.isfile(SYSTEM_IMAGE): raise Exception("System image file(%s) does not exist." % SYSTEM_IMAGE)
+    walbrix_cfg = version.read(SYSTEM_IMAGE)
+    current_version = walbrix_cfg["WALBRIX_VERSION"]
+    print "Currently installed version: %s" % current_version
+
+    update_info_url = walbrix_cfg.get("WALBRIX_UPDATE_URL") or create_install_disk.DEFAULT_UPDATE_INFO_URL
+    release_info = create_install_disk.get_release_info(specified_version, update_info_url)
 
     available_version = release_info["version"]
     print "Available version: %s" % available_version
-
-    if not os.path.isfile(SYSTEM_IMAGE): raise Exception("System image file(%s) does not exist." % SYSTEM_IMAGE)
-    current_version = version.read(SYSTEM_IMAGE)["WALBRIX_VERSION"]
-    print "Currently installed version: %s" % current_version
 
     if available_version == current_version:
         print "No need to update."

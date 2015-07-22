@@ -1,7 +1,7 @@
 #!/usr/bin/python2.7
 import argparse,array,fcntl,glob,os,subprocess,shutil,struct,sys,tempfile,re,json,urllib2,contextlib,time
 
-UPDATE_INFO_URL="http://update.walbrix.net"
+DEFAULT_UPDATE_INFO_URL="http://update.walbrix.net"
 DEFAULT_SYSTEM_IMAGE="/.overlay/boot/walbrix"
 MINIMUM_DISK_SIZE_IN_GB=1
 MAX_BIOS_FRIENDLY_DISK_SIZE=2199023255552
@@ -158,8 +158,8 @@ def print_usable_disks(minimum_disk_size = 1000000000):
 def get_partition_uuid(partition):
     return subprocess.check_output(["blkid","-o","value","-s","UUID",partition]).strip()
     
-def get_release_info(specified_version = None): # None == latest stable
-    update_info = json.load(urllib2.urlopen(UPDATE_INFO_URL))
+def get_release_info(specified_version = None, update_info_url = DEFAULT_UPDATE_INFO_URL): # None == latest stable
+    update_info = json.load(urllib2.urlopen(update_info_url))
     if specified_version is None: specified_version = update_info["latest_stable"]
     for v in update_info["releases"]:
         if v["version"] == specified_version: return v
@@ -175,14 +175,14 @@ def search_command(name, altname = None):
             if os.path.isfile(fullpath): return fullpath
     return None
 
-def exec_install(device, image = None, yes = False):
+def exec_install(device, image = None, yes = False, update_url=DEFAULT_UPDATE_INFO_URL):
     if image is not None:
         if not os.path.isfile(image): raise Exception("Image file '%s' not found." % image)
     else:
         if os.path.isfile(DEFAULT_SYSTEM_IMAGE): image = DEFAULT_SYSTEM_IMAGE
         else:
             print "System image file not specified. It's going to be downloaded."
-            release_info = get_release_info()
+            release_info = get_release_info(None, update_url)
             print "Version: %s" % release_info["version"]
             image = release_info["image_url"]
             print "Download URL: %s" % image
@@ -268,6 +268,7 @@ if __name__ == '__main__':
     parser.add_argument("--image", type=str, help="System image file to install")
     parser.add_argument("--yes", "-y", action="store_true", help="Proceed without confirmation")
     parser.add_argument("--sources", action="store_true", help="Copy portage tree")
+    parser.add_argument("--update-url", type=str, default=DEFAULT_UPDATE_INFO_URL, help="Update info URL")
     parser.add_argument("device", type=str, nargs='?', help="Target device")
     args = parser.parse_args()
 
@@ -277,7 +278,7 @@ if __name__ == '__main__':
         print_usable_disks(MINIMUM_DISK_SIZE_IN_GB * 1000000000)
         sys.exit(1)
     #else
-    boot_partition = exec_install(args.device, args.image, args.yes)
+    boot_partition = exec_install(args.device, args.image, args.yes, args.update_url)
     if boot_partition is None: sys.exit(1)
 
     if args.sources:

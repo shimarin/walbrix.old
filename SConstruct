@@ -52,6 +52,7 @@ touch $TARGET
 env.Command("build/walbrix/walbrix.cfg", "$WBUI_MARKER", """
 echo "set WALBRIX_VERSION=`./kernelver -n source/walbrix.x86_64/boot/kernel`" > $TARGET
 echo "set WALBRIX_BUILD_ID=`cat build/wbui/usr/share/wbui/commit-id`" >> $TARGET
+echo "set WALBRIX_UPDATE_URL=http://update.walbrix.net" >> $TARGET
 """)
 
 env.Command("build/walbrix/.done", ["$SYSTEM_64_MARKER", "$SYSTEM_32_MARKER","build/walbrix/walbrix.cfg","files/walbrix/grub.cfg","files/walbrix/install.cfg","files/walbrix/background.png"], """
@@ -75,6 +76,7 @@ touch $TARGET
 env.Command("build/desktop/walbrix.cfg", "$WBUI_MARKER", """
 echo "set WALBRIX_VERSION=`./kernelver -n source/desktop.i686/boot/kernel`" > $TARGET
 echo "set WALBRIX_BUILD_ID=`cat build/wbui/usr/share/wbui/commit-id`" >> $TARGET
+echo "set WALBRIX_UPDATE_URL=http://update.walbrix.net/desktop/" >> $TARGET
 """)
 
 env.Command("build/desktop/.done", ["$DESKTOP_32_MARKER", "build/desktop/walbrix.cfg", "files/desktop/grub.cfg", "files/desktop/install.cfg", "files/walbrix/background.png"], """
