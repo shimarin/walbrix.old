@@ -4,8 +4,11 @@ DOCUMENT_ROOT=/var/www/localhost/htdocs
 CONFIG_PHP=${DOCUMENT_ROOT}/config/config.php
 
 start() {
-        ebegin "Starting ${SVCNAME}"
-        [ -f "${DOCUMENT_ROOT}/.ocdata" ] || cd ${DOCUMENT_ROOT} && su -s /bin/sh apache -c "php occ maintenance:install --database=mysql --database-name=owncloud --database-user=owncloud --database-pass='' --admin-user=admin --admin-pass=admin"
+    ebegin "Starting ${SVCNAME}"
+    if [ ! -f "${DOCUMENT_ROOT}/.ocdata" ]; then
+        cd "${DOCUMENT_ROOT}"
+        occ maintenance:install --database=mysql --database-name=owncloud --database-user=owncloud --database-pass='' --admin-user=admin --admin-pass=admin
         sed -i "s/0 => 'localhost',/\$_SERVER['SERVER_NAME']/" ${CONFIG_PHP} && chown apache.apache ${CONFIG_PHP}
-        eend 0
+    fi
+    eend 0
 }
