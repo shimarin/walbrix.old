@@ -371,14 +371,20 @@ def run(lstfile, context):
     mkdir_p(context.destination)
     process_lstfile(context, lstfile)
 
-    # Cleanup /tmp, /var/tmp, /var/log
-    for d in ["tmp", "var/tmp", "var/log"]:
-        tmpdir = os.path.join(context.destination, d)
-        if os.path.isdir(tmpdir):
-            for item in os.listdir(tmpdir):
-                filename = "%s/%s" % (tmpdir, item)
+    # Cleanup /tmp, /var/tmp
+    for d in ["tmp", "var/tmp"]:
+        path = os.path.join(context.destination, d)
+        if os.path.isdir(path):
+            for item in os.listdir(path):
+                filename = "%s/%s" % (path, item)
                 if os.path.islink(filename) or not os.path.isdir(filename): os.unlink(filename)
                 else: shutil.rmtree(filename)
+
+    # Cleanup others
+    for f in ["var/log/*.log", "var/log/portage", "var/lib/gentoo/news", "var/cache/edb"]:
+        for path in glob.glob(os.path.join(context.destination, f)):
+            if os.path.isfile(path): os.unlink(path)
+            elif os.path.isdir(path): shutil.rmtree(path)
 
     # execute ldconfig if exists
     ldconfig = "%s/sbin/ldconfig" % context.destination
