@@ -7,7 +7,7 @@ VAR_MATCH = re.compile(r'^set (.+?)=(.+)$')
 def read(image=DEFAULT_SYSTEM_IMAGE):
     vars = {}
     with create_install_disk.tempmount(image, "loop,ro","squashfs") as tmpdir:
-        with open("%s/grubvars.cfg" % tmpdir) as f:
+        with open("%s/walbrix.cfg" % tmpdir) as f:
             while True:
                 line = f.readline()
                 if not line: break
