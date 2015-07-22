@@ -3,7 +3,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <pwd.h>
 
 #define PHP "php"
 #define SCRIPT "/var/www/localhost/htdocs/occ"
