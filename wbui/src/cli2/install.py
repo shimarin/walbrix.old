@@ -4,6 +4,7 @@ import create_install_disk,fbinfo,boot_vga_info
 
 MINIMUM_DISK_SIZE_IN_GB=3.5
 DEFAULT_XEN_VGA="gfx-640x480x32"
+DRM_MODULE_BLACKLIST=["mgag200"]
 
 def shutdown_vgs():
     subprocess.check_call(["vgchange","-an"], close_fds=True)
@@ -15,14 +16,9 @@ def determine_xen_vga_mode():
     if info[0] not in ["EFI VGA", "VESA VGA"]: return None
     return "gfx-%dx%dx%d" % (info[1],info[2],info[3])
 
-def is_kms_incompatible_system():
-    MATROX = "0x102b"
-    VIRTUALBOX = "0x80ee"
+def is_kms_compatible_system():
     info = boot_vga_info.get_boot_vga_info()
-    if info is None: return False
-    vendor_id = info.get("vendor_id")
-    if vendor_id in [ MATROX, VIRTUALBOX ]: return True
-    return False
+    return info is not None and info.get("modeset") == True and info.get("module") not in DRM_MODULE_BLACKLIST
 
 def run(device, image, no_bios = False, xen_vga = None): # image can be device like /dev/sr0
     if not os.path.exists(image): raise Exception("System image file(%s) does not exist." % image)
@@ -74,7 +70,7 @@ def run(device, image, no_bios = False, xen_vga = None): # image can be device l
     create_install_disk.sync_udev()
 
     # detect vga mode if necessary
-    if xen_vga is None and is_kms_incompatible_system(): xen_vga="DETECT"
+    if xen_vga is None and not is_kms_compatible_system(): xen_vga="DETECT"
     if xen_vga == "DETECT": xen_vga = determine_xen_vga_mode()
     
     with create_install_disk.tempmount(boot_partition, "rw", "vfat") as tmpdir:
