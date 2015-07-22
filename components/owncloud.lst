@@ -9,7 +9,7 @@ $require php54.lst
 $require pecl-imagick.lst
 #require components/libreoffice.lst
 $package dev-php/xcache
-$package dev-php/pecl-apcu
+$require pecl-apcu.lst
 #$require pecl-memcached.lst
 #copy owncloud/smb.conf /etc/samba/smb.conf
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1owncloud\2/'
@@ -48,5 +48,12 @@ $sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;mbstring.func_overload.\+$/
 $sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;always_populate_raw_post_data.\+$/always_populate_raw_post_data=-1/'
 $sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;default_charset.\+$/default_charset="UTF-8"/'
 $write /var/spool/cron/crontabs/apache '*/15  *  *  *  * php -f /var/www/localhost/htdocs/cron.php'
+
+# occ command
+$copy owncloud/occ.c /tmp/occ.c
+$exec --overlay "gcc -o /usr/sbin/occ /tmp/occ.c"
+
+# upgrade script
+$copy owncloud/upgrade-owncloud /usr/sbin/upgrade-owncloud
 
 $vadesc

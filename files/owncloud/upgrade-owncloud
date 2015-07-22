@@ -1,0 +1,44 @@
+#!/bin/sh
+if [ "$#" -ne 1 ]; then
+	echo "Usage: $0 owncloud-X.Y.Z.tar.bz2"
+	exit 1
+fi
+if [ ! -f /var/www/localhost/htdocs/config/config.php ]; then
+	echo "ownCloud is not installed."
+	exit 1
+fi
+ARCHIVE=$1
+if ! tar tf "$ARCHIVE" owncloud/occ; then
+	echo "$ARCHIVE is not a valid ownCloud archive. (by the way, .zip format is not supported)"
+	exit 1
+fi
+
+echo "Extracting $ARCHIVE ..."
+tar xf "$ARCHIVE" || exit 1
+if [ ! -d owncloud ]; then
+	echo "Something wrong. directory 'owncloud' not found in archive."
+	exit 1
+fi
+echo "Copying to DocumentRoot..."
+chown -R apache.apache owncloud
+echo "Stopping apache..."
+/etc/init.d/apache2 stop
+cp -a owncloud/. /var/www/localhost/htdocs/
+rm -rf owncloud
+echo "Executing upgrade script..."
+occ upgrade
+SERVER_NAME="localhost" php << EOF
+<?php
+include("/var/www/localhost/htdocs/config/config.php");
+if (isset(\$CONFIG["trusted_domains"])) {
+	\$td = \$CONFIG["trusted_domains"];
+	if (count(\$td) == 1 && \$td[0] == "localhost") exit(1);
+}
+?>
+EOF
+if [ $? == 1 ]; then
+	echo "Modifying trusted_domains"
+	sed -i "s/0 => 'localhost',/\$_SERVER['SERVER_NAME']/" /var/www/localhost/htdocs/config/config.php
+fi
+echo "Upgrade done. starting apache..."
+/etc/init.d/apache2 start
