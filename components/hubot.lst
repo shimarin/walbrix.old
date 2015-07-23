@@ -1,0 +1,16 @@
+$require domU.lst
+$require cron.lst
+$require vim.lst
+$require git.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1hubot\2/'
+$package net-libs/nodejs
+
+$exec "npm install -g hubot coffee-script yo generator-hubot node-trello"
+$exec "useradd -m hubot"
+
+# su - hubot
+# mkdir myhubot
+# cd myhubot
+# yo hubot (Bot Adapter: slack)
+# export HUBOT_SLACK_TOKEN=xxxx-1234567890-yyyyyyyyyyyyyyyyyyyyyyyy
+# ./bin/hubot --adapter slack

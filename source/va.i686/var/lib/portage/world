@@ -4,8 +4,10 @@ app-admin/sudo
 app-admin/sysklogd
 app-arch/zip
 app-editors/nvi
+app-editors/vim
 app-portage/gentoolkit
 dev-db/mysql
+dev-db/redis
 dev-java/commons-dbcp
 dev-java/commons-pool
 dev-java/jdbc-mysql
@@ -18,12 +20,14 @@ dev-php/pecl-imagick
 dev-php/pecl-memcached
 dev-php/xcache
 dev-util/strace
+dev-vcs/git
 mail-mta/postfix
 media-fonts/vlgothic
 media-video/ffmpeg
 net-analyzer/traceroute
 net-analyzer/zabbix
 net-fs/samba
+net-libs/nodejs
 net-misc/curl
 net-misc/netkit-telnetd
 net-misc/ntp

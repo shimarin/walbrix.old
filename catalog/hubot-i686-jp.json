@@ -1,0 +1,12 @@
+{
+    "id":"hubot",
+    "version":"2.13.2",
+    "title":"Hubot 2.13.2",
+    "tarball":"http://dist.walbrix.net/va/hubot-2.13.2-i686-jp.tar.xz",
+    "description":"Hubot",
+    "minimum_ram":128,
+    "minimum_hd":1,
+
+    "uuid":"1ffe5b2c-35f5-409c-acdd-8195eb1cb0e6",
+    "instruction":"sshでログインして利用してください。"
+}

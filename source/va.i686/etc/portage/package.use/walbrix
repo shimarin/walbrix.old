@@ -24,3 +24,4 @@ dev-java/java-config -python_targets_python3_3
 dev-java/icedtea-bin -X -alsa cups cjk
 gnome-base/gsettings-desktop-schemas -introspection
 app-text/ghostscript-gpl cups
+dev-vcs/git -perl -gpg
