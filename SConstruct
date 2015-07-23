@@ -37,19 +37,19 @@ touch $TARGET
 env['SYSTEM_64_MARKER'] = "build/walbrix/x86_64/.done"
 env['SYSTEM_32_MARKER'] = "build/walbrix/i686/.done"
 
-env.Command("$SYSTEM_64_MARKER", "source/walbrix.x86_64", """
+env.Command("$SYSTEM_64_MARKER", ["source/walbrix.x86_64/var/log/emerge.log", "components/walbrix.lst"], """
 rm -rf build/walbrix/x86_64
 ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/walbrix.lst build/walbrix/x86_64
 touch $TARGET
 """)
 
-env.Command("$SYSTEM_32_MARKER", "source/walbrix.i686", """
+env.Command("$SYSTEM_32_MARKER", ["source/walbrix.i686/var/log/emerge.log", "components/walbrix.lst"], """
 rm -rf build/walbrix/i686
 ./collect --source source/walbrix.i686 --var=ARCH=i686 components/walbrix.lst build/walbrix/i686
 touch $TARGET
 """)
 
-env.Command("build/walbrix/walbrix.cfg", "$WBUI_MARKER", """
+env.Command("build/walbrix/walbrix.cfg", ["$SYSTEM_64_MARKER","$SYSTEM_32_MARKER","$WBUI_MARKER"], """
 echo "set WALBRIX_VERSION=`./kernelver -n source/walbrix.x86_64/boot/kernel`" > $TARGET
 echo "set WALBRIX_BUILD_ID=`cat build/wbui/usr/share/wbui/commit-id`" >> $TARGET
 echo "set WALBRIX_UPDATE_URL=http://update.walbrix.net" >> $TARGET
@@ -61,19 +61,19 @@ touch $TARGET
 """)
 
 env.Command("walbrix", ["build/walbrix/.done", "$WBUI_MARKER", "$LOCALE_MARKER"], "mksquashfs build/walbrix/* build/wbui build/locale $TARGET -noappend")
-env.Command("upload", "walbrix", "s3cmd put -P $SOURCE s3://dist.walbrix.net/walbrix-`./kernelver -n source/walbrix.x86_64/boot/kernel`")
+env.Command("upload", "walbrix", "s3cmd put -P $SOURCE s3://dist.walbrix.net/walbrix")
 
 ### DESKTOP ###
 
 env['DESKTOP_32_MARKER'] = "build/desktop/i686/.done"
 
-env.Command("$DESKTOP_32_MARKER", ["source/desktop.i686","components/desktop.lst"], """
+env.Command("$DESKTOP_32_MARKER", ["source/desktop.i686/var/log/emerge.log","components/desktop.lst"], """
 rm -rf build/desktop/i686
 ./collect --source source/desktop.i686 --var=ARCH=i686 components/desktop.lst build/desktop/i686
 touch $TARGET
 """)
 
-env.Command("build/desktop/walbrix.cfg", "$WBUI_MARKER", """
+env.Command("build/desktop/walbrix.cfg", ["$DESKTOP_32_MARKER","$WBUI_MARKER"], """
 echo "set WALBRIX_VERSION=`./kernelver -n source/desktop.i686/boot/kernel`" > $TARGET
 echo "set WALBRIX_BUILD_ID=`cat build/wbui/usr/share/wbui/commit-id`" >> $TARGET
 echo "set WALBRIX_UPDATE_URL=http://update.walbrix.net/desktop/" >> $TARGET
@@ -92,14 +92,14 @@ env['INSTALLER_64_MARKER'] = "build/installer/x86_64/.done"
 env['INSTALLER_32_MARKER'] = "build/installer/i686/.done"
 env['MKISOFS_OPTS'] = "-f -J -r -b boot/boot.img -no-emul-boot -boot-load-size 4 -boot-info-table -graft-points -eltorito-alt-boot -e boot/efiboot.img"
 
-env.Command("$INSTALLER_64_MARKER", ["components/installer.lst","$LOCALE_MARKER"], """
+env.Command("$INSTALLER_64_MARKER", ["source/walbrix.x86_64/var/log/emerge.log","components/installer.lst","$LOCALE_MARKER"], """
 rm -rf build/installer/x86_64
 ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/installer.lst build/installer/x86_64
 cp -av build/locale build/installer/x86_64/.locale
 touch $TARGET
 """)
 
-env.Command("$INSTALLER_32_MARKER", ["components/installer.lst","$LOCALE_MARKER"], """
+env.Command("$INSTALLER_32_MARKER", ["source/walbrix.i686/var/log/emerge.log","components/installer.lst","$LOCALE_MARKER"], """
 rm -rf build/installer/i686
 ./collect --source source/walbrix.i686 --var=ARCH=i686 components/installer.lst build/installer/i686
 cp -av build/locale build/installer/i686/.locale
