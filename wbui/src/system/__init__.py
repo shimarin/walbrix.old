@@ -48,7 +48,7 @@ import tempfile
 from xml.etree import ElementTree
 
 # WBUIバージョン
-version = "0.2.1"
+version = "0.3.0"
 
 guest_kernel = "/boot/vmlinuz.domU"
 runapp_link = "/var/run/wb-run-app"
