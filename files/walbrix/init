@@ -200,17 +200,17 @@ if [ -f /newroot/.overlay/boot/walbrix.cur ];then
 fi
 
 if [ `grep '/newroot/.overlay/profile' /proc/mounts | awk '{print $1}'` = "tmpfs" ]; then
-    # some useful modification for rescue environment
-    sed -i 's/\/usr\/sbin\/wbgetty/\/sbin\/agetty/' /newroot/etc/inittab
-    sed -i 's/tty1 linux/--autologin root tty1 linux/' /newroot/etc/inittab
-    echo 'hostname="rescue"' > /newroot/etc/conf.d/hostname
+    if [ "${SOFTLEVEL}" == "install" ]; then
+        echo 'hostname="install"' > /newroot/etc/conf.d/hostname
+    else
+        # some useful modification for rescue environment
+        sed -i 's/\/usr\/sbin\/wbgetty/\/sbin\/agetty/' /newroot/etc/inittab
+        sed -i 's/tty1 linux/--autologin root tty1 linux/' /newroot/etc/inittab
+        echo 'hostname="rescue"' > /newroot/etc/conf.d/hostname
+    fi
     if [ -f /newroot/.overlay/boot/walbrix.emg ]; then
         # extract emergency files (typically hostname, openssh, openvpn files and authorized_keys)
         tar xvf /newroot/.overlay/boot/walbrix.emg -C /newroot
-    fi
-    if [ "${SOFTLEVEL}" == "install" ]; then
-        echo -e '#!/bin/sh\n[ `tty` == "/dev/tty1" ] && exec fbterm -- wb installer' > /newroot/root/.profile
-        chmod 755 /newroot/root/.profile
     fi
 fi
 

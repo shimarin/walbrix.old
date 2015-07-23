@@ -14,7 +14,7 @@ $write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
 $package sys-apps/v86d
 $sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
 $sed /etc/inittab 's/\/sbin\/agetty 38400 tty1 linux/\/usr\/sbin\/wbgetty 38400 --noclear tty1 linux/'
-#$sed /etc/inittab 's/^c\([2-6]\):/#c\1:/'
+$write /etc/conf.d/splash 'SPLASH_EFFECTS=""'
 $sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBFREE01"/' # set default hostname
 $patch /etc/init.d/swap walbrix/swap.init.patch # enable zramswap
 

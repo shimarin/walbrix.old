@@ -1,6 +1,19 @@
 # -*- coding:utf-8 -*-
-import subprocess,sys,codecs,os
+from __future__ import absolute_import
+import argparse,subprocess,sys,codecs,os
+import installer
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--gui", action="store_true", help="GUI Installer")
+parser.add_argument("--poweroff", action="store_true", help="Power off at exit")
+parser.add_argument("--image", type=str, help="System image file to install")
+args = parser.parse_args()
+
+if args.gui:
+    installer.main(args.image, args.poweroff)
+    sys.exit(0)
+
+#else
 sys.stdout = codecs.getwriter('utf_8')(sys.stdout)
 
 version = os.uname()[2].split('-',1)[0]

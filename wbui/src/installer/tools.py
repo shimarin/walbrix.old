@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import os
-import subprocess
-import sys
-import traceback
-import random
+import os,sys,traceback,random
 
 import pygame
 
 import system
-import gui
-import gui.messagebox
-import installer
+import gui,gui.messagebox
 import resource_loader
 import dialogbox
+
+import installer
 
 window = None
 
@@ -35,14 +31,22 @@ gui.res.register("string_installer_tools_memory_test",resource_loader.l({"en":u"
 gui.res.register("string_installer_tools_tool_failed",resource_loader.l({"en":u"Failed to start the memtest86+ (%s)", "ja":u"memtest86+の起動に失敗しました(%s)"}))
 string_installer_tools_exit = resource_loader.l({"en":u"Exit to the Linux console. Are you sure?", "ja":u"Linuxコンソールに抜けます。よろしいですか？"})
 
-#gui.res.register("string_installer_tools",resource_loader.l({"en":u"Cancel", "ja":u"キャンセル"}))
-#gui.res.register("string_installer_tools",resource_loader.l({"en":u"Cancel", "ja":u"キャンセル"}))
+def kexec_cmdline(kernel, kernel_args = None, initrd = None):
+    cmdline = ["/usr/sbin/kexec", "-l", kernel]
+    if kernel_args != None: cmdline.append("--append=%s" % kernel_args)
+    if initrd != None: cmdline.append("--initrd=%s" % initrd)
+    return cmdline
 
-#gui.res.register("string_installer_tools",resource_loader.l({"en":u"Cancel", "ja":u"キャンセル"}))
-#gui.res.register("string_installer_tools",resource_loader.l({"en":u"Cancel", "ja":u"キャンセル"}))
-
-
-
+def kexec_load_kernel(kernel, kernel_args = None, initrd = None):
+    s = system.getSystem()
+    cmdline = kexec_cmdline(kernel, kernel_args, initrd)
+    with dialogbox.messagebox.open(gui.res.string_inst_start_) as pb:
+        with s.openCancellableProcessForInput(cmdline) as kexec:
+            nbr = s.getNonblockingReader(kexec.stdout)
+            line = nbr.readline()
+            while line != "":
+                gui.yieldFrame()
+                line = nbr.readline()
 
 def rescue(source_device, arch):
     if gui.messagebox.execute(gui.res.string_installer_tools_rescue_mode % (arch), ["ok", "cancel"]) != "ok": return False
@@ -53,7 +57,7 @@ def rescue(source_device, arch):
             kernel = "%s/boot/vmlinuz.%d" % (sourceDir, arch)
             kernel_args = "video=uvesafb:mtrr:3,ywrap,1024x768-32 logo.nologo"
             initrd = "%s/boot/rescue.img" % (sourceDir)
-            installer.kexec_load_kernel(kernel, kernel_args, initrd)
+            kexec_load_kernel(kernel, kernel_args, initrd)
         pygame.quit()
         os.execv("/usr/sbin/kexec", ("/usr/sbin/kexec", "-e"))
     except Exception, e:
@@ -100,28 +104,10 @@ def benchmark_gui():
 
     return True
 
-def memtest(source_device):
-    if gui.messagebox.execute(gui.res.string_installer_tools_memory_test, ["ok", "cancel"]) != "ok": return False
-
-    try:
-        s= system.getSystem()
-        with s.temporaryMount(source_device, None, "ro") as sourceDir:
-            kernel = "%s/boot/memtest" % sourceDir
-            installer.kexec_load_kernel(kernel)
-        pygame.quit()
-        os.execv("/usr/sbin/kexec", ("/usr/sbin/kexec", "-e"))
-    except Exception, e:
-        traceback.print_exc(file=sys.stderr)
-        gui.messagebox.execute(gui.res.string_installer_tools_tool_failed % (e), ["ok"], gui.res.color_dialog_negative)
-        return False
-
-    return True
-
 def console():
     if dialogbox.messagebox.execute(string_installer_tools_exit, dialogbox.DialogBox.OKCANCEL()) != "ok": return False
 
     pygame.quit()
-    os.putenv("SHELL", "/bin/sh")
-    os.execv("/usr/bin/openvt", ("openvt", "-wsl", "--", "/bin/bash"))
 
+    os.execv("/usr/bin/openvt", ["openvt", "-wsl", "--", "/usr/bin/fbterm", "--", "/usr/sbin/wb", "console-with-message"])
     return True

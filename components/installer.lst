@@ -10,6 +10,7 @@ $require kbd.lst
 $package sys-apps/net-tools
 $package sys-apps/sed
 $require openrc.lst
+$require acpi.lst
 $require splashutils.lst
 /usr/share/splashutils/initrd.splash
 
@@ -22,16 +23,20 @@ $exec "find /lib/modules/$(KERNEL_VERSION) -name '*.ko' | xargs xz"
 $exec "/sbin/depmod $(KERNEL_VERSION)" # depmod again
 
 $require wbui-deps.lst
+$copy installer/wbgetty /usr/sbin/wbgetty
+$sed /etc/inittab 's/\/sbin\/agetty 38400 tty1 linux/\/usr\/sbin\/wbgetty 38400 --noclear tty1 linux/'
 
 $sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBINSTALL"/'
+
+$write /etc/conf.d/splash 'SPLASH_EFFECTS=""'
 
 $sed /etc/shadow 's/^root:\*:/root::/' # Empty root passwordj
 $sed /etc/inittab 's/tty1 linux/--noclear --autologin root tty1 linux/'
 
 $exec "rm -f /etc/runlevels/default/netmount"
 
-$write /root/.profile '#!/bin/sh\n[ `tty` == "/dev/tty1" ] && exec fbterm -- wb installer'
-$exec "chmod 755 /root/.profile"
+#$write /root/.profile '#!/bin/sh\n[ `tty` == "/dev/tty1" ] && fbset --test && exec wb installer --poweroff --gui'
+#$exec "chmod 755 /root/.profile"
 
 $symlink /etc/init.d/net.eth0 net.lo
 #$symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0

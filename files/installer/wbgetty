@@ -12,15 +12,6 @@ if [ ! -e /dev/fb0 ]; then
     exec /sbin/agetty $@
 fi
 
-if [ `cat /run/openrc/softlevel` = 'install' ]; then
-    /usr/sbin/wb installer --gui --poweroff
-    exit
-fi
-
-if [ ! -f /sys/hypervisor/type ]; then
-    echo "Hypervisor is not present. Falling back to normal login."
-    exec /sbin/agetty $@
-fi
-
 #else
-/usr/sbin/wb getty
+/usr/sbin/wb installer --gui --poweroff
+

@@ -20,7 +20,7 @@ def is_kms_compatible_system():
     info = boot_vga_info.get_boot_vga_info()
     return info is not None and info.get("modeset") == True and info.get("module") not in DRM_MODULE_BLACKLIST
 
-def run(device, image, no_bios = False, xen_vga = None): # image can be device like /dev/sr0
+def run(device, image, yes = False, no_bios = False, xen_vga = None): # image can be device like /dev/sr0
     if not os.path.exists(image): raise Exception("System image file(%s) does not exist." % image)
 
     disk_info = create_install_disk.get_disk_info(device)
@@ -29,8 +29,9 @@ def run(device, image, no_bios = False, xen_vga = None): # image can be device l
     device_size_in_gb = float(device_size) / 1024**3
     if device_size_in_gb < MINIMUM_DISK_SIZE_IN_GB: raise Exception("Insufficient device capacity. %.1fGiB required(%.1fGiB)" % (MINIMUM_DISK_SIZE_IN_GB, device_size_in_gb))
 
-    create_install_disk.print_disk_info([disk_info])
-    if raw_input("Are you sure to destroy all data on %s? ('yes' if sure): " % device) != "yes": return False
+    if not yes:
+        create_install_disk.print_disk_info([disk_info])
+        if raw_input("Are you sure to destroy all data on %s? ('yes' if sure): " % device) != "yes": return False
 
     shutdown_vgs() # deactivate all VGs as target device might have belonged to some of them
     
@@ -124,10 +125,23 @@ def run(device, image, no_bios = False, xen_vga = None): # image can be device l
     print "Done."
     return True
 
+def detect_install_image():
+    image = create_install_disk.DEFAULT_SYSTEM_IMAGE
+    if os.path.isfile(image):
+        return image
+    #else
+    # search CD-ROM
+    for line in subprocess.check_output(["lsblk","-nd","--raw","-o","NAME,FSTYPE"]).splitlines():
+        line = line.split()
+        if len(line) > 1 and line[1] == "iso9660":
+            return "/dev/%s" % line[0]
+    raise Exception("No usable install image")
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--image", type=str, help="System image file to install")
     parser.add_argument("--no-bios", action="store_true", help="Don't install bootloader for BIOS(UEFI only)")
+    parser.add_argument("--yes", "-y", action="store_true", help="Proceed without confirmation")
     parser.add_argument("--xen-vga", type=str, nargs='?', const="DETECT", help="Specify Xen's vga= option")
     parser.add_argument("device", type=str, nargs='?', help="target device")
     args = parser.parse_args()
@@ -144,15 +158,6 @@ if __name__ == '__main__':
             sys.exit(1)
         else:
             device = usable_disks[0]["name"]
-    image = args.image
-    if image is None:
-        image = create_install_disk.DEFAULT_SYSTEM_IMAGE
-        if not os.path.isfile(image):
-            # search CD-ROM
-            for line in subprocess.check_output(["lsblk","-nd","--raw","-o","NAME,FSTYPE"]).splitlines():
-                line = line.split()
-                if len(line) > 1 and line[1] == "iso9660":
-                    image = "/dev/%s" % line[0]
-                    break
-        
-    if not run(device, image, args.no_bios, args.xen_vga): sys.exit(1)
+    image = args.image if args.image is not None else detect_install_image()
+
+    if not run(device, image, args.yes, args.no_bios, args.xen_vga): sys.exit(1)

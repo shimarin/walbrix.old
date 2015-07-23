@@ -84,6 +84,14 @@ def get_disk_info(device):
         rst["bios_compatible"] = rst["sector_size"] == 512 and rst["size"] <= MAX_BIOS_FRIENDLY_DISK_SIZE
     except OSError:
         pass   # e.g. unloaded cd-rom drive
+
+    if "size" in rst:
+        size = rst["size"]
+        if size < 1000000: rst["size_str"] = "<1MB"
+        elif size < 1000000000: rst["size_str"] = "%dMB" % (size / 1000000)
+        elif size < 1000000000000: rst["size_str"] = "%dGB" % (size / 1000000000)
+        else: rst["size_str"] = "%dTB" % (size / 1000000000000)
+
     return rst
 
 def usable_disks(minimum_disk_size = 1000000000):
@@ -138,17 +146,11 @@ def tempmount(device, options = None, type = "auto"):
         os.rmdir(tmpdir)
 
 def print_disk_info(disks):
-    def size_to_str(size):
-        if size < 1000000: return str(size)
-        elif size < 1000000000: return "%dMB" % (size / 1000000)
-        elif size < 1000000000000: return "%dGB" % (size / 1000000000)
-        #else
-        return "%dTB" % (size / 1000000000000)
     row_format ="{:<15} {:>8} {:>12} {:>20} {:>10}"
     print row_format.format("NAME","SIZE","VENDOR","MODEL","BOOT TYPE")
     print "---------------------------------------------------------------------"
     for disk in disks:
-        print row_format.format(disk["name"],size_to_str(disk["size"]),'"' + (disk["vendor"] or "UNKNOWN") + '"','"' + (disk["model"] or "UNKNOWN") + '"',"BIOS+UEFI" if disk["bios_compatible"] else "UEFI")
+        print row_format.format(disk["name"],disk["size_str"],'"' + (disk["vendor"] or "UNKNOWN") + '"','"' + (disk["model"] or "UNKNOWN") + '"',"BIOS+UEFI" if disk["bios_compatible"] else "UEFI")
     
 def print_usable_disks(minimum_disk_size = 1000000000):
     print "Target disk(like /dev/sdX) must be specified.  Usable disks are:"
