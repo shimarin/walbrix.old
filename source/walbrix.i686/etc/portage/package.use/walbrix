@@ -1,4 +1,4 @@
-sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc
+sys-boot/grub device-mapper grub_platforms_pc grub_platforms_xen grub_platforms_efi-64
 
 sys-kernel/gentoo-sources symlink
 sys-apps/kmod lzma

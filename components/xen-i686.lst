@@ -1,1 +1,3 @@
-# empty
+# pv-grub2
+$write /tmp/grub.cfg 'set root=(xen/xvda1)\nnormal (xen/xvda1)/boot/grub/grub.cfg'
+$exec "grub2-mkimage -c /tmp/grub.cfg -o /usr/lib/xen/boot/pv-grub2-x86_32 -O i386-xen loopback xfs linux echo test gzio configfile cpuid minicmd squash4 && gzip /usr/lib/xen/boot/pv-grub2-x86_32"

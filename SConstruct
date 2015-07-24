@@ -37,9 +37,10 @@ touch $TARGET
 env['SYSTEM_64_MARKER'] = "build/walbrix/x86_64/.done"
 env['SYSTEM_32_MARKER'] = "build/walbrix/i686/.done"
 
-env.Command("$SYSTEM_64_MARKER", ["source/walbrix.x86_64/var/log/emerge.log", "components/walbrix.lst"], """
+env.Command("$SYSTEM_64_MARKER", ["$SYSTEM_32_MARKER","source/walbrix.x86_64/var/log/emerge.log", "components/walbrix.lst"], """
 rm -rf build/walbrix/x86_64
 ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/walbrix.lst build/walbrix/x86_64
+cp -a build/walbrix/i686/usr/lib/xen/boot/pv-grub2-x86_32.gz build/walbrix/x86_64/usr/lib/xen/boot/
 touch $TARGET
 """)
 

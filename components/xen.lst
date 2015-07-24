@@ -1,5 +1,5 @@
 #$package dev-lang/ocaml "^/usr/lib(64)?/ocaml/((ocamldoc|ocamlbuild|compiler-libs)/|.+\.(cmx|cmxa|ml|mli|a|h)$)"
-
+$require grub.lst
 $require pypam.lst
 $require iproute2.lst
 #bridge-utils
@@ -20,3 +20,4 @@ $symlink /etc/runlevels/default/xendomains /etc/init.d/xendomains
 
 $sed /lib/udev/rules.d/xen-backend.rules 's/^\(SUBSYSTEM=="net",.*\)"tap\*"\(.*\/etc\/xen\/scripts\/vif-setup.*\)$/\1"tap*.*"\2/'
 $sed /etc/rc.conf 's/^#rc_sys=""/rc_sys="xen0"/'
+
