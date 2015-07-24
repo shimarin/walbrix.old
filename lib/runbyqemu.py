@@ -3,7 +3,7 @@ import argparse,subprocess,os
 DEFAULT_HD_IMAGE_0 = "testvm-hda.img"
 DEFAULT_HD_IMAGE_1 = "testvm-hdb.img"
 
-def create_hd_image_if_not_exist(hdimage, size="4G"):
+def create_hd_image_if_not_exist(hdimage, size="8G"):
     if os.path.exists(hdimage): return
     #else
     print "Creating virtual HD image %s" % hdimage
