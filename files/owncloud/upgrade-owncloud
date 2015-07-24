@@ -28,10 +28,10 @@ if [ ! -d "$TEMPDIR"/owncloud ]; then
 	echo "Something wrong. directory 'owncloud' not found in archive."
 	exit 1
 fi
-echo "Copying to DocumentRoot..."
 chown -R apache.apache "$TEMPDIR"/owncloud
 echo "Stopping apache..."
 /etc/init.d/apache2 stop
+echo "Copying to DocumentRoot..."
 cp -a "$TEMPDIR"/owncloud/. /var/www/localhost/htdocs/
 rm -rf "$TEMPDIR"
 echo "Executing upgrade script..."
