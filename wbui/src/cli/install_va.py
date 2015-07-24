@@ -135,6 +135,15 @@ def run(options, args):
                         tar.write(buf)
                         buf = src.read(1024)
 
+            # https://github.com/wbrxcorp/walbrix/issues/39
+            xen_conf_dir = os.path.join(tmpdir, "etc/xen")
+            if not os.path.isdir(xen_conf_dir):
+                if os.path.exists(xen_conf_dir): os.unlink(xen_conf_dir)
+                os.makedirs(xen_conf_dir)
+            with open(os.path.join(xen_conf_dir, "config"), "w") as f:
+                f.write("memory=%d\n" % ram)
+                f.write("vcpus=1\n")
+
             # カーネル種別(なし/32bit/64bit)判定
             kernel = v.determineVMKernel(tmpdir)
             if kernel == None: kernel = system.guest_kernel

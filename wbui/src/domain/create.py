@@ -154,6 +154,15 @@ def create_new_domain(args):
 
             vmm.setHostName(tmpdir, hostname)
 
+            # https://github.com/wbrxcorp/walbrix/issues/39
+            xen_conf_dir = os.path.join(tmpdir, "etc/xen")
+            if not os.path.isdir(xen_conf_dir):
+                if os.path.exists(xen_conf_dir): os.unlink(xen_conf_dir)
+                os.makedirs(xen_conf_dir)
+            with open(os.path.join(xen_conf_dir, "config"), "w") as f:
+                f.write("memory=%d\n" % memory)
+                f.write("vcpus=%d\n" % vcpus)
+
             # rootのパスワードをつける
             serialnum = status.get_serial_number()
             set_root_password(tmpdir, serialnum)
