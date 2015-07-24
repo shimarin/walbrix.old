@@ -62,7 +62,6 @@ sys-apps/sg3_utils
 sys-apps/smartmontools
 sys-apps/usb_modeswitch
 sys-apps/usbutils
-sys-apps/v86d
 sys-auth/nss-mdns
 sys-auth/nss-myhostname
 sys-block/nbd

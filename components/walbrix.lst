@@ -11,7 +11,6 @@ $require grub.lst
 $package sys-apps/kexec-tools
 $write /etc/fstab 'overlay\t/\toverlay\tdefaults\t0 0\n/dev/zram0\tnone\tswap\tsw,pri=1\t0 0'
 $write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
-$package sys-apps/v86d
 $sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
 $sed /etc/inittab 's/\/sbin\/agetty 38400 tty1 linux/\/usr\/sbin\/wbgetty 38400 --noclear tty1 linux/'
 $write /etc/conf.d/splash 'SPLASH_EFFECTS=""'
