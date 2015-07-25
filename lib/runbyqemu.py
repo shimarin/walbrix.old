@@ -28,7 +28,7 @@ def run(cdimage, hda, hdb, memory, no64, cirrus, tap, vnc):
     if tap: cmdline += ["-net","tap,ifname=%s,script=no,downscript=no" % tap, "-net","nic"]
     if vnc: cmdline += ["-vnc",vnc]
 
-    subprocess.check_call(cmdline)
+    os.execvp("qemu-system-x86_64", cmdline)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
