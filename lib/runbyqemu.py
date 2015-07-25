@@ -2,14 +2,15 @@ import argparse,subprocess,os
 
 DEFAULT_HD_IMAGE_0 = "testvm-hda.img"
 DEFAULT_HD_IMAGE_1 = "testvm-hdb.img"
+DEFAULT_HD_SIZE = "8G"
 
-def create_hd_image_if_not_exist(hdimage, size="8G"):
+def create_hd_image_if_not_exist(hdimage, DEFAULT_HD_SIZE):
     if os.path.exists(hdimage): return
     #else
     print "Creating virtual HD image %s" % hdimage
     subprocess.check_call(["qemu-img","create","-f","raw",hdimage,size])
 
-def run(cdimage, hda, hdb, memory, no64, cirrus):
+def run(cdimage, hda, hdb, memory, no64, cirrus, tap, vnc):
     if cdimage == None and not os.path.exists(hda):
         print "Fresh HD without CD, what are you going to do with it?"
         return False
@@ -24,6 +25,8 @@ def run(cdimage, hda, hdb, memory, no64, cirrus):
     if cdimage is not None: cmdline += ["-cdrom",cdimage,"-boot","order=dc"]
     if no64: cmdline += ["-cpu", "host,-lm"]
     if cirrus: cmdline += ["-vga","cirrus"]
+    if tap: cmdline += ["-net","tap,ifname=%s,script=no,downscript=no" % tap, "-net","nic"]
+    if vnc: cmdline += ["-vnc",vnc]
 
     subprocess.check_call(cmdline)
 
@@ -35,5 +38,7 @@ if __name__ == '__main__':
     parser.add_argument("--memory","-m", type=int, default=4096, help="Memory in MB")
     parser.add_argument("--no64", action="store_true", help="32bit mode")
     parser.add_argument("--cirrus", action="store_true", help="Use cirrus logic video emulation")
+    parser.add_argument("--tap", type=str, nargs='?', const="tap0", help="TAP device to use as a bridged network")
+    parser.add_argument("--vnc", type=str, nargs='?', const=":0", help="Use VNC instead of showing physical screen")
     args = parser.parse_args()
-    run(args.cdimage, args.hda, args.hdb, args.memory, args.no64, args.cirrus)
+    run(args.cdimage, args.hda, args.hdb, args.memory, args.no64, args.cirrus, args.tap, args.vnc)
