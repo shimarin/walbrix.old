@@ -4,7 +4,7 @@ DEFAULT_HD_IMAGE_0 = "testvm-hda.img"
 DEFAULT_HD_IMAGE_1 = "testvm-hdb.img"
 DEFAULT_HD_SIZE = "8G"
 
-def create_hd_image_if_not_exist(hdimage, DEFAULT_HD_SIZE):
+def create_hd_image_if_not_exist(hdimage, size=DEFAULT_HD_SIZE):
     if os.path.exists(hdimage): return
     #else
     print "Creating virtual HD image %s" % hdimage
