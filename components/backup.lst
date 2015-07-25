@@ -4,6 +4,7 @@ $require samba.lst
 $write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15\nmax protocol=SMB2\n\n[export]\nguest ok=yes\nwritable=no\npath=/var/lib/backup/export\nacl check permissions=no\n'
 $require cron.lst
 $require nfs.lst
+$write /etc/exports '#/var/lib/backup/head *(ro,no_subtree_check)'
 $patch /etc/crontab backup/crontab.patch   # make daily and weekly jobs get done at night
 $require python27.lst
 $package sys-fs/btrfs-progs
