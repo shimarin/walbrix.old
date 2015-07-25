@@ -1,0 +1,17 @@
+#!/bin/sh
+BACKUP_ROOT=/var/lib/backup
+HEAD=$BACKUP_ROOT/head
+EXPORT_DIR=$BACKUP_ROOT/export
+LOGFILE=/var/log/export.log
+
+tty -s || exec >$LOGFILE 2>&1
+
+[ -f $EXPORT_DIR/.export_here ] || exit 1
+
+for i in `find $HEAD -maxdepth 1 -mindepth 1 -type d -printf "%f\n"`;do
+	tar zcvpf $EXPORT_DIR/$i.tar.gz.tmp -C $HEAD/$i . && mv $EXPORT_DIR/$i.tar.gz.tmp $EXPORT_DIR/$i.tar.gz
+done
+
+for i in `find $HEAD -maxdepth 1 -mindepth 1 -type f -name '*.bin' -printf "%f\n"`; do
+	gzip -c $HEAD/$i >  $EXPORT_DIR/$i.gz.tmp && mv $EXPORT_DIR/$i.gz.tmp $EXPORT_DIR/$i.gz
+done

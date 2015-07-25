@@ -1,0 +1,13 @@
+#!/bin/sh
+BACKUP_ROOT=/var/lib/backup
+LOGFILE=/var/log/snapshot.log
+DOW=`LANG=C date +%a`
+
+tty -s || exec >$LOGFILE 2>&1
+
+btrfs filesystem sync $BACKUP_ROOT/head || exit 1
+
+[ -d $BACKUP_ROOT/$DOW ] && btrfs filesystem sync $BACKUP_ROOT/$DOW && btrfs subvolume delete $BACKUP_ROOT/$DOW
+[ -d $BACKUP_ROOT/$DOW ] && { echo "Unable to create a snapshot due to already existing directory $BACKUP_ROOT/$DOW"; exit 1; }
+btrfs subvolume snapshot -r $BACKUP_ROOT/head $BACKUP_ROOT/$DOW || { echo "Failed to create snapshot $BACKUP_ROOT/$DOW"; exit 1; }
+
