@@ -1,4 +1,4 @@
 =sys-kernel/aufs-sources-3.14.46
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
-=app-emulation/docker-1.7.0-r1
+=app-emulation/docker-1.7.1
