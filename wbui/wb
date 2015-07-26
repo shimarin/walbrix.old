@@ -11,6 +11,6 @@ if [ -f ${WBUI_BASE}/cli2/${PYTHON_MODULE}.py -o -f ${WBUI_BASE}/cli2/${PYTHON_M
 fi
 
 #else (for backward compatibility)
-exec /usr/bin/python2.7 ${WBUI_BASE}/wb.pyc $@
+exec /usr/bin/python2.7 ${WBUI_BASE}/wb.py $@
 
 
