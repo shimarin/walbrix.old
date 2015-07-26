@@ -2,10 +2,8 @@ sys-devel/binutils multitarget
 sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc grub_platforms_xen
 
 sys-kernel/gentoo-sources symlink
-sys-apps/kmod lzma
 
 net-misc/openvpn threads passwordsave
-dev-libs/libxml2 python
 dev-lang/python sqlite
 net-fs/cifs-utils -acl -ads -caps 
 sys-apps/usb_modeswitch jimtcl
@@ -16,28 +14,34 @@ sys-apps/smartmontools minimal
 net-fs/samba -server -aio -netapi
 dev-db/mysql -perl
 sys-power/nut usb
+net-fs/nfs-utils -tcpd
 
-dev-python/markdown -python_targets_python3_3
-dev-python/pypam -python_targets_python3_3
-dev-python/setuptools -python_targets_python3_3
-dev-python/lxml -python_targets_python3_3
-app-editors/vim python -python_targets_python3_3
-dev-libs/boost -python_targets_python3_3
-dev-libs/libnl -python_targets_python3_3
-sys-fs/cryptsetup -python_targets_python3_3
-dev-python/python-magic -python_targets_python3_3
-dev-python/setuptools -python_targets_python3_3
-dev-python/chardet -python_targets_python3_3
-dev-python/pycurl -python_targets_python3_3
-dev-python/pycrypto -python_targets_python3_3
-dev-python/pyyaml -python_targets_python3_3
-dev-python/httplib2 -python_targets_python3_3
-dev-python/pyasn1 -python_targets_python3_3
-dev-python/markupsafe -python_targets_python3_3
-dev-python/jinja -python_targets_python3_3
-dev-python/six -python_targets_python3_3
-dev-python/python-dateutil -python_targets_python3_3
-sys-fs/zfs -python_targets_python3_3
+dev-python/markdown -python_targets_python3_4
+dev-python/pypam -python_targets_python3_4
+dev-python/setuptools -python_targets_python3_4
+dev-python/lxml -python_targets_python3_4
+app-editors/vim python -python_targets_python3_4
+dev-libs/boost -python_targets_python3_4
+dev-libs/libnl -python_targets_python3_4
+sys-fs/cryptsetup -python_targets_python3_4
+dev-python/python-magic -python_targets_python3_4
+dev-python/setuptools -python_targets_python3_4
+dev-python/chardet -python_targets_python3_4
+dev-python/pycurl -python_targets_python3_4
+dev-python/pycrypto -python_targets_python3_4
+dev-python/pyyaml -python_targets_python3_4
+dev-python/httplib2 -python_targets_python3_4
+dev-python/pyasn1 -python_targets_python3_4
+dev-python/markupsafe -python_targets_python3_4
+dev-python/jinja -python_targets_python3_4
+dev-python/six -python_targets_python3_4
+dev-python/python-dateutil -python_targets_python3_4
+sys-fs/zfs -python_targets_python3_4
+sys-apps/file -python_targets_python3_4
+sys-libs/libcap-ng -python_targets_python3_4
+sys-apps/kmod lzma -python_targets_python3_4
+dev-libs/libxml2 python -python_targets_python3_4
+sys-apps/util-linux -python_targets_python3_4
 
 # splash
 sys-libs/zlib static-libs
@@ -55,9 +59,9 @@ sys-cluster/drbd heartbeat pacemaker xen
 #app-emulation/qemu xen
 
 # wbui
-dev-python/numpy -python_targets_python3_3
-dev-python/pygame -python_targets_python3_3
-dev-python/pyalsaaudio -python_targets_python3_3
+dev-python/numpy -python_targets_python3_4
+dev-python/pygame -python_targets_python3_4
+dev-python/pyalsaaudio -python_targets_python3_4
 media-libs/libsdl alsa fbcon
 media-libs/sdl-image jpeg png webp
 media-libs/sdl-mixer vorbis

@@ -29,3 +29,5 @@
 =sys-fs/zfs-0.6.4.2
 =sys-fs/zfs-kmod-0.6.4.2
 =sys-kernel/spl-0.6.4.2 
+
+=dev-util/scons-2.3.5
