@@ -1,12 +1,5 @@
 # -*- coding:utf-8 -*-
-import os
-import sys
-import subprocess
-import traceback
-import re
-import stat
-import threading
-import traceback
+import os,sys,subprocess,traceback,re,stat,threading,traceback,multiprocessing
 
 import pygame
 
@@ -26,15 +19,16 @@ import dialogbox
 import create
 import resource_loader
 
+import cli2.create as cli_create
+
 # string resources
 gui.res.register("string_config_info",resource_loader.l({"en":u"Configuration information of the virtual machine %s could not be found.Do you want to create it?", "ja":u"仮想マシン %s の設定情報が見つかりません。作成しますか？"}))
 gui.res.register("string_allocated_memory",resource_loader.l({"en":u"Allocated memory(MB)", "ja":u"割当メモリ(MB)"}))
 gui.res.register("string_new_set",resource_loader.l({"en":u"%s's new settings", "ja":u"%s の新しい設定"}))
 gui.res.register("string_memory_assign_desc",resource_loader.l({"en":u"Please assign the memory of 32MB or more", "ja":u"32MB以上のメモリを割り当てて下さい"}))
 gui.res.register("string_confi_info",resource_loader.l({"en":u"Created the %s virtual machine configuration information ", "ja":u"仮想マシン %s の設定情報を作成しました"}))
-gui.res.register("string_start_desc",resource_loader.l({"en":u"Do you want to start the virtual machine %s?", "ja":u"仮想マシン %s を起動しますか？"}))
-gui.res.register("string_started_desc",resource_loader.l({"en":u"Starting virtual machine ...", "ja":u"仮想マシンを開始しています..."}))
-gui.res.register("string_not_start",resource_loader.l({"en":u"Could not start the virtual machine", "ja":u"仮想マシンを開始できませんでした"}))
+string_starting = resource_loader.l({"en":u"Starting virtual machine ...", "ja":u"仮想マシンを開始しています..."})
+string_not_start = resource_loader.l({"en":u"Could not start the virtual machine", "ja":u"仮想マシンを開始できませんでした"})
 gui.res.register("string_vm_connect_desc",resource_loader.l({"en":u"Do you want to connect to the console of the virtual machine %s?", "ja":u"仮想マシン %s のコンソールに接続しますか？"}))
 gui.res.register("string_exit_desc",resource_loader.l({"en":u"Do you want to issue shutdown command to the virtual machine %s?", "ja":u"仮想マシン %s に終了命令を発行しますか？"}))
 gui.res.register("string_domain_issued",resource_loader.l({"en":u"Shutdown command has been issued to the virtual machine", "ja":u"仮想マシンに終了命令を発行しました"}))
@@ -177,22 +171,35 @@ def rescue_orphaned_domain(domain):
     dialogbox.messagebox.execute(gui.res.string_confi_info % (name))
     return True
 
-def start(domain):
-    if dialogbox.messagebox.execute(gui.res.string_start_desc % (domain["name"]), dialogbox.DialogBox.OKCANCEL()) != "ok": return False
+def start_domain(name):
+    def wb_create(q):
+        try:
+            cli_create.run(name)
+            q.put(True)
+        except Exception, e:
+            traceback.print_exc(file=sys.stderr)
+            q.put(e)
 
-    vmm = vm.getVirtualMachineManager()
     try:
-        with dialogbox.messagebox.open(gui.res.string_started_desc):
-            p = vmm.startDomainAsync(domain["name"])
-            while p.poll() == None:
+        q = multiprocessing.Queue()
+        p = multiprocessing.Process(target=wb_create, args=(q,))
+        p.start()
+        with dialogbox.messagebox.open(string_starting):
+            while p.is_alive():
                 gui.yieldFrame()
-            if p.returncode != 0: raise Exception()
+        p.join()
+        rst = q.get_nowait()
+        if isinstance(rst, Exception): raise rst
     except:
         traceback.print_exc(file=sys.stderr)
-        dialogbox.messagebox.execute(gui.res.string_not_start, None, gui.res.caution_sign)
+        dialogbox.messagebox.execute(string_not_start, None, gui.res.caution_sign)
         wbui.play_sound("fail")
+        return False
 
-    footer.window.setText(gui.res.string_started_desc)
+    return True
+
+def start(domain):
+    return start_domain(domain["name"])
 
 def console(domain):
     if dialogbox.messagebox.execute(gui.res.string_vm_connect_desc % (domain["name"]), dialogbox.DialogBox.OKCANCEL()) != "ok": return False

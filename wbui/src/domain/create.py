@@ -1,20 +1,9 @@
 # -*- coding:utf-8 -*-
-import sys
-import os
-import threading
-import urllib2
-import io
-import xml
-import json
-import crypt
-import traceback
-import signal
+import sys,os,io,xml,json,crypt,traceback,signal
 
 import pygame
 
-import domain
-import volume
-import status
+import domain,domain.operate as operate,volume,status
 import gui
 import wbui
 import footer
@@ -23,12 +12,10 @@ import vm
 import catalog
 import vaconfig
 
-import dialogbox
-import dialogbox.inputbox
-import dialogbox.progressbar
+import dialogbox,dialogbox.inputbox,dialogbox.progressbar,dialogbox.messagebox
+
 import http_client
 import resource_loader
-
 
 # string resources
 gui.res.register("string_located",resource_loader.l({"en":u"'%s' is set to the serial number for the system", "ja":u"'%s'はシステムのシリアルナンバーにしてあります"}))
@@ -37,7 +24,6 @@ gui.res.register("string_area_description",resource_loader.l({"en":u"Virtual Mac
 gui.res.register("string_download_description",resource_loader.l({"en":u"Downloading a virtual machine ...", "ja":u"仮想マシンのダウンロード中..."}))
 gui.res.register("string_create_failed",resource_loader.l({"en":u"Failed to create the virtual machine. (%s)", "ja":u"仮想マシンの作成に失敗しました。(%s)"}))
 gui.res.register("string_creation_completed",resource_loader.l({"en":u"Creation of a virtual machine has been completed", "ja":u"仮想マシンの作成が完了しました"}))
-gui.res.register("string_not_start",resource_loader.l({"en":u"Could not start the virtual machine you just created.", "ja":u"作成した仮想マシンを開始できませんでした。"}))
 gui.res.register("string_create_region",resource_loader.l({"en":u"There is no volumes that can be used to create the virtual machine. Do you want to create a volume?(You will need to erase any hard drive)", "ja":u"仮想マシンの作成に使用できる領域がありません。領域を作成しますか？（ハードディスクをどれか消去する必要があります）"}))
 gui.res.register("string_machine_name",resource_loader.l({"en":u"The virtual machine name", "ja":u"仮想マシン名"}))
 gui.res.register("string_allocated_memory",resource_loader.l({"en":u"Allocated memory(MB)", "ja":u"割当メモリ(MB)"}))
@@ -64,6 +50,7 @@ gui.res.register("string_enter_code",resource_loader.l({"en":u"Enter the code", 
 
 gui.res.register("string_domain_sys_error",resource_loader.l({"en":u"System error: unsupported architecture %s", "ja":u"システムエラー：サポートされていないアーキテクチャ %s"}))
 gui.res.register("string_domain_support_error",resource_loader.l({"en":u"Sorry, this virtual appliance doesn't support your architecture. (required=%s, yours=%s)", "ja":u"申し訳ございませんが、この仮想アプライアンスあなたのアーキテクチャをサポートしていません。(%sが必要、あなたのアーキテクチャは%s)"}))
+string_starting = resource_loader.l({"en":u"Starting virtual machine ...", "ja":u"仮想マシンを開始しています..."})
 
 string_cancel =  resource_loader.l({"en":u"Cancel", "ja":u"キャンセル"})
 string_cancelled = resource_loader.l({"en":u"Cancelled", "ja":u"キャンセルされました"})
@@ -189,14 +176,10 @@ def create_new_domain(args):
         dialogbox.messagebox.execute(gui.res.string_create_failed % (e), None, gui.res.caution_sign)
         return False
 
-    try:
-        vmm.startDomain(hostname)
-        wbui.play_sound("success")
-        dialogbox.messagebox.execute(gui.res.string_creation_completed)
-    except:
-        wbui.play_sound("fail")
-        dialogbox.messagebox.execute(gui.res.string_not_start, None, gui.res.caution_sign)
-        return False
+    if not operate.start_domain(hostname): return False
+
+    wbui.play_sound("success")
+    dialogbox.messagebox.execute(gui.res.string_creation_completed)
 
     if configuration_messages != None:
         for msg in configuration_messages:
