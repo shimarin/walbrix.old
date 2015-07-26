@@ -2,11 +2,12 @@ import subprocess,json,copy
 
 def get_all_domains():
     domains = {}
-    for line in subprocess.check_output(["lvs","--noheadings","--nosuffix","@wbvm","-o","lv_name,vg_name,lv_path"], close_fds=True).splitlines():
-        name, vg_name, device = map(lambda x:x.strip(), line.split())
+    for line in subprocess.check_output(["lvs","--noheadings","--nosuffix","@wbvm","-o","lv_name,vg_name,lv_path,lv_tags"], close_fds=True).splitlines():
+        name, vg_name, device,tags = [ x.strip() for x in line.split() ]
         uuid = subprocess.check_output(["blkid","-s","UUID","-o","value",device]).strip()
         if uuid == "": continue
-        domains[uuid] = {"name":name,"vg_name":vg_name,"device":device}
+        tags = tags.split(',')
+        domains[uuid] = {"name":name,"vg_name":vg_name,"device":device,"autostart":"autostart" in tags}
     return domains
 
 def get_running_domains():
