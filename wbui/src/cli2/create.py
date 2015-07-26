@@ -102,6 +102,11 @@ def run(name, default_memory = 128, console = False):
         config += determine_boot_type(tempdir)
 
     config.append("name='%s'" % name)
+
+    uuid = subprocess.check_output(["blkid","-s","UUID","-o", "value", device]).strip()
+    if uuid == "": raise Exception("No UUID comes with device %s" % device)
+    config.append("uuid='%s'" % uuid)
+
     if not any([re.match(r'^\s*memory\s*=',x) is not None for x in config]):
         config.append("memory=%d" % default_memory)
 
