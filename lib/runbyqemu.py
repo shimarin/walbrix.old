@@ -10,7 +10,7 @@ def create_hd_image_if_not_exist(hdimage, size=DEFAULT_HD_SIZE):
     print "Creating virtual HD image %s" % hdimage
     subprocess.check_call(["qemu-img","create","-f","raw",hdimage,size])
 
-def run(cdimage, hda, hdb, memory, no64, cirrus, tap, vnc):
+def run(cdimage, hda, hdb, memory, no64, cirrus, tap, vnc, soundhw):
     if cdimage == None and not os.path.exists(hda):
         print "Fresh HD without CD, what are you going to do with it?"
         return False
@@ -27,7 +27,7 @@ def run(cdimage, hda, hdb, memory, no64, cirrus, tap, vnc):
     if cirrus: cmdline += ["-vga","cirrus"]
     if tap: cmdline += ["-net","tap,ifname=%s,script=no,downscript=no" % tap, "-net","nic"]
     if vnc: cmdline += ["-vnc",vnc]
-
+    if soundhw: cmdline += ["-soundhw", soundhw]
     os.execvp("qemu-system-x86_64", cmdline)
 
 if __name__ == '__main__':
@@ -40,5 +40,6 @@ if __name__ == '__main__':
     parser.add_argument("--cirrus", action="store_true", help="Use cirrus logic video emulation")
     parser.add_argument("--tap", type=str, nargs='?', const="tap0", help="TAP device to use as a bridged network")
     parser.add_argument("--vnc", type=str, nargs='?', const=":0", help="Use VNC instead of showing physical screen")
+    parser.add_argument("--soundhw", type=str, nargs='?', const="ac97", help="Sound card emulation")
     args = parser.parse_args()
-    run(args.cdimage, args.hda, args.hdb, args.memory, args.no64, args.cirrus, args.tap, args.vnc)
+    run(args.cdimage, args.hda, args.hdb, args.memory, args.no64, args.cirrus, args.tap, args.vnc, args.soundhw)
