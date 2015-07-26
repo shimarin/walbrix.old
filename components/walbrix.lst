@@ -50,6 +50,10 @@ $copy walbrix/network-multi-bridge /etc/xen/scripts/network-multi-bridge
 $copy walbrix/network-bridge.init /etc/init.d/network-bridge
 $symlink /etc/runlevels/default/network-bridge /etc/init.d/network-bridge
 
+# Walbrix-style domain autostarting
+$copy walbrix/wbdomains /etc/init.d/wbdomains
+$symlink /etc/runlevels/default/wbdomains /etc/init.d/wbdomains
+
 # prevent to get profile layer unmounted
 $write /etc/conf.d/localmount 'no_umounts="/.overlay/boot|/.overlay/profile"'
 # to get profile layer properly ro-remounted

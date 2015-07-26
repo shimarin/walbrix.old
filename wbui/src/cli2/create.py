@@ -32,11 +32,11 @@ def make_sure_device_is_not_being_used(device):
     except subprocess.CalledProcessError, e: # probably not LV
         pass
 
-def get_device(name):
+def get_device(name, quiet=False):
     for line in subprocess.check_output(["lvs","--noheadings","--nosuffix","@wbvm","-o","lv_name,lv_path"], close_fds=True).splitlines():
         lv, device = map(lambda x:x.strip(), line.split())
         if lv == name and make_sure_its_vm(device):
-            print "VM found: %s" % device
+            if not quiet: print "VM found: %s" % device
             return device
     raise Exception("No such VM: %s" % name)
 
@@ -89,8 +89,8 @@ def determine_boot_type(vmroot):
     if not os.path.isfile(init): raise Exception("%s is missimg in VM" % kernel)
     return ["kernel='%s'" % kernel, "root='/dev/xvda1 ro'"]
 
-def run(name, default_memory = 128, console = False):
-    device, name = (name, os.path.basename(name)) if is_block(name) and make_sure_its_vm(name) else (get_device(name), name)
+def run(name, default_memory = 128, console = False, quiet=False):
+    device, name = (name, os.path.basename(name)) if is_block(name) and make_sure_its_vm(name) else (get_device(name, quiet), name)
     make_sure_device_is_not_being_used(device)
     
     with create_install_disk.tempmount(device, "ro") as tempdir:
@@ -118,17 +118,18 @@ def run(name, default_memory = 128, console = False):
 
     cmdline = ["xl", "create"]
     if console: cmdline.append("-c")
+    if quiet: cmdline.append("--quiet")
     cmdline += ["/dev/null", ';'.join(config)]
-    #print cmdline
     subprocess.check_call(cmdline)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", action="store_true", help="Connect to console")
+    parser.add_argument("--quiet", action="store_true", help="Quiet operation")
     parser.add_argument("--default-memory", type=int, default=128, help="Default memory capacity")
     parser.add_argument("name", type=str, help="VM name or device")
     args = parser.parse_args()
     try:
-        run(args.name, args.default_memory, args.c)
+        run(args.name, args.default_memory, args.c, args.quiet)
     except subprocess.CalledProcessError, e:
         sys.exit(e.returncode)

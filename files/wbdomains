@@ -1,0 +1,46 @@
+#!/sbin/runscript
+# Copyright 2015 Walbrix Corporation
+
+extra_commands="status"
+
+depend() {
+	need xenstored
+	after dhcp xend xenconsoled
+}
+
+is_running() {
+	/usr/sbin/xl list "${1}" >/dev/null 2>&1
+}
+
+start() {
+	einfo "Starting Walbrix autostart domains"
+	for name in $(wb autostart); do
+		if ! is_running ${name} ; then
+			ebegin "  Starting domain ${name}"
+			wb create --quiet ${name}
+			eend $?
+		else
+			einfo "  Not starting domain ${name} - already running"
+		fi
+	done
+}
+
+stop() {
+	einfo "Shutting down Walbrix autostart domains"
+	DOMAINS="$(wb autostart)"
+	for name in $DOMAINS ; do
+	    if is_running ${name} ; then
+		ebegin "  Asking domain ${name} to shutdown in the background..."
+		xl shutdown -w -F ${name} >/dev/null &
+	    else
+		einfo "  Not stopping domain ${name} - not running"
+	    fi
+	done
+	einfo "  Waiting for shutdown of domains that are still running"
+	wait
+	eend $?
+}
+
+status() {
+	/usr/sbin/wb list
+}
