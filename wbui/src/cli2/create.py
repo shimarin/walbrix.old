@@ -1,11 +1,11 @@
-import argparse,os,sys,stat,subprocess,re,struct
+import argparse,os,sys,stat,subprocess,re,struct,errno
 import create_install_disk
 
 def is_block(name):
     try:
         return stat.S_ISBLK(os.stat(name)[stat.ST_MODE])
     except OSError, e:
-        if e.errno != os.errno.ENOENT: raise
+        if e.errno != errno.ENOENT: raise
     return False
 
 def is_vm(device):

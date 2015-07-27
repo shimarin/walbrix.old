@@ -63,6 +63,13 @@ def partition_belongs_to(partition, disk):
             return True
     return False
 
+def get_capacity_string(num_bytes):
+    if num_bytes < 1000000: return "<1MB"
+    if num_bytes < 1000000000: return "%dMB" % (num_bytes / 1000000)
+    if num_bytes < 1000000000000: return "%dGB" % (num_bytes / 1000000000)
+    #else
+    return "%dTB" % (num_bytes / 1000000000000)
+
 def get_disk_info(device):
     if isinstance(device, tuple): major, minor = device
     else:
@@ -85,12 +92,7 @@ def get_disk_info(device):
     except OSError:
         pass   # e.g. unloaded cd-rom drive
 
-    if "size" in rst:
-        size = rst["size"]
-        if size < 1000000: rst["size_str"] = "<1MB"
-        elif size < 1000000000: rst["size_str"] = "%dMB" % (size / 1000000)
-        elif size < 1000000000000: rst["size_str"] = "%dGB" % (size / 1000000000)
-        else: rst["size_str"] = "%dTB" % (size / 1000000000000)
+    if "size" in rst: rst["size_str"] = get_capacity_string(rst["size"])
 
     return rst
 

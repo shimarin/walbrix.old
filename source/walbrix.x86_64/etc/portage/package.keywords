@@ -8,26 +8,21 @@
 =sys-cluster/drbd-8.4.3
 =sys-fs/bcache-tools-1.0.5
 =net-misc/s3cmd-1.5.2-r1
+=sys-block/thin-provisioning-tools-0.4.1
+=dev-util/scons-2.3.5
+=dev-lang/ocaml-4.01.0
 
 #snort
 =net-analyzer/snort-2.9.7.3 
 =net-analyzer/barnyard2-1.9
 =net-libs/daq-2.0.2
 
-
 # yum
 =dev-python/pyliblzma-0.5.3-r1
 =sys-apps/yum-3.4.3_p20130218-r1
-
-# xen
-=app-emulation/xen-4.5.1
-=app-emulation/xen-tools-4.5.1
-=app-emulation/xen-pvgrub-4.5.1
-=dev-lang/ocaml-4.01.0
 
 # zfs
 =sys-fs/zfs-0.6.4.2
 =sys-fs/zfs-kmod-0.6.4.2
 =sys-kernel/spl-0.6.4.2 
 
-=dev-util/scons-2.3.5
