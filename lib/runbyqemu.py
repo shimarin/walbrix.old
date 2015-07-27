@@ -1,4 +1,4 @@
-import argparse,subprocess,os
+import argparse,subprocess,os,multiprocessing
 
 DEFAULT_HD_IMAGE_0 = "testvm-hda.img"
 DEFAULT_HD_IMAGE_1 = "testvm-hdb.img"
@@ -10,13 +10,13 @@ def create_hd_image_if_not_exist(hdimage, size=DEFAULT_HD_SIZE):
     print "Creating virtual HD image %s" % hdimage
     subprocess.check_call(["qemu-img","create","-f","raw",hdimage,size])
 
-def run(cdimage, hda, hdb, memory, no64, cirrus, tap, vnc, soundhw):
+def run(cdimage, hda, hdb, memory, no64, cirrus, tap, vnc, soundhw, smp):
     if cdimage == None and not os.path.exists(hda):
         print "Fresh HD without CD, what are you going to do with it?"
         return False
     create_hd_image_if_not_exist(hda)
 
-    cmdline = ["qemu-system-x86_64","-enable-kvm","-hda",hda,"-rtc","base=utc,clock=rt","-m",str(memory)]
+    cmdline = ["qemu-system-x86_64","-enable-kvm","-hda",hda,"-rtc","base=utc,clock=rt","-m",str(memory),"-smp",str(smp)]
 
     if hdb is not None:
         create_hd_image_if_not_exist(hdb)
@@ -30,6 +30,12 @@ def run(cdimage, hda, hdb, memory, no64, cirrus, tap, vnc, soundhw):
     if soundhw: cmdline += ["-soundhw", soundhw]
     os.execvp("qemu-system-x86_64", cmdline)
 
+def get_number_of_physical_cpu_cores():
+    try:
+        return int(subprocess.check_output("grep 'core id' /proc/cpuinfo | sort | uniq | wc -l", shell=True))
+    except:
+        return 1
+    
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("cdimage", type=str, nargs='?', help="ISO9660 image")
@@ -41,5 +47,6 @@ if __name__ == '__main__':
     parser.add_argument("--tap", type=str, nargs='?', const="tap0", help="TAP device to use as a bridged network")
     parser.add_argument("--vnc", type=str, nargs='?', const=":0", help="Use VNC instead of showing physical screen")
     parser.add_argument("--soundhw", type=str, nargs='?', const="ac97", help="Sound card emulation")
+    parser.add_argument("--smp", type=int, default=get_number_of_physical_cpu_cores(), help="Number of CPU")
     args = parser.parse_args()
-    run(args.cdimage, args.hda, args.hdb, args.memory, args.no64, args.cirrus, args.tap, args.vnc, args.soundhw)
+    run(args.cdimage, args.hda, args.hdb, args.memory, args.no64, args.cirrus, args.tap, args.vnc, args.soundhw, args.smp)
