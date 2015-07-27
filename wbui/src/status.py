@@ -1,14 +1,15 @@
 # -*- coding:utf-8 -*-
 
+import subprocess,os
+
 import pygame
-import subprocess
-import os
 
 import system
-import vm
 import wbui
 import gui
 import resource_loader
+
+import cli2.info as cli_info
 
 kernel_version = None
 kernel_arch = None
@@ -26,8 +27,6 @@ window = None
 
 gui.res.register("color_status_positive", pygame.Color(94,223,255))
 gui.res.register("color_status_negative", pygame.Color(255,103,121))
-
-
 
 # string resources
 gui.res.register("string_serial_number", resource_loader.l({"en":u"Serial Number", "ja":u"シリアルナンバー"}))
@@ -58,7 +57,7 @@ class Window(gui.Window):
 
     def refresh(self):
         global freememory, maxmemory, vpn_ipaddress
-        (freememory, maxmemory) = vm.getVirtualMachineManager().getFreeMemoryInMb()
+        (freememory, maxmemory) = cli_info.get_free_memory_in_mb()
         vpn_ipaddress = get_vpn_ip_address()
 
     def onAddedAsChild(self, parent):
@@ -122,17 +121,11 @@ def init():
         pass # keep it None
     
     # CPU情報を得る
-    cpuinfo = subprocess.Popen("lscpu", shell=True, stdout=subprocess.PIPE, close_fds=True)
-    line = cpuinfo.stdout.readline()
-    while line:
-        if line.startswith("CPU(s):"):
-            cpus = int(line[10:].strip())
-        elif line.startswith("CPU MHz:"):
-            cpu_clock = int(float(line[10:].strip()))
-        line = cpuinfo.stdout.readline()
-    cpuinfo.wait()
-
-    support_hvm = os.system("xl info|egrep '^xen_caps.*hvm-' -q") == 0
+    xl_info = cli_info.run()
+    cpus = xl_info.get("nr_cpus") or 0
+    cpu_clock = xl_info.get("cpu_mhz") or 0
+    xen_caps = xl_info.get("xen_caps")
+    support_hvm = xen_caps is not None and "hvm-" in xen_caps
 
     canvas = pygame.Surface((400, 400), pygame.SRCALPHA, 32)
     vpn_ipaddress = None
