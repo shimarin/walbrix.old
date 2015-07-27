@@ -487,16 +487,16 @@ def vpn(domain):
 
 def run(domain):
     # orphanなdomainの処理
-    if not domain["configfile"] and "device" in domain:
-        if rescue_orphaned_domain(domain) == False: return
+    #if not domain["configfile"] and "device" in domain:
+    #    if rescue_orphaned_domain(domain) == False: return
 
     operations = []
-    memory = domain["memory"]
+    memory = domain.get("memory")
     domain_name = domain["name"]
     s = system.getSystem()
-    if memory == None and domain["configfile"]:
+    if memory is None:
         operations.append({"id":"start","label":gui.res.string_domain_operate_start})
-    if memory != None:
+    else:
         if s.isRunningAsGetty(): 
             operations.append({"id":"console","label":gui.res.string_console})
         operations.append({"id":"shutdown","label":gui.res.string_ins_ends})
@@ -504,18 +504,16 @@ def run(domain):
         operations.append({"id":"destroy","label":gui.res.string_stop})
     if domain["autostart"]:
         operations.append({"id":"noautostart","label":gui.res.string_can_automatic})
-    elif domain["configfile"]:
+    else:
         operations.append({"id":"autostart","label":gui.res.string_auto_start})
 
-    vmm = vm.getVirtualMachineManager()
-    vm_device = vmm.determineVMDeviceName(domain_name)
-    volume_status = s.getLogicalVolumeStatusFlags(vm_device)
-    modifiable = volume_status[0] == '-' and volume_status[1] == 'w' and volume_status[5] == '-' and s.getDeviceFSType(vm_device) == "xfs"
+    modifiable = domain.get("writable") and not domain.get("open") and domain.get("fstype") == "xfs"
     
     if memory == None:
-        if modifiable: operations.append({"id":"rename", "label":gui.res.string_name_ram})
-        if modifiable: operations.append({"id":"expand", "label":gui.res.string_extend_space})
-        if modifiable: operations.append({"id":"vpn", "label":gui.res.string_vpn_config})
+        if modifiable: 
+            operations.append({"id":"rename", "label":gui.res.string_name_ram})
+            operations.append({"id":"expand", "label":gui.res.string_extend_space})
+            operations.append({"id":"vpn", "label":gui.res.string_vpn_config})
         operations.append({"id":"delete","label":gui.res.string_remove})
     if modifiable: operations.append({"id":"duplicate", "label":gui.res.string_replicate})
 

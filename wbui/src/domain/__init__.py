@@ -1,20 +1,11 @@
 # -*- coding:utf-8 -*-
-import os
-import sys
+import sys,traceback
+
 import pygame
-import crypt
-import threading
-import subprocess
-import urllib
-import traceback
 
 import wbui
-import gui
-import gui.list
-import gui.messagebox
-import gui.selectbox
+import gui,gui.list,gui.messagebox,gui.selectbox,dialogbox
 import system
-import vm
 import status
 import footer
 import pygamehelper
@@ -22,6 +13,8 @@ import pygamehelper
 import create
 import operate
 import resource_loader
+
+import cli2.list as cli_list
 
 domainList = None
 window = None
@@ -88,7 +81,7 @@ class DomainListItem(gui.list.ListItem):
     def __init__(self, domain):
         font = gui.res.font_domain_list
         self.hdr_img = font.render(domain["name"], True, gui.res.color_text)
-        self.value_img = font.render((gui.res.string_domain_use % (domain["memory"]) if domain["memory"] != None else gui.res.string_domain_stop) + ':' + (gui.res.string_domain_auto if domain["autostart"] else gui.res.string_domain_manual), True, (96, 255, 96) if domain["memory"] != None else (255,96,96))
+        self.value_img = font.render((gui.res.string_domain_use % (domain["memory"]) if domain.get("memory") != None else gui.res.string_domain_stop) + ':' + (gui.res.string_domain_auto if domain["autostart"] else gui.res.string_domain_manual), True, (96, 255, 96) if "memory" in domain else (255,96,96))
         gui.list.ListItem.__init__(self, max(self.hdr_img.get_height(), self.value_img.get_height()))
         self.domain = domain
     def getDomain(self):
@@ -109,10 +102,19 @@ def init():
     window.push(domainList)
 
 def refresh():
-    vmm = vm.getVirtualMachineManager()
-    domains = vmm.getDomains()
-    font = gui.res.font_system.getFont(20)
+    try:
+        all_domains = cli_list.get_all_domains()
+        running_domains = cli_list.get_running_domains()
+        domains = cli_list.merge(all_domains, running_domains)
+    except Exception, e:
+        traceback.print_exc(file=sys.stderr)
+        domains = []
 
+    for domain in domains:
+        if "memkb" in domain and "memory" not in domain:
+            domain["memory"] = domain["memkb"] / 1024
+
+    font = gui.res.font_system.getFont(20)
     domainList.setDomainList(domains)
 
 def set_marquee():
