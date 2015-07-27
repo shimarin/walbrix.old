@@ -89,8 +89,11 @@ def determine_boot_type(vmroot):
     if not os.path.isfile(init): raise Exception("%s is missimg in VM" % kernel)
     return ["kernel='%s'" % kernel, "root='/dev/xvda1 ro'"]
 
+def get_device_and_vmname(name, quiet=False):
+    return (name, os.path.basename(name)) if is_block(name) and make_sure_its_vm(name) else (get_device(name, quiet), name)
+
 def run(name, default_memory = 128, console = False, quiet=False):
-    device, name = (name, os.path.basename(name)) if is_block(name) and make_sure_its_vm(name) else (get_device(name, quiet), name)
+    device, name = get_device_and_vmname(name, quiet)
     make_sure_device_is_not_being_used(device)
     
     with create_install_disk.tempmount(device, "ro") as tempdir:
