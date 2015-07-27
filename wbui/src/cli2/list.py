@@ -1,4 +1,4 @@
-import subprocess,json,copy,re
+import subprocess,json,copy,re,os
 
 BLKID_PATTERN=re.compile(r'^(.+?)=(.+)$')
 
@@ -25,7 +25,10 @@ def get_all_domains():
 
 def get_running_domains():
     domains = {}
-    for running_domain in json.loads(subprocess.check_output(["xl","list","-l"])):
+    with open(os.devnull, 'w') as devnull:
+        xl = subprocess.check_output(["xl","list","-l"],stderr=devnull)
+
+    for running_domain in json.loads(xl):
         domid = running_domain.get("domid")
         config = running_domain.get("config")
         if None in [domid, config]: continue
@@ -60,5 +63,10 @@ def merge(all_domains,running_domains):
     return domain_list
 
 if __name__ == '__main__':
+    row_format ="{:<3} {:<15} {:<16} {:>5} {:>6} {:>6} {:>4}"
+    print row_format.format("RUN","NAME","VG","BOOT","DISK","RAM","#CPU")
+    print "-------------------------------------------------------------"
     for domain in merge(get_all_domains(), get_running_domains()):
-        print domain
+        memkb = domain.get("memkb")
+        running = "*" if memkb is not None else ""
+        print row_format.format(running,domain["name"],domain["vg_name"],"*" if domain.get("autostart") == True else "","%dG" % domain["size"],"%dM" % (memkb / 1024) if memkb is not None else "",domain.get("vcpus") or "")
