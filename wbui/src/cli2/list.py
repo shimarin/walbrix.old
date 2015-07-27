@@ -55,6 +55,7 @@ def merge(all_domains,running_domains):
             domains[uuid].update(domain)
         else:
             domains[uuid] = domain
+        if "name" not in domain and "xen_name" in domain: domain["name"] = domain["xen_name"]
 
     domain_list = []
     for uuid, domain in domains.iteritems():
@@ -68,5 +69,9 @@ if __name__ == '__main__':
     print "-------------------------------------------------------------"
     for domain in merge(get_all_domains(), get_running_domains()):
         memkb = domain.get("memkb")
+        memstr = "%dM" % (memkb / 1024) if memkb is not None else ""
         running = "*" if memkb is not None else ""
-        print row_format.format(running,domain["name"],domain["vg_name"],"*" if domain.get("autostart") == True else "","%dG" % domain["size"],"%dM" % (memkb / 1024) if memkb is not None else "",domain.get("vcpus") or "")
+        if "vg_name" in domain:
+            print row_format.format(running,domain["name"],domain["vg_name"],"*" if domain.get("autostart") == True else "","%dG" % domain["size"],memstr,domain.get("vcpus") or "")
+        else:
+            print row_format.format(running,domain["name"],"UNKNOWN","","-",memstr,domain.get("vcpus") or "")
