@@ -63,6 +63,12 @@ touch $TARGET
 
 env.Command("walbrix", ["build/walbrix/.done", "$WBUI_MARKER", "$LOCALE_MARKER"], "mksquashfs build/walbrix/* build/wbui build/locale $TARGET -noappend")
 env.Command("upload", "walbrix", "s3cmd put -P $SOURCE s3://dist.walbrix.net/walbrix")
+env.Command("install", ["walbrix","/.overlay/boot/walbrix"],"""
+mount -o rw,remount /.overlay/boot
+[ ! -f /.overlay/boot/walbrix.cur ] && mv /.overlay/boot/walbrix /.overlay/boot/walbrix.cur
+cp walbrix /.overlay/boot/walbrix
+mount -o ro,remount /.overlay/boot
+""") 
 
 ### DESKTOP ###
 
