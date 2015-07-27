@@ -19,7 +19,7 @@ import dialogbox
 import create
 import resource_loader
 
-import cli2.create as cli_create
+import cli2.create as cli_create,cli2.autostart as cli_autostart
 
 # string resources
 gui.res.register("string_config_info",resource_loader.l({"en":u"Configuration information of the virtual machine %s could not be found.Do you want to create it?", "ja":u"仮想マシン %s の設定情報が見つかりません。作成しますか？"}))
@@ -107,9 +107,9 @@ gui.res.register("string_replicate",resource_loader.l({"en":u"Replicate", "ja":u
 
 gui.res.register("string_learn",resource_loader.l({"en":u"Confirm how to use", "ja":u"利用方法を確認する"}))
 
-gui.res.register("string_vm_auto_start",resource_loader.l({"en":u"Virtual machine %s has been set to Automatic startup", "ja":u"仮想マシン%sを自動起動に設定しました"}))
+string_vm_autostart = resource_loader.l({"en":u"Virtual machine %s has been set to Automatic startup", "ja":u"仮想マシン%sを自動起動に設定しました"})
 
-gui.res.register("string_terminated",resource_loader.l({"en":u"Virtual Machine %s has been set to Manual startup", "ja":u"仮想マシン%sの自動起動を解除しました"}))
+string_vm_no_autostart = resource_loader.l({"en":u"Virtual Machine %s has been set to Manual startup", "ja":u"仮想マシン%sの自動起動を解除しました"})
 
 string_cant_across_2tb = resource_loader.l({"en":u"Disk size can't be expanded across 2TB border.","ja":u"2TBの境界をまたがってディスク容量を拡張することはできません"})
 
@@ -550,16 +550,13 @@ def run(domain):
     elif operation == "vpn":
         return vpn(domain)
     elif operation == "autostart":
-        link = "/etc/xen/auto/%s" % (domain_name)
-        if not os.path.exists(link):
-            os.symlink("../%s" % (domain_name), link)
-        footer.window.setText(gui.res.string_vm_auto_start % (domain_name))
+        cli_autostart.set_autostart(domain_name, True)
+        footer.window.setText(string_vm_autostart % (domain_name))
         return True
 
     elif operation == "noautostart":
-        link = "/etc/xen/auto/%s" % (domain_name)
-        if os.path.exists(link): os.unlink(link)
-        footer.window.setText(gui.res.string_terminated % (domain_name))
+        cli_autostart.set_autostart(domain_name, False)
+        footer.window.setText(string_vm_no_autostart % (domain_name))
         return True
 
     elif operation == "instruction":
