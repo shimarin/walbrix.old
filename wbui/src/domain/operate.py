@@ -19,7 +19,7 @@ import dialogbox
 import create
 import resource_loader
 
-import cli2.create as cli_create,cli2.autostart as cli_autostart,cli2.edit as cli_edit,cli2.rename as cli_rename,cli2.install_va as cli_install_va
+import cli2.create as cli_create,cli2.autostart as cli_autostart,cli2.edit as cli_edit,cli2.rename as cli_rename,cli2.install_va as cli_install_va,cli2.remove_vm as cli_remove_vm
 
 # string resources
 gui.res.register("string_config_info",resource_loader.l({"en":u"Configuration information of the virtual machine %s could not be found.Do you want to create it?", "ja":u"仮想マシン %s の設定情報が見つかりません。作成しますか？"}))
@@ -134,22 +134,6 @@ def get_va_metadata_from_cache(name):
 
     return system.get_metadata_from_cache(name)
 
-def delete_domain(name):
-    s = system.getSystem()
-    device_name = determine_device_name(name)
-    if device_name != None:
-        try:
-            s.removeLogicalVolume(device_name)
-        except:
-            return False
-
-    if os.path.exists("/etc/xen/auto/" + name):
-        os.unlink("/etc/xen/auto/" + name)
-    if os.path.exists("/etc/xen/" + name):
-        os.unlink("/etc/xen/" + name)
-
-    return True
-
 def rescue_orphaned_domain(domain):
     name = domain["name"]
     yn = dialogbox.messagebox.execute(gui.res.string_config_info % (name), dialogbox.DialogBox.OKCANCEL())
@@ -247,12 +231,15 @@ def destroy(domain):
 
 def delete(domain):
     if dialogbox.messagebox.execute(gui.res.string_delete_desc % (domain["name"]), dialogbox.DialogBox.OKCANCEL(), gui.res.caution_sign) != "ok": return False
-    if delete_domain(domain["name"]):
-        footer.window.setText(gui.res.string_vm_del)
-        return True
-    #else:
-    dialogbox.messagebox.execute(gui.res.string_vm_not_del,None, gui.res.caution_sign)
-    return False
+
+    try:
+        cli_remove_vm.run(domain["device"], True)
+    except:
+        dialogbox.messagebox.execute(gui.res.string_vm_not_del,None, gui.res.caution_sign)
+        return False
+
+    footer.window.setText(gui.res.string_vm_del)
+    return True
 
 '''
 ["hostname"] = hostname
@@ -316,10 +303,8 @@ def rename(name, device):
 
 def expand(domain):
     s = system.getSystem()
-    vmm = vm.getVirtualMachineManager()
-    config = vmm.getVMConfig(domain["name"])
-    device = vmm.getDeviceNameFromDeviceString(config["disk"][0])
-    orig_disk = s.determineLogicalVolumeSizeInGB(device)
+    device = domain["device"]
+    orig_disk = domain.get("size") or s.determineLogicalVolumeSizeInGB(device)
     min_disk = int(orig_disk) + 1
     disk = gui.inputbox.TextInputBox(gui.res.string_new_size, min_disk, None, 1, 5, "0123456789").execute(gui.getDesktop())
     if disk == None: return False
