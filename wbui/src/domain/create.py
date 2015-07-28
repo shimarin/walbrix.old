@@ -8,7 +8,6 @@ import gui
 import wbui
 import footer
 import system
-import vm
 import catalog
 import vaconfig
 
@@ -16,6 +15,8 @@ import dialogbox,dialogbox.inputbox,dialogbox.progressbar,dialogbox.messagebox
 
 import http_client
 import resource_loader
+
+import cli2.install_va as cli_install_va
 
 # string resources
 gui.res.register("string_located",resource_loader.l({"en":u"'%s' is set to the serial number for the system", "ja":u"'%s'はシステムのシリアルナンバーにしてあります"}))
@@ -123,7 +124,6 @@ def create_new_domain(args):
     # マーキーに作成中の仮想マシンに関する情報を表示
     footer.window.setText(gui.res.string_area_description % (hostname,vgname,memory,disk) )
 
-    vmm = vm.getVirtualMachineManager()
     try:
         s = system.getSystem()
         with s.temporaryMount(device_name, None, "inode32") as tmpdir:
@@ -139,7 +139,7 @@ def create_new_domain(args):
                             extract_archive.send_signal(signal.SIGINT)
                         line = nbr.readline()
 
-            vmm.setHostName(tmpdir, hostname)
+            cli_install_va.set_hostname(tmpdir, hostname)
 
             # https://github.com/wbrxcorp/walbrix/issues/39
             xen_conf_dir = os.path.join(tmpdir, "etc/xen")
@@ -160,13 +160,6 @@ def create_new_domain(args):
             # メタデータを元に、コンフィギュレーションを行う
             if metadata != None:
                 configuration_messages = configure_va(metadata, tmpdir)
-
-            # check if pv kernel exists
-            kernel = vmm.determineVMKernel(tmpdir)
-            # pv kernel can't be read when disk size >= 2048
-            if kernel == None or disk >= 2048: kernel = system.guest_kernel
-
-        vmm.createVMConfigFile(hostname, memory, kernel, vcpus, device_name)
 
     except Exception, e:
         s = system.getSystem()
