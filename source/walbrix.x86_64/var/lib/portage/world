@@ -17,6 +17,7 @@ app-portage/gentoolkit
 dev-db/mysql
 dev-libs/libisoburn
 dev-python/chardet
+dev-python/flask
 dev-python/pyalsaaudio
 dev-python/pygame
 dev-util/debootstrap

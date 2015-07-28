@@ -9,6 +9,7 @@ $require fbterm.lst
 $require cdrkit.lst # isoinfo
 $require grub.lst # for grub2-install, grub2-mkimage
 $require udev.lst # udevadm
+$require flask.lst # util
 /usr/bin/curl
 /usr/bin/fbset
 $copy walbrix/wbgetty /usr/sbin/wbgetty

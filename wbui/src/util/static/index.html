@@ -1,0 +1,86 @@
+<html ng-app="WbUtil">
+<head>
+  <title>Walbrix Utility</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <style>
+    .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+  </style>
+  <script src="/static/js/angular.min.js"></script>
+  <script src="/static/js/angular-resource.min.js"></script>
+  <script src="/static/js/ui-bootstrap-tpls-0.13.1.min.js"></script>
+  <script src="/static/js/wbutil.js"></script>
+</head>
+<body>
+  <div class="container">
+    <img src="/static/img/title.png"/>
+    <h1>Walbrix ユーティリティ</h1>
+    <tabset justified="true">
+      <tab heading="スクリーンショット">
+	<h2>スクリーンショット</h2>
+	<button class="btn btn-lg btn-primary" ng-click="take_screenshot()">撮る</button>
+	<div>
+          <progressbar ng-show="loading_screenshot" class="progress-striped active">スクリーンショット取得中...</progressbar>
+          <img class="img-responsive" ng-show="!loading_screenshot" ng-src="{{screenshot}}">
+        </div>
+      </tab>
+      <tab heading="証明書の発行とインストール">
+        <div ng-controller="InstallCert">
+	  <h2>CSRの発行</h2>
+	  開発元から発行されたシリアル番号:<input type="text" ng-model="cn"> <button class="btn btn-default" ng-disabled="!cn" ng-click="issue_csr()">CSRを発行する</button><br/>
+	  ※シリアル番号は大文字小文字を区別します<br/>
+
+          <div ng-show="csr">
+	    <pre ng-bind="csr"></pre>
+            <p>枠内の -----BEGIN CERTIFICATE REQUEST----- から -----END CERTIFICATE REQUEST----- までの部分をメール本文に貼り付けて <a href="mailto:csr@walbrix.net">csr@walbrix.net</a> に送信してください。折り返し、クライアント証明書が返送されます。</p>
+          </div>
+
+          <div ng-show="status.key">
+	    <h2>クライアント証明書のインストール</h2>
+            <div class="alert alert-warning" ng-show="status.cert">
+              証明書は既にインストールされています。インストールを行うと既存の証明書は上書きされます。
+            </div>
+	    <p>ここに開発元から発行されたクライアント証明書(-----BEGIN CERTIFICATE-----で始まり -----END CERTIFICATE-----で終わるテキスト)を貼り付けてください。</p>
+	    <textarea class="form-control" rows="10" ng-model="cert"></textarea><br/>
+            <p><button class="btn btn-primary" ng-disabled="!cert" ng-click="save_cert()">証明書をインストールする</button></p>
+          </div>
+        </div>
+      </tab>
+      <tab heading="証明書のバックアップとリストア">
+        <div ng-controller="BackupCert">
+	  <h2>証明書のバックアップ</h2>
+	  <p><button class="btn btn-default" ng-disabled="!status.key || !status.cert" ng-click="get_pkcs12()">証明書をバックアップする</button><p>
+
+          <div ng-show="pkcs12">
+	    <pre ng-bind="pkcs12"></pre>
+            <p>枠内のテキストを保存してください。</p>
+          </div>
+
+	  <h2>証明書のリストア</h2>
+          <div class="alert alert-warning" ng-show="status.cert">
+            証明書は既にインストールされています。リストアを行うと既存の証明書は上書きされます。
+          </div>
+	  <p>ここにバックアップした証明書を貼り付けてください。（上のバックアップ機能で取得したデータのみここに貼り付けることができます。-----BEGIN CERTIFICATE-----で始まるものはリストアには使用できません）</p>
+	  <textarea class="form-control" rows="10" ng-model="pkcs12_to_restore"></textarea><br/>
+	  <p><button class="btn btn-danger" ng-disabled="!pkcs12_to_restore" ng-click="restore_pkcs12()">証明書をリストアする</button></p>
+        </div>
+      </tab>
+      <tab heading="SSH公開鍵">
+        <div ng-controller="AuthorizedKeys">
+	  <h2>SSH公開鍵の編集</h2>
+	  <div>
+	    <textarea class="form-control" rows="10" ng-model="authorized_keys"></textarea>
+	    <p>ここで ~root/.ssh/authorized_keysを編集できます。ここに設置された公開鍵に対応する秘密鍵を所有していればパスワードを使わず root権限でシステムにログイン出来ます。鍵ファイルの管理には十分ご注意下さい。</p>
+            <button class="btn btn-primary" ng-click="save_authorized_keys()">上記内容に更新</button>
+	  </div>
+        </div>
+      </tab>
+    </tabset>
+    <div class="footer" style="border-top: 1px solid #eee;margin-top: 40px;padding-top: 40px;padding-bottom: 40px;">
+        <p>&copy; <a href="http://www.walbrix.com/jp/">Walbrix Corporation</a> 2009-2015</p>
+    </div>
+  </div>
+</body>
+</html>

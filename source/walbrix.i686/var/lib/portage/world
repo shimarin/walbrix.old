@@ -16,6 +16,7 @@ app-i18n/fbterm
 app-misc/screen
 app-portage/gentoolkit
 dev-db/mysql
+dev-python/flask
 dev-python/pyalsaaudio
 dev-python/pygame
 dev-util/strace
