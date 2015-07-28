@@ -1,7 +1,7 @@
 #!/usr/bin/python2.7
 # -*- coding:utf-8 -*-
 
-import sys,os,subprocess,base64,re,stat,tempfile,shutil,SocketServer
+import sys,os,subprocess,base64,re,stat,tempfile,shutil,multiprocessing,signal,SocketServer
 import BaseHTTPServer
 
 import handler
@@ -21,25 +21,30 @@ utility_port = None
 def start_utility():
     global utility
     global utility_port
-    utility = subprocess.Popen("/usr/sbin/wb run-util", shell=True, stdout=subprocess.PIPE, close_fds=True)
-    utility_port = int(utility.stdout.readline())
+
+    q = multiprocessing.Queue()
+    utility = multiprocessing.Process(target=run, args=(q, 0))
+    utility.daemon = True
+    utility.start()
+    utility_port = q.get(True, 1)
+    
     return utility_port
 
 def stop_utility():
     global utility
-    if utility == None: return False
-    utility.terminate()
-    utility.wait()
+    if utility is None: return False
+    if utility.is_alive():
+        utility.terminate()
+        utility.join()
     utility = None
     return True
 
 def is_utility_running():
-    return utility != None
+    return utility != None and utility.is_alive()
 
 def get_utility_port():
-    global utility
+    if not is_utility_running(): return None
     global utility_port
-    if utility == None: return None
     return utility_port
 
 def main(port = 0):
@@ -174,7 +179,8 @@ class DummyQueue:
     def put(self, obj):
         print obj
 
-def run(q, port = 0):
+def run(q, port = 0,debug=False):
+    signal.signal(signal.SIGTERM, signal.SIG_DFL)
     try:
         original_socket_bind = SocketServer.TCPServer.server_bind
         def socket_bind_wrapper(self):
@@ -184,9 +190,11 @@ def run(q, port = 0):
             return ret
 
         SocketServer.TCPServer.server_bind = socket_bind_wrapper
-        app.run(host='0.0.0.0',port=port,debug=True)
+        app.run(host='0.0.0.0',port=port)
     except Exception, e:
         q.put(e)
     
 if __name__ == '__main__':
-    run(DummyQueue(), None)
+    run(DummyQueue(), None, True)
+
+
