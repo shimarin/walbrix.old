@@ -6,8 +6,7 @@ import pygame
 import footer
 import wbui
 import system
-import domain
-import vm
+import domain,volume
 import gui
 import gui.selectbox
 import gui.progressbar
@@ -63,7 +62,7 @@ gui.res.register("string_cloning",resource_loader.l({"en":u"Cloning a virtual ma
 gui.res.register("string_operation_desc",resource_loader.l({"en":u"Source is running. Are you ok with the snapshot replication?", "ja":u"複製元が稼働中です。スナップショットの複製となりますがよろしいですか？"}))
 gui.res.register("string_duplicate",resource_loader.l({"en":u"Destination virtual machine:", "ja":u"複製先仮想マシン"}))
 gui.res.register("string_duplicate_fail",resource_loader.l({"en":u"Failed to replicate the virtual machine. You may not have enough space in the volume of destination", "ja":u"仮想マシンの複製に失敗しました。複製先の領域に十分な空きが無い可能性があります"}))
-gui.res.register("string_duplication_description",resource_loader.l({"en":u"Replicate the virtual machine %s as volume=%s/name=%s as(HD %dGB)...", "ja":u"仮想マシン%sを領域%s上の%sとして複製(HD%dGB)..."}))
+gui.res.register("string_duplication_description",resource_loader.l({"en":u"Replicate the virtual machine %s as vg=%s/name=%s", "ja":u"仮想マシン%sを領域%s上の%sとして複製"}))
 
 gui.res.register("string_replicate_fails",resource_loader.l({"en":u"failed to replicate the virtual machine. (%s).", "ja":u"仮想マシンの複製に失敗しました。(%s)"}))
 
@@ -133,28 +132,6 @@ def get_va_metadata_from_cache(name):
     if name == None: return None
 
     return system.get_metadata_from_cache(name)
-
-def rescue_orphaned_domain(domain):
-    name = domain["name"]
-    yn = dialogbox.messagebox.execute(gui.res.string_config_info % (name), dialogbox.DialogBox.OKCANCEL())
-    if yn != "ok": return False
-    fields = [{"id":"memory","label":gui.res.string_allocated_memory,"value":64,"type":"int"}]
-    memory = None
-    while memory == None:
-        values = gui.propertybox.execute(gui.res.string_new_set % (name) ,fields)
-        if values == None: return False
-
-        memory = values["memory"]
-        fields[0]["value"] = memory
-        if memory < 32:
-            dialogbox.messagebox.execute(gui.res.string_memory_assign_desc,None, gui.res.caution_sign)
-            memory = None
-
-    vmm = vm.getVirtualMachineManager()
-    vmm.createVMConfigFile(name, memory, system.guest_kernel, 1, domain["device"])
-    domain["configfile"] = True
-    dialogbox.messagebox.execute(gui.res.string_confi_info % (name))
-    return True
 
 def start_domain(name):
     def wb_create(q):
@@ -328,7 +305,7 @@ def expand(domain):
     gui.messagebox.execute(gui.res.string_enhanced, ["ok"])
     return True
 
-def exec_duplicate(src, dest, hostname, kernel, vcpus):
+def exec_duplicate(src, dest, hostname):
     s = system.getSystem()
     with gui.progressbar.SyncedProgressBar(gui.res.string_cloning) as pb:
         try:
@@ -355,6 +332,39 @@ def exec_duplicate(src, dest, hostname, kernel, vcpus):
             # VAのメタデータを得る
             metadata = system.get_va_metadata(dest, tmpdir)
 
+def edit_duplicate_domain(hostname):
+    vgname = None
+    vglist = volume.list_vgs()
+    if len(vglist) == 0:
+        if dialogbox.messagebox.execute(gui.res.string_create_region, dialogbox.DialogBox.OKCANCEL(), gui.res.caution_sign) == "ok":
+            vgname = volume.create_vg()
+        if vgname == None: return None
+    else:
+        vgname = vglist[0]["name"]
+
+    fields = [{"id":"hostname","label":gui.res.string_machine_name,"value":hostname},{"id":"vgname","label":gui.res.string_domain_area,"value":vgname}]
+    while True:
+        values = gui.propertybox.execute(gui.res.string_duplicate,fields)
+        if values == None: break
+        #else
+        hostname = values["hostname"]
+        vgname = values["vgname"]
+
+        fields[0]["value"] = hostname
+        fields[1]["value"] = vgname
+
+        if domain.exists(hostname):
+            dialogbox.messagebox.execute(gui.res.string_vm_already_exists % (hostname), None, gui.res.caution_sign)
+            continue
+
+        if not volume.vg_exists(vgname):
+            dialogbox.messagebox.execute(gui.res.string_domain_desc % (vgname), None, gui.res.caution_sign)
+            continue
+
+        return {"hostname":hostname, "vgname":vgname}
+
+    return None
+
 def duplicate(domain):
     name = domain["name"]
     src_device = domain["device"]
@@ -364,18 +374,14 @@ def duplicate(domain):
 
     s = system.getSystem()
     lvsize = domain.get("size") or s.determineLogicalVolumeSizeInGB(src_device)
-    min_disk = int(lvsize + 1) if int(lvsize) < lvsize else int(lvsize)
-    new_domain = create.edit_new_domain(gui.res.string_duplicate, name, 128, min_disk)
+    new_domain = edit_duplicate_domain(name)
     if new_domain == None: return
 
     hostname = new_domain["hostname"]
     vgname = new_domain["vgname"]
-    disk = new_domain["disk"]
-    kernel = system.guest_kernel
-    vcpus = 1
 
     lvname = hostname
-    device_name = system.create_logical_volume_in_GB(vgname, lvname, disk, True, "@wbvm")
+    device_name = system.create_logical_volume_in_GB(vgname, lvname, lvsize, True, "@wbvm")
     if device_name == None:
         wbui.play_sound("fail")
         gui.messagebox.execute(gui.res.string_duplicate_fail, ["ok"], gui.res.color_dialog_negative)
@@ -384,14 +390,14 @@ def duplicate(domain):
     metadata = None # /etc/wb-va.xml
 
     # マーキーに作成中の仮想マシンに関する情報を表示
-    footer.window.setText(gui.res.string_duplication_description % (name,vgname,hostname,disk) )
+    footer.window.setText(gui.res.string_duplication_description % (name,vgname,hostname) )
 
     try:
         if use_snapshot:
             with s.openSnapshot(src_device, 1) as snapshot:
-                exec_duplicate(snapshot, device_name, hostname, kernel, vcpus)
+                exec_duplicate(snapshot, device_name, hostname)
         else:
-            exec_duplicate(src_device, device_name, hostname, kernel, vcpus)
+            exec_duplicate(src_device, device_name, hostname)
     except Exception, e:
         s.removeLogicalVolume(device_name)
         wbui.play_sound("fail")
@@ -462,10 +468,6 @@ def vpn(domain):
     return True
 
 def run(domain):
-    # orphanなdomainの処理
-    #if not domain["configfile"] and "device" in domain:
-    #    if rescue_orphaned_domain(domain) == False: return
-
     operations = []
     memory = domain.get("memory")
     domain_name = domain["name"]
