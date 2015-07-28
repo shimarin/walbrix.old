@@ -25,8 +25,12 @@ def get_all_domains():
 
 def get_running_domains():
     domains = {}
-    with open(os.devnull, 'w') as devnull:
-        xl = subprocess.check_output(["xl","list","-l"],stderr=devnull)
+
+    try:
+        with open(os.devnull, 'w') as devnull:
+            xl = subprocess.check_output(["xl","list","-l"],stderr=devnull)
+    except:
+        xl = "[]" # No xl installed or xenstored is not running. https://github.com/wbrxcorp/walbrix/issues/43
 
     for running_domain in json.loads(xl):
         domid = running_domain.get("domid")
