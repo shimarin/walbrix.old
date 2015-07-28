@@ -19,7 +19,7 @@ import dialogbox
 import create
 import resource_loader
 
-import cli2.create as cli_create,cli2.autostart as cli_autostart,cli2.edit as cli_edit,cli2.rename as cli_rename
+import cli2.create as cli_create,cli2.autostart as cli_autostart,cli2.edit as cli_edit,cli2.rename as cli_rename,cli2.install_va as cli_install_va
 
 # string resources
 gui.res.register("string_config_info",resource_loader.l({"en":u"Configuration information of the virtual machine %s could not be found.Do you want to create it?", "ja":u"仮想マシン %s の設定情報が見つかりません。作成しますか？"}))
@@ -63,7 +63,7 @@ gui.res.register("string_cloning",resource_loader.l({"en":u"Cloning a virtual ma
 gui.res.register("string_operation_desc",resource_loader.l({"en":u"Source is running. Are you ok with the snapshot replication?", "ja":u"複製元が稼働中です。スナップショットの複製となりますがよろしいですか？"}))
 gui.res.register("string_duplicate",resource_loader.l({"en":u"Destination virtual machine:", "ja":u"複製先仮想マシン"}))
 gui.res.register("string_duplicate_fail",resource_loader.l({"en":u"Failed to replicate the virtual machine. You may not have enough space in the volume of destination", "ja":u"仮想マシンの複製に失敗しました。複製先の領域に十分な空きが無い可能性があります"}))
-gui.res.register("string_duplication_description",resource_loader.l({"en":u"Replicate the virtual machine %s as volume=%s/name=%s as(RAM %dMB HD %dGB)...", "ja":u"仮想マシン%sを領域%s上の%sとして複製(RAM%dMB HD%dGB)..."}))
+gui.res.register("string_duplication_description",resource_loader.l({"en":u"Replicate the virtual machine %s as volume=%s/name=%s as(HD %dGB)...", "ja":u"仮想マシン%sを領域%s上の%sとして複製(HD%dGB)..."}))
 
 gui.res.register("string_replicate_fails",resource_loader.l({"en":u"failed to replicate the virtual machine. (%s).", "ja":u"仮想マシンの複製に失敗しました。(%s)"}))
 
@@ -343,8 +343,7 @@ def expand(domain):
     gui.messagebox.execute(gui.res.string_enhanced, ["ok"])
     return True
 
-def exec_duplicate(src, dest, hostname, memory, kernel, vcpus):
-    vmm = vm.getVirtualMachineManager()
+def exec_duplicate(src, dest, hostname, kernel, vcpus):
     s = system.getSystem()
     with gui.progressbar.SyncedProgressBar(gui.res.string_cloning) as pb:
         try:
@@ -367,30 +366,25 @@ def exec_duplicate(src, dest, hostname, memory, kernel, vcpus):
             # growfsする
             subprocess.Popen("xfs_growfs %s" % tmpdir, shell=True, close_fds=True).wait()
             # ホスト名をつける
-            vmm.setHostName(tmpdir, hostname)
+            cli_install_va.set_hostname(tmpdir, hostname)
             # VAのメタデータを得る
             metadata = system.get_va_metadata(dest, tmpdir)
-        vmm.createVMConfigFile(hostname, memory, kernel, vcpus, dest)
 
 def duplicate(domain):
-    vmm = vm.getVirtualMachineManager()
+    name = domain["name"]
+    src_device = domain["device"]
+    use_snapshot = domain.get("open") != False
+    if use_snapshot:
+        if dialogbox.messagebox.execute(gui.res.string_operation_desc, dialogbox.DialogBox.OKCANCEL()) != "ok": return
+
     s = system.getSystem()
-    config = vmm.getVMConfig(domain["name"])
-    name = config["name"]
-    src_device = vmm.determineVMDeviceName(name)
-    use_snapshot = False
-    if subprocess.check_output("lvs --noheadings -o lv_attr", shell=True, close_fds=True).strip().endswith("o"): # アクティブ
-        if gui.messagebox.execute(gui.res.string_operation_desc, ["ok", "cancel"], gui.res.color_dialog_negative) != "ok": return # スナップショット複製で良いか？NGならreturn
-        gui.yieldFrame()
-        use_snapshot = True
-    lvsize = s.determineLogicalVolumeSizeInGB(src_device)
+    lvsize = domain.get("size") or s.determineLogicalVolumeSizeInGB(src_device)
     min_disk = int(lvsize + 1) if int(lvsize) < lvsize else int(lvsize)
-    new_domain = create.edit_new_domain(gui.res.string_duplicate, name, config["memory"], min_disk)
+    new_domain = create.edit_new_domain(gui.res.string_duplicate, name, 128, min_disk)
     if new_domain == None: return
 
     hostname = new_domain["hostname"]
     vgname = new_domain["vgname"]
-    memory = new_domain["memory"]
     disk = new_domain["disk"]
     kernel = system.guest_kernel
     vcpus = 1
@@ -405,14 +399,14 @@ def duplicate(domain):
     metadata = None # /etc/wb-va.xml
 
     # マーキーに作成中の仮想マシンに関する情報を表示
-    footer.window.setText(gui.res.string_duplication_description % (name,vgname,hostname,memory,disk) )
+    footer.window.setText(gui.res.string_duplication_description % (name,vgname,hostname,disk) )
 
     try:
         if use_snapshot:
             with s.openSnapshot(src_device, 1) as snapshot:
-                exec_duplicate(snapshot, device_name, hostname, memory, kernel, vcpus)
+                exec_duplicate(snapshot, device_name, hostname, kernel, vcpus)
         else:
-            exec_duplicate(src_device, device_name, hostname, memory, kernel, vcpus)
+            exec_duplicate(src_device, device_name, hostname, kernel, vcpus)
     except Exception, e:
         s.removeLogicalVolume(device_name)
         wbui.play_sound("fail")
@@ -425,10 +419,7 @@ def duplicate(domain):
     return True
 
 def vpn(domain):
-    vmm = vm.getVirtualMachineManager()
-    config = vmm.getVMConfig(domain["name"])
-    if config == None: return False
-    device = vmm.getDeviceNameFromDeviceString(config["disk"][0])
+    device = domain["device"]
     s = system.getSystem()
     try:
         with s.temporaryMount(device, None, "ro") as tmpdir:
@@ -515,7 +506,7 @@ def run(domain):
             operations.append({"id":"expand", "label":gui.res.string_extend_space})
             operations.append({"id":"vpn", "label":gui.res.string_vpn_config})
         operations.append({"id":"delete","label":gui.res.string_remove})
-    if modifiable: operations.append({"id":"duplicate", "label":gui.res.string_replicate})
+    operations.append({"id":"duplicate", "label":gui.res.string_replicate})
 
     metadata = get_va_metadata_from_cache(domain_name)
     instruction = None
