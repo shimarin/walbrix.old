@@ -10,6 +10,7 @@
   </style>
   <script src="/static/js/angular.min.js"></script>
   <script src="/static/js/angular-resource.min.js"></script>
+  <script src="/static/js/angular-messages.min.js"></script>
   <script src="/static/js/ui-bootstrap-tpls-0.13.1.min.js"></script>
   <script src="/static/js/wbutil.js"></script>
 </head>
@@ -22,8 +23,11 @@
 	<h2>スクリーンショット</h2>
 	<button class="btn btn-lg btn-primary" ng-click="take_screenshot()">撮る</button>
 	<div>
-          <progressbar ng-show="loading_screenshot" class="progress-striped active">スクリーンショット取得中...</progressbar>
-          <img class="img-responsive" ng-show="!loading_screenshot" ng-src="{{screenshot}}">
+          <img class="img-responsive" ng-show="!screenshot_result.loading" ng-src="{{screenshot}}">
+          <div ng-messages="screenshot_result" role="alert">
+            <div ng-message="loading"><progressbar class="progress-striped active">スクリーンショット取得中...</progressbar></div>
+            <span class="text-danger" ng-message="error">スクリーンショット取得失敗</span>
+          </div>
         </div>
       </tab>
       <tab heading="証明書の発行とインストール">
@@ -32,9 +36,13 @@
 	  開発元から発行されたシリアル番号:<input type="text" ng-model="cn"> <button class="btn btn-default" ng-disabled="!cn" ng-click="issue_csr()">CSRを発行する</button><br/>
 	  ※シリアル番号は大文字小文字を区別します<br/>
 
-          <div ng-show="csr">
-	    <pre ng-bind="csr"></pre>
-            <p>枠内の -----BEGIN CERTIFICATE REQUEST----- から -----END CERTIFICATE REQUEST----- までの部分をメール本文に貼り付けて <a href="mailto:csr@walbrix.net">csr@walbrix.net</a> に送信してください。折り返し、クライアント証明書が返送されます。</p>
+          <div ng-messages="csr_result" role="alert">
+            <div ng-message="success">
+	      <pre ng-bind="csr_result.data"></pre>
+              <p>枠内の -----BEGIN CERTIFICATE REQUEST----- から -----END CERTIFICATE REQUEST----- までの部分をメール本文に貼り付けて <a href="mailto:csr@walbrix.net">csr@walbrix.net</a> に送信してください。折り返し、クライアント証明書が返送されます。</p>
+            </div>
+            <span class="text-danger" ng-message="error">CSR生成失敗</span>
+            <span class="text-danger" ng-message="unusable">'WBFREE01' はシリアルナンバーとしては使用できません。<a href="mailto:support@walbrix.net">support@walbrix.net</a>に「シリアルナンバー発行希望」の旨をメールしてください（無料）。</span>
           </div>
 
           <div ng-show="status.key">
@@ -45,6 +53,10 @@
 	    <p>ここに開発元から発行されたクライアント証明書(-----BEGIN CERTIFICATE-----で始まり -----END CERTIFICATE-----で終わるテキスト)を貼り付けてください。</p>
 	    <textarea class="form-control" rows="10" ng-model="cert"></textarea><br/>
             <p><button class="btn btn-primary" ng-disabled="!cert" ng-click="save_cert()">証明書をインストールする</button></p>
+            <div ng-messages="crt_result" role="alert">
+              <span ng-message="success">証明書がインストールされました</span>
+              <span class="text-danger" ng-message="error">証明書インストール失敗</span>
+            </div>
           </div>
         </div>
       </tab>
@@ -52,10 +64,12 @@
         <div ng-controller="BackupCert">
 	  <h2>証明書のバックアップ</h2>
 	  <p><button class="btn btn-default" ng-disabled="!status.key || !status.cert" ng-click="get_pkcs12()">証明書をバックアップする</button><p>
-
-          <div ng-show="pkcs12">
-	    <pre ng-bind="pkcs12"></pre>
-            <p>枠内のテキストを保存してください。</p>
+          <div ng-messages="pkcs12_result" role="alert">
+            <div ng-message="success">
+	      <pre ng-bind="pkcs12_result.data"></pre>
+              <p>枠内のテキストを保存してください。</p>
+            </div>
+            <span class="text-danger" ng-message="error">証明書バックアップ失敗</span>
           </div>
 
 	  <h2>証明書のリストア</h2>
@@ -65,16 +79,22 @@
 	  <p>ここにバックアップした証明書を貼り付けてください。（上のバックアップ機能で取得したデータのみここに貼り付けることができます。-----BEGIN CERTIFICATE-----で始まるものはリストアには使用できません）</p>
 	  <textarea class="form-control" rows="10" ng-model="pkcs12_to_restore"></textarea><br/>
 	  <p><button class="btn btn-danger" ng-disabled="!pkcs12_to_restore" ng-click="restore_pkcs12()">証明書をリストアする</button></p>
+          <div ng-messages="pkcs12_restore_result" role="alert">
+            <span ng-message="success">証明書がリストアされました</span>
+            <span class="text-danger" ng-message="error">証明書リストア失敗</span>
+          </div>
         </div>
       </tab>
       <tab heading="SSH公開鍵">
         <div ng-controller="AuthorizedKeys">
 	  <h2>SSH公開鍵の編集</h2>
-	  <div>
-	    <textarea class="form-control" rows="10" ng-model="authorized_keys"></textarea>
-	    <p>ここで ~root/.ssh/authorized_keysを編集できます。ここに設置された公開鍵に対応する秘密鍵を所有していればパスワードを使わず root権限でシステムにログイン出来ます。鍵ファイルの管理には十分ご注意下さい。</p>
-            <button class="btn btn-primary" ng-click="save_authorized_keys()">上記内容に更新</button>
-	  </div>
+	  <textarea class="form-control" rows="10" ng-model="authorized_keys"></textarea>
+	  <p>ここで ~root/.ssh/authorized_keysを編集できます。ここに設置された公開鍵に対応する秘密鍵を所有していればパスワードを使わず root権限でシステムにログイン出来ます。鍵ファイルの管理には十分ご注意下さい。</p>
+          <p><button class="btn btn-primary" ng-click="save_authorized_keys()">上記内容に更新</button></p>
+          <div ng-messages="authorized_keys_result" role="alert">
+            <span ng-message="success">SSH公開鍵が上記内容に設定されました</span>
+            <span class="text-danger" ng-message="error">SSH公開鍵設定失敗</span>
+          </div>
         </div>
       </tab>
     </tabset>

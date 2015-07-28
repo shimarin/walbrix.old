@@ -2,10 +2,6 @@
 # -*- coding:utf-8 -*-
 
 import sys,os,subprocess,base64,re,stat,tempfile,shutil,multiprocessing,signal,SocketServer
-import BaseHTTPServer
-
-import handler
-
 import flask
 
 app = flask.Flask(__name__)
@@ -47,19 +43,13 @@ def get_utility_port():
     global utility_port
     return utility_port
 
-def main(port = 0):
-    script_path = os.path.abspath(os.path.dirname(__file__))
-    os.chdir(script_path)
-
-    server_address = ('', port)
-    httpd = BaseHTTPServer.HTTPServer(server_address, handler.RequestHandler)
-    print httpd.server_address[1]
-    sys.stdout.flush()
-    httpd.serve_forever()
-
 @app.route("/")
 def index():
-    return app.send_static_file('index.html')
+    return app.send_static_file("index.html")
+
+@app.route("/favicon.ico")
+def favicon():
+    return app.send_static_file("favicon.ico")
 
 @app.route("/status")
 def status():
@@ -74,14 +64,14 @@ def screenshot_txt():
 
 @app.route("/authorized_keys",methods=['GET'])
 def get_authorized_keys():
-    authorized_keys_path = os.path.expanduser("~/.ssh/authorized_keys")
+    authorized_keys_path = "/root/.ssh/authorized_keys"
     response = flask.make_response(open(authorized_keys_path).read() if os.path.isfile(authorized_keys_path) else "")
     response.headers['Content-Type'] = 'text/plain'
     return response
 
 @app.route("/authorized_keys",methods=['POST','PUT'])
 def post_authorized_keys():
-    ssh_path = os.path.expanduser("~/.ssh")
+    ssh_path = "/root/.ssh"
     authorized_keys_path = os.path.join(ssh_path, "authorized_keys")
     authorized_keys = flask.request.data.replace(r"\r\n", r"\n")
     if authorized_keys[-1] != '\n': authorized_keys += '\n'
@@ -116,6 +106,12 @@ def get_cn(cert_filename=cert):
     if cn_match is None: return None
     return cn_match.groups()[0]
 
+def set_hostname(hostname):
+    with open("/etc/conf.d/hostname", "w") as f:
+        f.write('hostname="%s"' % hostname)
+
+    subprocess.call(["hostname",hostname])
+
 @app.route("/crt",methods=["POST","PUT"])
 def post_crt():
     with tempfile.NamedTemporaryFile(delete=True) as tmpfile:
@@ -125,11 +121,8 @@ def post_crt():
         if cn is None: return "400 Bad Request", 400
         #else
         shutil.copy(tmpfile, cert)
-        
-    with open("/etc/conf.d/hostname", "w") as hostname:
-        hostname.write('hostname="%s"' % cn)
 
-    subprocess.call(["hostname",cn])
+    set_hostname(cn)
 
     return flask.jsonify({"success":True})
 
@@ -173,6 +166,8 @@ def post_pkcs12():
     with open(cert, "w") as f:
         f.write(cert_contents)
 
+    set_hostname(cn)
+
     return flask.jsonify({"success":True})
 
 class DummyQueue:
@@ -196,5 +191,4 @@ def run(q, port = 0,debug=False):
     
 if __name__ == '__main__':
     run(DummyQueue(), None, True)
-
 
