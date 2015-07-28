@@ -50,7 +50,10 @@ def run(disk, image):
         while p.is_alive():
             gui.yieldFrame()
         p.join()
-        rst = q.get()
+        try:
+            rst = q.get_nowait()
+        except Exception, e:
+            rst = e
 
     if isinstance(rst, Exception):
         dialogbox.messagebox.execute(string_inst_installation_failed % (rst), None, gui.res.caution_sign)

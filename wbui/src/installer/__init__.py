@@ -186,7 +186,7 @@ def start(install_image = None):
         while p.is_alive():
             gui.yieldFrame()
         p.join()
-        rst = q.get()
+        rst = q.get_nowait()
         if isinstance(rst, Exception): raise rst
         disks, install_image = rst
 
