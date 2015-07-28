@@ -19,7 +19,7 @@ import dialogbox
 import create
 import resource_loader
 
-import cli2.create as cli_create,cli2.autostart as cli_autostart
+import cli2.create as cli_create,cli2.autostart as cli_autostart,cli2.edit as cli_edit,cli2.rename as cli_rename
 
 # string resources
 gui.res.register("string_config_info",resource_loader.l({"en":u"Configuration information of the virtual machine %s could not be found.Do you want to create it?", "ja":u"仮想マシン %s の設定情報が見つかりません。作成しますか？"}))
@@ -49,8 +49,9 @@ gui.res.register("string_vm_name",resource_loader.l({"en":u"The virtual machine 
 gui.res.register("string_allocated",resource_loader.l({"en":u"Allocated memory(MB)", "ja":u"割当メモリ(MB)"}))
 gui.res.register("string_vm_name_exists",resource_loader.l({"en":u"Virtual machine %s is already exists. Please choose another name.", "ja":u"仮想マシン %s は既に存在しています。他の名前を指定してください。"}))
 gui.res.register("string_allocation_desc",resource_loader.l({"en":u"Please allocate at least 32MB of memory.", "ja":u"少なくとも32MBのメモリを割り当てて下さい。"}))
-gui.res.register("string_vm_change",resource_loader.l({"en":u"Change the virtual machine", "ja":u"仮想マシンの変更"}))
-gui.res.register("string_vm_changed",resource_loader.l({"en":u"Virtual machine has been changed", "ja":u"仮想マシンが変更されました"}))
+string_vm_change = resource_loader.l({"en":u"Change the virtual machine", "ja":u"仮想マシンの変更"})
+string_vm_changed = resource_loader.l({"en":u"Virtual machine has been changed", "ja":u"仮想マシンが変更されました"})
+string_vm_change_failed = resource_loader.l({"en":u"Error changing virtual machine: %s", "ja":u"仮想マシンの変更でエラーが発生しました: %s"})
 gui.res.register("string_new_size",resource_loader.l({"en":u"The new size(GB)", "ja":u"新しいサイズ(GB)"}))
 gui.res.register("string_size_desc",resource_loader.l({"en":u"Must be greater than current size", "ja":u"現在のサイズより大きくしなければなりません"}))
 gui.res.register("string_free_space_desc",resource_loader.l({"en":u"Unable to extend the size of disk allocation.Please make sure have enough free space.", "ja":u"ディスクの割り当てサイズを拡張できませんでした。領域の空きが十分か確認してください。"}))
@@ -282,37 +283,36 @@ def edit_existing_domain(title, hostname, memory):
 
     return None
 
-def rename(name):
-    vmm = vm.getVirtualMachineManager()
-    s = system.getSystem()
-    config = vmm.getVMConfig(name)
-    if config == None: return False
-    values = edit_existing_domain(gui.res.string_vm_change, config["name"], config["memory"])
-    if values == None: return False
-    newname = values["name"]
-    newmemory = values["memory"]
+def rename(name, device):
+    values = cli_edit.read(device)
+    memory = values.get("memory") or 128
+    rst = edit_existing_domain(string_vm_change, name, memory)
+    if rst is None: return False
+    #else
+    newname = rst["name"]
+    newmemory = rst["memory"]
 
     changed = False
-    if newname != config["name"]:
-        os.remove("/etc/xen/%s" % config["name"])
-        device = vmm.getDeviceNameFromDeviceString(config["disk"][0])
-        with s.temporaryMount(device, None, "inode32") as tmpdir:
-            vmm.setHostName(tmpdir, newname)
-        config["name"] = newname
-        subprocess.Popen("lvrename %s %s" % (device, newname), shell=True, close_fds=True).wait()
-        vgname = device.split('/')[2]
-        config["disk"][0] = "phy:/dev/%s/%s,xvda1,w" % (vgname, newname)
-        changed = True
 
-    if newmemory != config["memory"]:
-        config["memory"] = newmemory
-        changed = True
-    
+    try:
+        if newmemory != memory:
+            values["memory"] = newmemory
+            cli_edit.write(device, values)
+            changed = True
+
+        if newname != name:
+            cli_rename.run(device, newname)
+            changed = True
+    except Exception, e:
+        traceback.print_exc(file=sys.stderr)
+        dialogbox.messagebox.execute(string_vm_change_failed % (e), None, gui.res.caution_sign)
+        return False
+
     if changed:
-        with open("/etc/xen/%s" % newname, "w") as f:
-            for field in config: f.write("%s=%s\n" % (field, repr(config[field])))
         domain.refresh()
-        dialogbox.messagebox.execute(gui.res.string_vm_changed)
+        dialogbox.messagebox.execute(string_vm_changed)
+
+    return False # because domain.refresh() already called even if changed
 
 def expand(domain):
     s = system.getSystem()
@@ -542,7 +542,7 @@ def run(domain):
     elif operation == "delete":
         return delete(domain)
     elif operation == "rename":
-        return rename(domain["name"])
+        return rename(domain["name"],domain["device"])
     elif operation == "expand":
         return expand(domain)
     elif operation == "duplicate":
