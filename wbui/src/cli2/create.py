@@ -50,32 +50,16 @@ def detect_arch(executable):
     print "Architecture determined from %s: %d-bit" % (executable, arch)
     return arch
 
-def choose_bootloader(supported_archs):
-    bootloaders = {
-        "x86_64":"/usr/lib/xen/boot/pv-grub2-x86_64.gz",
-        "i686":"/usr/lib/xen/boot/pv-grub2-x86_32.gz"
-    }
-    for arch in supported_archs:
-        if arch in bootloaders and os.path.isfile(bootloaders[arch]): return bootloaders[arch]
-    raise Exception("No applicable bootloader.")
-
 def determine_boot_type(vmroot):
     init = os.path.join(vmroot, "sbin/init")
     grub1_cfg = os.path.join(vmroot, "boot/grub/menu.lst")
     grub2_cfg = os.path.join(vmroot, "boot/grub/grub.cfg")
+    grub2_bin = "/usr/lib/xen/boot/pv-grub2-x86_64.gz" # https://github.com/wbrxcorp/walbrix/issues/61
 
     # pv-grub2
-    if os.path.isfile(grub2_cfg):
-        cfg_content = open(grub2_cfg).read()
-        arch_line_match = re.search(r'^set\s*WALBRIX_DOMAIN_ARCH\s*=(.+)$', cfg_content, re.MULTILINE)
-        if arch_line_match:
-            supported_archs = arch_line_match.groups()[0]
-            print "Supported architecture: %s" % supported_archs
-            bootloader = choose_bootloader(supported_archs.split(','))
-        else:
-            bootloader = "/usr/lib/xen/boot/pv-grub2-x86_%d.gz" % detect_arch(init)
-        if not os.path.isfile(bootloader):raise Exception("Bootloader %s does not exist when it's needed" % bootloader)
-        return ["kernel='%s'" % bootloader]
+    if os.path.isfile(grub2_bin) and os.path.isfile(grub2_cfg):
+        if not os.path.isfile(init) or detect_arch(init) == 64:
+            return ["kernel='%s'" % grub2_bin]
 
     # pv-grub1
     if os.path.isfile(grub1_cfg):

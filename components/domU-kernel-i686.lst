@@ -1,0 +1,1 @@
+$write /boot/grub/menu.lst 'default=0\ntimeout=1\n\ntitle Linux\nroot (hd0)\nkernel (hd0)/boot/kernel root=/dev/xvda1'
