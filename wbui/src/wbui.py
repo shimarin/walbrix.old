@@ -25,7 +25,6 @@ import splash
 import gui
 import gui.list
 import gui.messagebox
-import util
 import catalog
 import theme
 import system
@@ -95,7 +94,7 @@ def play_sound(name):
 
 # サブプロセスを全部狩る
 def reap_all_subprocesses():
-    util.stop_utility()
+    pass
 
 # wbuiのリスタート
 def restart():
