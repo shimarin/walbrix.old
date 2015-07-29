@@ -3,7 +3,7 @@
 =dev-python/python-magic-0.4.6-r1
 =sys-fs/aufs-headers-3.19_p20150420 
 =sys-fs/aufs-util-3.19_p20150420 
-=sys-kernel/aufs-sources-3.14.46
+=sys-kernel/aufs-sources-3.18.19
 =app-crypt/chntpw-140201
 =sys-cluster/drbd-8.4.3
 =sys-fs/bcache-tools-1.0.5
