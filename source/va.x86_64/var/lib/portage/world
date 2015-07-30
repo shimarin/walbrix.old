@@ -19,4 +19,5 @@ sys-fs/fuse
 sys-fs/xfsprogs
 sys-kernel/aufs-sources
 sys-kernel/genkernel
+sys-kernel/gentoo-sources
 sys-process/vixie-cron

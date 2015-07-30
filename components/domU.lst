@@ -37,8 +37,6 @@ $sed /etc/rc.conf 's/^#rc_sys.\+$/rc_sys="xenU"/'
 /bin/awk
 /bin/busybox
 
-/boot/kernel
-
 $require nvi.lst
 $require sudo.lst
 $require zabbix-agent.lst
