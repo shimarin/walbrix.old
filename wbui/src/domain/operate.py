@@ -414,7 +414,9 @@ def vpn(domain):
     s = system.getSystem()
     try:
         with s.temporaryMount(device, None, "ro") as tmpdir:
-            rst = subprocess.check_output(["/bin/egrep", "ENABLE_PASSWORD_SAVE|enable_password_save=yes", "%s/usr/sbin/openvpn" % tmpdir], shell=False, close_fds=True)
+            openvpn_binary = os.path.join(tmpdir, "/usr/sbin/openvpn")
+            if os.path.isfile(openvpn_binary):
+                subprocess.check_output(["/bin/egrep", "ENABLE_PASSWORD_SAVE|enable_password_save=yes", openvpn_binary]) 
     except:
         #traceback.print_exc(file=sys.stderr)
         dialogbox.messagebox.execute(gui.res.string_connection_desc, None, gui.res.caution_sign)
@@ -433,9 +435,9 @@ def vpn(domain):
                 f.write("client\n")
                 f.write("dev tun\n")
                 f.write("remote %s\n" % values["hostname"])
-                cert_filename = "/etc/ssl/certs/ca-certificates.crt"
+                cert_filename = "/etc/ssl/certs/ca-bundle.crt"
                 if not os.path.exists("%s%s" % (tmpdir, cert_filename)):
-                    cert_filename = "/etc/ssl/certs/ca-bundle.crt"
+                    cert_filename = "/etc/ssl/certs/ca-certificates.crt"
                 f.write("ca %s\n" % cert_filename)
                 f.write("fragment 1300\n")
                 f.write("mssfix\n")
