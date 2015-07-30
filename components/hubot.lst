@@ -1,4 +1,5 @@
 $require domU.lst
+$require domU-kernel.lst
 $require cron.lst
 $require vim.lst
 $require git.lst

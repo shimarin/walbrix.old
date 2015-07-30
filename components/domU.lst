@@ -1,5 +1,4 @@
 $require rootfs.lst
-$require domU-kernel.lst
 /usr/bin/ldd
 $package sys-apps/baselayout
 $require dev.lst
