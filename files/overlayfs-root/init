@@ -57,7 +57,12 @@ if ! mount "${ROOT_PARTITION}" /mnt/orig_root; then
     exec sh
 fi
 
-if ! mount -o loop,ro /mnt/orig_root/system /mnt/system; then
+if ! losetup -r /dev/loop0 /mnt/orig_root/system; then
+    bad_msg "Unable to setup loopback $(ROOT_PARTITION)/system"
+    exec sh
+fi
+
+if ! mount /dev/loop0 /mnt/system; then
     bad_msg "Unable to loopback mount ($ROOT_PARTITION)/system"
     exec sh
 fi
@@ -77,6 +82,7 @@ if ! mount -t overlay -o lowerdir=/mnt/system,upperdir=/mnt/orig_root/real_root,
 fi
 
 mkdir -p /newroot/.overlay/orig_root && mount --move /mnt/orig_root /newroot/.overlay/orig_root
+#mkdir /newroot/.overlay/system && mount --move /mnt/system /newroot/.overlay/system
 
 touch /newroot/.overlay/.lock
 
