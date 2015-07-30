@@ -5,7 +5,7 @@ import magic # emerge python-magic
 import lxml.etree
 import kernelver
 
-import execute,kernel,rpmbootstrap,vadesc,package,stage3
+import execute,kernel,rpmbootstrap,vadesc,package,stage3,squashfs
 
 _elf = re.compile('.*ELF.+dynamically linked.*')
 
@@ -148,22 +148,13 @@ def process_file(context, filename):
             print(e)
 
 def process_lstfile(context, lstfile):
-    def require(args):
+    def require(context, args):
         dirname = os.path.dirname(lstfile)
         required_lstfile = context.apply_variables(args[0])
         if dirname != "": required_lstfile = os.path.normpath(dirname + "/" + required_lstfile)
         process_lstfile(context, required_lstfile)
 
-    def _package(args):
-        package.apply(context, args)
-
-    def _kernel(args):
-        kernel.apply(context, args)
-        
-    def _execute(args):
-        execute.apply(context, args)
-
-    def mkdir(args):
+    def mkdir(context, args):
         if len(args) < 1: raise Exception("$mkdir directive gets at least 1 argument")
         for arg in args:
             if not arg.startswith('/'): raise Exception("Directory name must start with '/'")
@@ -171,7 +162,7 @@ def process_lstfile(context, lstfile):
             print "$mkdir '%s'" % arg
             mkdir_p(name)
 
-    def deltree(args):
+    def deltree(context, args):
         if len(args) < 1: raise Exception("$deltree directive gets at least 1 argument")
         for arg in args:
             if not arg.startswith('/'): raise Exception("Directory name must start with '/'")
@@ -179,7 +170,7 @@ def process_lstfile(context, lstfile):
             print "$deltree '%s'" % arg
             shutil.rmtree(name)
 
-    def mv(args):
+    def mv(context, args):
         if len(args) != 2: raise Exception("$mv directive must have 2 args")
         if not args[0].startswith('/'): raise Exception("Filename must start with '/'")
         if not args[1].startswith('/'): raise Exception("Filename must start with '/'")
@@ -188,7 +179,7 @@ def process_lstfile(context, lstfile):
         print "Move file/dir: %s -> %s" % (src, dst)
         subprocess.check_call(["/bin/mv",src,dst])
         
-    def symlink(args):
+    def symlink(context, args):
         if len(args) != 2: raise Exception("$symlink directive must have 2 args")
         if not args[0].startswith('/'): raise Exception("Filename must start with '/'")
         name = "%s%s" % (context.destination, context.apply_variables(args[0]))
@@ -197,14 +188,14 @@ def process_lstfile(context, lstfile):
         if os.path.lexists(name): os.unlink(name)
         os.symlink(src, name)
 
-    def sed(args):
+    def sed(context, args):
         if len(args) != 2: raise Exception("$sed directive gets 2 args")
         if not args[0].startswith('/'): raise Exception("Filename must start with '/'")
         name = "%s%s" % (context.destination, context.apply_variables(args[0]))
         print "$sed '%s' to '%s'" % (args[1], name)
         subprocess.check_call(["/bin/sed","-i",args[1],name])
 
-    def touch(args):
+    def touch(context, args):
         if len(args) < 1: raise Exception("$touch directive needs at least one arg")
         for arg in args:
             if not arg.startswith('/'): raise Exception("Filename must start with '/'")
@@ -212,7 +203,7 @@ def process_lstfile(context, lstfile):
             print "$touch '%s'" % arg
             subprocess.check_call(["/usr/bin/touch", name])
 
-    def write(args):
+    def write(context, args):
         parser = argparse.ArgumentParser()
         parser.add_argument("--append", action="store_true", help="append instead of overwrite")
         parser.add_argument("name", type=str, help="filename")
@@ -225,7 +216,7 @@ def process_lstfile(context, lstfile):
         with open(name, "a" if args.append else "w") as f:
             subprocess.check_call(["echo","-e",text], stdout=f)
 
-    def copy(args):
+    def copy(context, args):
         if len(args) != 2: raise Exception("$copy directive gets 2 args")
         src = os.path.normpath("files/" + context.apply_variables(args[0]))
         dest = os.path.normpath("%s%s" % (context.destination, context.apply_variables(args[1])))
@@ -235,7 +226,7 @@ def process_lstfile(context, lstfile):
         subprocess.check_call(["cp","-av",src, dest])
         os.chown(dest, 0, 0)
 
-    def patch(args):
+    def patch(context, args):
         if len(args) != 2: raise Exception("$patch directive gets 2 args")
         if not args[0].startswith('/'): raise Exception("Target file/dirname must start with '/'")
         target = os.path.normpath("%s%s" % (context.destination, context.apply_variables(args[0])))
@@ -250,7 +241,7 @@ def process_lstfile(context, lstfile):
         os.chmod(target, mode)
         os.chown(target, uid, gid)
 
-    def device(args):
+    def device(context, args):
         parser = argparse.ArgumentParser()
         parser.add_argument("--nonroot-friendly", action="store_true", help="make its mode 0666")
         parser.add_argument("type", type=str, help="device type(b or c)")
@@ -270,14 +261,11 @@ def process_lstfile(context, lstfile):
             # According to https://www.soljerome.com/blog/2011/08/26/python-umask-inconsistencies/ , os.mknod is affected by running process' umask so we need to adjust its mode afterwards
             os.chmod(name, 0666)
 
-    def setvar(args):
+    def setvar(context, args):
         if len(args) != 2: raise Exception("$set directive gets 2 args")
         context.set_variable(args[0], context.apply_variables(args[1]))
 
-    def _vadesc(args):
-        vadesc.apply(context, args)
-
-    def download(args):
+    def download(context, args):
         parser = argparse.ArgumentParser()
         parser.add_argument("--filename", type=str, help="filename to save")
         parser.add_argument("url", type=str, help="URL to download")
@@ -293,7 +281,7 @@ def process_lstfile(context, lstfile):
         mkdir_p("%s/tmp/download" % context.destination)
         shutil.copy(cache_file, "%s/tmp/download/%s" % (context.destination, filename))
 
-    def debootstrap(args):
+    def debootstrap(context, args):
         parser = argparse.ArgumentParser()
         parser.add_argument("--include", type=str, help="additional packages(comma separated)")
         parser.add_argument("dist", type=str, help="name of distribution such as 'jessie'")
@@ -316,17 +304,11 @@ def process_lstfile(context, lstfile):
                 shutil.rmtree(debootstrap_dir)
         subprocess.check_call(["tar","zxvpf",cache_file,"-C",context.destination])
 
-    def _rpmbootstrap(args):
-        rpmbootstrap.apply(context, args)
-
-    def _stage3(args):
-        stage3.apply(context, args)
-
     directives = {
         "$require":require,
-        "$package":_package,
-        "$kernel":_kernel,
-        "$exec":_execute,
+        "$package":package.apply,
+        "$kernel":kernel.apply,
+        "$exec":execute.apply,
         "$mkdir":mkdir,
         "$deltree":deltree,
         "$symlink":symlink,
@@ -338,11 +320,12 @@ def process_lstfile(context, lstfile):
         "$patch":patch,
         "$device":device,
         "$set":setvar,
-        "$vadesc":_vadesc,
+        "$vadesc":vadesc.apply,
         "$download":download,
         "$debootstrap":debootstrap,
-        "$rpmbootstrap":_rpmbootstrap,
-        "$stage3":_stage3
+        "$rpmbootstrap":rpmbootstrap.apply,
+        "$stage3":stage3.apply,
+        "$squashfs":squashfs.apply
     }
     
     if context.is_lstfile_already_processed(lstfile): return
@@ -354,7 +337,7 @@ def process_lstfile(context, lstfile):
                 directive_line = shlex.split(line, True)
                 if directive_line[0] not in directives:
                     raise Exception("Invalid directive '%s' in %s" % (directive_line[0], lstfile))
-                directives[directive_line[0]](directive_line[1:])
+                directives[directive_line[0]](context, directive_line[1:])
             elif not line.startswith("#"):
                 filename = line.strip()
                 if filename != "": process_file(context, context.apply_variables(filename))
