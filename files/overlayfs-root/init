@@ -1,0 +1,100 @@
+#!/bin/sh
+
+. /etc/initrd.defaults
+. /etc/initrd.scripts
+
+# Clean input/output
+exec >${CONSOLE} <${CONSOLE} 2>&1
+
+mount -t proc -o noexec,nosuid,nodev proc /proc >/dev/null 2>&1
+mount -o remount,rw / >/dev/null 2>&1
+
+# Prevent superfluous printks from being printed to the console
+echo 1 > /proc/sys/kernel/printk
+
+# Set up symlinks
+/bin/busybox --install -s
+
+CMDLINE=$(cat /proc/cmdline)
+
+ROOT_PARTITION=/dev/xvda1
+LOCALE=ja_JP
+INIT_OPTS=''
+SOFTLEVEL=default
+
+for x in ${CMDLINE}
+do
+	case "${x}" in
+		root=*)
+			ROOT_PARTITION=${x#*=}
+		;;
+		walbrix.locale=*)
+			LOCALE=${x#*=}
+		;;
+		init_opts=*)
+			INIT_OPTS=${x#*=}
+		;;
+		softlevel=*)
+			SOFTLEVEL=${x#*=}
+		;;
+	esac
+done
+
+# Mount devfs, sysfs
+mount_devfs
+mount_sysfs
+
+cd /
+
+mkdir -p "${NEW_ROOT}"
+CHROOT="${NEW_ROOT}"
+
+mkdir /mnt/orig_root
+mkdir /mnt/system
+
+if ! mount "${ROOT_PARTITION}" /mnt/orig_root; then
+    bad_msg "Unable to mount $ROOT_PARTITION"
+    exec sh
+fi
+
+if ! mount -o loop,ro /mnt/orig_root/system /mnt/system; then
+    bad_msg "Unable to loopback mount ($ROOT_PARTITION)/system"
+    exec sh
+fi
+
+if [ "${SOFTLEVEL}" = "rescue" ]; then
+    mount -t tmpfs tmpfs /mnt/orig_root/real_root || bad_msg "Unable to mount tmpfs"
+fi
+
+rm -rf /mnt/orig_root/work # cleanup overlayfs workdir
+mkdir -p /mnt/orig_root/real_root /mnt/orig_root/work
+rm -rf /mnt/orig_root/real_root/tmp /mnt/orig_root/real_root/var/tmp # cleanup temporary dirs
+rm -f /mnt/orig_root/real_root/etc/mtab # mtab should always point /proc/mounts
+rm -f /mnt/orig_root/real_root/etc/ld.so.cache
+
+if ! mount -t overlay -o lowerdir=/mnt/system,upperdir=/mnt/orig_root/real_root,workdir=/mnt/orig_root/work overlay /newroot; then
+	bad_msg "Unable to mount /newroot"
+fi
+
+mkdir -p /newroot/.overlay/orig_root && mount --move /mnt/orig_root /newroot/.overlay/orig_root
+
+touch /newroot/.overlay/.lock
+
+if [ -f /newroot/.overlay/orig_root/system.cur ];then
+     mv -f /newroot/.overlay/orig_root/system.cur /newroot/.overlay/orig_root/system.old
+fi
+
+if [ `grep '/newroot' /proc/mounts | awk '{print $1}'` = "tmpfs" ]; then
+    # some useful modification for rescue environment
+    sed -i 's/tty1 linux/--autologin root tty1 linux/' /newroot/etc/inittab
+fi
+
+mount --move /dev /newroot/dev
+mount --move /sys /newroot/sys
+mount --move /proc /newroot/proc
+
+exec /sbin/switch_root /newroot /sbin/init "${INIT_OPTS}"
+
+# If we get here, something bad has happened
+exec /bin/sh
+

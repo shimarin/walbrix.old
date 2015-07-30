@@ -1,0 +1,17 @@
+# modify initramfs
+$mkdir /tmp/initramfs/etc/splash/wb/images
+$copy overlayfs-root/init /tmp/initramfs/init.overlayfs-root
+$exec 'cd /tmp/initramfs && unxz -c /boot/initramfs | cpio -idm && mv /tmp/initramfs/init /tmp/initramfs/init.gentoo && mv /tmp/initramfs/init.overlayfs-root /tmp/initramfs/init && (find .|cpio -o -H newc) | xz -c --check=crc32 > /boot/initramfs'
+$deltree /tmp/initramfs
+
+$write /etc/conf.d/localmount 'no_umounts="/.overlay/orig_root"'
+$sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount,ro"/'
+
+$squashfs /system
+
+$mkdir /boot/grub
+$write /boot/grub/grub.cfg "set default=0\nset timeout=1\n\nloopback loop /system\n\nmenuentry 'Linux' {\n\techo 'Loading kernel ...'\n\tlinux (loop)/boot/kernel root=/dev/xvda1\n\tinitrd (loop)/boot/initramfs\n}"
+
+$mkdir /real_root/etc/conf.d
+$write /real_root/etc/conf.d/hostname 'hostname="overleyroot"'
+$symlink /etc real_root/etc

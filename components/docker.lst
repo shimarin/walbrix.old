@@ -1,6 +1,7 @@
 $require domU.lst
+#$require domU-overlayfs-kernel.lst
 $require domU-kernel.lst
-$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1owncloud\2/'
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1docker\2/'
 
 $package sys-fs/aufs-util
 #dev-lang/go
@@ -10,6 +11,6 @@ $require git.lst
 $package app-emulation/docker --use="aufs -device-mapper vim-syntax"
 $symlink /etc/runlevels/default/docker /etc/init.d/docker
 
-#$squashfs /system
+#$require overlayfs-root.lst
 
 $vadesc
