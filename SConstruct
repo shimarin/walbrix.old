@@ -92,7 +92,7 @@ touch $TARGET
 
 env.Command("desktop", ["build/desktop/.done", "$WBUI_MARKER", "$LOCALE_MARKER"], "mksquashfs build/desktop/* build/wbui build/locale $TARGET -noappend")
 
-### INSTALLER(CD/DVD-ROM) ###
+### INSTALLER ###
 
 env['INSTALLER_64_MARKER'] = "build/installer/x86_64/.done"
 env['INSTALLER_32_MARKER'] = "build/installer/i686/.done"
@@ -118,7 +118,6 @@ env.Command("build/installer/wbui", "$WBUI_MARKER", "(cd build/wbui && find .|cp
 
 boot_iso9660 = ["build/boot-iso9660/boot.img","build/boot-iso9660/efiboot.img","build/boot-iso9660/bootx64.efi"]
 env.Command(boot_iso9660, "components/boot-iso9660.lst", "rm -rf build/boot-iso9660 && ./collect --source source/walbrix.x86_64 components/boot-iso9660.lst build/boot-iso9660")
-env.Command("portage.tar.xz", "/usr/portage/metadata/timestamp.chk", "tar Jcvpf $TARGET --exclude='portage/metadata/cache' --exclude='portage/packages' --exclude='portage/distfiles' -C /usr portage")
 
 for region in ["jp"]:
     # CD
@@ -126,8 +125,16 @@ for region in ["jp"]:
     iso9660_files = "boot/boot.img=build/boot-iso9660/boot.img boot/efiboot.img=build/boot-iso9660/efiboot.img boot/grub/grub.cfg=files/iso9660/grub.cfg boot/grub/fonts/unicode.pf2=build/walbrix/i686/usr/share/grub/unicode.pf2 EFI/BOOT/bootx64.efi=build/boot-iso9660/bootx64.efi kernel.32=build/walbrix/i686/boot/kernel install.32=build/installer/install.32 wbui=build/installer/wbui EFI/Walbrix/kernel=build/walbrix/x86_64/boot/kernel EFI/Walbrix/initramfs=build/walbrix/x86_64/boot/initramfs"
     env.Command("walbrix-%s.iso" % region, iso9660_deps + ["walbrix"], "xorriso -as mkisofs $MKISOFS_OPTS -V WBINSTALL -o $TARGET %s walbrix=walbrix" % iso9660_files)
     env.Command("desktop-%s.iso" % region, iso9660_deps + ["desktop"], "xorriso -as mkisofs $MKISOFS_OPTS -V WBINSTALL -o $TARGET %s walbrix=desktop" % iso9660_files)
-    env.Command("walbrix-%s-DVD.iso" % region, iso9660_deps + ["walbrix" + "portage.tar.xz"], "xorriso -as mkisofs  $MKISOFS_OPTS -V WBINSTALLDVD -o $TARGET %s walbrix=walbrix portage.tar.xz=portage.tar.xz distfiles=/usr/portage/distfiles" % iso9660_files)
 
+### SOURCE DVD ###
+
+env.Command("portage.tar.xz", "/usr/portage/metadata/timestamp.chk", "tar Jcvpf $TARGET --exclude='portage/metadata/cache' --exclude='portage/packages' --exclude='portage/distfiles' -C /usr portage")
+env.Command("walbrix-sources.iso", "portage.tar.xz", """
+./cleanup_distfiles
+xorriso -as mkisofs -J -r -graft-points -V WBSOURCE -o $TARGET portage.tar.xz=$SOURCE distfiles=/usr/portage/distfiles x86_64/etc/portage=source/walbrix.x86_64/etc/portage i686/etc/portage=source/walbrix.i686/etc/portage x86_64/etc/kernels=source/walbrix.x86_64/etc/kernels i686/etc/kernels=source/walbrix.i686/etc/kernels
+[ `stat -c %s walbrix-sources.iso` -le 4704317440 ] && echo "ISO filesize OK."
+echo s3cmd put -P walbrix-sources.iso s3://dist.walbrix.net/walbrix-sources-`./kernelver -n source/walbrix.x86_64/boot/kernel`.iso
+""")
 
 ### VIRTUAL APPLIANCES ###
 
