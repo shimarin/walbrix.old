@@ -12,6 +12,7 @@
   <script src="/static/js/angular-resource.min.js"></script>
   <script src="/static/js/angular-messages.min.js"></script>
   <script src="/static/js/ui-bootstrap-tpls-0.13.1.min.js"></script>
+  <script src="/static/js/ng-file-upload-all.min.js"></script>
   <script src="/static/js/wbutil.js"></script>
 </head>
 <body>
@@ -60,31 +61,6 @@
           </div>
         </div>
       </tab>
-      <tab heading="証明書のバックアップとリストア">
-        <div ng-controller="BackupCert">
-	  <h2>証明書のバックアップ</h2>
-	  <p><button class="btn btn-default" ng-disabled="!status.key || !status.cert" ng-click="get_pkcs12()">証明書をバックアップする</button><p>
-          <div ng-messages="pkcs12_result" role="alert">
-            <div ng-message="success">
-	      <pre ng-bind="pkcs12_result.data"></pre>
-              <p>枠内のテキストを保存してください。</p>
-            </div>
-            <span class="text-danger" ng-message="error">証明書バックアップ失敗</span>
-          </div>
-
-	  <h2>証明書のリストア</h2>
-          <div class="alert alert-warning" ng-show="status.cert">
-            証明書は既にインストールされています。リストアを行うと既存の証明書は上書きされます。
-          </div>
-	  <p>ここにバックアップした証明書を貼り付けてください。（上のバックアップ機能で取得したデータのみここに貼り付けることができます。-----BEGIN CERTIFICATE-----で始まるものはリストアには使用できません）</p>
-	  <textarea class="form-control" rows="10" ng-model="pkcs12_to_restore"></textarea><br/>
-	  <p><button class="btn btn-danger" ng-disabled="!pkcs12_to_restore" ng-click="restore_pkcs12()">証明書をリストアする</button></p>
-          <div ng-messages="pkcs12_restore_result" role="alert">
-            <span ng-message="success">証明書がリストアされました</span>
-            <span class="text-danger" ng-message="error">証明書リストア失敗</span>
-          </div>
-        </div>
-      </tab>
       <tab heading="SSH公開鍵">
         <div ng-controller="AuthorizedKeys">
 	  <h2>SSH公開鍵の編集</h2>
@@ -94,6 +70,22 @@
           <div ng-messages="authorized_keys_result" role="alert">
             <span ng-message="success">SSH公開鍵が上記内容に設定されました</span>
             <span class="text-danger" ng-message="error">SSH公開鍵設定失敗</span>
+          </div>
+        </div>
+      </tab>
+      <tab heading="システム設定のバックアップとリストア">
+        <div ng-controller="Backup">
+	  <h2>システム設定のバックアップ</h2>
+	  <p><a class="btn btn-default" href="tgz">システム設定をバックアップする</a> クリックするとバックアップファイル(.tgz形式)がダウンロードされます。バックアップファイルには証明書やSSH公開鍵などが含まれます。</p>
+	  <h2>システム設定のリストア</h2>
+          <div class="alert alert-warning" ng-show="status.cert">
+            証明書が既にインストールされています。証明書を含むバックアップファイルのリストアを行うと、既存の証明書は上書きされます。
+          </div>
+	  <p><button class="btn btn-default" ngf-select ng-model="file">バックアップファイルを選択</button> <span ng-show="!file">未選択</span><span ng-show="file">{{file.name}} ({{file.size|number}}バイト)</span></p>
+	  <p><button class="btn btn-danger" ng-click="upload()" ng-disabled="!file">リストアを実行</button></p>
+          <div ng-messages="tgz_result" role="alert">
+            <span ng-message="success">システム設定がリストアされました</span>
+            <span class="text-danger" ng-message="error">リストア失敗</span>
           </div>
         </div>
       </tab>

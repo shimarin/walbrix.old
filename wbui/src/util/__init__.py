@@ -1,7 +1,7 @@
 #!/usr/bin/python2.7
 # -*- coding:utf-8 -*-
 
-import sys,os,subprocess,base64,re,stat,tempfile,shutil,multiprocessing,signal,SocketServer
+import sys,os,subprocess,glob,base64,re,stat,tempfile,shutil,multiprocessing,signal,socket,SocketServer,StringIO
 import flask
 
 app = flask.Flask(__name__)
@@ -106,11 +106,12 @@ def get_cn(cert_filename=cert):
     if cn_match is None: return None
     return cn_match.groups()[0]
 
-def set_hostname(hostname):
-    with open("/etc/conf.d/hostname", "w") as f:
-        f.write('hostname="%s"' % hostname)
+def set_hostname(hostname = None):
+    if hostname is not None:
+        with open("/etc/conf.d/hostname", "w") as f:
+            f.write('hostname="%s"' % hostname)
 
-    subprocess.call(["hostname",hostname])
+    subprocess.call(["service","hostname","restart"])
 
 @app.route("/crt",methods=["POST","PUT"])
 def post_crt():
@@ -170,6 +171,28 @@ def post_pkcs12():
 
     return flask.jsonify({"success":True})
 
+@app.route("/tgz",methods=["GET"])
+def get_tgz():
+    rw_root = "/.overlay/profile/root"
+    files = ["etc/conf.d/hostname","etc/conf.d/keymaps","etc/openvpn/client.key","etc/openvpn/client.crt","etc/ssh/ssh_host_*","etc/wb/*","root/.ssh/authorized_keys"]
+    expanded_files = [item[len(rw_root) + 1:] for sublist in [ glob.glob(os.path.join(rw_root,x)) for x in files ] for item in sublist] # flatten
+    with tempfile.NamedTemporaryFile(delete=True) as tmpfile:
+        subprocess.check_call(["tar","zcf","-","-C",rw_root] + expanded_files,stdout=tmpfile)
+        return flask.send_file(tmpfile.name, mimetype="application/x-tar", as_attachment=True, attachment_filename="%s.tgz" % socket.gethostname())
+
+@app.route("/tgz",methods=["POST","PUT"])
+def post_tgz():
+    uploaded_file = flask.request.files.get("file")
+    if not uploaded_file: return "400 Bad Request", 400
+
+    p = subprocess.Popen(["tar","zxf","-","-C","/"],stdin=subprocess.PIPE)
+    p.communicate(uploaded_file.stream.read())
+    if p.wait() != 0: return "400 Bad Resuest(tar failed)", 400
+
+    set_hostname()
+
+    return flask.jsonify({"success":True})
+
 class DummyQueue:
     def put(self, obj):
         print obj
@@ -185,7 +208,7 @@ def run(q, port = 0,debug=False):
             return ret
 
         SocketServer.TCPServer.server_bind = socket_bind_wrapper
-        app.run(host='0.0.0.0',port=port)
+        app.run(host='0.0.0.0',port=port,debug=debug)
     except Exception, e:
         q.put(e)
     

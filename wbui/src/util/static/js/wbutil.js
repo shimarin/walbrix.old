@@ -1,4 +1,4 @@
-var app = angular.module("WbUtil", ["ngResource","ngMessages","ui.bootstrap"])
+var app = angular.module("WbUtil", ["ngResource","ngMessages","ui.bootstrap","ngFileUpload"])
 app.controller("InstallCert", ["$scope","$http", function($scope, $http) {
     $scope.issue_csr = function() {
         if ($scope.cn && $scope.cn.toLowerCase() == "wbfree01") {
@@ -24,24 +24,21 @@ app.controller("InstallCert", ["$scope","$http", function($scope, $http) {
         });
     }
 }]);
-app.controller("BackupCert", ["$scope","$http", function($scope, $http) {
-    $scope.get_pkcs12 = function() {
-        $http.get("/pkcs12").success(function(data) {
-            $scope.pkcs12_result = { success:true, data:data };
-        }).error(function(data) {
-            $scope.pkcs12_result = { error:true };
-        });
-    }
-    $scope.restore_pkcs12 = function() {
-        $http.post("/pkcs12", $scope.pkcs12_to_restore, {headers:{"Content-Type":"text/plain"}}).success(function(data) {
-            $scope.pkcs12_restore_result = data;
-            if (data.success) {
-                $scope.refresh_status();
-                $scope.pkcs12_to_restore = "";
-            }
-        }).error(function(data) {
-            $scope.pkcs12_restore_result = {error:true};
-        });
+app.controller("Backup", ["$scope","$http","Upload", function($scope, $http, Upload) {
+    $scope.file = null;
+    $scope.upload = function () {
+        Upload.upload({
+            url: 'tgz',
+            file: $scope.file
+        }).success(function (data, status, headers, config) {
+            $scope.tgz_result = data;
+	    if (data.success) {
+		$scope.refresh_status();
+		$scope.file = null;
+	    }
+        }).error(function (data, status, headers, config) {
+            $scope.tgz_result = { error: true };
+        })
     }
 }]);
 app.controller("AuthorizedKeys", ["$scope","$http", function($scope, $http) {
