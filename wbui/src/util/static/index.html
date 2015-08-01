@@ -31,7 +31,7 @@
           </div>
         </div>
       </tab>
-      <tab heading="証明書の発行とインストール">
+      <tab heading="証明書のインストール">
         <div ng-controller="InstallCert">
 	  <h2>CSRの発行</h2>
 	  開発元から発行されたシリアル番号:<input type="text" ng-model="cn"> <button class="btn btn-default" ng-disabled="!cn" ng-click="issue_csr()">CSRを発行する</button><br/>
@@ -73,7 +73,7 @@
           </div>
         </div>
       </tab>
-      <tab heading="システム設定のバックアップとリストア">
+      <tab heading="設定のバックアップ">
         <div ng-controller="Backup">
 	  <h2>システム設定のバックアップ</h2>
 	  <p><a class="btn btn-default" href="tgz">システム設定をバックアップする</a> クリックするとバックアップファイル(.tgz形式)がダウンロードされます。バックアップファイルには証明書やSSH公開鍵などが含まれます。</p>
