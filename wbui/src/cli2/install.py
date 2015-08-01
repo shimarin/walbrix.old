@@ -121,7 +121,14 @@ def run(device, image, yes = False, no_bios = False, xen_vga = None): # image ca
         subprocess.call(["sync"])
 
     # format profile volume
-    subprocess.check_call(["mkfs.xfs","-q","/dev/%s/profile" % vgname])
+    profile_volume = "/dev/%s/profile" % vgname
+    subprocess.check_call(["mkfs.xfs","-q",profile_volume])
+
+    # install ins file if exists
+    ins_file = image + ".ins"
+    if os.path.isfile(ins_file):
+        with create_install_disk.tempmount(profile_volume, "rw", "xfs") as tempdir:
+            subprocess.call(["tar","xvf",ins_file,"-C",os.path.join(tempdir,"root")])
     print "Done."
     return True
 

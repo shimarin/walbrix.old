@@ -179,7 +179,7 @@ def search_command(name, altname = None):
             if os.path.isfile(fullpath): return fullpath
     return None
 
-def exec_install(device, image = None, yes = False, update_url=DEFAULT_UPDATE_INFO_URL):
+def exec_install(device, image = None, yes = False, update_url=DEFAULT_UPDATE_INFO_URL,ins_file=None):
     if image is not None:
         if not os.path.isfile(image): raise Exception("Image file '%s' not found." % image)
     else:
@@ -238,6 +238,11 @@ def exec_install(device, image = None, yes = False, update_url=DEFAULT_UPDATE_IN
             subprocess.check_call(["wget","-O",save_image_file_to,image])
         else:
             shutil.copy(image, save_image_file_to)
+
+        # copy ins file if specified
+        if ins_file is not None:
+            shutil.copy(ins_file, save_image_file_to + ".ins")
+
         print "Syncing..."
 
     print "Done."
@@ -273,6 +278,7 @@ if __name__ == '__main__':
     parser.add_argument("--yes", "-y", action="store_true", help="Proceed without confirmation")
     parser.add_argument("--sources", action="store_true", help="Copy portage tree")
     parser.add_argument("--update-url", type=str, default=DEFAULT_UPDATE_INFO_URL, help="Update info URL")
+    parser.add_argument("--ins-file", type=str, help="ins file")
     parser.add_argument("device", type=str, nargs='?', help="Target device")
     args = parser.parse_args()
 
@@ -282,7 +288,7 @@ if __name__ == '__main__':
         print_usable_disks(MINIMUM_DISK_SIZE_IN_GB * 1000000000)
         sys.exit(1)
     #else
-    boot_partition = exec_install(args.device, args.image, args.yes, args.update_url)
+    boot_partition = exec_install(args.device, args.image, args.yes, args.update_url,args.ins_file)
     if boot_partition is None: sys.exit(1)
 
     if args.sources:
