@@ -3,7 +3,7 @@ import argparse,os,tempfile,shutil,subprocess,re
 
 cn_pattern = re.compile(r'^subject=.*/CN=(.+?)($|\/)')
 
-def run(outfile, key=None, cert=None, authorized_keys=None):
+def run(outfile, key=None, cert=None, openvpn=False,authorized_keys=None):
 
     cn = None
 
@@ -27,6 +27,10 @@ def run(outfile, key=None, cert=None, authorized_keys=None):
             os.makedirs(os.path.join(tmpdir, "etc/conf.d"))
             with open(os.path.join(tmpdir, "etc/conf.d/hostname"),"w") as f:
                 f.write('hostname="%s"\n' % cn)
+        if openvpn:
+            default_runlevel = os.path.join(tmpdir, "etc/runlevels/default")
+            os.makedirs(default_runlevel)
+            os.symlink("/etc/init.d/openvpn", os.path.join(default_runlevel, "openvpn"))
         if authorized_keys is not None:
             os.makedirs(os.path.join(tmpdir, "root/.ssh"))
             os.chmod(os.path.join(tmpdir, "root"), 0700)
@@ -42,7 +46,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--key", type=str, help="SSL key file")
     parser.add_argument("--cert", type=str, help="SSL cert file")
+    parser.add_argument("--openvpn", action="store_true", help="Autostart openvpn")
     parser.add_argument("--authorized-keys", type=str, nargs='?', const=os.path.expanduser("~/.ssh/authorized_keys"), help="SSH public key files")
     parser.add_argument("outfile", type=str, nargs='?', help="File to output")
     args = parser.parse_args()
-    run(args.outfile, args.key, args.cert, args.authorized_keys)
+    run(args.outfile, args.key, args.cert, args.openvpn, args.authorized_keys)

@@ -128,7 +128,9 @@ def run(device, image, yes = False, no_bios = False, xen_vga = None): # image ca
     ins_file = image + ".ins"
     if os.path.isfile(ins_file):
         with create_install_disk.tempmount(profile_volume, "rw", "xfs") as tempdir:
-            subprocess.call(["tar","xvf",ins_file,"-C",os.path.join(tempdir,"root")])
+            rw_layer = os.path.join(tempdir,"root")
+            os.mkdir(rw_layer)
+            subprocess.call(["tar","xvf",ins_file,"-C",rw_layer])
     print "Done."
     return True
 
