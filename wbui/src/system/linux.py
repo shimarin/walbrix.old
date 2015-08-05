@@ -76,7 +76,7 @@ class Xfs(Filesystem):
         self.system = system
     
     def mkfs(self, partition):
-        self.system.execShell("mkfs.xfs %s" % (partition), True)
+        self.system.execShell("mkfs.xfs -m crc=0 -f %s" % (partition), True)
 
     def label(self, partition, value):
         self.system.execShell("xfs_admin -L %s %s" % (value, partition), True)

@@ -145,7 +145,11 @@ def create_logical_volume_in_GB(vgname, name, size, mkfs=False, tag=None):
     if mkfs == None or mkfs == False: return device_name
 
     fstype = "xfs" if mkfs == True else mkfs
-    ret = exec_shell("mkfs.%s -q %s" % (fstype, device_name))
+    if fstype == "xfs":
+        ret = exec_shell("mkfs.xfs -m crc=0 -f %s" % device_name)
+    else:
+        ret = exec_shell("mkfs.%s -q %s" % (fstype, device_name))
+
     if ret != 0:
         remove_logical_volume(device_name)
         return None
