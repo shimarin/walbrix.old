@@ -8,6 +8,14 @@ region_to_locale = {
     "jp":{"locale":"ja_JP","language":"ja"}
 }
 
+def lstfile_deps(lstfile, source, region="jp"):
+    arch_match = re.search(r'^\/usr\/(.+)-pc-linux-gnu\/lib$', open(os.path.join(source, "etc/ld.so.conf.d/05binutils.conf")).read(), re.MULTILINE)
+    if arch_match is None: raise Exception("Architecture couldn't be determined")
+    arch = arch_match.groups()[0]
+    deps = os.popen("./lstfile_deps --source=%s --var=ARCH=%s --var=REGION=%s %s" % (source, arch, region,lstfile)).read().splitlines()
+    deps += [lstfile, os.path.join(source, "var/log/emerge.log")]
+    return deps
+
 ### COMMON components ###
 
 env['WBUI_MARKER'] = "build/wbui/.done"
@@ -37,13 +45,13 @@ touch $TARGET
 env['SYSTEM_64_MARKER'] = "build/walbrix/x86_64/.done"
 env['SYSTEM_32_MARKER'] = "build/walbrix/i686/.done"
 
-env.Command("$SYSTEM_64_MARKER", ["$SYSTEM_32_MARKER","source/walbrix.x86_64/var/log/emerge.log", "components/walbrix.lst"], """
+env.Command("$SYSTEM_64_MARKER", lstfile_deps("components/walbrix.lst","source/walbrix.x86_64"), """
 rm -rf build/walbrix/x86_64
 ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/walbrix.lst build/walbrix/x86_64
 touch $TARGET
 """)
 
-env.Command("$SYSTEM_32_MARKER", ["source/walbrix.i686/var/log/emerge.log", "components/walbrix.lst"], """
+env.Command("$SYSTEM_32_MARKER", lstfile_deps("components/walbrix.lst","source/walbrix.i686"), """
 rm -rf build/walbrix/i686
 ./collect --source source/walbrix.i686 --var=ARCH=i686 components/walbrix.lst build/walbrix/i686
 touch $TARGET
@@ -75,7 +83,7 @@ mount -o ro,remount /.overlay/boot
 
 env['DESKTOP_32_MARKER'] = "build/desktop/i686/.done"
 
-env.Command("$DESKTOP_32_MARKER", ["source/desktop.i686/var/log/emerge.log","components/desktop.lst"], """
+env.Command("$DESKTOP_32_MARKER", lstfile_deps("components/desktop.lst","source/desktop.i686"), """
 rm -rf build/desktop/i686
 ./collect --source source/desktop.i686 --var=ARCH=i686 components/desktop.lst build/desktop/i686
 touch $TARGET
@@ -100,14 +108,14 @@ env['INSTALLER_64_MARKER'] = "build/installer/x86_64/.done"
 env['INSTALLER_32_MARKER'] = "build/installer/i686/.done"
 env['MKISOFS_OPTS'] = "-f -J -r -no-emul-boot -boot-load-size 4 -boot-info-table -graft-points -eltorito-alt-boot -e boot/efiboot.img"
 
-env.Command("$INSTALLER_64_MARKER", ["source/walbrix.x86_64/var/log/emerge.log","components/installer.lst","$LOCALE_MARKER"], """
+env.Command("$INSTALLER_64_MARKER", ["$LOCALE_MARKER"] + lstfile_deps("components/installer.lst", "source/walbrix.x86_64"), """
 rm -rf build/installer/x86_64
 ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/installer.lst build/installer/x86_64
 cp -av build/locale build/installer/x86_64/.locale
 touch $TARGET
 """)
 
-env.Command("$INSTALLER_32_MARKER", ["source/walbrix.i686/var/log/emerge.log","components/installer.lst","$LOCALE_MARKER"], """
+env.Command("$INSTALLER_32_MARKER", ["$LOCALE_MARKER"] + lstfile_deps("components/installer.lst", "source/walbrix.i686"), """
 rm -rf build/installer/i686
 ./collect --source source/walbrix.i686 --var=ARCH=i686 components/installer.lst build/installer/i686
 cp -av build/locale build/installer/i686/.locale
@@ -119,7 +127,7 @@ env.Command("build/installer/install.32", "$INSTALLER_32_MARKER", "(cd build/ins
 env.Command("build/installer/wbui", "$WBUI_MARKER", "(cd build/wbui && find .|cpio -o -H newc) | xz -c --check=crc32 > $TARGET")
 
 boot_iso9660 = ["build/boot-iso9660/boot.img","build/boot-iso9660/efiboot.img","build/boot-iso9660/bootx64.efi","source/walbrix.i686/usr/share/syslinux/isolinux.bin","source/walbrix.i686/usr/share/syslinux/libutil.c32","source/walbrix.i686/usr/share/syslinux/ldlinux.c32","source/walbrix.i686/usr/share/syslinux/menu.c32"]
-env.Command(boot_iso9660, "components/boot-iso9660.lst", "rm -rf build/boot-iso9660 && ./collect --source source/walbrix.x86_64 components/boot-iso9660.lst build/boot-iso9660")
+env.Command(boot_iso9660, lstfile_deps("components/boot-iso9660.lst","source/walbrix.x86_64"), "rm -rf build/boot-iso9660 && ./collect --source source/walbrix.x86_64 components/boot-iso9660.lst build/boot-iso9660")
 
 for region in ["jp"]:
     # CD
@@ -159,7 +167,7 @@ class VALookup:
         lstfile = "components/%s.lst" % artifact
         archive_cmd = ("tar Jcvpf ${TARGET}.tmp -C %s ." % build_dir) if format == "tar.xz" else ("mksquashfs %s ${TARGET}.tmp -noappend -comp xz" % build_dir)
         node = File(name)
-        self.env.Command(node, ["components/%s.lst" % artifact], """
+        self.env.Command(node, lstfile_deps(lstfile, source_dir,region), """
 rm -rf %s
 ./collect --source %s %s %s %s
 %s
