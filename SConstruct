@@ -60,8 +60,10 @@ cp files/walbrix/grub.cfg files/walbrix/install.cfg files/walbrix/background.png
 touch $TARGET
 """)
 
-env.Command("walbrix", ["build/walbrix/.done", "$WBUI_MARKER", "$LOCALE_MARKER"], "mksquashfs build/walbrix/* build/wbui build/locale $TARGET -noappend")
-env.Command("upload", "walbrix", "s3cmd put -P $SOURCE s3://dist.walbrix.net/walbrix")
+env.Command("walbrix", ["build/walbrix/.done", "$WBUI_MARKER", "$LOCALE_MARKER"], """
+mksquashfs build/walbrix/* build/wbui build/locale $TARGET -noappend
+echo s3cmd put -P $TARGET s3://dist.walbrix.net/walbrix
+""")
 env.Command("install", ["walbrix","/.overlay/boot/walbrix"],"""
 mount -o rw,remount /.overlay/boot
 [ ! -f /.overlay/boot/walbrix.cur ] && mv /.overlay/boot/walbrix /.overlay/boot/walbrix.cur
@@ -138,20 +140,34 @@ echo s3cmd put -P walbrix-sources.iso s3://dist.walbrix.net/walbrix-sources-`./k
 
 ### VIRTUAL APPLIANCES ###
 
-def define_va_target(artifact, arch, region):
-    build_dir = "build/%s-%s-%s" % (artifact, arch, region)
-    source_dir = "source/va.%s" % arch
-    variables = "--var=ARTIFACT=%s --var=ARCH=%s --var=REGION=%s --var=LANGUAGE=%s" % (artifact, arch, region, region_to_locale[region]["language"])
-    lstfile = "components/%s.lst" % artifact
-    env.Command("%s-%s-%s.tar.xz" % (artifact,arch,region), ["components/%s.lst" % artifact], "rm -rf %s && ./collect --source %s %s %s %s && tar Jcvpf $TARGET -C %s ." % (build_dir, source_dir, variables, lstfile, build_dir, build_dir))
+regex_va = re.compile(r'^(.+)-(.+)-(.+)\.(tar\.xz|squashfs)$')
 
-if len(COMMAND_LINE_TARGETS) > 0:
-    regex_va = re.compile(r'^(.+)-(.+)-(.+)\.tar\.xz$')
-    for target in COMMAND_LINE_TARGETS:
-        va_match = regex_va.match(target)
-        if va_match:
-            (artifact, arch, region) = va_match.groups()
-            define_va_target(artifact, arch, region)
+class VALookup:
+    def __init__(self, env):
+        self.env = env
+        self.nodes = {}
+    def lookup(self, name, **kw):
+        va_match = regex_va.match(name)
+        if va_match is None: return None
+        #else
+        if name in self.nodes: return self.nodes[name]
+        (artifact, arch, region, format) = va_match.groups()
+        build_dir = "build/%s-%s-%s" % (artifact, arch, region)
+        source_dir = "source/va.%s" % arch
+        variables = "--var=ARTIFACT=%s --var=ARCH=%s --var=REGION=%s --var=LANGUAGE=%s" % (artifact, arch, region, region_to_locale[region]["language"])
+        lstfile = "components/%s.lst" % artifact
+        archive_cmd = ("tar Jcvpf ${TARGET}.tmp -C %s ." % build_dir) if format == "tar.xz" else ("mksquashfs %s ${TARGET}.tmp -noappend -comp xz" % build_dir)
+        node = File(name)
+        self.env.Command(node, ["components/%s.lst" % artifact], """
+rm -rf %s
+./collect --source %s %s %s %s
+%s
+mv ${TARGET}.tmp ${TARGET}
+""" % (build_dir, source_dir, variables, lstfile, build_dir, archive_cmd))
+        self.nodes[name] = node
+        return node
+
+env.lookup_list.append(VALookup(env).lookup)
 
 ### end rule defs ###
 
