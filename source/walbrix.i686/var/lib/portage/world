@@ -69,6 +69,7 @@ sys-block/nbd
 sys-block/open-iscsi
 sys-block/parted
 sys-boot/grub
+sys-boot/syslinux
 sys-cluster/drbd
 sys-firmware/bluez-firmware
 sys-fs/bcache-tools
