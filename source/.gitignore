@@ -1,5 +1,6 @@
 */*
 !*.sh
+!*.py
 !*/etc
 */etc/*
 !*/etc/kernels

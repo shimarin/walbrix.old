@@ -2,6 +2,7 @@ sys-devel/binutils multitarget
 sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc grub_platforms_xen
 
 sys-kernel/gentoo-sources symlink
+virtual/linux-sources firmware
 
 net-misc/openvpn threads passwordsave
 dev-lang/python sqlite
