@@ -128,10 +128,13 @@ for region in ["jp"]:
 
 ### SOURCE DVD ###
 
-env.Command("portage.tar.xz", "/usr/portage/metadata/timestamp.chk", "tar Jcvpf $TARGET --exclude='portage/metadata/cache' --exclude='portage/packages' --exclude='portage/distfiles' -C /usr portage")
+env.Command("portage.tar.xz", "/usr/portage/metadata/timestamp.chk", """
+tar Jcvpf ${TARGET}.tmp --exclude='portage/metadata/cache' --exclude='portage/packages' --exclude='portage/distfiles' -C /usr portage
+mv ${TARGET}.tmp ${TARGET}
+""")
 env.Command("walbrix-sources.iso", "portage.tar.xz", """
 ./cleanup_distfiles
-xorriso -as mkisofs -J -r -graft-points -V WBSOURCE -o $TARGET portage.tar.xz=$SOURCE distfiles=/usr/portage/distfiles x86_64/etc/portage=source/walbrix.x86_64/etc/portage i686/etc/portage=source/walbrix.i686/etc/portage x86_64/etc/kernels=source/walbrix.x86_64/etc/kernels i686/etc/kernels=source/walbrix.i686/etc/kernels
+xorriso -as mkisofs -J -r -graft-points -V WBSOURCE -o $TARGET portage.tar.xz=$SOURCE distfiles=/usr/portage/distfiles x86_64/etc/portage=source/walbrix.x86_64/etc/portage i686/etc/portage=source/walbrix.i686/etc/portage x86_64/etc/kernels=source/walbrix.x86_64/etc/kernels i686/etc/kernels=source/walbrix.i686/etc/kernels x86_64/var/lib/portage/world=source/walbrix.x86_64/var/lib/portage/world i686/var/lib/portage/world=source/walbrix.i686/var/lib/portage/world
 [ `stat -c %s walbrix-sources.iso` -le 4704317440 ] && echo "ISO filesize OK."
 echo s3cmd put -P walbrix-sources.iso s3://dist.walbrix.net/walbrix-sources-`./kernelver -n source/walbrix.x86_64/boot/kernel`.iso
 """)
