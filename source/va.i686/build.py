@@ -10,14 +10,14 @@ def exec_cmd(cmdline):
 
 def groupadd_if_not_exists(gid, name):
     try:
-        return grp.getgrgid(gid)
+        return grp.getgrnam(name)
     except KeyError:
         pass
     exec_cmd(["groupadd","-g",str(gid),name])
 
 def useradd_if_not_exists(uid, name, group, added_for,homedir, shell):
     try:
-        return pwd.getpwuid(uid)
+        return pwd.getpwnam(name)
     except KeyError:
         pass
     exec_cmd(["useradd","-c","added by portage for %s" % added_for, "-d",homedir,"-u",str(uid),"-g",group,"-s",shell,name])
@@ -78,4 +78,3 @@ build_kernel_if_needed("", ["--symlink","bzImage"])
 ## emerge world
 
 exec_cmd(["emerge","-uDN","--keep-going","world"])
-
