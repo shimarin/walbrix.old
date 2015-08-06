@@ -5,6 +5,10 @@ WBUI_BASE=/usr/share/wbui
 
 PYTHON_MODULE=`echo $1 | sed 's/-/_/g'`
 
+if [ "$PYTHON_MODULE" = "import" ]; then
+    PYTHON_MODULE="import_vm"
+fi
+
 if [ -f ${WBUI_BASE}/cli2/${PYTHON_MODULE}.py -o -f ${WBUI_BASE}/cli2/${PYTHON_MODULE}.pyc ]; then
     shift
     PYTHONPATH=${WBUI_BASE} exec python2.7 -m cli2.${PYTHON_MODULE} $@

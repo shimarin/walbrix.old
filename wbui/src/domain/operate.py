@@ -18,7 +18,7 @@ import dialogbox
 import create
 import resource_loader
 
-import cli2.create as cli_create,cli2.autostart as cli_autostart,cli2.edit as cli_edit,cli2.rename as cli_rename,cli2.install_va as cli_install_va,cli2.remove_vm as cli_remove_vm
+import cli2.create as cli_create,cli2.autostart as cli_autostart,cli2.edit as cli_edit,cli2.rename as cli_rename,cli2.import_vm as cli_import,cli2.remove_vm as cli_remove_vm
 
 # string resources
 gui.res.register("string_config_info",resource_loader.l({"en":u"Configuration information of the virtual machine %s could not be found.Do you want to create it?", "ja":u"仮想マシン %s の設定情報が見つかりません。作成しますか？"}))
@@ -328,7 +328,7 @@ def exec_duplicate(src, dest, hostname):
             # growfsする
             subprocess.Popen("xfs_growfs %s" % tmpdir, shell=True, close_fds=True).wait()
             # ホスト名をつける
-            cli_install_va.set_hostname(tmpdir, hostname)
+            cli_import.set_hostname(tmpdir, hostname)
             # VAのメタデータを得る
             metadata = system.get_va_metadata(dest, tmpdir)
 

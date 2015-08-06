@@ -225,7 +225,7 @@ def run(url, vg, name,size,ram,vcpus=1,root_password=None,verbose=False,copy_pub
     print "Logical volume %s created." % device
     success = False
     try:
-        subprocess.check_call(["mkfs.xfs","-f",device])
+        subprocess.check_call(["mkfs.xfs","-m","crc=0","-f",device])
         with util.tempmount(device, "inode32", "xfs") as tmpdir:
             install(tmpdir, tarball, vmname, size, ram, vcpus, root_password,verbose,copy_pubkey)
         success = True

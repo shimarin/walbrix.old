@@ -6,5 +6,6 @@ download_cache/
 /walbrix
 /desktop
 *.xz
+*.squashfs
 *.iso
 *.img

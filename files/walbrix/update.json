@@ -1,9 +1,9 @@
 {
-    "latest_stable":"4.1.2",
+    "latest_stable":"4.1.4",
     "releases":[
         { "version":"unstable", "image_url":"http://dist.walbrix.net/walbrix" },
-        { "version":"4.1.2", "image_url":"http://dist.walbrix.net/walbrix-4.1.2" }
+        { "version":"4.1.4", "image_url":"http://dist.walbrix.net/walbrix-4.1.4" }
     ],
     "upload_command":"s3cmd put -P update.json s3://update.walbrix.net/index.json",
-    "copy_command":"s3cmd cp s3://dist.walbrix.net/walbrix s3://dist.walbrix.net/walbrix-X.Y.Z"
+    "copy_command":"s3cmd cp -P s3://dist.walbrix.net/walbrix s3://dist.walbrix.net/walbrix-X.Y.Z"
 }

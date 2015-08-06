@@ -16,7 +16,7 @@ import dialogbox,dialogbox.inputbox,dialogbox.progressbar,dialogbox.messagebox
 import http_client
 import resource_loader
 
-import cli2.install_va as cli_install_va
+import cli2.import_vm as cli_import
 
 # string resources
 gui.res.register("string_located",resource_loader.l({"en":u"'%s' is set to the serial number for the system", "ja":u"'%s'はシステムのシリアルナンバーにしてあります"}))
@@ -139,7 +139,7 @@ def create_new_domain(args):
                             extract_archive.send_signal(signal.SIGINT)
                         line = nbr.readline()
 
-            cli_install_va.set_hostname(tmpdir, hostname)
+            cli_import.set_hostname(tmpdir, hostname)
 
             # https://github.com/wbrxcorp/walbrix/issues/39
             xen_conf_dir = os.path.join(tmpdir, "etc/xen")
