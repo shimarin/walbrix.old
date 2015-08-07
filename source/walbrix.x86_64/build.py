@@ -71,7 +71,7 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
             return True
     return False
 
-exec_cmd(["emerge","-uDN","linux-sources","genkernel","splash-themes-gentoo"])
+exec_cmd(["emerge","-uDN","gentoo-sources","genkernel","splash-themes-gentoo"])
 if build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natural_gentoo","all"]):
     try:
         exec_cmd(["emerge","-1","zfs-kmod","spl"])
