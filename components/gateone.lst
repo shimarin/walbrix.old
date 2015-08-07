@@ -1,0 +1,20 @@
+$require domU.lst
+$require domU-kernel.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1gateone\2/'
+
+$require tornado.lst
+$package dev-python/six --exclude='^/usr/lib(64)?/python3.*/'
+$package dev-python/futures
+$package dev-python/html5lib --exclude='^/usr/lib(64)?/python3.*/'
+
+$exec --overlay "cd /root && git clone https://github.com/liftoff/GateOne.git"
+
+$exec "cd /root/GateOne && python setup.py install"
+$deltree /root/GateOne
+
+$write /etc/local.d/gateone.start '#!/bin/sh\ngateone --disable_ssl --port=80 &'
+$exec "chmod 755 /etc/local.d/gateone.start"
+
+$mkdir /etc/xen
+$write /etc/xen/config "memory=96"
+
