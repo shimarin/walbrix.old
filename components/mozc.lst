@@ -3,7 +3,7 @@ $package app-i18n/tegaki-zinnia-japanese
 #media-libs/tiff
 $package app-dicts/myspell-en
 $package app-text/iso-codes --use="linguas_ja"
-$package app-i18n/zinnia
+#$package app-i18n/zinnia
 $package x11-themes/sound-theme-freedesktop
 $package sys-apps/dbus --use="X"
 $symlink /etc/runlevels/default/dbus /etc/init.d/dbus
@@ -14,14 +14,14 @@ $package x11-apps/setxkbmap
 #net-libs/liblockfile
 #dev-libs/dbus-glib
 $package app-text/enchant
-$package gnome-base/gconf
+#$package gnome-base/gconf
 $package x11-libs/pango --use="X"
 $package media-libs/libcanberra
 #dev-qt/qtcore
 #dev-qt/qttranslations
 #dev-qt/qtdbus
 #dev-qt/qtscript
-$package dev-qt/qtgui
+#$package dev-qt/qtgui
 $package app-i18n/fcitx --use="X dbus gtk gtk3 -qt4"
 $package dev-python/pycairo
 $package gnome-base/dconf
@@ -30,7 +30,7 @@ $package dev-python/pygobject
 #x11-libs/libnotify
 $package x11-misc/notification-daemon
 $package app-i18n/ibus --use="X gtk3 gtk"
-$package app-i18n/ibus-qt
+#$package app-i18n/ibus-qt
 $package app-emacs/emacs-common-gentoo --use="X"
 $package app-editors/emacs --use="X alsa dbus gif gtk gtk3 jpeg png sound tiff" 
 $package app-i18n/mozc --use="emacs fcitx ibus -qt4 renderer linguas_ja"
