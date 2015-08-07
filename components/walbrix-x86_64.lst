@@ -16,4 +16,6 @@ $require debootstrap.lst
 $require yum.lst
 
 # zfs
-$exec --overlay "emerge -1 zfs"
+/sbin/splat
+$package sys-fs/zfs
+

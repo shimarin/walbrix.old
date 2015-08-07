@@ -68,10 +68,15 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
         if not os.path.isfile(("/boot/kernel-genkernel-%s-%s" + source) % (arch, version)):
             print "Kernel %s%s needs to be built" % (version, source)
             exec_cmd(["genkernel","--no-mountboot","--kerneldir=/usr/src/linux-%s%s" % (version, source)] + genkernel_opts)
-            return
+            return True
+    return False
 
 exec_cmd(["emerge","-uDN","linux-sources","genkernel","splash-themes-gentoo"])
-build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natural_gentoo","all"])
+if build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natural_gentoo","all"]):
+    try:
+        exec_cmd(["emerge","-1","zfs-kmod","spl"])
+    except subprocess.CalledProcessError:
+        print "Looks like ZFS modules are not compatible with this kernel."
 
 ## emerge world
 
