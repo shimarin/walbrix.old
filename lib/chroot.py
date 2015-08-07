@@ -1,5 +1,25 @@
-import os,argparse,struct,subprocess,sys
-import tempmount
+import os,argparse,struct,subprocess,sys,contextlib,time
+
+@contextlib.contextmanager
+def yield_mounted(mountpoint):
+    try:
+        yield
+    finally:
+        for x in range(5):
+         if subprocess.call(["umount",mountpoint]) == 0: return
+         time.sleep(1)
+
+@contextlib.contextmanager
+def mount(type,device,mountpoint):
+    subprocess.check_call(["mount","-t",type,device,mountpoint])
+    with yield_mounted(mountpoint):
+        yield
+
+@contextlib.contextmanager
+def bind_mount(source,mountpoint):
+    subprocess.check_call(["mount","-o","bind",source,mountpoint])
+    with yield_mounted(mountpoint):
+        yield
 
 def getExecutableBitWidth(filename):
     ei_class = None
@@ -42,14 +62,14 @@ def run(target, command):
     rst = None
     portage = "/usr/portage"
 
-    with tempmount.do("/proc", "%s/proc" % (target), "bind"):
-        with tempmount.do("/dev", "%s/dev" % (target), "bind"):
-            with tempmount.do("tmpfs", "%s/dev/shm" % (target)):
-                with tempmount.do("/dev/pts", "%s/dev/pts" % (target), "bind"):
+    with mount("proc","proc",os.path.join(target, "proc")):
+        with bind_mount("/dev",os.path.join(target, "dev")):
+            with mount("tmpfs","tmpfs",os.path.join(target, "dev/shm")):
+                with bind_mount("/dev/pts", os.path.join(target, "dev/pts")):
                     if os.path.exists("%s/usr/portage/metadata/timestamp" % target) or not os.path.isdir("%s/usr/portage" % target) or portage == None:
                         rst = chroot(target, command)
                     else:
-                        with tempmount.do(portage, "%s/usr/portage" % (target), "bind"):
+                        with bind_mount("/usr/portage", os.path.join(target, "usr/portage")):
                             rst = chroot(target, command)
 
     print("Cleanup chroot env")
