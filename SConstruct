@@ -52,17 +52,18 @@ env['SYSTEM_32_MARKER'] = "build/walbrix/i686/.done"
 env.Command("$SYSTEM_64_MARKER", lstfile_deps("components/walbrix.lst","source/walbrix.x86_64"), """
 rm -rf build/walbrix/x86_64
 ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/walbrix.lst build/walbrix/x86_64
-touch $TARGET
+./kernelver -n build/walbrix/x86_64/boot/kernel > $TARGET
 """)
 
 env.Command("$SYSTEM_32_MARKER", lstfile_deps("components/walbrix.lst","source/walbrix.i686"), """
 rm -rf build/walbrix/i686
 ./collect --source source/walbrix.i686 --var=ARCH=i686 components/walbrix.lst build/walbrix/i686
-touch $TARGET
+./kernelver -n build/walbrix/i686/boot/kernel > $TARGET
 """)
 
 env.Command("build/walbrix/walbrix.cfg", ["$SYSTEM_64_MARKER","$SYSTEM_32_MARKER","$WBUI_MARKER"], """
-echo "set WALBRIX_VERSION=`./kernelver -n source/walbrix.x86_64/boot/kernel`" > $TARGET
+[ "`cat $SYSTEM_64_MARKER`" = "`cat $SYSTEM_32_MARKER`" ]
+echo "set WALBRIX_VERSION=`cat $SYSTEM_64_MARKER`" > $TARGET
 echo "set WALBRIX_BUILD_ID=`cat build/wbui/usr/share/wbui/commit-id`" >> $TARGET
 echo "set WALBRIX_UPDATE_URL=http://update.walbrix.net" >> $TARGET
 """)
