@@ -14,7 +14,9 @@ def lstfile_deps(lstfile, source, region="jp"):
     arch_match = re.search(r'^\/usr\/(.+)-pc-linux-gnu\/lib$', open(binutils_conf).read(), re.MULTILINE)
     if arch_match is None: raise Exception("Architecture couldn't be determined")
     arch = arch_match.groups()[0]
-    deps = os.popen("./lstfile_deps --source=%s --var=ARCH=%s --var=REGION=%s %s" % (source, arch, region,lstfile)).read().splitlines()
+    deps_proc = os.popen("./lstfile_deps --source=%s --var=ARCH=%s --var=REGION=%s %s" % (source, arch, region,lstfile))
+    deps = deps_proc.read().splitlines()
+    if deps_proc.close() != None: raise Exception("lstfile_deps error while processing %s for %s" % (lstfile, source))
     deps += [lstfile, os.path.join(source, "var/log/emerge.log")]
     return deps
 
