@@ -19,6 +19,8 @@ dev-php/pecl-apcu
 dev-php/pecl-imagick
 dev-php/pecl-memcached
 dev-php/xcache
+dev-python/futures
+dev-python/html5lib
 dev-util/strace
 dev-vcs/git
 mail-mta/postfix
@@ -43,3 +45,4 @@ www-apache/mod_authnz_external
 www-apache/mod_extract_forwarded
 www-servers/apache
 www-servers/tomcat
+www-servers/tornado
