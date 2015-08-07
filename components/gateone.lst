@@ -16,5 +16,5 @@ $write /etc/local.d/gateone.start '#!/bin/sh\ngateone --disable_ssl --port=80 &'
 $exec "chmod 755 /etc/local.d/gateone.start"
 
 $mkdir /etc/xen
-$write /etc/xen/config "memory=128"
+$write /etc/xen/config "memory=96"
 
