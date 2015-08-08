@@ -42,7 +42,9 @@ def get_tar_decompression_option(url):
     filetypes = {
         "tar":"",
         "tar.gz":"z",
+        "tgz":"z",
         "tar.bz2":"j",
+        "tbz2":"j",
         "tar.lzma":"J",
         "tar.xz":"J"
     }
@@ -53,6 +55,9 @@ def get_tar_decompression_option(url):
 
 def is_tarball(url):
     return get_tar_decompression_option(url) is not None
+
+def is_squashfs(url):
+    return url.endswith(".squashfs")
 
 def load_json(url):
     if urlparse.urlparse(url).scheme == '': # local file
@@ -117,14 +122,23 @@ def resolve_relative_path(origin, relative):
     )
     return urlparse.urlunparse(resolved)
 
-def create_xen_conf(rootdir, ram, vcpus):
+def create_xen_conf(rootdir, ram=None, vcpus=None):
     xen_conf_dir = os.path.join(rootdir, "etc/xen")
     if not os.path.isdir(xen_conf_dir):
         if os.path.exists(xen_conf_dir): os.unlink(xen_conf_dir)
         os.makedirs(xen_conf_dir)
-    with open(os.path.join(xen_conf_dir, "config"), "w") as f:
-        f.write("memory=%d\n" % ram)
-        f.write("vcpus=%d\n" % vcpus)
+    xen_conf_file = os.path.join(xen_conf_dir, "config")
+
+    vals = {}
+    if os.path.exists(xen_conf_file):
+        exec open(xen_conf_file).read() in None, vals
+
+    if ram is not None: vals["memory"] = ram
+    if vcpus is not None: vals["vcpus"] = vcpus
+        
+    with open(xen_conf_file, "w") as f:
+        for key, value in vals.iteritems():
+            f.write("%s=%s\n" % (key, repr(value)))
 
 def set_hostname(rootdir, hostname):
     debian = os.path.join(rootdir, "etc/hostname") # debian(generic UNIX)
@@ -171,29 +185,57 @@ def copy_public_keys(rootdir):
             if pubkey[-1] != '\n': pubkey += '\n'
             authorized_keys.write(pubkey)
 
-def install(rootdir, tarball, vmname,size,ram,vcpus=1,root_password=None,verbose=False,copy_pubkey=False):
-    with process_for_output(["tar",get_tar_decompression_option(tarball) + ("xvpf" if verbose else "xpf"),"-","-C",rootdir]) as tar:
-        with input_stream(tarball) as (src, size):
-            copied = 0
+def copy_archive(archive, out):
+    with input_stream(archive) as (src, size):
+        copied = 0
+        buf = src.read(4096)
+        while buf != "":
+            out.write(buf)
+            copied += len(buf)
             buf = src.read(4096)
-            while buf != "":
-                tar.write(buf)
-                copied += len(buf)
-                buf = src.read(4096)
+
+def setup_vm_info(rootdir, vmname, ram, vcpus=1, root_password=None,copy_pubkey=False):
     create_xen_conf(rootdir, ram, vcpus)
     set_hostname(rootdir, vmname)
     if root_password is not None:
         set_root_password(rootdir, root_password)
     if copy_pubkey:
         copy_public_keys(rootdir)
+            
+def install(rootdir, archive, vmname,size,ram,vcpus=1,root_password=None,verbose=False,copy_pubkey=False):
+    if archive[1] == "tar":
+        with process_for_output(["tar",get_tar_decompression_option(archive[0]) + ("xvpf" if verbose else "xpf"),"-","-C",rootdir]) as tar:
+            copy_archive(archive[0], tar)
+        setup_vm_info(rootdir, vmname, ram, vcpus, root_password, copy_pubkey)
+    elif archive[1] == "squashfs":
+        ro_layer = "system"
+        rw_layer = "rw"
+        ro_file = os.path.join(rootdir, ro_layer)
+        rw_dir = os.path.join(rootdir, rw_layer)
+        work_dir = os.path.join(rootdir, "work")
+        os.makedirs(rw_dir)
+        os.makedirs(work_dir)
+        with open(ro_file, "w") as f:
+            copy_archive(archive[0], f)
+        os.makedirs(os.path.join(rootdir, "boot/grub"))
+        with open(os.path.join(rootdir, "boot/grub/grub.cfg"),"w") as f:
+            f.write("set WALBRIX_RO_LAYER=/%s\n" % ro_layer)
+            f.write("set WALBRIX_RW_LAYER=/%s\n" % rw_layer)
+            f.write("loopback loop ${WALBRIX_RO_LAYER}\n")
+            f.write("set root=loop\n")
+            f.write("normal /boot/grub/grub.cfg")
+
+        with util.tempmount(ro_file, "loop,ro", "squashfs") as tmpdir1:
+            with util.tempmount("overlay", "lowerdir=%s,upperdir=%s,workdir=%s" % (tmpdir1, rw_dir, work_dir), "overlay") as tmpdir2:
+                setup_vm_info(tmpdir2, vmname, ram, vcpus, root_password, copy_pubkey)
+    else:
+        raise Exception("Unknown archive type:%s" % archive[1])
 
 def run(url, vg, name,size,ram,vcpus=1,root_password=None,verbose=False,copy_pubkey=False):
-    if is_tarball(url):
-        tarball = url
-        if name is None:
-            basename = os.path.basename(tarball)
-            if '-' not in basename: raise Exception("Could not determine VA name from tar filename '%s'" % basename)
-            name = basename.split('-')[0]
+    archive = None
+
+    if is_tarball(url): archive = (url, "tar")
+    elif is_squashfs(url): archive = (url, "squashfs")
     else:
         vainfo, origin = load_json(url)
         id = vainfo.get("id")
@@ -205,15 +247,24 @@ def run(url, vg, name,size,ram,vcpus=1,root_password=None,verbose=False,copy_pub
         if ram is None: raise Exception("'minimum_ram' field not found from VA info")
         size = size or minimum_hd
         if size is None: raise Exception("'minimum_hd' field not found from VA info")
-        if "tarball" not in vainfo: raise Exception("'tarball' field not found from VA info")
-        tarball = resolve_relative_path(origin, vainfo["tarball"])
+        if "squashfs" in vainfo: # detect squashfs first
+            archive = (resolve_relative_path(origin, vainfo["squashfs"]), "squashfs")
+        elif "tarball" in vainfo:
+            archive = (resolve_relative_path(origin, vainfo["tarball"]), "tar")
+
+    if archive is None: raise Exception("Archive file couldn't be determined")
+
+    if name is None:
+        basename = os.path.basename(archive[0])
+        if '-' not in basename: raise Exception("Could not determine VA name from tar filename '%s'" % basename)
+        name = basename.split('-')[0]
 
     vmname = get_available_vm_name(name)
-    if verbose: print "VM name: %s, Source tarball: %s" % (vmname, tarball)
-    if tarball.startswith("http://") or tarball.startswith("https://"):
+    if verbose: print "VM name: %s, Source archive: %s" % (vmname, archive[0])
+    if archive[0].startswith("http://") or archive[0].startswith("https://"):
         pass # TODO: check if resource exists
     else:
-        if not os.path.isfile(tarball): raise Exception("Archive file '%s' does not exist" % tarball)
+        if not os.path.isfile(archive[0]): raise Exception("Archive file '%s' does not exist" % archive[0])
 
     vg = vg or select_vg(size)
     if vg == None:
@@ -227,7 +278,7 @@ def run(url, vg, name,size,ram,vcpus=1,root_password=None,verbose=False,copy_pub
     try:
         subprocess.check_call(["mkfs.xfs","-m","crc=0","-f",device])
         with util.tempmount(device, "inode32", "xfs") as tmpdir:
-            install(tmpdir, tarball, vmname, size, ram, vcpus, root_password,verbose,copy_pubkey)
+            install(tmpdir, archive, vmname, size, ram, vcpus, root_password,verbose,copy_pubkey)
         success = True
     finally:
         if not success:
@@ -245,10 +296,10 @@ if __name__ == '__main__':
     parser.add_argument("-p", "--root-password", type=str, help="Set root password after extraction")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose mode")
     parser.add_argument("-k", "--copy-pubkey", action="store_true", help="Copy ssh public keys(id_rsa/dsa.pub, authorized_keys) to extracted VM's /root/.ssh/authorized_keys")
-    parser.add_argument("url", type=str, help="Virtual Appliance (JSON|tarball) (URL|filename)")
+    parser.add_argument("url", type=str, help="Virtual Appliance (JSON|archive) (URL|filename)")
     args = parser.parse_args()
 
-    if is_tarball(args.url) and (args.ram is None or args.size is None):
-        raise Exception("--size and --ram must be specified when installing tarball")
+    if (is_tarball(args.url) or is_squashfs(args.url)) and args.size is None:
+        raise Exception("--size must be specified when importing archive file directly")
 
     run(args.url,args.vg, args.name,args.size,args.ram,args.vcpus,args.root_password,args.verbose,args.copy_pubkey)

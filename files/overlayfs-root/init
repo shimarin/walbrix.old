@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# execute original initrc script if "walbrix.boot" is not specified
+mount -t proc -o noexec,nosuid,nodev proc /proc >/dev/null 2>&1
+if ! /bin/busybox grep -q '\bwalbrix.ro_layer=' /proc/cmdline; then
+    busybox umount /proc && exec ./init.gentoo $@
+fi
+
 . /etc/initrd.defaults
 . /etc/initrd.scripts
 
@@ -18,26 +24,34 @@ echo 1 > /proc/sys/kernel/printk
 CMDLINE=$(cat /proc/cmdline)
 
 ROOT_PARTITION=/dev/xvda1
+RO_LAYER=/system
+RW_LAYER=/rw
 LOCALE=ja_JP
 INIT_OPTS=''
 SOFTLEVEL=default
 
 for x in ${CMDLINE}
 do
-	case "${x}" in
-		root=*)
-			ROOT_PARTITION=${x#*=}
-		;;
-		walbrix.locale=*)
-			LOCALE=${x#*=}
-		;;
-		init_opts=*)
-			INIT_OPTS=${x#*=}
-		;;
-		softlevel=*)
-			SOFTLEVEL=${x#*=}
-		;;
-	esac
+    case "${x}" in
+	root=*)
+	    ROOT_PARTITION=${x#*=}
+	    ;;
+	walbrix.ro_layer=*)
+	    RO_LAYER=${x#*=}
+	    ;;
+	walbrix.rw_layer=*)
+	    RW_LAYER=${x#*=}
+	    ;;
+	walbrix.locale=*)
+	    LOCALE=${x#*=}
+	    ;;
+	init_opts=*)
+	    INIT_OPTS=${x#*=}
+	    ;;
+	softlevel=*)
+	    SOFTLEVEL=${x#*=}
+	    ;;
+    esac
 done
 
 # Mount devfs, sysfs
@@ -57,37 +71,36 @@ if ! mount "${ROOT_PARTITION}" /mnt/orig_root; then
     exec sh
 fi
 
-if ! losetup -r /dev/loop0 /mnt/orig_root/system; then
-    bad_msg "Unable to setup loopback $(ROOT_PARTITION)/system"
+if ! losetup -r /dev/loop0 /mnt/orig_root${RO_LAYER}; then
+    bad_msg "Unable to setup loopback (ROOT_PARTITION)${RO_LAYER}"
     exec sh
 fi
 
-if ! mount /dev/loop0 /mnt/system; then
-    bad_msg "Unable to loopback mount ($ROOT_PARTITION)/system"
+if ! mount -o ro /dev/loop0 /mnt/system; then
+    bad_msg "Unable to loopback mount (ROOT_PARTITION)${RO_LAYER}"
     exec sh
 fi
 
 if [ "${SOFTLEVEL}" = "rescue" ]; then
-    mount -t tmpfs tmpfs /mnt/orig_root/real_root || bad_msg "Unable to mount tmpfs"
+    mount -t tmpfs tmpfs /mnt/orig_root${RW_LAYER} || bad_msg "Unable to mount tmpfs"
 fi
 
 rm -rf /mnt/orig_root/work # cleanup overlayfs workdir
-mkdir -p /mnt/orig_root/real_root /mnt/orig_root/work
-rm -rf /mnt/orig_root/real_root/tmp /mnt/orig_root/real_root/var/tmp # cleanup temporary dirs
-rm -f /mnt/orig_root/real_root/etc/mtab # mtab should always point /proc/mounts
-rm -f /mnt/orig_root/real_root/etc/ld.so.cache
+mkdir -p /mnt/orig_root${RW_LAYER} /mnt/orig_root/work
+rm -rf /mnt/orig_root${RW_LAYER}/tmp /mnt/orig_root${RW_LAYER}/var/tmp # cleanup temporary dirs
+rm -f /mnt/orig_root${RW_LAYER}/etc/mtab # mtab should always point /proc/mounts
+rm -f /mnt/orig_root${RW_LAYER}/etc/ld.so.cache
 
-if ! mount -t overlay -o lowerdir=/mnt/system,upperdir=/mnt/orig_root/real_root,workdir=/mnt/orig_root/work overlay /newroot; then
+if ! mount -t overlay -o lowerdir=/mnt/system,upperdir=/mnt/orig_root${RW_LAYER},workdir=/mnt/orig_root/work overlay /newroot; then
 	bad_msg "Unable to mount /newroot"
 fi
 
-mkdir -p /newroot/.overlay/orig_root && mount --move /mnt/orig_root /newroot/.overlay/orig_root
-#mkdir /newroot/.overlay/system && mount --move /mnt/system /newroot/.overlay/system
+mkdir -p /newroot/.overlay && mount --move /mnt/orig_root /newroot/.overlay
 
 touch /newroot/.overlay/.lock
 
-if [ -f /newroot/.overlay/orig_root/system.cur ];then
-     mv -f /newroot/.overlay/orig_root/system.cur /newroot/.overlay/orig_root/system.old
+if [ -f /newroot/.overlay/system.cur ];then
+     mv -f /newroot/.overlay/system.cur /newroot/.overlay/system.old
 fi
 
 if [ `grep '/newroot' /proc/mounts | awk '{print $1}'` = "tmpfs" ]; then

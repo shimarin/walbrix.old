@@ -1,6 +1,22 @@
-$set OVERLAYFS_KERNELVER 4.1.3-gentoo
+$set OVERLAYFS_KERNELVER 4.1.4-gentoo
 /boot/kernel-genkernel-x86_64-$(OVERLAYFS_KERNELVER)
 /boot/initramfs-genkernel-x86_64-$(OVERLAYFS_KERNELVER)
 $symlink /boot/kernel kernel-genkernel-x86_64-$(OVERLAYFS_KERNELVER)
 $symlink /boot/initramfs initramfs-genkernel-x86_64-$(OVERLAYFS_KERNELVER)
 
+# modify initramfs
+$mkdir /tmp/initramfs
+$copy overlayfs-root/init /tmp/initramfs/init.overlayfs-root
+/usr/bin/xz
+/bin/cpio
+$exec 'cd /tmp/initramfs && unxz -c /boot/initramfs | cpio -idm && mv /tmp/initramfs/init /tmp/initramfs/init.gentoo && mv /tmp/initramfs/init.overlayfs-root /tmp/initramfs/init && (find .|/bin/cpio -o -H newc) | /usr/bin/xz -c --check=crc32 > /boot/initramfs'
+
+# adjust mount services
+$mkdir /etc/conf.d
+$write /etc/conf.d/localmount 'no_umounts="/.overlay"'
+/etc/init.d/mount-ro
+$sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount,ro"/'
+
+# grub
+$mkdir /boot/grub
+$copy overlayfs-root/grub.cfg /boot/grub/grub.cfg
