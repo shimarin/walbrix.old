@@ -231,7 +231,7 @@ def install(rootdir, archive, vmname,size,ram,vcpus=1,root_password=None,verbose
     else:
         raise Exception("Unknown archive type:%s" % archive[1])
 
-def run(url, vg, name,size,ram,vcpus=1,root_password=None,verbose=False,copy_pubkey=False):
+def run(url, vg, name,size,btrfs,ram,vcpus=1,root_password=None,verbose=False,copy_pubkey=False):
     archive = None
 
     if is_tarball(url): archive = (url, "tar")
@@ -276,8 +276,11 @@ def run(url, vg, name,size,ram,vcpus=1,root_password=None,verbose=False,copy_pub
     print "Logical volume %s created." % device
     success = False
     try:
-        subprocess.check_call(["mkfs.xfs","-m","crc=0","-f",device])
-        with util.tempmount(device, "inode32", "xfs") as tmpdir:
+        if btrfs:
+            subprocess.check_call(["mkfs.btrfs",device])
+        else:
+            subprocess.check_call(["mkfs.xfs","-m","crc=0","-f",device])
+        with util.tempmount(device, None if btrfs else "inode32", "btrfs" if btrfs else "xfs") as tmpdir:
             install(tmpdir, archive, vmname, size, ram, vcpus, root_password,verbose,copy_pubkey)
         success = True
     finally:
@@ -291,6 +294,7 @@ if __name__ == '__main__':
     parser.add_argument("--vg", type=str, help="Volume group name to install VA default=automatically chosen")
     parser.add_argument("-n", "--name", type=str, help="VM name to create default=determined from filename", default=None)
     parser.add_argument("-L", "--size", type=int, help="size of logical volume for the application(in gigabytes)")
+    parser.add_argument("--btrfs", action="store_true", help="Use btrfs instead of xfs")
     parser.add_argument("-r", "--ram", type=int, help="RAM size for new VM in megabytes")
     parser.add_argument("-u", "--vcpus", type=int, default=1, help="Number of virtual CPU cores")
     parser.add_argument("-p", "--root-password", type=str, help="Set root password after extraction")
@@ -302,4 +306,4 @@ if __name__ == '__main__':
     if (is_tarball(args.url) or is_squashfs(args.url)) and args.size is None:
         raise Exception("--size must be specified when importing archive file directly")
 
-    run(args.url,args.vg, args.name,args.size,args.ram,args.vcpus,args.root_password,args.verbose,args.copy_pubkey)
+    run(args.url,args.vg, args.name,args.size,args.btrfs,args.ram,args.vcpus,args.root_password,args.verbose,args.copy_pubkey)

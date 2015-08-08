@@ -1,6 +1,6 @@
 $require domU.lst
-$require domU-kernel.lst
-$write /etc/fstab '/dev/xvda1\t/\txfs\tdefaults\t0 0\n#/dev/xvdb1\t/var/lib/backup\tbtrfs\tcompress-force,autodefrag\t0 0\n/dev/zram0\tnone\tswap\tsw,pri=1\t0 0'
+$require domU-overlayfs-kernel.lst
+#$write /etc/fstab '/dev/xvda1\t/\txfs\tdefaults\t0 0\n#/dev/xvdb1\t/var/lib/backup\tbtrfs\tcompress-force,autodefrag\t0 0\n/dev/zram0\tnone\tswap\tsw,pri=1\t0 0'
 $require samba.lst
 $write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15\nmax protocol=SMB2\n\n[export]\nguest ok=yes\nwritable=no\npath=/var/lib/backup/export\nacl check permissions=no\n'
 $require cron.lst
@@ -16,3 +16,4 @@ $symlink /etc/runlevels/default/rsyncd /etc/init.d/rsyncd
 $copy backup/snapshot /etc/cron.daily/snapshot
 $copy backup/export /etc/cron.weekly/export
 $copy backup/setup_head.start /etc/local.d/setup_head.start
+

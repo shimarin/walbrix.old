@@ -1,5 +1,43 @@
-import argparse,os,sys,stat,subprocess,re,struct,errno
-import create_install_disk as util,edit
+import argparse,os,sys,stat,subprocess,re,struct,errno,contextlib,shutil
+import cli2.create_install_disk as util
+
+ro_layer_re = re.compile(r'set WALBRIX_RO_LAYER=(.+)$',re.MULTILINE)
+rw_layer_re = re.compile(r'set WALBRIX_RW_LAYER=(.+)$',re.MULTILINE)
+
+def get_overlay_params(rootdir):
+    grub_cfg = os.path.join(rootdir, "boot/grub/grub.cfg")
+    if not os.path.isfile(grub_cfg): return None
+    #else
+    cfg = open(grub_cfg).read()
+    ro_layer_match = ro_layer_re.search(cfg)
+    rw_layer_match = rw_layer_re.search(cfg)
+    if None in [ro_layer_match, rw_layer_match]: return None
+    
+    return (ro_layer_match.groups()[0], rw_layer_match.groups()[0])
+
+@contextlib.contextmanager
+def mount_vm(name, readonly=False,options=None):
+    mount_options = []
+    if readonly: mount_options.append("ro")
+    if options is not None: mount_options.append(options)
+    device, name = get_device_and_vmname(name)
+    make_sure_device_is_not_being_used(device)
+    with util.tempmount(device, ",".join(mount_options)) as tempdir:
+        overlay_params = get_overlay_params(tempdir)
+        if overlay_params is not None:
+            ro_layer, rw_layer = overlay_params
+            work_dir = os.path.join(tempdir, "work")
+            if not readonly:
+                if os.path.exists(work_dir): shutil.rmtree(work_dir)
+                os.makedirs(work_dir)
+            with util.tempmount(os.path.join(tempdir, ro_layer.strip('/')), "loop,ro", "squashfs") as ro_dir:
+                rw_dir = os.path.join(tempdir, rw_layer.strip('/'))
+                overlay_options = ["lowerdir=%s:%s" % (rw_dir, ro_dir)] if readonly else ["lowerdir=%s,upperdir=%s,workdir=%s" % (ro_dir, rw_dir, work_dir)]
+                if readonly: overlay_options.append("ro")
+                with util.tempmount("overlay", ",".join(overlay_options), "overlay") as overlay_root:
+                    yield overlay_root
+        else:
+            yield tempdir
 
 def is_block(name):
     try:
@@ -80,7 +118,7 @@ def run(name, default_memory = 128, console = False, quiet=False):
     device, name = get_device_and_vmname(name, quiet)
     make_sure_device_is_not_being_used(device)
     
-    with edit.mount_vm(device, True) as tempdir:
+    with mount_vm(device, True) as tempdir:
         configfile = os.path.join(tempdir, "etc/xen/config")
         config = []
         if os.path.isfile(configfile):
