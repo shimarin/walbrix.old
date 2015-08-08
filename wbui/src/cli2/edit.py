@@ -2,8 +2,6 @@ import argparse,subprocess,os,tempfile
 import cli2.create_install_disk as util
 
 def read_in_text(device):
-    create.make_sure_device_is_not_being_used(device)
-
     with create.mount_vm(device, True) as tempdir:
         configfile = os.path.join(tempdir, "etc/xen/config")
         return open(configfile).read() if os.path.isfile(configfile) else ""
@@ -15,8 +13,6 @@ def read(device):
     return vals
 
 def write(device, vals):
-    create.make_sure_device_is_not_being_used(device)
-
     with create.mount_vm(device, False) as tempdir:
         configfile = os.path.join(tempdir, "etc/xen/config")
         with open(configfile, "w") as f:
