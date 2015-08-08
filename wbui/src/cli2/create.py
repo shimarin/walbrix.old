@@ -1,5 +1,5 @@
 import argparse,os,sys,stat,subprocess,re,struct,errno
-import create_install_disk
+import create_install_disk as util,edit
 
 def is_block(name):
     try:
@@ -9,7 +9,7 @@ def is_block(name):
     return False
 
 def is_vm(device):
-    with create_install_disk.tempmount(device, "ro") as tempdir:
+    with util.tempmount(device, "ro") as tempdir:
         return any(map(lambda x:os.path.isfile(os.path.join(tempdir, x)), ["boot/grub/menu.lst","boot/grub/grub.cfg","sbin/init"]))
 
 def make_sure_its_vm(device):
@@ -80,7 +80,7 @@ def run(name, default_memory = 128, console = False, quiet=False):
     device, name = get_device_and_vmname(name, quiet)
     make_sure_device_is_not_being_used(device)
     
-    with create_install_disk.tempmount(device, "ro") as tempdir:
+    with edit.mount_vm(device, True) as tempdir:
         configfile = os.path.join(tempdir, "etc/xen/config")
         config = []
         if os.path.isfile(configfile):
