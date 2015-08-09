@@ -5,9 +5,12 @@ $require vim.lst
 $require git.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1hubot\2/'
 $package net-libs/nodejs
+$write --append /etc/profile.env "export NODE_PATH=/usr/lib/node_modules"
 
 $exec "npm install -g hubot coffee-script yo generator-hubot node-trello"
 $exec "useradd -m hubot"
+
+
 
 # su - hubot
 # mkdir myhubot
@@ -15,3 +18,7 @@ $exec "useradd -m hubot"
 # yo hubot (Bot Adapter: slack)
 # export HUBOT_SLACK_TOKEN=xxxx-1234567890-yyyyyyyyyyyyyyyyyyyyyyyy
 # ./bin/hubot --adapter slack
+
+$mkdir /etc/xen
+$write /etc/xen/config "memory=128"
+
