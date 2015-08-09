@@ -23,6 +23,7 @@ $write /tmp/create.sh 'cd $HOME/default && yo hubot --adapter=irc --owner="Walbr
 $exec --envvar=NODE_PATH=/usr/lib/node_modules --overlay "su hubot -c 'sh /tmp/create.sh'"
 
 $write /etc/conf.d/hubot "export HUBOT_IRC_SERVER=localhost\nexport HUBOT_IRC_ROOMS='#default'\nexport HUBOT_IRC_NICK=hubot\nexport HUBOT_IRC_UNFLOOD=true\n\nHUBOT_DIR='/home/hubot/default'\nHUBOT_OPTS='-a irc'"
+$exec "chown hubot /etc/conf.d/hubot"
 
 $copy hubot/hubot.init /etc/init.d/hubot
 $symlink /etc/runlevels/default/hubot /etc/init.d/hubot
@@ -35,4 +36,4 @@ $copy hubot/kiwi.init /etc/init.d/kiwi
 $symlink /etc/runlevels/default/kiwi /etc/init.d/kiwi
 
 $mkdir /etc/xen
-$write /etc/xen/config "memory=128"
+$write /etc/xen/config "memory=256"
