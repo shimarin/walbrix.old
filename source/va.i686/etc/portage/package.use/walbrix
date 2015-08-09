@@ -28,3 +28,5 @@ gnome-base/gsettings-desktop-schemas -introspection
 app-text/ghostscript-gpl cups
 dev-vcs/git -perl -gpg
 
+net-irc/unrealircd -ssl
+

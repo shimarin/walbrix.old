@@ -14,6 +14,7 @@ dev-java/jdbc-mysql
 dev-java/jdbc-postgresql
 dev-java/sun-javamail
 dev-java/tomcat-servlet-api
+dev-lang/coffee-script
 dev-lang/php
 dev-php/pecl-apcu
 dev-php/pecl-imagick
@@ -29,6 +30,7 @@ media-video/ffmpeg
 net-analyzer/traceroute
 net-analyzer/zabbix
 net-fs/samba
+net-irc/unrealircd
 net-libs/nodejs
 net-misc/curl
 net-misc/netkit-telnetd

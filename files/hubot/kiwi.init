@@ -1,0 +1,18 @@
+#!/sbin/runscript
+PIDFILE=/var/run/${SVCNAME}.pid
+
+depend() {
+	use dns net
+}
+
+start() {
+	ebegin "Starting ${SVCNAME}"
+	/root/KiwiIRC/kiwi start -p "${PIDFILE}"
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping ${SVCNAME}"
+	/root/KiwiIRC/kiwi stop -p "${PIDFILE}"
+	eend $?
+}

@@ -3,22 +3,36 @@ $require domU-kernel.lst
 $require cron.lst
 $require vim.lst
 $require git.lst
+$require python27.lst
+$require unrealircd.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1hubot\2/'
 $package net-libs/nodejs
 $write --append /etc/profile.env "export NODE_PATH=/usr/lib/node_modules"
 
-$exec "npm install -g hubot coffee-script yo generator-hubot node-trello"
+$package dev-lang/coffee-script
+
+$exec --envvar=NODE_PATH=/usr/lib/node_modules --overlay "npm install -g hubot hubot-chatwork hubot-irc yo generator-hubot node-trello"
 $exec "useradd -m hubot"
 
+$mkdir /home/hubot/.config/configstore
+$write /home/hubot/.config/configstore/insight-yo.json '{"optOut": true}'
+$mkdir /home/hubot/default
+$exec "chown -R hubot.hubot /home/hubot"
 
+$write /tmp/create.sh 'cd $HOME/default && yo hubot --adapter=irc --owner="Walbrix Support <support@walbrix.net>" --name=hubot --description="An example hubot"'
+$exec --envvar=NODE_PATH=/usr/lib/node_modules --overlay "su hubot -c 'sh /tmp/create.sh'"
 
-# su - hubot
-# mkdir myhubot
-# cd myhubot
-# yo hubot (Bot Adapter: slack)
-# export HUBOT_SLACK_TOKEN=xxxx-1234567890-yyyyyyyyyyyyyyyyyyyyyyyy
-# ./bin/hubot --adapter slack
+$write /etc/conf.d/hubot "export HUBOT_IRC_SERVER=localhost\nexport HUBOT_IRC_ROOMS='#default'\nexport HUBOT_IRC_NICK=hubot\nexport HUBOT_IRC_UNFLOOD=true\n\nHUBOT_DIR='/home/hubot/default'\nHUBOT_OPTS='-a irc'"
+
+$copy hubot/hubot.init /etc/init.d/hubot
+$symlink /etc/runlevels/default/hubot /etc/init.d/hubot
+
+$exec --envvar=NODE_PATH=/usr/lib/node_modules --overlay "cd /root && git clone https://github.com/prawnsalad/KiwiIRC.git && cd KiwiIRC && npm install"
+$copy hubot/config.js /root/KiwiIRC/config.js
+$exec "cd /root/KiwiIRC && ./kiwi build"
+
+$copy hubot/kiwi.init /etc/init.d/kiwi
+$symlink /etc/runlevels/default/kiwi /etc/init.d/kiwi
 
 $mkdir /etc/xen
 $write /etc/xen/config "memory=128"
-

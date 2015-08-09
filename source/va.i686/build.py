@@ -30,6 +30,7 @@ groups = [
     (105, "zabbix"),
     #(106, "lpadmin"),
     #(107, "dhcp"),
+    (109, "unrealircd"),
     (124, "postmaster"),
     (125, "crontab"),
     (126, "netdev")
@@ -48,7 +49,8 @@ users = [
     (105, "zabbix", "zabbix", "zabbix","/var/lib/zabbix/home","/sbin/nologin"),
     #(106, "snort", "snort", "snort","/dev/null","/sbin/nologin"),
     #(107, "dhcp", "dhcp", "dhcp","/var/lib/dhcp","/sbin/nologin"),
-    (108, "memcached", "daemon", "memcached", "/dev/null","/sbin/nologin")
+    (108, "memcached", "daemon", "memcached", "/dev/null","/sbin/nologin"),
+    (109, "unrealircd", "unrealircd", "unrealircd", "/dev/null","/sbin/nologin")
 ]
 
 for group in groups:

@@ -1,0 +1,6 @@
+#net-dns/c-ares
+#dev-libs/tre
+$package net-irc/unrealircd
+$copy unrealircd/unrealircd.conf /etc/unrealircd/unrealircd.conf
+$exec "chown unrealircd /etc/unrealircd/unrealircd.conf && chmod -R g+r /etc/unrealircd"
+$symlink /etc/runlevels/default/unrealircd /etc/init.d/unrealircd
