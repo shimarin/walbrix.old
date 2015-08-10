@@ -22,6 +22,9 @@ def process_lstfile(lstfile, context):
                 print os.path.join("files",line[1])
             elif line[0] == "$patch":
                 print os.path.join("files",line[2])
+            elif line[0] == "$set":
+                if len(line) != 3: raise Exception("$set directive gets 2 args")
+                context.set_variable(line[1], context.apply_variables(line[2]))
     
     context.mark_lstfile_as_processed(lstfile)
     print lstfile
