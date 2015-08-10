@@ -1,5 +1,6 @@
 #!/sbin/runscript
 PIDFILE=/var/run/${SVCNAME}.pid
+LOGFILE=/var/log/hubot/${SVCNAME}.log
 
 depend() {
 	use dns net
@@ -7,8 +8,9 @@ depend() {
 
 start() {
 	ebegin "Starting ${SVCNAME}"
-	start-stop-daemon --start --quiet --make-pidfile -b --exec ${HUBOT_DIR}/bin/hubot -d "${HUBOT_DIR}" \
-		--user hubot --pidfile "${PIDFILE}" -- ${HUBOT_OPTS}
+	start-stop-daemon --start --quiet --make-pidfile -b --exec "/bin/bash" -d "${HUBOT_DIR}" \
+		--user hubot --pidfile "${PIDFILE}" -- \
+		-c "exec ${HUBOT_DIR}/bin/hubot ${HUBOT_OPTS} >> ${LOGFILE} 2>&1"
 	eend $?
 }
 
