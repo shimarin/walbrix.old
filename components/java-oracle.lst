@@ -1,0 +1,26 @@
+$require java.lst
+
+#x11-proto/xproto
+#x11-proto/xextproto
+#x11-proto/inputproto
+#x11-misc/util-macros
+#media-fonts/font-util
+#x11-proto/renderproto
+#x11-libs/xtrans
+#x11-proto/xf86bigfontproto
+#x11-proto/kbproto
+#dev-libs/libpthread-stubs
+#x11-proto/xcb-proto
+#x11-proto/fixesproto
+#x11-libs/libXau
+#x11-libs/libXdmcp
+#x11-libs/libxcb
+#x11-libs/libX11
+#x11-libs/libXext
+#x11-libs/libXrender
+#x11-libs/libXfixes
+#x11-libs/libXi
+#$package x11-libs/libXtst
+$package dev-java/oracle-jre-bin
+
+$exec "java-config -S oracle-jre-bin-1.8"

@@ -1,0 +1,56 @@
+$require domU.lst
+$require domU-kernel.lst
+$require cron.lst
+$require postgresql.lst
+$require tomcat.lst
+$require java-oracle.lst
+$require postfix.lst
+$require iptables.lst
+
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1aipo\2/'
+
+$set AIPO_TAR aipo-8.0.1-linux-x86.gz
+$download http://iij.dl.osdn.jp/aipo/63319/$(AIPO_TAR)
+$exec "tar xvf /tmp/download/$(AIPO_TAR) -C /tmp"
+
+$set AIPO_SOURCE aipo-8.0.1.zip
+$download http://jaist.dl.osdn.jp/aipo/63319/$(AIPO_SOURCE)
+$exec "mv /tmp/download/$(AIPO_SOURCE) /root/"
+
+$set AIPO_HOME /usr/local/aipo
+$set TOMCAT_HOME /var/lib/tomcat-8
+$set POSTGRES_USER aipo_postgres                                              
+$set DIST_DIR /tmp/aipo-*/dist
+
+$exec "rm -rf $(TOMCAT_HOME)/webapps/ROOT && mkdir -p $(TOMCAT_HOME)/webapps/ROOT && unzip -o $(DIST_DIR)/aipo.war -d $(TOMCAT_HOME)/webapps/ROOT"
+$exec "mkdir -p $(TOMCAT_HOME)/webapps/container && unzip -o $(DIST_DIR)/container.war -d $(TOMCAT_HOME)/webapps/container"
+
+$exec "mkdir -p $(AIPO_HOME)/backup/xreg"
+$exec "cp -rf $(TOMCAT_HOME)/webapps/ROOT/WEB-INF/conf/*.xreg /usr/local/aipo/backup/xreg"
+$exec "mkdir -p /usr/share/tomcat-8/datasource"
+$exec "cp -rf $(TOMCAT_HOME)/webapps/ROOT/WEB-INF/datasource/dbcp-org001.properties /usr/share/tomcat-8/datasource/"
+
+$exec "mkdir -p /usr/share/tomcat-8/data && chown tomcat.tomcat /usr/share/tomcat-8/data"
+$exec "mkdir -p $(AIPO_HOME)/bin"
+$exec "cp -rf $(DIST_DIR)/bin/* $(AIPO_HOME)/bin/ && chmod +x $(AIPO_HOME)/bin/*.sh"
+$exec "cp -rf $(DIST_DIR)/license $(AIPO_HOME)/"
+
+$exec "dd if=/dev/urandom bs=16 count=1|base64 > $(TOMCAT_HOME)/webapps/ROOT/WEB-INF/conf/securityTokenKey.txt"
+$exec "cp $(TOMCAT_HOME)/webapps/ROOT/WEB-INF/conf/securityTokenKey.txt $(TOMCAT_HOME)/webapps/container/WEB-INF/classes/aipo/"
+$exec "chown -R tomcat.tomcat $(TOMCAT_HOME)"
+
+$sed /etc/conf.d/tomcat-8 's/^#JAVA_OPTS=.\+/JAVA_OPTS="-server -Xmx512M -Xms64M -Xss256k -Dsun.nio.cs.map=x-windows-iso2022jp\/ISO-2022-JP"/'
+
+$mkdir /tmp/postgresql
+$copy postgresql/operate.sh /tmp/postgresql/operate.sh
+$exec "/tmp/postgresql/operate.sh createdb org001 aipo_postgres"
+$exec "mv $(DIST_DIR)/sql/org001.sql /tmp/org001.sql"
+$exec "/tmp/postgresql/operate.sh exec org001 aipo_postgres '\i /tmp/org001.sql'"
+
+# redirect port 80 -> 8080
+$write /var/lib/iptables/rules-save "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8080\nCOMMIT"
+
+$mkdir /etc/xen
+$write /etc/xen/config "memory=256"
+
+#$vadesc
