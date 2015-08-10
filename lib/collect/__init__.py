@@ -354,8 +354,8 @@ def run(lstfile, context):
     mkdir_p(context.destination)
     process_lstfile(context, lstfile)
 
-    # Cleanup /tmp, /var/tmp
-    for d in ["tmp", "var/tmp"]:
+    # Cleanup /tmp
+    for d in ["tmp"]:
         path = os.path.join(context.destination, d)
         if os.path.isdir(path):
             for item in os.listdir(path):
