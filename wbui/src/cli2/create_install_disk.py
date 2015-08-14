@@ -110,7 +110,7 @@ def usable_disks(minimum_disk_size = 1000000000):
         if disk_info is None or disk_info["ro"] != 0: continue  # skip R/O device
         if disk_info["removable"] != 0 and not device_name.startswith("/dev/sd"): continue # skip non-/dev/sdX removable device (e.g. /dev/srX)
         if any(partition_belongs_to(x, device_name) for x in mounted_partitions): continue # skip disk contains any mounted partition
-        if disk_info["size"] < minimum_disk_size: continue
+        if "size" not in disk_info or disk_info["size"] < minimum_disk_size: continue
         rst.append(disk_info)
     return rst
     
