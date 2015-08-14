@@ -1,5 +1,5 @@
 import argparse,subprocess,os,tempfile
-import cli2.create_install_disk as util
+import cli2.create as create
 
 def read_in_text(device):
     with create.mount_vm(device, True) as tempdir:
@@ -14,8 +14,9 @@ def read(device):
 
 def write(device, vals):
     with create.mount_vm(device, False) as tempdir:
-        configfile = os.path.join(tempdir, "etc/xen/config")
-        with open(configfile, "w") as f:
+        xen_dir = os.path.join(tempdir, "etc/xen")
+        if not os.path.isdir(xen_dir): os.makedirs(xen_dir)
+        with open(os.path.join(xen_dir, "config"), "w") as f:
             for key, value in vals.iteritems():
                 f.write("%s=%s\n" % (key, repr(value)))
 
