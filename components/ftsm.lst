@@ -19,7 +19,7 @@ $package dev-python/feedgenerator
 $package dev-python/pyyaml
 $package dev-python/imaging --use="jpeg tiff truetype zlib"
 #require components/markdown.lst
-#require components/mroonga.lst
+$require mroonga.lst
 $package app-misc/screen
 $package app-misc/tmux
 #require components/wkhtmltopdf.lst

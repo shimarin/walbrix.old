@@ -16,3 +16,5 @@ mail-mta/postfix sasl
 dev-python/imaging jpeg tiff truetype
 dev-java/icedtea-bin -X -alsa cups cjk
 app-text/ghostscript-gpl cups
+app-text/groonga mecab
+

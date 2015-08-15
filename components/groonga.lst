@@ -1,0 +1,25 @@
+$package app-text/groonga --use="mecab"
+$package app-text/groonga-normalizer-mysql
+$mkdir /etc/sysctl.d
+$write /etc/sysctl.d/groonga.conf 'vm.overcommit_memory=1\nvm.max_map_count=262144'
+
+# from mecab
+/etc/mecabrc
+/usr/bin/mecab
+/usr/bin/mecab-config
+
+# from mecab-ipadic
+/usr/lib/mecab/dic/ipadic/char.bin
+/usr/lib/mecab/dic/ipadic/dicrc
+/usr/lib/mecab/dic/ipadic/left-id.def
+/usr/lib/mecab/dic/ipadic/matrix.bin
+/usr/lib/mecab/dic/ipadic/pos-id.def
+/usr/lib/mecab/dic/ipadic/rewrite.def
+/usr/lib/mecab/dic/ipadic/right-id.def
+/usr/lib/mecab/dic/ipadic/sys.dic
+/usr/lib/mecab/dic/ipadic/unk.dic
+
+$download http://packages.groonga.org/source/groonga-gobject/groonga-gobject-1.0.1.tar.gz
+$exec "cd /root && tar zxvf /tmp/download/groonga-gobject-*.tar.gz"
+$exec --overlay "cd /root/groonga-gobject-* && ./configure && make && make install"
+$exec "rm -rf /root/groonga-gobject-*"
