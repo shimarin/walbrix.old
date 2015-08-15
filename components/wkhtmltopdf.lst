@@ -1,0 +1,4 @@
+$require xvfb.lst
+$package dev-qt/qtgui
+/usr/bin/wkhtmltoimage
+/usr/bin/wkhtmltopdf

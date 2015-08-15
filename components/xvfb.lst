@@ -1,0 +1,12 @@
+$package x11-apps/xkbcomp
+$package x11-misc/xkeyboard-config
+$package media-libs/fontconfig
+/usr/share/fonts/vlgothic/VL-PGothic-Regular.ttf
+$package x11-base/xorg-server
+$package x11-drivers/xf86-video-fbdev
+$package x11-drivers/xf86-input-mouse
+$package x11-drivers/xf86-input-evdev
+$package x11-drivers/xf86-video-dummy
+$copy xvfb/Xvfb.init /etc/init.d/Xvfb
+$write --append /etc/profile.env "export DISPLAY=:0"
+$symlink /etc/runlevels/default/Xvfb /etc/init.d/Xvfb

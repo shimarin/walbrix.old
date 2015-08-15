@@ -1,0 +1,4 @@
+$package dev-python/pygments
+$package dev-python/markdown --use="pygments"
+$package dev-python/unittest2
+$exec "git clone https://github.com/google/py-gfm.git /tmp/py-gfm && cd /tmp/py-gfm && python ./setup.py install"

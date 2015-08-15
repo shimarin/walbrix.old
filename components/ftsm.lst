@@ -1,30 +1,29 @@
 $require domU.lst
 $require domU-kernel.lst
 $require cron.lst
-#require components/flask-sqlalchemy.lst
-#require components/beautifulsoup.lst
-#require components/feedparser.lst
-#require components/httplib2.lst
+$require flask-sqlalchemy.lst
+$package dev-python/beautifulsoup --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
+$package dev-python/feedparser --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
+$package dev-python/httplib2 --exclude='^/usr/lib(64)?/(python3.2/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
 $require git.lst
 $require emacs.lst
 $require vim.lst
 $require s3cmd.lst
 $require tomcat.lst
 $require java-oracle.lst
-#require components/mysql-python.lst
+$require mysql-python.lst
 $require uwsgi.lst
 $package app-admin/logrotate
 $require postfix.lst
 $package dev-python/feedgenerator
 $package dev-python/pyyaml
 $package dev-python/imaging --use="jpeg tiff truetype zlib"
-#require components/markdown.lst
 $require mroonga.lst
 $package app-misc/screen
 $package app-misc/tmux
-#require components/wkhtmltopdf.lst
-#require components/py-gfm.lst
-#require components/requests.lst
+$require wkhtmltopdf.lst
+$require py-gfm.lst
+$require requests.lst
 $package sys-apps/dstat
 
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1ftsm\2/'

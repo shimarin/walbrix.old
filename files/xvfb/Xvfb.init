@@ -1,0 +1,17 @@
+#!/sbin/runscript
+
+XVFB=/usr/bin/Xvfb
+XVFBARGS="-screen 0 1024x768x24 -nolisten tcp"
+PIDFILE=/run/Xvfb.pid 
+ 
+start() {
+        ebegin "Starting virtual X frame buffer: Xvfb"
+        start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --background --exec $XVFB -- $XVFBARGS
+        eend ${?}
+}
+ 
+stop() {
+        ebegin  "Stopping virtual X frame buffer: Xvfb"
+        start-stop-daemon --stop --pidfile $PIDFILE
+        eend ${?}
+}

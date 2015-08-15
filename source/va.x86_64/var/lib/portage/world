@@ -19,12 +19,22 @@ dev-java/jdbc-postgresql
 dev-java/oracle-jre-bin
 dev-java/slf4j-api
 dev-java/sun-javamail
+dev-python/beautifulsoup
+dev-python/chardet
 dev-python/feedgenerator
+dev-python/feedparser
+dev-python/flask-sqlalchemy
+dev-python/httplib2
 dev-python/imaging
+dev-python/markdown
+dev-python/mysql-python
 dev-python/pyyaml
+dev-python/requests
+dev-python/unittest2
 dev-util/strace
 mail-mta/postfix
 media-fonts/vlgothic
+media-gfx/wkhtmltopdf
 net-analyzer/traceroute
 net-analyzer/zabbix
 net-fs/nfs-utils
@@ -47,3 +57,4 @@ sys-process/vixie-cron
 www-servers/nginx
 www-servers/tomcat
 www-servers/uwsgi
+x11-base/xorg-server

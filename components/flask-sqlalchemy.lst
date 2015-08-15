@@ -1,0 +1,3 @@
+$require flask.lst
+$package dev-python/sqlalchemy --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
+$package dev-python/flask-sqlalchemy --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'

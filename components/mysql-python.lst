@@ -1,0 +1,3 @@
+$require python27.lst
+$require mysql.lst
+$package dev-python/mysql-python
