@@ -1,0 +1,3 @@
+$package dev-lang/lua
+$package www-servers/nginx --use="nginx_modules_http_lua"
+

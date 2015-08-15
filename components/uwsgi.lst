@@ -1,0 +1,3 @@
+$package dev-lang/lua
+$package www-servers/uwsgi --use="lua"
+

@@ -9,3 +9,6 @@ dev-vcs/git -perl -gpg
 net-fs/samba ldap
 net-nds/openldap -tcpd samba
 net-fs/nfs-utils -tcpd
+www-servers/nginx nginx_modules_http_lua
+www-servers/uwsgi python lua -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool
+

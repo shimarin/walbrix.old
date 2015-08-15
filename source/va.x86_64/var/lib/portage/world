@@ -3,6 +3,7 @@ app-admin/sysklogd
 app-arch/zip
 app-editors/nvi
 app-emulation/docker
+app-portage/gentoolkit
 dev-util/strace
 media-fonts/vlgothic
 net-analyzer/traceroute
@@ -21,3 +22,5 @@ sys-kernel/aufs-sources
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
 sys-process/vixie-cron
+www-servers/nginx
+www-servers/uwsgi
