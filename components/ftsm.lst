@@ -1,0 +1,30 @@
+$require domU.lst
+$require domU-kernel.lst
+$require cron.lst
+#require components/flask-sqlalchemy.lst
+#require components/beautifulsoup.lst
+#require components/feedparser.lst
+#require components/httplib2.lst
+$require git.lst
+$require emacs.lst
+$require vim.lst
+$require s3cmd.lst
+$require tomcat.lst
+$require java-oracle.lst
+#require components/mysql-python.lst
+$require uwsgi.lst
+$package app-admin/logrotate
+$require postfix.lst
+$package dev-python/feedgenerator
+$package dev-python/pyyaml
+$package dev-python/imaging --use="jpeg tiff truetype zlib"
+#require components/markdown.lst
+#require components/mroonga.lst
+$package app-misc/screen
+$package app-misc/tmux
+#require components/wkhtmltopdf.lst
+#require components/py-gfm.lst
+#require components/requests.lst
+$package sys-apps/dstat
+
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1ftsm\2/'

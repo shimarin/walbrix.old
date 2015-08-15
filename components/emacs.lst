@@ -1,0 +1,4 @@
+#net-libs/liblockfile-1.09
+$package app-emacs/emacs-common-gentoo
+$package app-editors/emacs
+$symlink /usr/bin/emacs emacs-24

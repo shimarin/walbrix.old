@@ -3,3 +3,5 @@
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =app-emulation/docker-1.7.1
+=net-misc/s3cmd-1.5.2-r1
+=dev-python/python-magic-0.4.6-r1
