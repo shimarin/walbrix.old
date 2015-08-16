@@ -1,0 +1,5 @@
+$require python27.lst
+#net-libs/http-parser
+#dev-libs/libuv
+$package net-libs/nodejs
+

@@ -25,4 +25,6 @@ x11-libs/libdrm -video_cards_intel -video_cards_nouveau -video_cards_radeon -vid
 x11-libs/libXfont truetype
 x11-libs/pixman cpu_flags_x86_ssse3
 dev-python/markdown pygments
+dev-libs/openssl -bindist
+net-misc/openssh -bindist
 

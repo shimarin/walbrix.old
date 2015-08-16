@@ -1,0 +1,20 @@
+#!/sbin/runscript
+PIDFILE=/run/${SVCNAME}.pid
+DOCKER_SOCKET=/run/docker.sock
+
+depend() {
+	use docker
+}
+
+start() {
+	ebegin "Starting ${SVCNAME}"
+        while [ ! -S ${DOCKER_SOCKET} ]; do sleep 1; done
+	start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --background --exec /root/dockerui/dockerui -- -a /root/dockerui/dist -p :80
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping ${SVCNAME}"
+	start-stop-daemon --stop --pidfile $PIDFILE "${PIDFILE}"
+	eend $?
+}

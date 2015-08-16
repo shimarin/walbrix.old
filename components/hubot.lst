@@ -6,7 +6,7 @@ $require git.lst
 $require python27.lst
 $require unrealircd.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1hubot\2/'
-$package net-libs/nodejs
+$require nodejs.lst
 $write --append /etc/profile.env "export NODE_PATH=/usr/lib/node_modules"
 
 $package dev-lang/coffee-script

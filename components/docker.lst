@@ -1,13 +1,19 @@
 $require domU.lst
-$require domU-overlayfs-kernel.lst
+$require domU-kernel.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1docker\2/'
 
 $package sys-fs/aufs-util
-#dev-lang/go
+$package dev-lang/go
 #dev-db/sqlite
 $package net-firewall/iptables
 $require git.lst
 $package app-emulation/docker --use="aufs -device-mapper vim-syntax"
 $symlink /etc/runlevels/default/docker /etc/init.d/docker
+
+$require nodejs.lst
+$exec "npm install -g grunt-cli"
+$exec --overlay "cd /root && git clone https://github.com/crosbymichael/dockerui.git && cd dockerui && npm install && grunt build && go build dockerui.go"
+$copy docker/dockerui.init /etc/init.d/dockerui
+$symlink /etc/runlevels/default/dockerui /etc/init.d/dockerui
 
 $vadesc
