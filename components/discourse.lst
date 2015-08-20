@@ -1,0 +1,30 @@
+$require domU.lst
+$require domU-kernel.lst
+$require postgresql.lst
+$require postfix.lst
+$require bundler.lst
+#require components/passenger.lst
+$require redis.lst
+#require components/python27.lst
+$require git.lst
+#require components/imagemagick.lst
+
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1discourse\2/'
+$package app-text/mecab
+$package app-dicts/mecab-ipadic
+
+$exec "rm -rf /var/www/localhost/htdocs"
+$exec "git clone -b v1.3.4 https://github.com/discourse/discourse.git /var/www/localhost/htdocs"
+##patchsinglefile /var/www/localhost/htdocs/Gemfile discourse/Gemfile.patch
+$exec --overlay "cd /var/www/localhost/htdocs && bundle install"
+$exec "rm -rf /usr/local/lib/ruby/gems/*/cache /usr/local/lib/ruby/gems/*/gems/nokogiri-*/ext/nokogiri/tmp /usr/local/lib/ruby/gems/*/gems/nokogiri-*/ports/archives"
+#copy discourse/default_vhost.include /etc/apache2/vhosts.d/default_vhost.include
+#copy discourse/discourse.conf /var/www/localhost/htdocs/config/discourse.conf
+#copy discourse/setup_initial_database.sh /setup_initial_database.sh
+#chrootexec sh /setup_initial_database.sh && rm /setup_initial_database.sh
+$exec "chown -R apache.apache /var/www/localhost/htdocs"
+#copy discourse/sidekiq.init /etc/init.d/sidekiq
+#symlink /etc/runlevels/default/sidekiq /etc/init.d/sidekiq
+
+#$vadesc
+

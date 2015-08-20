@@ -3,6 +3,7 @@ app-admin/logrotate
 app-admin/sudo
 app-admin/sysklogd
 app-arch/zip
+app-dicts/mecab-ipadic
 app-editors/nvi
 app-editors/vim
 app-portage/gentoolkit
