@@ -23,6 +23,7 @@ dev-php/pecl-memcached
 dev-php/xcache
 dev-python/futures
 dev-python/html5lib
+dev-ruby/bundler
 dev-util/strace
 dev-vcs/git
 mail-mta/postfix

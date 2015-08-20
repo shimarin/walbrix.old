@@ -1,0 +1,13 @@
+$set RUBY_VERSION 2.1
+$package dev-lang/ruby-$(RUBY_VERSION).6-r1
+$symlink /usr/bin/erb erb21
+$symlink /usr/bin/irb irb21
+$symlink /usr/bin/ruby ruby21
+$symlink /usr/bin/testrb testrb21
+
+$package dev-ruby/rubygems
+$package dev-ruby/rake
+$package dev-ruby/json
+$package dev-ruby/racc
+$package dev-ruby/rdoc
+

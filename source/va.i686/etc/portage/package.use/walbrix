@@ -30,3 +30,10 @@ dev-vcs/git -perl -gpg
 
 net-irc/unrealircd -ssl
 
+dev-ruby/rubygems -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
+virtual/rubygems -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
+dev-ruby/rake -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
+dev-ruby/json -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
+dev-ruby/racc -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
+dev-ruby/rdoc -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
+dev-ruby/bundler -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
