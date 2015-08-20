@@ -1,0 +1,19 @@
+#!/sbin/runscript
+PIDFILE=/run/tt-rss-update.pid
+USER=apache
+
+depend() {
+	need mysql
+}
+
+start() {
+	ebegin "Starting tt-rss update daemon"
+	start-stop-daemon --start --pidfile $PIDFILE --user $USER --make-pidfile --background --exec php -- /var/www/localhost/htdocs/update_daemon2.php
+	eend ${?}
+}
+
+stop() {
+	ebegin "Stopping tt-rss update daemon"
+	start-stop-daemon --stop --pidfile $PIDFILE
+	eend ${?}
+}

@@ -1,0 +1,16 @@
+{
+    "id": "tt-rss",
+    "version":"15.7",
+    "title": "Tiny Tiny RSS 15.7",
+    "description": "Tiny Tiny RSSは、オープンソースでWebベースのニュースフィード(RSS/Atom)リーダー・アグリゲーターです。",
+    "minimum_hd": 1,
+    "tarball": "http://dist.walbrix.net/va/tt-rss-15.7-i686-jp.tar.xz",
+    "minimum_ram": 128,
+    "images": [{"url": "http://va.walbrix.net/img/tt-rss01.png"}],
+
+    "uuid":"3a342670-2be3-4458-ae6e-976d040e62b9",
+    "instruction":{
+        "ja":"デフォルトのユーザー名/パスワードは admin/password です。",
+        "en":"The default username/password is admin/password"
+    }
+}

@@ -1,0 +1,39 @@
+$require domU.lst
+$require domU-kernel.lst
+$require cron.lst
+$require apache.lst
+$require mysql.lst
+$require php54.lst
+$require samba.lst
+$require postfix.lst
+$require git.lst
+$write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15\n\n[www]\nguest ok = yes\nforce user=apache\nforce group=apache\nwritable=yes\npath=/var/www/localhost/htdocs\n'
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1tt-rss\2/'
+$exec 'rm -rf /var/www/localhost/htdosc && git clone https://tt-rss.org/git/tt-rss.git /var/www/localhost/htdocs'
+$exec 'cp /var/www/localhost/htdocs/config.php-dist /var/www/localhost/htdocs/config.php'
+$sed /var/www/localhost/htdocs/config.php 's/"pgsql"/"mysql"/'
+$sed /var/www/localhost/htdocs/config.php 's/"fox"/"tt-rss"/'
+$sed /var/www/localhost/htdocs/config.php 's/"XXXXXX"/""/'
+$sed /var/www/localhost/htdocs/config.php 's/your\.domain\.dom/example\.com/'
+$sed /var/www/localhost/htdocs/config.php "s/'http:\/\/example\.org\/tt-rss\/'/(\$_SERVER['HTTPS']? 'https:\/\/' : 'http:\/\/'\) . \$_SERVER['SERVER_NAME'] . '\/'/"
+$sed /var/www/localhost/htdocs/config.php "s/.*FEED_CRYPT_KEY.*/\tdefine\('FEED_CRYPT_KEY', 'YiIEBwKWOXAWJzNWWMmf3vxy'\);/"
+#chrootexec wget -O - --no-check-certificate https://github.com/dasmurphy/tinytinyrss-fever-plugin/archive/1.4.7.tar.gz | tar zxvf - -C /tmp
+#chrootexec mv /tmp/tinytinyrss-fever-plugin-1.4.7/fever /var/www/localhost/htdocs/plugins/ && rm -rf /tmp/tinytinyrss-fever-plugin-1.4.7
+$exec "chown -R apache.apache /var/www/localhost"
+
+# create database
+$mkdir /tmp/mysql
+$copy mysql/operate.sh /tmp/mysql/operate.sh
+$exec "/tmp/mysql/operate.sh createdb tt-rss"
+$exec "/tmp/mysql/operate.sh exec tt-rss 'source /var/www/localhost/htdocs/schema/ttrss_schema_mysql.sql'"
+$write /tmp/ttrss_example.sql "update ttrss_prefs set def_value='Asia/Tokyo' where pref_name='USER_TIMEZONE';"
+$write --append /tmp/ttrss_example.sql "insert into ttrss_feeds (owner_uid, title, feed_url) values (1, 'ワルブリックス株式会社 ブログ', 'http://www.walbrix.com/jp/blog/index.xml');"
+$exec "/tmp/mysql/operate.sh exec tt-rss 'source /tmp/ttrss_example.sql'"
+
+$copy tt-rss/tt-rss-update.init /etc/init.d/tt-rss-update
+$symlink /etc/runlevels/default/tt-rss-update /etc/init.d/tt-rss-update
+
+$mkdir /etc/xen
+$write /etc/xen/config "memory=128"
+
+$vadesc
