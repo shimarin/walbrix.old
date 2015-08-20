@@ -3,28 +3,47 @@ $require domU-kernel.lst
 $require postgresql.lst
 $require postfix.lst
 $require bundler.lst
-#require components/passenger.lst
 $require redis.lst
-#require components/python27.lst
 $require git.lst
-#require components/imagemagick.lst
+$require iptables.lst
+$require imagemagick.lst
 
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1discourse\2/'
 $package app-text/mecab
 $package app-dicts/mecab-ipadic
 
-$exec "rm -rf /var/www/localhost/htdocs"
-$exec "git clone -b v1.3.4 https://github.com/discourse/discourse.git /var/www/localhost/htdocs"
-##patchsinglefile /var/www/localhost/htdocs/Gemfile discourse/Gemfile.patch
-$exec --overlay "cd /var/www/localhost/htdocs && bundle install"
-$exec "rm -rf /usr/local/lib/ruby/gems/*/cache /usr/local/lib/ruby/gems/*/gems/nokogiri-*/ext/nokogiri/tmp /usr/local/lib/ruby/gems/*/gems/nokogiri-*/ports/archives"
-#copy discourse/default_vhost.include /etc/apache2/vhosts.d/default_vhost.include
-#copy discourse/discourse.conf /var/www/localhost/htdocs/config/discourse.conf
-#copy discourse/setup_initial_database.sh /setup_initial_database.sh
-#chrootexec sh /setup_initial_database.sh && rm /setup_initial_database.sh
-$exec "chown -R apache.apache /var/www/localhost/htdocs"
-#copy discourse/sidekiq.init /etc/init.d/sidekiq
-#symlink /etc/runlevels/default/sidekiq /etc/init.d/sidekiq
+$download http://ftp.jaist.ac.jp/pub/postgresql/projects/pgFoundry/textsearch-ja/textsearch_ja/9.0.0/textsearch_ja-9.0.0.tar.gz
+$exec --overlay "cd /tmp && tar zxvf /tmp/download/textsearch_ja-*.tar.gz && cd /tmp/textsearch_ja-* && make USE_PGXS=1 && make USE_PGXS=1 install && cp textsearch_ja.sql /tmp/"
+$sed /tmp/textsearch_ja.sql "s/LANGUAGE 'C'/LANGUAGE 'c'/"
 
-#$vadesc
+$exec "useradd -m discourse"
+#git ls-remote https://github.com/discourse/discourse.git refs/tags/v1.3.4
+$exec "git clone --depth=1 -b v1.3.4 https://github.com/discourse/discourse.git /home/discourse/default"
+$exec --overlay "cd /home/discourse/default && bundle install"
+$exec "rm -rf /usr/local/lib/ruby/gems/*/cache /usr/local/lib/ruby/gems/*/gems/nokogiri-*/ext/nokogiri/tmp /usr/local/lib/ruby/gems/*/gems/nokogiri-*/ports/archives"
+$sed /home/discourse/default/config/discourse_defaults.conf 's/serve_static_assets = .*/serve_static_assets = true/'
+$write /home/discourse/default/config/discourse.conf 'db_name = discourse\nhostname = "discourse.example.com"\nsmtp_address = localhost\nsmtp_domain = example.com\nsmtp_enable_start_tls = false'
+
+$mkdir /tmp/postgresql
+$copy postgresql/exec.sh /tmp/postgresql/exec.sh
+$exec "/tmp/postgresql/exec.sh 'createuser -sDR discourse -U postgres'"
+$exec "/tmp/postgresql/exec.sh 'createdb discourse -E utf-8 -T template0 -O discourse -U postgres'"
+$exec "/tmp/postgresql/exec.sh 'psql -f /tmp/textsearch_ja.sql discourse'"
+
+$mkdir /tmp/redis
+$copy redis/exec.sh /tmp/redis/exec.sh
+$copy discourse/setup.sh /tmp/setup.sh
+$exec "/tmp/redis/exec.sh /tmp/postgresql/exec.sh /tmp/setup.sh"
+
+$exec "chown -R discourse.discourse /home/discourse/default"
+
+$copy discourse/discourse.init /etc/init.d/discourse
+$symlink /etc/runlevels/default/discourse /etc/init.d/discourse
+
+$copy discourse/sidekiq.init /etc/init.d/sidekiq
+$symlink /etc/runlevels/default/sidekiq /etc/init.d/sidekiq
+
+$write /var/lib/iptables/rules-save "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 9292\nCOMMIT"
+
+$vadesc
 

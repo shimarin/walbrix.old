@@ -51,3 +51,4 @@ www-apache/mod_extract_forwarded
 www-servers/apache
 www-servers/tomcat
 www-servers/tornado
+www-servers/uwsgi

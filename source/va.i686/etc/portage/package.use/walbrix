@@ -37,3 +37,5 @@ dev-ruby/json -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
 dev-ruby/racc -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
 dev-ruby/rdoc -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
 dev-ruby/bundler -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
+www-servers/uwsgi python lua ruby -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
+
