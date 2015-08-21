@@ -40,10 +40,7 @@ $exec "chown -R discourse.discourse /home/discourse/default"
 $copy discourse/discourse.init /etc/init.d/discourse
 $symlink /etc/runlevels/default/discourse /etc/init.d/discourse
 
-$copy discourse/sidekiq.init /etc/init.d/sidekiq
-$symlink /etc/runlevels/default/sidekiq /etc/init.d/sidekiq
-
-$write /var/lib/iptables/rules-save "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 9292\nCOMMIT"
+$write /var/lib/iptables/rules-save "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3000\nCOMMIT"
 
 $vadesc
 

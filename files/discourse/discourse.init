@@ -1,23 +1,32 @@
 #!/sbin/runscript
 
-APP_HOME=/home/discourse/default
-APP_USER=discourse
-PID_FILE=/run/${SVCNAME}.pid
-PGSQL_VERSION=`basename /etc/postgresql-* | sed 's/^postgresql-//'`
+APP_HOME=${APP_HOME:-/home/discourse/default}
+APP_USER=${APP_USER:-discourse}
+APP_PORT=${APP_PORT:-3000}
+PID_DIR=/run/${SVCNAME} 
+RUBY_GC_MALLOC_LIMIT=${RUBY_GC_MALLOC_LIMIT:-90000000}
 
 depend() {
-	need postgresql-${PGSQL_VERSION}
+	need postgresql
 }
 
 start() {
+	export RUBY_GC_MALLOC_LIMIT
+	mkdir -p ${PID_DIR}
 	ebegin "Starting" ${SVCNAME}
-	export RUBY_GC_MALLOC_LIMIT=90000000
-	start-stop-daemon --start --chdir ${APP_HOME} --exec 'rackup' --user ${APP_USER} --name ruby -b -m --pidfile ${PID_FILE} -- -E production -s puma ${APP_HOME}/config.ru
+	start-stop-daemon --start --chdir ${APP_HOME} --exec bundle --user ${APP_USER} -b -m --pidfile ${PID_DIR}/rails.pid -- exec rails s puma -e production -p ${APP_PORT}
+	eend $?
+	ebegin "Statring sidekiq for" ${SVCNAME}
+	start-stop-daemon --start --chdir ${APP_HOME} --exec bundle --user ${APP_USER} -b -m --pidfile ${PID_DIR}/sidekiq.pid -- exec sidekiq -e production
 	eend $?
 }
 
 stop() {
+	ebegin "Stopping sidekiq for" ${SVCNAME}
+	start-stop-daemon --stop --pidfile ${PID_DIR}/sidekiq.pid
+	eend $?
 	ebegin "Stopping" ${SVCNAME}
-	start-stop-daemon --stop --pidfile ${PID_FILE}
+	start-stop-daemon --stop --pidfile ${PID_DIR}/rails.pid
 	eend $?
 }
+
