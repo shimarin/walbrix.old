@@ -1,0 +1,2 @@
+$require twisted-core.lst
+$package dev-python/twisted-names --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
