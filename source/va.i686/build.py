@@ -32,6 +32,7 @@ groups = [
     #(107, "dhcp"),
     (109, "unrealircd"),
     (110, "nginx"),
+    (111, "haproxy"),
     (124, "postmaster"),
     (125, "crontab"),
     (126, "netdev")
@@ -52,7 +53,8 @@ users = [
     #(107, "dhcp", "dhcp", "dhcp","/var/lib/dhcp","/sbin/nologin"),
     (108, "memcached", "daemon", "memcached", "/dev/null","/sbin/nologin"),
     (109, "unrealircd", "unrealircd", "unrealircd", "/dev/null","/sbin/nologin"),
-    (110, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin")
+    (110, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin"),
+    (111, "haproxy", "haproxy", "haproxy", "/dev/null", "/sbin/nologin")
 ]
 
 for group in groups:
