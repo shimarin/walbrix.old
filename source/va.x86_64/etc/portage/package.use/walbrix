@@ -9,7 +9,6 @@ dev-vcs/git -perl -gpg
 net-fs/samba ldap
 net-nds/openldap -tcpd samba
 net-fs/nfs-utils -tcpd
-www-servers/nginx nginx_modules_http_lua
 www-servers/uwsgi python lua -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool
 app-editors/emacs -gtk3 -xpm 
 mail-mta/postfix sasl
@@ -27,4 +26,5 @@ x11-libs/pixman cpu_flags_x86_ssse3
 dev-python/markdown pygments
 dev-libs/openssl -bindist
 net-misc/openssh -bindist
+www-servers/nginx aio nginx_modules_http_lua nginx_modules_http_spdy nginx_modules_http_realip nginx_modules_http_mp4 nginx_modules_http_flv nginx_modules_mail_smtp nginx_modules_mail_pop3 nginx_modules_mail_imap
 

@@ -24,6 +24,7 @@ dev-php/pecl-memcached
 dev-php/xcache
 dev-python/futures
 dev-python/html5lib
+dev-python/twisted-names
 dev-ruby/bundler
 dev-util/strace
 dev-vcs/git
@@ -49,6 +50,7 @@ sys-process/vixie-cron
 www-apache/mod_authnz_external
 www-apache/mod_extract_forwarded
 www-servers/apache
+www-servers/nginx
 www-servers/tomcat
 www-servers/tornado
 www-servers/uwsgi

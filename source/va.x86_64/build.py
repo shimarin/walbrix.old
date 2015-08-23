@@ -30,6 +30,7 @@ groups = [
     (105, "zabbix"),
     #(106, "lpadmin"),
     #(107, "dhcp"),
+    (110, "nginx"),
     #(124, "postmaster"),
     (125, "crontab"),
     (126, "netdev"),
@@ -42,7 +43,8 @@ users = [
     #(uid, name, group, added_for, homedir, shell)
     (101, "openvpn", "openvpn", "openvpn","/dev/null","/sbin/nologin"),
     (102, "avahi", "avahi", "avahi","/dev/null","/sbin/nologin"),
-    (105, "zabbix", "zabbix", "zabbix","/var/lib/zabbix/home","/sbin/nologin")
+    (105, "zabbix", "zabbix", "zabbix","/var/lib/zabbix/home","/sbin/nologin"),
+    (110, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin")
 ]
 
 for group in groups:
