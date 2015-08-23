@@ -7,14 +7,15 @@ $package dev-python/six --exclude='^/usr/lib(64)?/python3.*/'
 $package dev-python/futures
 $package dev-python/html5lib --exclude='^/usr/lib(64)?/python3.*/'
 
-$exec --overlay "cd /root && git clone https://github.com/liftoff/GateOne.git"
+$exec --overlay "cd /tmp && git clone --depth=1 https://github.com/liftoff/GateOne.git"
+$exec "cd /tmp/GateOne && python setup.py install"
 
-$exec "cd /root/GateOne && python setup.py install"
-$deltree /root/GateOne
+$write /etc/conf.d/gateone 'GATEONE_OPTS="--disable_ssl --port=80"'
+$sed /etc/init.d/gateone 's/--exec ${GATEONE} --/--exec ${GATEONE} --pidfile \/run\/gateone.pid --/'
 
-$write /etc/local.d/gateone.start '#!/bin/sh\ngateone --disable_ssl --port=80 &'
-$exec "chmod 755 /etc/local.d/gateone.start"
+$symlink /etc/runlevels/default/gateone /etc/init.d/gateone
 
 $mkdir /etc/xen
-$write /etc/xen/config "memory=96"
+$write /etc/xen/config "memory=128"
 
+$vadesc

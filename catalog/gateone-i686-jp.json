@@ -1,0 +1,11 @@
+{
+    "id":"gateone",
+    "version":"1.2.0",
+    "title":"ブラウザ対応SSHクライアント GateOne 1.2.0",
+    "description":"GateOneはは、HTML5+WebSocketで実現されている Webブラウザ用ターミナルエミュレータです。",
+    "tarball":"http://dist.walbrix.net/va/gateone-1.2.0-i686-jp.tar.xz",
+    "minimum_ram":128,
+    "minimum_hd":1,
+
+    "uuid":"8e41c0ea-481e-4027-8d5c-6bac7351660b"
+}
