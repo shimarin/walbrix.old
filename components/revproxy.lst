@@ -6,6 +6,9 @@ $require twisted-names.lst
 $package net-proxy/haproxy
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1revproxy\2/'
 
+/usr/lib/libnss_wins.so
+$sed /etc/nsswitch.conf 's/^\(hosts:.* \)dns\( *\)/\1wins dns\2/'
+
 $exec "wget -O /usr/sbin/fakedns https://raw.githubusercontent.com/wbrxcorp/fakedns/master/fakedns.py"
 $exec "wget -O /etc/init.d/fakedns https://raw.githubusercontent.com/wbrxcorp/fakedns/master/fakedns.init"
 $exec "chmod 755 /etc/init.d/fakedns /usr/sbin/fakedns"
