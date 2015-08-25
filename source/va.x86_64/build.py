@@ -32,6 +32,7 @@ groups = [
     #(107, "dhcp"),
     (110, "nginx"),
     #(111, "haproxy"),
+    (112, "groonga"),
     #(124, "postmaster"),
     (125, "crontab"),
     (126, "netdev"),
@@ -47,6 +48,7 @@ users = [
     (105, "zabbix", "zabbix", "zabbix","/var/lib/zabbix/home","/sbin/nologin"),
     (110, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin"),
     #(111, "haproxy", "haproxy", "haproxy", "/dev/null", "/sbin/nologin"),
+    (112, "groonga", "groonga", "groonga", "/dev/null", "/sbin/nologin"),
 ]
 
 for group in groups:
