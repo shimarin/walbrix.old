@@ -17,3 +17,5 @@ $copy backup/snapshot /etc/cron.daily/snapshot
 $copy backup/export /etc/cron.weekly/export
 $copy backup/setup_head.start /etc/local.d/setup_head.start
 
+$mkdir /etc/xen
+$write /etc/xen/config "memory=512"

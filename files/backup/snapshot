@@ -3,6 +3,9 @@ BACKUP_ROOT=/var/lib/backup
 LOGFILE=/var/log/snapshot.log
 DOW=`LANG=C date +%a`
 
+[ -d "${BACKUP_ROOT}" ] && touch ${BACKUP_ROOT}
+[ -d "/.overlay/rw${BACKUP_ROOT}" ] && BACKUP_ROOT=/.overlay/rw${BACKUP_ROOT}
+
 tty -s || exec >$LOGFILE 2>&1
 
 btrfs filesystem sync $BACKUP_ROOT/head || exit 1

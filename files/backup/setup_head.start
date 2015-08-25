@@ -1,5 +1,8 @@
 #!/bin/sh
 BACKUP_ROOT=/var/lib/backup
+[ -d "${BACKUP_ROOT}" ] && touch ${BACKUP_ROOT}
+[ -d "/.overlay/rw${BACKUP_ROOT}" ] && BACKUP_ROOT=/.overlay/rw${BACKUP_ROOT}
+
 if btrfs filesystem sync $BACKUP_ROOT > /dev/null 2>&1; then
 	[ -d $BACKUP_ROOT/head ] || btrfs subvolume create $BACKUP_ROOT/head
 	[ -d $BACKUP_ROOT/export ] || mkdir $BACKUP_ROOT/export
