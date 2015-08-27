@@ -6,6 +6,10 @@ server {
 	ssl_certificate /etc/ssl/nginx/mysite.example.com.pem;
 	ssl_certificate_key /etc/ssl/nginx/mysite.example.com.key;
 
-	include proxy.conf;
+	set $upstream http://mysite.local;
+	location / {
+		include proxy.conf;
+	}
+	access_log off;
 }
 

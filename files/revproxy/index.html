@@ -31,7 +31,7 @@
       <h3>IPアドレス</h3>
       <p>このホストのIPアドレスは <big><strong>{{info.ipv4_address}}</strong></big> です。このIPアドレスに対して外部からのアクセスをフォワードするようルーターなどの通信機器を設定してください。IPアドレスを固定するには <a href="http://www.walbrix.net/tech/ipaddress.html">/etc/conf.d/net を編集</a>するか、Walbrix 4.1以降の場合は /etc/xen/config の vif=行をコメントインして MACアドレスを固定し、DHCPサーバに登録してください。</p>
       <h3>Proxy設定</h3>
-      <p>現在のマッピングは下記のようになっています。この設定内容は /etc/nginx/proxy.map ファイルに記載されています。このファイルへの変更を反映するには service nginx restart として Proxyサーバを再起動して下さい。</p>
+      <p>現在のマッピングは下記のようになっています。この設定内容は /etc/nginx/proxy.map ファイルに記載されています。このファイルへの変更を反映するには service nginx reload として下さい。</p>
       <pre>{{info.proxy_map}}</pre>
 
       <h3>その他</h3>
