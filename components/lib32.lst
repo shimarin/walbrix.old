@@ -1,5 +1,5 @@
 /lib32/libutil.so.1
 /lib32/libm.so.6
 /lib32/libpthread.so.0
-/usr/lib64/gcc/x86_64-pc-linux-gnu/4.8.4/32/libstdc++.so
-/usr/lib64/gcc/x86_64-pc-linux-gnu/4.8.4/32/libstdc++.so.6
+/usr/lib64/gcc/x86_64-pc-linux-gnu/$(GCC_VERSION)/32/libstdc++.so
+/usr/lib64/gcc/x86_64-pc-linux-gnu/$(GCC_VERSION)/32/libstdc++.so.6
