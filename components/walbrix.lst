@@ -96,6 +96,7 @@ $package sys-apps/smartmontools --use="minimal"
 
 # networks
 $require openssh.lst
+#sys-libs/libseccomp # needed by bind-tools
 $package net-dns/bind-tools
 $require nss-mdns.lst
 $require nss-myhostname.lst
