@@ -1,0 +1,39 @@
+#DEPEND
+$package dev-python/greenlet # needed by gevent
+$package dev-python/gevent # neede by gevent-websocket
+$package dev-python/versiontools # needed by gevent-socketio
+$package dev-python/gevent-websocket # needed by gevent-socketio
+$package dev-python/gevent-socketio 
+
+$package dev-python/mako # needed by python-catcher
+$package dev-python/python-catcher
+
+$package dev-python/chardet # neede by reconfigure,requests
+$package dev-python/reconfigure
+
+#RDEPEND
+$package dev-python/python-exconsole
+
+$package dev-python/bcrypt # needed by passlib
+$package dev-python/passlib
+
+$package dev-python/psutil
+
+#?
+
+#$package dev-python/lockfile # needed by python-daemon
+#$package dev-python/python-daemon
+
+#$package dev-python/pyopenssl
+
+#$package dev-python/requests
+
+#$package dev-python/pyasn1-modules # needed by python-ldap
+#$package dev-python/python-ldap
+
+$exec "wget -O - https://github.com/ajenti/ajenti/archive/1.2.22.tar.gz | tar zxvf - -C /tmp"
+$exec "cd /tmp/ajenti-* && make && make install"
+
+# execute agenti-panel
+
+
