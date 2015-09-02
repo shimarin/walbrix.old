@@ -1,5 +1,5 @@
 =sys-kernel/gentoo-sources-4.2.0
-=sys-kernel/aufs-sources-3.18.19
+=sys-kernel/aufs-sources-3.18.20
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =app-emulation/docker-1.7.1
