@@ -9,7 +9,7 @@ $require postfix.lst
 $require git.lst
 $write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15\n\n[www]\nguest ok = yes\nforce user=apache\nforce group=apache\nwritable=yes\npath=/var/www/localhost/htdocs\n'
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1tt-rss\2/'
-$exec 'rm -rf /var/www/localhost/htdosc && git clone https://tt-rss.org/git/tt-rss.git /var/www/localhost/htdocs'
+$exec 'rm -rf /var/www/localhost/htdocs && git clone https://tt-rss.org/git/tt-rss.git /var/www/localhost/htdocs'
 $exec 'cp /var/www/localhost/htdocs/config.php-dist /var/www/localhost/htdocs/config.php'
 $sed /var/www/localhost/htdocs/config.php 's/"pgsql"/"mysql"/'
 $sed /var/www/localhost/htdocs/config.php 's/"fox"/"tt-rss"/'
