@@ -1,10 +1,10 @@
 {
     "id": "owncloud",
-    "version":"8.1.0",
-    "title": "ownCloud 8.1.0",
+    "version":"8.1.3",
+    "title": "ownCloud 8.1.3",
     "description": "ownCloudは、ブラウザや WebDAVクライアントからアクセス可能なクラウドストレージを構築するためのオープンソースソフトウェアです。",
     "images": [{"url": "http://va.walbrix.net/img/owncloud01.png"}],
-    "tarball": "http://dist.walbrix.net/va/owncloud-8.1.0-i686-jp.tar.xz",
+    "tarball": "http://dist.walbrix.net/va/owncloud-8.1.3-i686-jp.tar.xz",
     "minimum_hd": 2,
     "minimum_ram": 192,
 

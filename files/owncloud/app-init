@@ -8,7 +8,7 @@ start() {
     if [ ! -f "${DOCUMENT_ROOT}/.ocdata" ]; then
         cd "${DOCUMENT_ROOT}"
         occ maintenance:install --database=mysql --database-name=owncloud --database-user=owncloud --database-pass='' --admin-user=admin --admin-pass=admin
-        sed -i "s/0 => 'localhost',/\$_SERVER['SERVER_NAME']/" ${CONFIG_PHP} && chown apache.apache ${CONFIG_PHP}
+        sed -i "s/0 => .*,/0 => \$_SERVER['SERVER_NAME'],/" ${CONFIG_PHP} && chown apache.apache ${CONFIG_PHP}
     fi
     eend 0
 }
