@@ -2,7 +2,18 @@ $set JAVA_VERSION 7
 $require python-exec.lst
 $package dev-java/java-config --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
 $package dev-java/java-config-wrapper
-$package dev-java/icedtea-bin-$(JAVA_VERSION).2.5.5 --exclude='^\/opt\/.+\/man\/' --use="-X -alsa cups cjk" # icedtea(-bin) depends on libcups.so no matter if cups USE flag is set
+
+#media-fonts/dejavu
+#media-fonts/sazanami
+#media-fonts/lklug
+#media-fonts/lohit-fonts
+#media-fonts/baekmuk-fonts
+#media-libs/libuninameslist
+#x11-proto/recordproto
+#x11-libs/libXtst
+#media-gfx/fontforge
+#media-fonts/arphicfonts
+$package dev-java/icedtea-bin-$(JAVA_VERSION).2.6.1 --exclude='^\/opt\/.+\/man\/' --use="-X -gtk -alsa cups cjk" # icedtea(-bin) depends on libcups.so no matter if cups USE flag is set
 
 #sys-apps/baselayout-java
 #gnome-base/gsettings-desktop-schemas  / ignored as it only needed for desktop app
