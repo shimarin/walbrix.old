@@ -1,5 +1,5 @@
-/boot/kernel-genkernel-x86_64-3.18.19-aufs
-$symlink /boot/vmlinuz.domU kernel-genkernel-x86_64-3.18.19-aufs
+/boot/kernel-genkernel-x86_64-3.18.20-aufs
+$symlink /boot/vmlinuz.domU kernel-genkernel-x86_64-3.18.20-aufs
 
 # 32-bit compat
 $require lib32.lst
