@@ -6,14 +6,7 @@
 !*/etc/kernels
 !*/etc/portage
 */etc/portage/*
+!*/etc/portage/sets
 !*/etc/portage/package.*
 */etc/portage/package.*/*
 !*/etc/portage/package.*/walbrix
-!*/var
-*/var/*
-!*/var/lib
-*/var/lib/*
-!*/var/lib/portage
-*/var/lib/portage/config
-*/var/lib/portage/preserved_libs_registry
-*/var/lib/portage/world_sets

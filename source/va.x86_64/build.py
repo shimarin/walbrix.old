@@ -72,12 +72,12 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
             exec_cmd(["genkernel","--no-mountboot","--kerneldir=/usr/src/linux-%s%s" % (version, source)] + genkernel_opts)
             return
 
-exec_cmd(["emerge","-uDN","aufs-sources","genkernel"])
+exec_cmd(["emerge","-uDN","system","aufs-sources","genkernel"])
 build_kernel_if_needed("aufs", ["--symlink","bzImage"])
 
 ## emerge world
 
-exec_cmd(["emerge","-uDN","--keep-going","world"])
+exec_cmd(["emerge","-uDN","--keep-going","world","@walbrix"])
 
 ## build sub kernels
 
