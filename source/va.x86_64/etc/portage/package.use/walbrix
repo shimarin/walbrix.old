@@ -13,7 +13,7 @@ www-servers/uwsgi python lua -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool
 app-editors/emacs -gtk3 -xpm 
 mail-mta/postfix sasl
 dev-python/imaging jpeg tiff truetype
-dev-java/icedtea-bin -X -alsa cups cjk
+dev-java/icedtea-bin -X -alsa cjk -gtk cups
 app-text/ghostscript-gpl cups
 app-text/groonga mecab
 dev-lang/python sqlite
