@@ -7,6 +7,7 @@ $require redis.lst
 $require git.lst
 $require iptables.lst
 $require imagemagick.lst
+$require nodejs.lst
 
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1discourse\2/'
 $package app-text/mecab
@@ -17,12 +18,10 @@ $exec --overlay "cd /tmp && tar zxvf /tmp/download/textsearch_ja-*.tar.gz && cd 
 $sed /tmp/textsearch_ja.sql "s/LANGUAGE 'C'/LANGUAGE 'c'/"
 
 $exec "useradd -m discourse"
-#git ls-remote https://github.com/discourse/discourse.git refs/tags/v1.3.4
-$exec "git clone --depth=1 -b v1.3.4 https://github.com/discourse/discourse.git /home/discourse/default"
+$exec "git clone --depth=1 -b stable https://github.com/discourse/discourse.git /home/discourse/default"
 $exec --overlay "cd /home/discourse/default && bundle install"
 $exec "rm -rf /usr/local/lib/ruby/gems/*/cache /usr/local/lib/ruby/gems/*/gems/nokogiri-*/ext/nokogiri/tmp /usr/local/lib/ruby/gems/*/gems/nokogiri-*/ports/archives"
-$sed /home/discourse/default/config/discourse_defaults.conf 's/serve_static_assets = .*/serve_static_assets = true/'
-$write /home/discourse/default/config/discourse.conf 'db_name = discourse\nhostname = "discourse.example.com"\nsmtp_address = localhost\nsmtp_domain = example.com\nsmtp_enable_start_tls = false'
+$write /home/discourse/default/config/discourse.conf 'serve_static_assets = true\ndb_name = discourse\nredis_db = 0\nhostname = "discourse.example.com"\nsmtp_address = localhost\nsmtp_domain = example.com\nsmtp_enable_start_tls = false'
 
 $mkdir /tmp/postgresql
 $copy postgresql/exec.sh /tmp/postgresql/exec.sh
@@ -33,6 +32,10 @@ $exec "/tmp/postgresql/exec.sh 'psql -f /tmp/textsearch_ja.sql discourse'"
 $mkdir /tmp/redis
 $copy redis/exec.sh /tmp/redis/exec.sh
 $copy discourse/setup.sh /tmp/setup.sh
+
+$exec "npm install -g uglifyjs"
+
+# rake db:migrate etc...
 $exec "/tmp/redis/exec.sh /tmp/postgresql/exec.sh /tmp/setup.sh"
 
 $exec "chown -R discourse.discourse /home/discourse/default"
@@ -43,4 +46,3 @@ $symlink /etc/runlevels/default/discourse /etc/init.d/discourse
 $write /var/lib/iptables/rules-save "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3000\nCOMMIT"
 
 $vadesc
-
