@@ -14,7 +14,7 @@ start() {
 	export RUBY_GC_MALLOC_LIMIT
 	mkdir -p ${PID_DIR}
 	ebegin "Starting" ${SVCNAME}
-	start-stop-daemon --start --chdir ${APP_HOME} --exec bundle --user ${APP_USER} -b -m --pidfile ${PID_DIR}/rails.pid -- exec rails s puma -e production -p ${APP_PORT}
+        start-stop-daemon --start --chdir ${APP_HOME} --exec 'rackup' --user ${APP_USER} --name ruby -b -m --pidfile ${PID_DIR}/rails.pid -- -E production -s thin -p ${APP_PORT} ${APP_HOME}/config.ru
 	eend $?
 	ebegin "Statring sidekiq for" ${SVCNAME}
 	start-stop-daemon --start --chdir ${APP_HOME} --exec bundle --user ${APP_USER} -b -m --pidfile ${PID_DIR}/sidekiq.pid -- exec sidekiq -e production
