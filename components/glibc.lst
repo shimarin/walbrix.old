@@ -16,7 +16,7 @@
 /usr/bin/localedef
 /usr/sbin/locale-gen
 
-$set GCC_VERSION 4.8.5
+$set GCC_VERSION 4.9.3
 /usr/lib/gcc/$(ARCH)-pc-linux-gnu/$(GCC_VERSION)/libgcc_s.so
 /usr/lib/gcc/$(ARCH)-pc-linux-gnu/$(GCC_VERSION)/libstdc++.so
 
