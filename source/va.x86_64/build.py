@@ -78,6 +78,7 @@ build_kernel_if_needed("aufs", ["--symlink","bzImage"])
 ## emerge world
 
 exec_cmd(["emerge","-uDN","--keep-going","world","@walbrix"])
+exec_cmd(["emerge","@preserved-rebuild"])
 
 ## build sub kernels
 

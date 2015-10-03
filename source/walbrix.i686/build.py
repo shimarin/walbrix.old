@@ -76,6 +76,7 @@ build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natura
 ## emerge world
 
 exec_cmd(["emerge","-uDN","--keep-going","world","@walbrix"])
+exec_cmd(["emerge","@preserved-rebuild"])
 
 ## build sub kernels
 
