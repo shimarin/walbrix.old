@@ -1,5 +1,6 @@
 #$require qemu.lst  # for HVM domains
-#$package dev-lang/ocaml
+$package dev-lang/ocaml
+$package dev-ml/findlib
 $mkdir /usr/lib/xen /var/lib/xen /var/lib/lib/xenstored /var/log/xen
 $symlink /usr/lib/xen/boot ../../libexec/xen/boot
 $sed /etc/init.d/xendomains 's/\(xl shutdown .*-w \)/\1-F /'

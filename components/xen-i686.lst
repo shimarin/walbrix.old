@@ -1,3 +1,5 @@
+$sed /lib/udev/rules.d/xen-backend.rules 's/^\(SUBSYSTEM=="net",.*\)"tap\*"\(.*\/etc\/xen\/scripts\/vif-setup.*\)$/\1"tap*.*"\2/'
+
 # pv-grub2
 $write /tmp/grub.cfg 'set root=(xen/xvda1)\nnormal (xen/xvda1)/boot/grub/grub.cfg'
 $exec "grub2-mkimage -c /tmp/grub.cfg -o /usr/lib/xen/boot/pv-grub2-x86_32 -O i386-xen loopback xfs btrfs linux echo test gzio configfile cpuid minicmd squash4 lsxen && gzip /usr/lib/xen/boot/pv-grub2-x86_32"
