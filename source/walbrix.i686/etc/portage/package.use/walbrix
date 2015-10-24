@@ -41,6 +41,7 @@ dev-python/itsdangerous -python_targets_python3_4
 dev-python/simplejson -python_targets_python3_4
 dev-python/werkzeug  -python_targets_python3_4
 dev-python/flask -python_targets_python3_4
+dev-python/pyxattr -python_targets_python3_4
  
 sys-libs/zlib static-libs
 media-libs/libjpeg-turbo static-libs
