@@ -10,6 +10,7 @@ $package dev-java/jdbc-postgresql
 
 $package dev-java/glassfish-transaction-api # needed by commons-dbcp
 $package dev-java/commons-dbcp
+$package dev-java/oracle-javamail
 
 $package dev-java/tomcat-servlet-api
 $package dev-java/eclipse-ecj
