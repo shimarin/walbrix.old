@@ -1,0 +1,6 @@
+$require setuptools.lst
+$require pip.lst
+$package dev-python/unittest2
+$package dev-python/linecache2
+$package dev-python/traceback2
+

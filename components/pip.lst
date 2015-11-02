@@ -1,0 +1,11 @@
+$require requests.lst
+$package dev-python/retrying
+$package dev-python/colorama
+$package dev-python/distlib
+$package dev-python/html5lib
+$package dev-python/progress
+$package dev-python/pbr
+$package dev-python/lockfile
+$package dev-python/CacheControl
+$package dev-python/pip
+

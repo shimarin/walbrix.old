@@ -1,5 +1,5 @@
 $require python27.lst
-$package dev-python/setuptools --exclude='^/usr/lib(64)?/python3.*/'
+$require setuptools.lst
 $package dev-python/backports --exclude='^/usr/lib(64)?/python3.*/'
 $package dev-python/certifi --exclude='^/usr/lib(64)?/python3.*/'
 $package dev-python/backports-ssl-match-hostname
