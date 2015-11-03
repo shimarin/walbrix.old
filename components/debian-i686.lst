@@ -1,4 +1,4 @@
-$debootstrap jessie --include="openssh-server,avahi-daemon,samba,ntp,openvpn,ca-certificates,linux-image-686-pae"
+$debootstrap jessie --include="openssh-server,avahi-daemon,samba,ntp,openvpn,ca-certificates,locales-all,linux-image-686-pae"
 $mkdir /boot/grub
 $write /boot/grub/menu.lst 'default=0\ntimeout=1\n\ntitle Linux\nroot (hd0)\nkernel (hd0)/vmlinuz root=/dev/xvda1 console=hvc0\ninitrd (hd0)/initrd.img'
 
