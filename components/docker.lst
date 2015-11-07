@@ -4,15 +4,19 @@ $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1docker\2/'
 
 $package sys-fs/aufs-util
 $package dev-lang/go
+$require perl.lst # for shasum command
+#$package dev-go/sanitized-anchor-name
+#$package dev-go/blackfriday
+#$package dev-go/go-md2man
 #dev-db/sqlite
 $package net-firewall/iptables
 $require git.lst
-$package app-emulation/docker --use="aufs -device-mapper vim-syntax"
+$package app-emulation/docker --use="aufs overlay -device-mapper"
 $symlink /etc/runlevels/default/docker /etc/init.d/docker
 
 $require nodejs.lst
 $exec "npm install -g grunt-cli"
-$exec --overlay "cd /root && git clone https://github.com/crosbymichael/dockerui.git && cd dockerui && npm install && grunt build && go build dockerui.go"
+$exec --overlay "cd /root && git clone https://github.com/crosbymichael/dockerui.git && cd dockerui && npm install"
 $copy docker/dockerui.init /etc/init.d/dockerui
 $symlink /etc/runlevels/default/dockerui /etc/init.d/dockerui
 

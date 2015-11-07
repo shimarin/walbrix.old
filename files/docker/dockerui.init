@@ -1,5 +1,6 @@
 #!/sbin/runscript
 PIDFILE=/run/${SVCNAME}.pid
+DOCKERUI_BASE=/root/dockerui
 DOCKER_SOCKET=/run/docker.sock
 
 depend() {
@@ -7,9 +8,12 @@ depend() {
 }
 
 start() {
-	ebegin "Starting ${SVCNAME}"
         while [ ! -S ${DOCKER_SOCKET} ]; do sleep 1; done
-	start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --background --exec /root/dockerui/dockerui -- -a /root/dockerui/dist -p :80
+        ebegin "Building ${SVCNAME}"
+        cd $DOCKERUI_BASE && git pull && npm install && grunt build
+	eend $?
+	ebegin "Starting ${SVCNAME}"
+	start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --background --exec $DOCKERUI_BASE/dist/dockerui -- -a $DOCKERUI_BASE/dist -p :80
 	eend $?
 }
 

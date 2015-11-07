@@ -1,9 +1,9 @@
 {
     "id": "docker",
-    "version":"1.7.1",
-    "title": "Docker 1.7.1 (64bit)",
+    "version":"1.9.0",
+    "title": "Docker 1.9.0 (64bit)",
     "description": "Dockerは、サーバーアプリケーションの配備を簡単に行うためのプラットフォームです。",
-    "tarball": "http://dist.walbrix.net/va/docker-1.7.1-x86_64-jp.tar.xz",
+    "tarball": "http://dist.walbrix.net/va/docker-1.9.0-x86_64-jp.tar.xz",
     "minimum_ram": 512, 
     "minimum_hd": 2,
 
