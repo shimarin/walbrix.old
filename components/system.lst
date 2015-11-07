@@ -14,7 +14,7 @@ $require nano.lst
 $package app-misc/ca-certificates
 $package app-misc/mime-types
 $package app-misc/pax-utils
-$package dev-lang/perl
+$require perl.lst
 $require python27.lst
 $package dev-lang/python-exec
 $package dev-libs/openssl

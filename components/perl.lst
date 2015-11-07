@@ -1,0 +1,3 @@
+$package dev-lang/perl
+$symlink /usr/bin/shasum shasum-5.880.0-perl-5.20.2
+

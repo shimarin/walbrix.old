@@ -1,4 +1,4 @@
-$package dev-lang/perl # for mysql_install_db
+$require perl.lst # for mysql_install_db
 
 #dev-libs/libaio
 #app-arch/libarchive

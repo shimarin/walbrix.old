@@ -1,5 +1,4 @@
 $require mysql.lst
-$package dev-lang/perl
 $package dev-perl/Net-Daemon
 $package dev-perl/PlRPC
 $package dev-perl/DBI
