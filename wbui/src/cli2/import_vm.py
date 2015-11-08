@@ -204,7 +204,7 @@ def setup_vm_info(rootdir, vmname, ram, vcpus=1, root_password=None,copy_pubkey=
             
 def install(rootdir, archive, vmname,size,ram,vcpus=1,root_password=None,verbose=False,copy_pubkey=False):
     if archive[1] == "tar":
-        with process_for_output(["tar",get_tar_decompression_option(archive[0]) + ("xvpf" if verbose else "xpf"),"-","-C",rootdir]) as tar:
+        with process_for_output(["tar",get_tar_decompression_option(archive[0]) + ("xvpf" if verbose else "xpf"),"-","--xattrs","--xattrs-include=*","-C",rootdir]) as tar:
             copy_archive(archive[0], tar)
         setup_vm_info(rootdir, vmname, ram, vcpus, root_password, copy_pubkey)
     elif archive[1] == "squashfs":

@@ -42,9 +42,9 @@ def apply(context, args):
                 subprocess.check_call(["umount","%s/dev" % rpmbootstrap_dir])
         
             progress_file = "download_cache/_rpmbootstrap_in_progress"
-            subprocess.check_call(["tar","zcvpf",progress_file,"-C",rpmbootstrap_dir,"."])
+            subprocess.check_call(["tar","zcvpf",progress_file,"--xattrs","--xattrs-include=*","-C",rpmbootstrap_dir,"."])
             os.rename(progress_file, cache_file)
         finally:
             shutil.rmtree(rpmbootstrap_dir, True)
 
-    subprocess.check_call(["tar","zxvpf",cache_file,"-C",context.destination])
+    subprocess.check_call(["tar","zxvpf",cache_file,"--xattrs","--xattrs-include=*","-C",context.destination])

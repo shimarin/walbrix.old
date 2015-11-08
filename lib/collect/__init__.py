@@ -298,11 +298,11 @@ def process_lstfile(context, lstfile):
                 subprocess.check_call(["debootstrap","--no-check-gpg","--arch=%s" % arch,"--include=%s" % args.include,dist,debootstrap_dir], env=env_with_root_path())
                 subprocess.check_call(["chroot", debootstrap_dir, "apt-get","clean"])
                 progress_file = "download_cache/_debootstrap_in_progress"
-                subprocess.check_call(["tar","zcvpf",progress_file,"-C",debootstrap_dir,"."])
+                subprocess.check_call(["tar","zcvpf",progress_file,"--xattrs","--xattrs-include=*","-C",debootstrap_dir,"."])
                 os.rename(progress_file, cache_file)
             finally:
                 shutil.rmtree(debootstrap_dir)
-        subprocess.check_call(["tar","zxvpf",cache_file,"-C",context.destination])
+        subprocess.check_call(["tar","zxvpf",cache_file,"--xattrs","--xattrs-include=*","-C",context.destination])
 
     directives = {
         "$require":require,

@@ -14,5 +14,5 @@ def apply(context, args):
         subprocess.check_call(["wget","-O",progress_file,url])
         os.rename(progress_file, cache_file)
 
-    subprocess.check_call(["tar","jxvpf",cache_file,"-C",context.destination])
+    subprocess.check_call(["tar","jxvpf",cache_file,"--xattrs","--xattrs-include=*","-C",context.destination])
 
