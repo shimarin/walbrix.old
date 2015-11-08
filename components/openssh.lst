@@ -1,4 +1,5 @@
 $package net-misc/openssh
+$sed /etc/ssh/sshd_config 's/^#PermitRootLogin prohibit-password$/PermitRootLogin yes/'
 $symlink /etc/runlevels/default/sshd /etc/init.d/sshd
 $mkdir /root/.ssh
 $touch /root/.ssh/authorized_keys
