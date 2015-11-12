@@ -6,6 +6,7 @@ $write /etc/network/interfaces.d/eth0 'auto eth0\niface eth0 inet dhcp'
 $write /etc/fstab '/dev/xvda1\t/\txfs\tnoatime\t0 0\n#/dev/zram0\tnone\tswap\tsw,pri=1\t0 0'
 $write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
 $write /etc/hostname "debian"
+$sed /etc/ssh/sshd_config 's/^PermitRootLogin .\+$/PermitRootLogin yes/'
 
 $exec 'mkdir -p /root/.ssh && chmod 700 /root/.ssh && touch /root/.ssh/authorized_keys'
 $write /etc/apt/sources.lst 'deb http://ftp.jp.debian.org/debian wheezy main contrib\ndeb http://security.debian.org/ wheezy/updates main contrib non-free'
