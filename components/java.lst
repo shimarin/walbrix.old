@@ -13,7 +13,7 @@ $package dev-java/java-config-wrapper
 #x11-libs/libXtst
 #media-gfx/fontforge
 #media-fonts/arphicfonts
-$package dev-java/icedtea-bin-$(JAVA_VERSION).2.6.1 --exclude='^\/opt\/.+\/man\/' --use="-X -gtk -alsa cups cjk" # icedtea(-bin) depends on libcups.so no matter if cups USE flag is set
+$package dev-java/icedtea-bin-$(JAVA_VERSION).2.6.2 --exclude='^\/opt\/.+\/man\/' --use="-gtk -alsa cups cjk headless-awt" # icedtea(-bin) depends on libcups.so no matter if cups USE flag is set
 
 #sys-apps/baselayout-java
 #gnome-base/gsettings-desktop-schemas  / ignored as it only needed for desktop app
