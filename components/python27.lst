@@ -1,2 +1,2 @@
-$package dev-lang/python-2.7.10
+$package dev-lang/python-2.7.10-r1
 $symlink /usr/bin/python python2.7
