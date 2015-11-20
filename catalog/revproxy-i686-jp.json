@@ -1,9 +1,9 @@
 {
     "id":"revproxy",
-    "version":"1.8.0",
-    "title":"リバースProxy 1.8.0",
+    "version":"1.9.7",
+    "title":"リバースProxy 1.9.7",
     "description":"Nginx Webサーバを使用してHTTPアクセスを LAN内のWebサーバに振り分ける仮想アプラインスです。",
-    "tarball":"http://dist.walbrix.net/va/revproxy-1.8.0-i686-jp.tar.xz",
+    "tarball":"http://dist.walbrix.net/va/revproxy-1.9.7-i686-jp.tar.xz",
     "minimum_ram":96,
     "minimum_hd":1,
 

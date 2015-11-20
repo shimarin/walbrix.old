@@ -30,6 +30,7 @@ dev-python/markdown
 dev-python/mysql-python
 dev-python/pyyaml
 dev-python/requests
+dev-python/twisted-names
 dev-python/unittest2
 dev-util/strace
 mail-mta/postfix
@@ -45,6 +46,7 @@ net-misc/netkit-telnetd
 net-misc/ntp
 net-misc/openvpn
 net-misc/s3cmd
+net-proxy/haproxy
 sys-apps/dstat
 sys-auth/nss-mdns
 sys-auth/nss-myhostname
