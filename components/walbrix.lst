@@ -46,6 +46,8 @@ $sed /etc/xen/xl.conf 's/^#vif.default.bridge="xenbr0"$/vif.default.bridge=""/'
 # setup network-bridge
 $copy walbrix/network-bridge /etc/xen/scripts/network-bridge
 $copy walbrix/conf-net /etc/conf.d/net
+$mkdir /etc/wpa_supplicant
+$copy walbrix/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
 $copy walbrix/network-multi-bridge /etc/xen/scripts/network-multi-bridge
 $copy walbrix/network-bridge.init /etc/init.d/network-bridge
 $symlink /etc/runlevels/default/network-bridge /etc/init.d/network-bridge
