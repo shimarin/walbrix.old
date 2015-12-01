@@ -1,0 +1,18 @@
+server {
+	server_name protected.example.com;
+	listen 80;
+
+	set $ngo_client_id "abc-def.apps.googleusercontent.com";
+	set $ngo_client_secret "abcdefg-123-xyz";
+	set $ngo_token_secret "a very long randomish string";
+	set $ngo_secure_cookies "true";
+	set $ngo_whitelist "allowed@examples.com other@example.com";
+
+	access_by_lua_file "/etc/nginx/nginx-google-oauth/access.lua";
+
+	set $upstream http://protected.local;
+	location / {
+		include proxy.conf;
+	}
+	access_log off;
+}

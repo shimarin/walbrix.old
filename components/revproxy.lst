@@ -4,6 +4,7 @@ $require nginx.lst
 $require uwsgi.lst
 $require twisted-names.lst
 $require postfix.lst
+$require git.lst
 $package net-proxy/haproxy
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1revproxy\2/'
 
@@ -15,6 +16,8 @@ $exec "wget -O /etc/init.d/fakedns https://raw.githubusercontent.com/wbrxcorp/fa
 $exec "chmod 755 /etc/init.d/fakedns /usr/sbin/fakedns"
 $symlink /etc/runlevels/default/fakedns /etc/init.d/fakedns
 
+$exec "git clone --depth=1 https://github.com/agoragames/nginx-google-oauth.git /etc/nginx/nginx-google-oauth"
+
 $write /etc/nginx/proxy.map "aipo.example.com http://aipo.local;\nowncloud.example.com http://owncloud.local;"
 
 $copy revproxy/nginx.conf /etc/nginx/nginx.conf
@@ -23,6 +26,7 @@ $copy revproxy/proxy.conf /etc/nginx/proxy.conf
 $mkdir /etc/nginx/conf.d
 $copy revproxy/always-ssl.conf.sample /etc/nginx/conf.d/always-ssl.conf.sample
 $copy revproxy/ssl-site.conf.sample /etc/nginx/conf.d/ssl-site.conf.sample
+$copy revproxy/google-oauth.conf.sample /etc/nginx/conf.d/google-oauth.conf.sample
 
 $mkdir /etc/ssl/nginx
 $exec "openssl genrsa 2048 > /etc/ssl/nginx/nginx.key"
