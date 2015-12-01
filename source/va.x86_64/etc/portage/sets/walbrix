@@ -20,6 +20,8 @@ dev-java/jdbc-postgresql
 dev-java/oracle-jre-bin
 dev-java/slf4j-api
 dev-java/sun-javamail
+dev-lua/luajson
+dev-lua/luasec
 dev-python/beautifulsoup
 dev-python/chardet
 dev-python/feedgenerator
@@ -61,3 +63,5 @@ www-servers/nginx
 www-servers/tomcat
 www-servers/uwsgi
 x11-base/xorg-server
+x11-proto/dri2proto # to build xorg-server without mesa
+

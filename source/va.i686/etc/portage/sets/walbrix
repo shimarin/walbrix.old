@@ -19,6 +19,8 @@ dev-java/sun-javamail
 dev-java/tomcat-servlet-api
 dev-lang/coffee-script
 dev-lang/php
+dev-lua/luajson
+dev-lua/luasec
 dev-php/pecl-apcu
 dev-php/pecl-imagick
 dev-php/pecl-memcached
