@@ -25,7 +25,7 @@ dev-lua/luasec
 dev-php/pecl-apcu
 dev-php/pecl-imagick
 dev-php/pecl-memcached
-dev-php/xcache
+dev-php/pecl-redis
 dev-python/futures
 dev-python/html5lib
 dev-python/twisted-names

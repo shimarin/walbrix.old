@@ -6,16 +6,18 @@ $require mysql.lst
 $require postfix.lst
 $require samba.lst
 $require ffmpeg.lst
-$require php54.lst
+$require php55.lst
+$require redis.lst
 $require pecl-imagick.lst
 #require components/libreoffice.lst
-$package dev-php/xcache
+#$package dev-php/xcache # replaced by opcache in PHP5.5
+$package dev-php/pecl-redis
 $require pecl-apcu.lst
 #$require pecl-memcached.lst
 #copy owncloud/smb.conf /etc/samba/smb.conf
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1owncloud\2/'
 
-$set OWNCLOUD_TAR owncloud-8.1.3.tar.bz2
+$set OWNCLOUD_TAR owncloud-8.2.1.tar.bz2
 $download https://download.owncloud.org/community/$(OWNCLOUD_TAR)
 $exec "tar jxvf /tmp/download/$(OWNCLOUD_TAR) -C /var/www/localhost"
 $exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/owncloud /var/www/localhost/htdocs"

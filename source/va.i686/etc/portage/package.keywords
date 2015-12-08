@@ -1,5 +1,5 @@
 =sys-kernel/vanilla-sources-3.2.73
-=dev-php/xcache-3.2.0
+=dev-php/pecl-redis-2.2.7 **
 =www-servers/tomcat-8.0.23-r1
 =dev-java/tomcat-servlet-api-8.0.23
 =dev-libs/libmemcached-1.0.18-r2
