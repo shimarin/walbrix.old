@@ -165,17 +165,20 @@ def process_lstfile(context, lstfile):
     def deltree(context, args):
         if len(args) < 1: raise Exception("$deltree directive gets at least 1 argument")
         for arg in args:
-            if not arg.startswith('/'): raise Exception("Directory name must start with '/'")
-            name = "%s%s" % (context.destination, context.apply_variables(arg))
-            print "$deltree '%s'" % arg
+            path = context.apply_variables(arg)
+            if not path.startswith('/'): raise Exception("Directory name must start with '/'")
+            name = "%s%s" % (context.destination, path)
+            print "$deltree '%s'" % path
             shutil.rmtree(name)
 
     def mv(context, args):
         if len(args) != 2: raise Exception("$mv directive must have 2 args")
-        if not args[0].startswith('/'): raise Exception("Filename must start with '/'")
-        if not args[1].startswith('/'): raise Exception("Filename must start with '/'")
-        src = "%s%s" % (context.destination, context.apply_variables(args[0]))
-        dst = "%s%s" % (context.destination, context.apply_variables(args[1]))
+        src = context.apply_variables(args[0])
+        dst = context.apply_variables(args[1])
+        if not src.startswith('/'): raise Exception("Filename must start with '/'")
+        if not dst.startswith('/'): raise Exception("Filename must start with '/'")
+        src = "%s%s" % (context.destination, src)
+        dst = "%s%s" % (context.destination, dst)
         print "Move file/dir: %s -> %s" % (src, dst)
         subprocess.check_call(["/bin/mv",src,dst])
         
