@@ -19,6 +19,7 @@ dev-java/jdbc-mysql
 dev-java/jdbc-postgresql
 dev-java/oracle-jre-bin
 dev-java/slf4j-api
+dev-java/sun-jaf
 dev-java/sun-javamail
 dev-lua/luajson
 dev-lua/luasec

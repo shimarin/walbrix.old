@@ -15,6 +15,7 @@ dev-java/commons-pool
 dev-java/jdbc-mysql
 dev-java/jdbc-postgresql
 dev-java/oracle-jre-bin
+dev-java/sun-jaf
 dev-java/sun-javamail
 dev-java/tomcat-servlet-api
 dev-lang/coffee-script
