@@ -1,5 +1,5 @@
-$rpmbootstrap --arch=i686 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/6.6/os/i386/Packages/centos-release-6-6.el6.centos.12.2.i686.rpm' --include='vim-minimal less initscripts passwd tar net-tools'
-$rpmbootstrap --arch=x86_64 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/6.6/os/x86_64/Packages/centos-release-6-6.el6.centos.12.2.x86_64.rpm' --include='vim-minimal less initscripts passwd tar net-tools'
+$rpmbootstrap --arch=i686 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/6.7/os/i386/Packages/centos-release-6-7.el6.centos.12.3.i686.rpm' --include='vim-minimal less initscripts passwd tar net-tools'
+$rpmbootstrap --arch=x86_64 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/6.7/os/x86_64/Packages/centos-release-6-7.el6.centos.12.3.x86_64.rpm' --include='vim-minimal less initscripts passwd tar net-tools'
 
 $require domU-kernel.lst
 
