@@ -13,7 +13,7 @@ $require shadow.lst
 $package sys-apps/attr
 $package sys-process/procps
 $require openssh.lst
-$package dev-libs/openssl
+$require openssl.lst
 $package sys-libs/timezone-data
 $package sys-apps/file
 $package app-arch/bzip2

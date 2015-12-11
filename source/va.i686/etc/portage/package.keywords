@@ -7,3 +7,5 @@
 =dev-ruby/bundler-1.9.10
 =www-servers/uwsgi-2.0.11.1
 =www-servers/nginx-1.9.7
+=app-misc/c_rehash-1.7-r1
+=dev-libs/openssl-1.0.2e

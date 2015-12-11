@@ -32,7 +32,7 @@ $package app-arch/unzip
 $package app-arch/xz-utils
 $package sys-apps/grep # grep, egrep
 $package sys-process/procps # free
-$package dev-libs/openssl # openssl
+$require openssl.lst
 $package dev-libs/libcdio # iso-read
 $package sys-fs/lvm2 # for lvs vgs pvs...
 $package sys-apps/pciutils # lspci

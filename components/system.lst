@@ -17,7 +17,7 @@ $package app-misc/pax-utils
 $require perl.lst
 $require python27.lst
 $package dev-lang/python-exec
-$package dev-libs/openssl
+$require openssl.lst
 $package dev-perl/Locale-gettext
 $package dev-perl/Module-Build
 $package dev-perl/SGMLSpm
