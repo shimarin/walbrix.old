@@ -52,6 +52,13 @@ $sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;always_populate_raw_post_da
 $sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;default_charset.\+$/default_charset="UTF-8"/'
 $write /var/spool/cron/crontabs/apache '*/15  *  *  *  * php -f /var/www/localhost/htdocs/cron.php'
 
+# libsmbclient-php
+$exec --overlay "pecl install channel://pecl.php.net/smbclient-0.8.0RC1"
+$write /etc/php/apache2-php5.5/ext/smbclient.ini "extension=smbclient.so"
+$write /etc/php/cli-php5.5/ext/smbclient.ini "extension=smbclient.so"
+#$symlink /etc/php/apache2-php5.5/ext-active/smbclient.ini ../ext/smbclient.ini
+$symlink /etc/php/cli-php5.5/ext-active/smbclient.ini ../ext/smbclient.ini
+
 # occ command
 $copy owncloud/occ.c /tmp/occ.c
 $exec --overlay "gcc -o /usr/sbin/occ /tmp/occ.c"
