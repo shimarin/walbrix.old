@@ -26,6 +26,8 @@ dev-vcs/git
 mail-mta/ssmtp
 media-fonts/vlgothic
 media-gfx/splash-themes-gentoo
+media-sound/alsa-utils
+media-sound/mpg123
 net-analyzer/barnyard2
 net-analyzer/netcat
 net-analyzer/nmap

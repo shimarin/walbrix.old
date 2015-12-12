@@ -1,1 +1,4 @@
 $package media-libs/alsa-lib
+/usr/bin/amixer
+$copy walbrix/asound.conf /etc/asound.conf
+

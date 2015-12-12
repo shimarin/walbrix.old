@@ -80,3 +80,6 @@ dev-vcs/git -perl -gpg
 # networks
 net-dns/avahi -introspection
 
+# misc
+media-sound/mpg123 alsa
+
