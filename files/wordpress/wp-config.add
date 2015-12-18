@@ -1,0 +1,18 @@
+function __generate_url__()
+{
+    $scheme = "http";
+    $default_port = 80;
+    if (is_ssl()) {
+        $scheme = "https";
+        $default_port = 443;
+    }
+
+    $host = $_SERVER["SERVER_NAME"];
+    $port = $_SERVER["SERVER_PORT"];
+    if ($port != $default_port && !isset($_SERVER["HTTP_X_FORWARDED_FOR"])) $host .= sprintf(":%d", $port);
+
+    return sprintf("%s://%s", $scheme, $host);
+}
+
+define('WP_SITEURL', __generate_url__());
+define('WP_HOME', __generate_url__());

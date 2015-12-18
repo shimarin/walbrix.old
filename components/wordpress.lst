@@ -1,0 +1,37 @@
+$require domU.lst
+$require domU-kernel.lst
+$require cron.lst
+$require apache.lst
+$require mysql.lst
+$require php55.lst
+$require samba.lst
+$require postfix.lst
+$copy wordpress/smb.conf /etc/samba/smb.conf
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1wordpress\2/'
+
+$set WORDPRESS_TAR wordpress-4.4-$(LANGUAGE).tar.gz
+$download http://$(LANGUAGE).wordpress.org/release-archive/$(LANGUAGE)/$(WORDPRESS_TAR)
+$exec "tar zxvf /tmp/download/$(WORDPRESS_TAR) -C /var/www/localhost"
+
+$exec "[ -f /var/www/localhost/htdocs/index.html ] && rm /var/www/localhost/htdocs/index.html || true"
+$exec "mv /var/www/localhost/wordpress/* /var/www/localhost/htdocs"
+$exec "rmdir /var/www/localhost/wordpress"
+$exec "mv /var/www/localhost/htdocs/wp-config-sample.php /var/www/localhost/htdocs/wp-config.php"
+
+$sed /var/www/localhost/htdocs/wp-config.php s/database_name_here/wordpress/
+$sed /var/www/localhost/htdocs/wp-config.php s/username_here/wordpress/
+$sed /var/www/localhost/htdocs/wp-config.php s/password_here//
+
+$sed /var/www/localhost/htdocs/wp-config.php 's/\(require_once(ABSPATH . '\''wp-settings.php'\'');\)/if (isset($_SERVER["HTTP_X_FORWARDED_PROTO"]) \&\& $_SERVER["HTTP_X_FORWARDED_PROTO"] == "https") $_SERVER["HTTPS"] = "on";\n\1/'
+$copy wordpress/wp-config.add /tmp/wp-config.add
+$exec "cat /tmp/wp-config.add >> /var/www/localhost/htdocs/wp-config.php"
+$exec "chown -R apache.apache /var/www/localhost"
+
+$copy mysql/operate.sh /tmp/mysql_operate.sh
+$exec "/tmp/mysql_operate.sh createdb wordpress"
+
+$write /etc/conf.d/generate-secret-token 'rc_after="mysql"\nrc_before="apache2"'
+$copy wordpress/generate-secret-token /etc/init.d/generate-secret-token
+$symlink /etc/runlevels/default/generate-secret-token /etc/init.d/generate-secret-token
+
+$vadesc
