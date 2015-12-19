@@ -32,6 +32,9 @@ $mkdir /etc/ssl/nginx
 $exec "openssl genrsa 2048 > /etc/ssl/nginx/nginx.key"
 $exec "openssl req -new -subj /CN=www.example.com -key /etc/ssl/nginx/nginx.key | openssl x509 -days 3650 -req -signkey /etc/ssl/nginx/nginx.key > /etc/ssl/nginx/nginx.pem"
 
+$mkdir /var/cache/nginx
+$exec "chown nginx /var/cache/nginx"
+
 $mkdir /var/www/localhost/htdocs
 $copy revproxy/index.html /var/www/localhost/htdocs/index.html
 
