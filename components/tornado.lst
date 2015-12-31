@@ -1,7 +1,10 @@
 $require python27.lst
 $require setuptools.lst
+$package dev-python/pycurl --exclude='^/usr/lib(64)?/python3.*/'
+$package dev-python/backports-abc --exclude='^/usr/lib(64)?/python3.*/'
+$package dev-python/singledispatch --exclude='^/usr/lib(64)?/python3.*/'
+$package dev-python/twisted-web --exclude='^/usr/lib(64)?/python3.*/'
 $package dev-python/backports --exclude='^/usr/lib(64)?/python3.*/'
 $package dev-python/certifi --exclude='^/usr/lib(64)?/python3.*/'
 $package dev-python/backports-ssl-match-hostname
 $package www-servers/tornado --exclude='^/usr/lib(64)?/python3.*/'
-
