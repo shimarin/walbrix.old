@@ -1,5 +1,5 @@
 #!/usr/bin/python2.7
-import subprocess,pwd,grp,glob,re,os
+import subprocess,pwd,grp,glob,re,os,sys
 
 def exec_cmd(cmdline):
     shell = isinstance(cmdline,str)
@@ -75,8 +75,9 @@ build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natura
 
 ## emerge world
 
-exec_cmd(["emerge","-uDN","--keep-going","world","@walbrix"])
-exec_cmd(["emerge","@preserved-rebuild"])
+if len(sys.argv) < 2 or sys.argv[1] != "noworld":
+    exec_cmd(["emerge","-uDN","--keep-going","world","@walbrix"])
+    exec_cmd(["emerge","@preserved-rebuild"])
 
 ## build sub kernels
 
