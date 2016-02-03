@@ -1,10 +1,17 @@
 #$require qemu.lst  # for HVM domains
+$package app-emulation/xen
 $package dev-lang/ocaml
 $package dev-ml/findlib
 $mkdir /usr/lib/xen /var/lib/xen /var/lib/lib/xenstored /var/log/xen
 $symlink /usr/lib/xen/boot ../../libexec/xen/boot
 $sed /etc/init.d/xendomains 's/\(xl shutdown .*-w \)/\1-F /'
 $sed /etc/init.d/xenconsoled 's/\(xl shutdown .*-w \)/\1-F /'
+
+$symlink /etc/runlevels/default/xenstored /etc/init.d/xenstored
+$symlink /etc/runlevels/default/xenconsoled /etc/init.d/xenconsoled
+$symlink /etc/runlevels/default/xendomains /etc/init.d/xendomains
+
+$sed /etc/rc.conf 's/^#rc_sys=""/rc_sys="xen0"/'
 
 # pv-grub2
 $write /tmp/grub.cfg 'set root=(xen/xvda1)\nnormal (xen/xvda1)/boot/grub/grub.cfg'

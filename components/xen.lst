@@ -8,15 +8,8 @@ $require iproute2.lst
 /bin/awk
 $package dev-python/lxml
 
-$package app-emulation/xen
 $package app-emulation/xen-tools
 $package app-emulation/xen-pvgrub
 
 $require xen-$(ARCH).lst
-
-$symlink /etc/runlevels/default/xenstored /etc/init.d/xenstored
-$symlink /etc/runlevels/default/xenconsoled /etc/init.d/xenconsoled
-$symlink /etc/runlevels/default/xendomains /etc/init.d/xendomains
-
-$sed /etc/rc.conf 's/^#rc_sys=""/rc_sys="xen0"/'
 
