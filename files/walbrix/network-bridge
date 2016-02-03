@@ -104,7 +104,7 @@ tdev=tmpbridge
 
 get_ip_info() {
     addr_pfx=`ip addr show dev $1 | egrep '^ *inet ' | sed -e 's/ *inet //' -e "s/$1//"`
-    gateway=`ip route show dev $1 | fgrep default | sed 's/default via //'`
+    gateway=`ip route show dev $1 | fgrep default | sed 's/default via //' | sed 's/ linkdown//'`
 }
     
 do_ifup() {
