@@ -68,7 +68,7 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
         arch, version, revision = kernel_match.groups()
         if revision is None: revision = ""
 
-        if not os.path.isfile(("/boot/kernel-genkernel-%s-%s" + source) % (arch, version)):
+        if not os.path.isfile(("/boot/kernel-genkernel-%s-%s" + source + "%s") % (arch, version, revision)):
             print "Kernel %s%s%s needs to be built" % (version, source, revision)
             exec_cmd(["genkernel","--no-mountboot","--kerneldir=/usr/src/linux-%s%s%s" % (version, source, revision)] + genkernel_opts)
             return
