@@ -1,0 +1,21 @@
+$require domU.lst
+$require domU-kernel.lst
+$require postfix.lst
+$require bundler.lst
+$require git.lst
+$require iptables.lst
+$package dev-libs/icu
+
+$exec "useradd -m gollum"
+$exec --overlay "gem install --no-ri --no-rdoc github-markdown gollum"
+
+$mkdir /home/gollum/default
+$exec "cd /home/gollum/default && git init"
+$exec "chown -R gollum.gollum /home/gollum/default"
+
+$copy gollum/gollum.init /etc/init.d/gollum
+$symlink /etc/runlevels/default/gollum /etc/init.d/gollum
+
+$write /var/lib/iptables/rules-save "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 4567\nCOMMIT"
+
+#$vadesc

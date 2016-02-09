@@ -1,0 +1,18 @@
+#!/sbin/runscript
+
+APP_HOME=${APP_HOME:-/home/gollum/default}
+APP_USER=${APP_USER:-gollum}
+APP_PORT=${APP_PORT:-4567}
+PID_FILE=/run/${SVCNAME}.pid
+
+start() {
+	ebegin "Starting" ${SVCNAME}
+    start-stop-daemon --start --chdir ${APP_HOME} --exec gollum --user ${APP_USER} --name ruby -b -m --pidfile ${PID_FILE} -- --mathjax --allow-uploads page --port ${APP_PORT} ${APP_HOME}
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping" ${SVCNAME}
+	start-stop-daemon --stop --pidfile ${PID_FILE}
+	eend $?
+}
