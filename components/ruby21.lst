@@ -1,5 +1,5 @@
 $set RUBY_VERSION 2.1
-$package dev-lang/ruby-$(RUBY_VERSION).6-r1
+$package dev-lang/ruby-$(RUBY_VERSION).7
 $symlink /usr/bin/erb erb21
 $symlink /usr/bin/irb irb21
 $symlink /usr/bin/ruby ruby21
