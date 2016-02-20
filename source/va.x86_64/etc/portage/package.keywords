@@ -1,5 +1,5 @@
-=sys-kernel/gentoo-sources-4.4.1
-=sys-kernel/aufs-sources-3.18.25-r1
+=sys-kernel/gentoo-sources-4.4.2
+=sys-kernel/aufs-sources-3.18.27
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =net-misc/s3cmd-1.6.0

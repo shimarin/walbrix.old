@@ -1,4 +1,4 @@
-$set OVERLAYFS_KERNELVER 4.4.1-gentoo
+$set OVERLAYFS_KERNELVER 4.4.2-gentoo
 /boot/kernel-genkernel-x86_64-$(OVERLAYFS_KERNELVER)
 /boot/initramfs-genkernel-x86_64-$(OVERLAYFS_KERNELVER)
 $symlink /boot/kernel kernel-genkernel-x86_64-$(OVERLAYFS_KERNELVER)
