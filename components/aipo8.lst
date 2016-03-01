@@ -9,12 +9,12 @@ $require iptables.lst
 
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1aipo\2/'
 
-$set AIPO_TAR aipo-8.0.1-linux-x86.gz
-$download http://iij.dl.osdn.jp/aipo/63319/$(AIPO_TAR)
+$set AIPO_TAR aipo-8.1.0-linux-x86.tar.gz
+$download http://iij.dl.osdn.jp/aipo/64557/$(AIPO_TAR)
 $exec "tar xvf /tmp/download/$(AIPO_TAR) -C /tmp"
 
-$set AIPO_SOURCE aipo-8.0.1.zip
-$download http://jaist.dl.osdn.jp/aipo/63319/$(AIPO_SOURCE)
+$set AIPO_SOURCE aipo-8.1.zip
+$download http://iij.dl.osdn.jp/aipo/64557/$(AIPO_SOURCE)
 $exec "mv /tmp/download/$(AIPO_SOURCE) /root/"
 
 $set AIPO_HOME /usr/local/aipo
