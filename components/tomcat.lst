@@ -19,7 +19,7 @@ $package dev-java/ant-eclipse-ecj
 $package dev-java/sun-jaf
 /usr/share/java-config-2/virtuals/jaf
 $package dev-java/sun-javamail
-$package www-servers/tomcat-$(TOMCAT_VERSION).0.28-r2
+$package www-servers/tomcat-$(TOMCAT_VERSION).0.30
 
 $exec "/usr/share/tomcat-$(TOMCAT_VERSION)/gentoo/tomcat-instance-manager.bash --create"
 
