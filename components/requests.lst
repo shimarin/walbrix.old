@@ -7,7 +7,7 @@ $package dev-python/py
 $package dev-python/ipaddress
 $package dev-python/idna
 $package dev-python/ply
-$package dev-python/pytest
+#$package dev-python/pytest
 $package dev-python/pycparser
 $package dev-python/cffi
 $package dev-python/cryptography
