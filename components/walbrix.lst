@@ -20,6 +20,9 @@ $patch /etc/init.d/swap walbrix/swap.init.patch # enable zramswap
 $symlink /etc/init.d/net.eth0 net.lo
 $symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
 
+# extend nf_conntrack capacity
+$write --append /etc/sysctl.conf 'net.nf_conntrack_max = 65536'
+
 # modify initramfs
 $mkdir /tmp/initramfs/etc/splash/wb/images
 $copy walbrix/init /tmp/initramfs/init.walbrix
