@@ -1,35 +1,56 @@
 $require domU.lst
 $require domU-kernel.lst
 $require cron.lst
-$require apache.lst
 $require postgresql.lst
 $require tomcat.lst
+$require java.lst
 $require postfix.lst
+$require iptables.lst
+
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1aipo\2/'
-$set AIPO_TARFILE aipo7020ja_linux64.tar.gz
-$set AIPO_SOURCE_ZIP aipo7020ja_src.zip
-$download https://aipo.googlecode.com/files/$(AIPO_TARFILE)
-$download http://iij.dl.sourceforge.jp/aipo/60038/$(AIPO_SOURCE_ZIP)
-$mkdir /tmp/aipo
-$exec "tar zxvf /tmp/download/$(AIPO_TARFILE) -C /tmp/aipo && tar zxvf /tmp/aipo/aipo*_linux/aipo*.tar.gz -C /tmp/aipo"
-$exec "mv /tmp/download/$(AIPO_SOURCE_ZIP) /root/"
-$exec "rm -rf /var/lib/tomcat-$(TOMCAT_VERSION)/webapps/ROOT && mv /tmp/aipo/aipo/src/webapps/* /var/lib/tomcat-$(TOMCAT_VERSION)/webapps/"
-$mkdir /usr/local/aipo
-$exec "mv /tmp/aipo/aipo/license /tmp/aipo/aipo/logs /tmp/aipo/aipo/src/bin /tmp/aipo/aipo/src/tomcat_diff /usr/local/aipo/"
-$sed /var/lib/tomcat-$(TOMCAT_VERSION)/webapps/aipo/WEB-INF/datasource/dbcp-org001.properties 's/cayenne.dbcp.username=postgres/cayenne.dbcp.username=aipo_postgres/g'
-$sed /var/lib/tomcat-$(TOMCAT_VERSION)/webapps/ROOT/WEB-INF/datasource/dbcp-org001.properties 's/cayenne.dbcp.username=postgres/cayenne.dbcp.username=aipo_postgres/g'
-$sed /var/lib/tomcat-$(TOMCAT_VERSION)/webapps/aipo/WEB-INF/conf/AipoResources.properties 's/aipo.webappserver.port=8080/aipo.webappserver.port=80/g'
-$exec "cp -a /tmp/aipo/aipo/src/initdata/psml /var/lib/tomcat-$(TOMCAT_VERSION)/webapps/aipo/WEB-INF/"
-$exec "cp -a /tmp/aipo/aipo/src/initdata/files /var/lib/tomcat-$(TOMCAT_VERSION)/webapps/aipo/WEB-INF/"
-$exec "cp -a /tmp/aipo/aipo/src/initdata/mail /var/lib/tomcat-$(TOMCAT_VERSION)/webapps/aipo/WEB-INF/"
-$exec "dd if=/dev/urandom bs=16 count=1|base64 > /var/lib/tomcat-8/webapps/aipo/WEB-INF/conf/securityTokenKey.txt && cp /var/lib/tomcat-8/webapps/aipo/WEB-INF/conf/securityTokenKey.txt /var/lib/tomcat-8/webapps/ROOT/WEB-INF/classes/aipo/"
-$exec "wget -O /var/lib/tomcat-$(TOMCAT_VERSION)/webapps/aipo/WEB-INF/conf/holidays_default.properties 'http://sourceforge.jp/frs/redir.php?m=jaist&f=%2Faipo%2F60038%2Fholidays_default.properties'"
-$exec "chown -R tomcat.tomcat /var/lib/tomcat-$(TOMCAT_VERSION)"
-$sed /etc/conf.d/tomcat-$(TOMCAT_VERSION) 's/^#JAVA_OPTS=.\+/JAVA_OPTS="-server -Xmx512M -Xms64M -Xss256k -Dsun.nio.cs.map=x-windows-iso2022jp\/ISO-2022-JP"/'
+
+$set AIPO_TAR aipo-8.1.0-linux-x86.tar.gz
+$download http://iij.dl.osdn.jp/aipo/64557/$(AIPO_TAR)
+$exec "tar xvf /tmp/download/$(AIPO_TAR) -C /tmp"
+
+$set AIPO_SOURCE aipo-8.1.zip
+$download http://iij.dl.osdn.jp/aipo/64557/$(AIPO_SOURCE)
+$exec "mv /tmp/download/$(AIPO_SOURCE) /root/"
+
+$set AIPO_HOME /usr/local/aipo
+$set TOMCAT_HOME /var/lib/tomcat-8
+$set POSTGRES_USER aipo_postgres                                              
+$set DIST_DIR /tmp/aipo-*/dist
+
+$exec "rm -rf $(TOMCAT_HOME)/webapps/ROOT && mkdir -p $(TOMCAT_HOME)/webapps/ROOT && unzip -o $(DIST_DIR)/aipo.war -d $(TOMCAT_HOME)/webapps/ROOT"
+$exec "mkdir -p $(TOMCAT_HOME)/webapps/container && unzip -o $(DIST_DIR)/container.war -d $(TOMCAT_HOME)/webapps/container"
+
+$exec "mkdir -p $(AIPO_HOME)/backup/xreg"
+$exec "cp -rf $(TOMCAT_HOME)/webapps/ROOT/WEB-INF/conf/*.xreg /usr/local/aipo/backup/xreg"
+$exec "mkdir -p /usr/share/tomcat-8/datasource"
+$exec "cp -rf $(TOMCAT_HOME)/webapps/ROOT/WEB-INF/datasource/dbcp-org001.properties /usr/share/tomcat-8/datasource/"
+
+$exec "mkdir -p /usr/share/tomcat-8/data && chown tomcat.tomcat /usr/share/tomcat-8/data"
+$exec "mkdir -p $(AIPO_HOME)/bin"
+$exec "cp -rf $(DIST_DIR)/bin/* $(AIPO_HOME)/bin/ && chmod +x $(AIPO_HOME)/bin/*.sh"
+$exec "cp -rf $(DIST_DIR)/license $(AIPO_HOME)/"
+
+$exec "dd if=/dev/urandom bs=16 count=1|base64 > $(TOMCAT_HOME)/webapps/ROOT/WEB-INF/conf/securityTokenKey.txt"
+$exec "cp $(TOMCAT_HOME)/webapps/ROOT/WEB-INF/conf/securityTokenKey.txt $(TOMCAT_HOME)/webapps/container/WEB-INF/classes/aipo/"
+$exec "chown -R tomcat.tomcat $(TOMCAT_HOME)"
+
+$sed /etc/conf.d/tomcat-8 's/^#JAVA_OPTS=.\+/JAVA_OPTS="-server -Xmx512M -Xms64M -Xss256k -Dsun.nio.cs.map=x-windows-iso2022jp\/ISO-2022-JP"/'
+
 $mkdir /tmp/postgresql
 $copy postgresql/operate.sh /tmp/postgresql/operate.sh
-$copy aipo/initial-database.sql /tmp/postgresql/initial-database.sql
 $exec "/tmp/postgresql/operate.sh createdb org001 aipo_postgres"
-$exec "/tmp/postgresql/operate.sh exec org001 aipo_postgres '\i /tmp/aipo/aipo/src/initdata/sql/org001.sql' '\i /tmp/aipo/aipo/src/initdata/sql/sample.sql' '\i /tmp/postgresql/initial-database.sql'"
-$patch /etc/apache2/vhosts.d/default_vhost.include aipo/default_vhost.patch
-$vadesc
+$exec "mv $(DIST_DIR)/sql/org001.sql /tmp/org001.sql"
+$exec "/tmp/postgresql/operate.sh exec org001 aipo_postgres '\i /tmp/org001.sql'"
+
+# redirect port 80 -> 8080
+$write /var/lib/iptables/rules-save "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8080\nCOMMIT"
+
+$mkdir /etc/xen
+$write /etc/xen/config "memory=256"
+
+#$vadesc

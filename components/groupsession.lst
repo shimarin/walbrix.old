@@ -2,7 +2,7 @@ $require domU.lst
 $require domU-kernel.lst
 $require cron.lst
 $require tomcat.lst
-$require java-oracle.lst
+$require java.lst
 $require postfix.lst
 $require iptables.lst
 

@@ -14,10 +14,9 @@ app-text/groonga-normalizer-mysql
 dev-db/mysql
 dev-java/commons-dbcp
 dev-java/commons-pool
-dev-java/icedtea-bin
+=dev-java/icedtea-bin-3.0.0_pre09
 dev-java/jdbc-mysql
 dev-java/jdbc-postgresql
-dev-java/oracle-jre-bin
 dev-java/slf4j-api
 dev-java/sun-jaf
 dev-java/sun-javamail

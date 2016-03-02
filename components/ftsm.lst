@@ -10,7 +10,7 @@ $require emacs.lst
 $require vim.lst
 $require s3cmd.lst
 $require tomcat.lst
-$require java-oracle.lst
+$require java.lst
 $require mysql-python.lst
 $require uwsgi.lst
 $package app-admin/logrotate

@@ -15,3 +15,10 @@
 =dev-go/blackfriday-1.2_p20150720
 =dev-go/sanitized-anchor-name-0_pre20150822
 
+#java8
+=dev-java/icedtea-bin-3.0.0_pre09
+=app-eselect/eselect-java-0.2.0
+=dev-java/icedtea-web-1.6.1-r1
+=virtual/jdk-1.8.0
+=virtual/jre-1.8.0
+
