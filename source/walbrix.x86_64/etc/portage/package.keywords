@@ -6,7 +6,7 @@
 =sys-kernel/aufs-sources-3.18.27
 =app-crypt/chntpw-140201
 =sys-cluster/drbd-8.4.3
-=sys-fs/bcache-tools-1.0.5
+=sys-fs/bcache-tools-1.0.8_p20140220-r1
 =net-misc/s3cmd-1.6.0
 =sys-block/thin-provisioning-tools-0.4.1
 =dev-util/scons-2.3.5
