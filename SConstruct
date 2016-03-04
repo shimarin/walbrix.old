@@ -82,7 +82,7 @@ mount -o rw,remount /.overlay/boot
 [ ! -f /.overlay/boot/walbrix.cur ] && mv /.overlay/boot/walbrix /.overlay/boot/walbrix.cur
 cp walbrix /.overlay/boot/walbrix
 mount -o ro,remount /.overlay/boot
-""") 
+""")
 
 ### DESKTOP ###
 
@@ -131,12 +131,12 @@ env.Command("build/installer/install.64", "$INSTALLER_64_MARKER", "(cd build/ins
 env.Command("build/installer/install.32", "$INSTALLER_32_MARKER", "(cd build/installer/i686 && find .|cpio -o -H newc) | xz -c --check=crc32 > $TARGET")
 env.Command("build/installer/wbui", "$WBUI_MARKER", "(cd build/wbui && find .|cpio -o -H newc) | xz -c --check=crc32 > $TARGET")
 
-boot_iso9660 = ["build/boot-iso9660/boot.img","build/boot-iso9660/efiboot.img","build/boot-iso9660/bootx64.efi","source/walbrix.i686/usr/share/syslinux/isolinux.bin","source/walbrix.i686/usr/share/syslinux/libutil.c32","source/walbrix.i686/usr/share/syslinux/ldlinux.c32","source/walbrix.i686/usr/share/syslinux/menu.c32"]
+boot_iso9660 = ["build/boot-iso9660/boot.img","build/boot-iso9660/efiboot.img","build/boot-iso9660/bootx64.efi"]
 env.Command(boot_iso9660, lstfile_deps("components/boot-iso9660.lst","source/walbrix.x86_64"), "rm -rf build/boot-iso9660 && ./collect --source source/walbrix.x86_64 components/boot-iso9660.lst build/boot-iso9660")
 
 for region in ["jp"]:
     # CD
-    iso9660_deps = ["$SYSTEM_64_MARKER","files/iso9660/grub.cfg","files/iso9660/isolinux.cfg","build/installer/install.32","build/installer/wbui"] + boot_iso9660
+    iso9660_deps = ["$SYSTEM_64_MARKER","files/iso9660/grub.cfg","files/iso9660/isolinux.cfg","build/installer/install.32","build/installer/wbui"] + boot_iso9660 + ["source/walbrix.i686/usr/share/syslinux/isolinux.bin","source/walbrix.i686/usr/share/syslinux/libutil.c32","source/walbrix.i686/usr/share/syslinux/ldlinux.c32","source/walbrix.i686/usr/share/syslinux/menu.c32"]
     iso9660_files = "boot/boot.img=build/boot-iso9660/boot.img boot/efiboot.img=build/boot-iso9660/efiboot.img boot/grub/grub.cfg=files/iso9660/grub.cfg boot/grub/fonts/unicode.pf2=build/walbrix/i686/usr/share/grub/unicode.pf2 EFI/BOOT/bootx64.efi=build/boot-iso9660/bootx64.efi boot/isolinux/isolinux.bin=source/walbrix.i686/usr/share/syslinux/isolinux.bin boot/isolinux/libutil.c32=source/walbrix.i686/usr/share/syslinux/libutil.c32 boot/isolinux/ldlinux.c32=source/walbrix.i686/usr/share/syslinux/ldlinux.c32 boot/isolinux/menu.c32=source/walbrix.i686/usr/share/syslinux/menu.c32 boot/isolinux/isolinux.cfg=files/iso9660/isolinux.cfg kernel.32=build/walbrix/i686/boot/kernel install.32=build/installer/install.32 wbui=build/installer/wbui EFI/Walbrix/kernel=build/walbrix/x86_64/boot/kernel EFI/Walbrix/initramfs=build/walbrix/x86_64/boot/initramfs"
     env.Command("walbrix-%s.iso" % region, iso9660_deps + ["walbrix"], "xorriso -as mkisofs $MKISOFS_OPTS -b boot/boot.img -V WBINSTALL -o $TARGET %s walbrix=walbrix" % iso9660_files)
     env.Command("walbrix-isolinux-%s.iso" % region, iso9660_deps + ["walbrix"], "xorriso -as mkisofs $MKISOFS_OPTS -b boot/isolinux/isolinux.bin -V WBINSTALL -o $TARGET %s walbrix=walbrix" % iso9660_files)
