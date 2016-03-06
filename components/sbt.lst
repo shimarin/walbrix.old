@@ -1,0 +1,7 @@
+$require java.lst
+#$package dev-lang/scala-2.10.6
+#$package dev-java/sbt
+/usr/bin/sbt
+/usr/share/sbt/package.env
+/usr/share/sbt/lib/sbt-launch.jar
+

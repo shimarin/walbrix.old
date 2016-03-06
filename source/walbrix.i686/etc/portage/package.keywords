@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.4.3
+=sys-kernel/gentoo-sources-4.4.4
 =app-i18n/fbterm-1.7-r1
 =sys-kernel/vanilla-sources-3.2.78
 =app-crypt/chntpw-140201
@@ -11,5 +11,4 @@
 =sys-block/thin-provisioning-tools-0.4.1
 =media-gfx/fbgrab-1.3
 =app-misc/c_rehash-1.7-r1
-=dev-libs/openssl-1.0.2e
-
+=sys-boot/grub-2.02_beta3

@@ -34,7 +34,7 @@ def run(device, image, yes = False, no_bios = False, xen_vga = None): # image ca
         if raw_input("Are you sure to destroy all data on %s? ('yes' if sure): " % device) != "yes": return False
 
     shutdown_vgs() # deactivate all VGs as target device might have belonged to some of them
-    
+
     bios_compatible = not no_bios and disk_info["bios_compatible"]
 
     # create partition table
@@ -73,14 +73,14 @@ def run(device, image, yes = False, no_bios = False, xen_vga = None): # image ca
     # detect vga mode if necessary
     if xen_vga is None and not is_kms_compatible_system(): xen_vga="DETECT"
     if xen_vga == "DETECT": xen_vga = determine_xen_vga_mode()
-    
+
     with create_install_disk.tempmount(boot_partition, "rw", "vfat") as tmpdir:
         # install bootloader
         os.makedirs("%s/boot/grub" % tmpdir)
         os.makedirs("%s/EFI/BOOT" % tmpdir)
 
         if bios_compatible: subprocess.check_call(["grub2-install","--target=i386-pc","--recheck","--boot-directory=%s/boot" % tmpdir,device])
-        subprocess.check_call(["grub2-mkimage","-o","%s/EFI/BOOT/bootx64.efi" % tmpdir,"-O","x86_64-efi"] + create_install_disk.GRUB_MODULES)
+        subprocess.check_call(["grub2-mkimage","-p","/boot/grub","-o","%s/EFI/BOOT/bootx64.efi" % tmpdir,"-O","x86_64-efi"] + create_install_disk.GRUB_MODULES)
 
         # boot config
         with open("%s/boot/grub/grub.cfg" % tmpdir, "w") as f:
@@ -89,7 +89,7 @@ def run(device, image, yes = False, no_bios = False, xen_vga = None): # image ca
         with open("%s/boot/grub/walbrix.cfg" % tmpdir, "w") as f:
             f.write("set WALBRIX_BOOT=UUID=%s\n" % boot_partition_uuid)
             if xen_vga is not None: f.write("set WALBRIX_XEN_VGA=%s\n" % xen_vga)
-            
+
         # copy system image
         print "Installing Walbrix..."
 

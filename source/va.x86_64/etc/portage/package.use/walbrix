@@ -27,4 +27,6 @@ dev-python/markdown pygments
 dev-libs/openssl -bindist
 net-misc/openssh -bindist
 www-servers/nginx aio http2 nginx_modules_http_auth_pam nginx_modules_http_fancyindex nginx_modules_http_cache_purge nginx_modules_http_lua nginx_modules_http_spdy nginx_modules_http_realip nginx_modules_http_mp4 nginx_modules_http_flv nginx_modules_http_stub_status nginx_modules_mail_smtp nginx_modules_mail_pop3 nginx_modules_mail_imap
+media-libs/gd fontconfig truetype png jpeg
+dev-lang/scala binary
 

@@ -113,10 +113,10 @@ def usable_disks(minimum_disk_size = 1000000000):
         if "size" not in disk_info or disk_info["size"] < minimum_disk_size: continue
         rst.append(disk_info)
     return rst
-    
+
 def execute_parted_command(device, command):
     subprocess.check_call(["parted","--script",device,command])
-    
+
 def sync_udev():
     subprocess.check_call(["udevadm","settle"])
 
@@ -153,7 +153,7 @@ def print_disk_info(disks):
     print "---------------------------------------------------------------------"
     for disk in disks:
         print row_format.format(disk["name"],disk["size_str"],'"' + (disk["vendor"] or "UNKNOWN") + '"','"' + (disk["model"] or "UNKNOWN") + '"',"BIOS+UEFI" if disk["bios_compatible"] else "UEFI")
-    
+
 def print_usable_disks(minimum_disk_size = 1000000000):
     print "Target disk(like /dev/sdX) must be specified.  Usable disks are:"
     print_disk_info(usable_disks(minimum_disk_size))
@@ -161,7 +161,7 @@ def print_usable_disks(minimum_disk_size = 1000000000):
 
 def get_partition_uuid(partition):
     return subprocess.check_output(["blkid","-o","value","-s","UUID",partition]).strip()
-    
+
 def get_release_info(specified_version = None, update_info_url = DEFAULT_UPDATE_INFO_URL): # None == latest stable
     update_info = json.load(urllib2.urlopen(update_info_url))
     if specified_version is None: specified_version = update_info["latest_stable"]
@@ -223,7 +223,7 @@ def exec_install(device, image = None, yes = False, update_url=DEFAULT_UPDATE_IN
         os.makedirs("%s/EFI/BOOT" % tmpdir)
 
         if bios_compatible: subprocess.check_call([search_command("grub2-install","grub-install"),"--target=i386-pc","--recheck","--boot-directory=%s/boot" % tmpdir,device])
-        subprocess.check_call([search_command("grub2-mkimage","grub-mkimage"),"-o","%s/EFI/BOOT/bootx64.efi" % tmpdir,"-O","x86_64-efi"] + GRUB_MODULES)
+        subprocess.check_call([search_command("grub2-mkimage","grub-mkimage"),"-p","/boot/grub" "-o","%s/EFI/BOOT/bootx64.efi" % tmpdir,"-O","x86_64-efi"] + GRUB_MODULES)
 
         # boot config
         with open("%s/boot/grub/grub.cfg" % tmpdir, "w") as f:
@@ -231,7 +231,7 @@ def exec_install(device, image = None, yes = False, update_url=DEFAULT_UPDATE_IN
             f.write("source (loop)/install.cfg\n")
         with open("%s/boot/grub/walbrix.cfg" % tmpdir, "w") as f:
             f.write("set WALBRIX_BOOT=UUID=%s\n" % boot_partition_uuid)
-            
+
         # copy system image
         save_image_file_to = "%s/walbrix" % tmpdir
         if image.startswith("http://") or image.startswith("https://"):
@@ -283,7 +283,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     check_prereqs()
-    
+
     if args.device is None:
         print_usable_disks(MINIMUM_DISK_SIZE_IN_GB * 1000000000)
         sys.exit(1)

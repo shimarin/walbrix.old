@@ -62,7 +62,7 @@ rm -rf build/walbrix/i686
 """)
 
 env.Command("build/walbrix/walbrix.cfg", ["$SYSTEM_64_MARKER","$SYSTEM_32_MARKER","$WBUI_MARKER"], """
-[ "`cat $SYSTEM_64_MARKER`" = "`cat $SYSTEM_32_MARKER`" ]
+#[ "`cat $SYSTEM_64_MARKER`" = "`cat $SYSTEM_32_MARKER`" ]
 echo "set WALBRIX_VERSION=`cat $SYSTEM_64_MARKER`" > $TARGET
 echo "set WALBRIX_BUILD_ID=`cat build/wbui/usr/share/wbui/commit-id`" >> $TARGET
 echo "set WALBRIX_UPDATE_URL=http://update.walbrix.net" >> $TARGET

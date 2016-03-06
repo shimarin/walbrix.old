@@ -11,9 +11,13 @@
 =app-misc/c_rehash-1.7-r1
 =dev-libs/openssl-1.0.2e
 
-=dev-java/icedtea-bin-3.0.0_pre09
-=app-eselect/eselect-java-0.2.0
+# java8
+=dev-lang/scala-2.11.7-r1
+=dev-lang/scala-2.10.6
+=virtual/jdk-1.8.0-r2
+=virtual/jre-1.8.0-r1
+=dev-java/icedtea-bin-3.0.0_pre09-r1
 =dev-java/icedtea-web-1.6.1-r1
-=virtual/jdk-1.8.0
-=virtual/jre-1.8.0
+=app-eselect/eselect-java-0.2.0
+=dev-java/sbt-0.13.11
 

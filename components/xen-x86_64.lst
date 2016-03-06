@@ -15,4 +15,4 @@ $sed /etc/rc.conf 's/^#rc_sys=""/rc_sys="xen0"/'
 
 # pv-grub2
 $write /tmp/grub.cfg 'set root=(xen/xvda1)\nnormal (xen/xvda1)/boot/grub/grub.cfg'
-$exec "grub2-mkimage -c /tmp/grub.cfg -o /usr/lib/xen/boot/pv-grub2-x86_64 -O x86_64-xen loopback xfs btrfs linux echo test gzio configfile cpuid minicmd squash4 lsxen && gzip /usr/lib/xen/boot/pv-grub2-x86_64"
+$exec "grub2-mkimage -c /tmp/grub.cfg -p /boot/grub -o /usr/lib/xen/boot/pv-grub2-x86_64 -O x86_64-xen loopback xfs btrfs linux echo test gzio configfile cpuid minicmd squash4 lsxen && gzip /usr/lib/xen/boot/pv-grub2-x86_64"

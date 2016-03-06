@@ -1,0 +1,8 @@
+$require java.lst
+$package dev-java/ant-core
+$package dev-java/hawtjni-runtime
+$package app-eselect/eselect-scala
+$package dev-lang/scala-2.11.7-r1
+$require vim.lst
+$package app-vim/scala-syntax
+$exec --overlay "eselect scala set scala-2.11"
