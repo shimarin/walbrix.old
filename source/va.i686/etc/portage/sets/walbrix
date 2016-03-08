@@ -8,6 +8,7 @@ app-editors/nano
 app-editors/nvi
 app-editors/vim
 app-portage/gentoolkit
+app-text/html2text
 dev-db/mysql
 dev-db/redis
 dev-java/commons-dbcp
@@ -35,6 +36,9 @@ dev-util/strace
 dev-vcs/git
 mail-mta/postfix
 media-fonts/vlgothic
+media-gfx/jpegoptim
+media-gfx/pngcrush
+media-gfx/wkhtmltopdf
 media-video/ffmpeg
 net-analyzer/traceroute
 net-analyzer/zabbix
@@ -60,3 +64,5 @@ www-servers/nginx
 www-servers/tomcat
 www-servers/tornado
 www-servers/uwsgi
+x11-base/xorg-server
+

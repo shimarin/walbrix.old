@@ -7,7 +7,7 @@
 =app-text/groonga-5.0.9
 =app-text/groonga-normalizer-mysql-1.1.0
 =media-gfx/wkhtmltopdf-0.12.2.1
-=www-servers/nginx-1.9.10-r3
+=www-servers/nginx-1.9.12
 
 #docker
 =app-emulation/docker-1.9.0

@@ -24,7 +24,7 @@ dev-php/pecl-memcached php_targets_php5-5 -php_targets_php5-6
 dev-java/java-config -python_targets_python3_4
 dev-java/icedtea-bin -X -alsa cjk -gtk cups headless-awt
 gnome-base/gsettings-desktop-schemas -introspection
-app-text/ghostscript-gpl cups
+app-text/ghostscript-gpl cups linguas_ja
 dev-vcs/git -perl -gpg
 
 net-irc/unrealircd -ssl
@@ -42,4 +42,9 @@ www-servers/nginx aio http2 nginx_modules_http_auth_pam nginx_modules_http_fancy
 
 media-libs/gd fontconfig truetype png jpeg
 dev-java/sbt binary
+app-text/poppler cjk curl jpeg2k png tiff
+x11-base/xorg-server xvfb
+x11-base/xorg-drivers -video_cards_glint -video_cards_intel -video_cards_mach64 -video_cards_mga -video_cards_nouveau -video_cards_nv -video_cards_r128 -video_cards_radeon -video_cards_savage -video_cards_tdfx -video_cards_trident -video_cards_vesa -video_cards_via -video_cards_vmware
+media-libs/mesa -video_cards_intel -video_cards_nouveau -video_cards_radeon -video_cards_vmware
+x11-libs/libdrm -video_cards_intel -video_cards_nouveau -video_cards_radeon -video_cards_vmware
 

@@ -7,7 +7,7 @@
 =dev-lang/coffee-script-1.9.3-r1
 =dev-ruby/bundler-1.9.10
 =www-servers/uwsgi-2.0.12
-=www-servers/nginx-1.9.10-r3
+=www-servers/nginx-1.9.12
 =app-misc/c_rehash-1.7-r1
 =dev-libs/openssl-1.0.2e
 
@@ -21,3 +21,4 @@
 =app-eselect/eselect-java-0.2.0
 =dev-java/sbt-0.13.11
 
+=media-gfx/wkhtmltopdf-0.12.2.1

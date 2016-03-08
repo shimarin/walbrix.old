@@ -1,0 +1,3 @@
+$package app-text/poppler-data
+$package app-text/poppler --use="cjk"
+

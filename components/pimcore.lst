@@ -1,0 +1,40 @@
+$require domU.lst
+$require domU-kernel.lst
+$require cron.lst
+$require apache.lst
+$require mysql.lst
+$require postfix.lst
+$require samba.lst
+$require php55.lst
+
+$require redis.lst
+$require pecl-imagick.lst
+$package dev-php/pecl-redis
+$require ffmpeg.lst
+$package app-text/ghostscript-gpl
+$require wkhtmltopdf.lst
+$require poppler.lst
+$package app-text/html2text
+#inkscape
+#require libreoffice.lst
+#https://github.com/rflynn/imgmin
+$package media-gfx/pngcrush
+$package media-gfx/jpegoptim
+
+$mkdir /tmp/mysql
+$copy mysql/operate.sh /tmp/mysql/operate.sh
+$exec "/tmp/mysql/operate.sh createdb pimcore"
+$copy pimcore/pimcore.sql /tmp/pimcore.sql
+$exec "/tmp/mysql/operate.sh exec pimcore 'source /tmp/pimcore.sql'"
+
+$set PIMCORE_ZIP pimcore-data.zip
+$download https://www.pimcore.org/download/$(PIMCORE_ZIP)
+$exec "cd /var/www/localhost/htdocs && unzip /tmp/download/$(PIMCORE_ZIP)"
+$copy pimcore/system.php /var/www/localhost/htdocs/website/var/config/system.php
+
+$exec "chown -R apache.apache /var/www/localhost"
+
+$write /var/spool/cron/crontabs/apache '*/5  *  *  *  * php /var/www/localhost/htdocs/pimcore/cli/console.php maintenance 1>/dev/null 2>/dev/null'
+
+$vadesc
+

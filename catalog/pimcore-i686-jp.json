@@ -1,0 +1,14 @@
+{
+    "id": "pimcore",
+    "version":"4.0.0-b4",
+    "title": "pimcore 4.0.0-b4",
+    "description": "The Open-source enterprise platform for PIM, CMS, DAM & Commerce",
+    "tarball": "http://dist.walbrix.net/va/pimcore-4.0.0-b4-i686-jp.tar.xz",
+    "minimum_hd": 2,
+    "minimum_ram": 256,
+
+    "uuid":"9ed5afc1-bc4d-4c31-bd74-20a13eded540",
+    "instruction": {
+        "ja":"初期ユーザー名とパスワードは admin/p1mcore_Adminです"
+    }
+}
