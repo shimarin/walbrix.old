@@ -1,0 +1,4 @@
+$package app-office/libreoffice --exclude=^/usr/share/icons/
+$package app-office/libreoffice-l10n
+$package media-fonts/liberation-fonts
+
