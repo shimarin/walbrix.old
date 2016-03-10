@@ -274,7 +274,7 @@ def process_lstfile(context, lstfile):
         parser.add_argument("url", type=str, help="URL to download")
         args = parser.parse_args(args)
         url = context.apply_variables(args.url)
-        filename = os.path.basename(url) if args.filename is None else args.filename
+        filename = os.path.basename(url) if args.filename is None else context.apply_variables(args.filename)
         cache_file = "download_cache/%s" % filename
         progress_file = "download_cache/_download_in_progress"
         if not os.path.exists(cache_file):
