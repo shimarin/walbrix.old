@@ -1,0 +1,31 @@
+$require domU.lst
+$require domU-kernel.lst
+$require cron.lst
+$require apache.lst
+$require mysql.lst
+$require postfix.lst
+$require samba.lst
+$require php55.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1rucaro\2/'
+
+$mkdir /tmp/mysql
+$copy mysql/operate.sh /tmp/mysql/operate.sh
+$exec "/tmp/mysql/operate.sh createdb rucaro rucaro rucaro"
+$copy rucaro/rucaro.sql /tmp/rucaro.sql
+$copy rucaro/set_top_url_empty.sql /tmp/set_top_url_empty.sql
+$exec "/tmp/mysql/operate.sh exec rucaro 'source /tmp/rucaro.sql'"
+$exec "/tmp/mysql/operate.sh exec rucaro 'source /tmp/set_top_url_empty.sql'"
+
+$set RUCARO_ZIP rucaro.zip
+$download --filename=$(RUCARO_ZIP) 'https://rucaro.org/?p=katachi_download&flagPost=1'
+$exec "cd /tmp && unzip /tmp/download/$(RUCARO_ZIP)"
+$exec "cp -av /tmp/rucaro/. /var/www/localhost/htdocs/"
+$exec "rm /var/www/localhost/htdocs/config.php /var/www/localhost/htdocs/back/dat/temp/flagUpdate.cgi"
+$copy rucaro/connect.cgi /var/www/localhost/htdocs/back/dat/db/connect.cgi
+
+#tar zcvf /tmp/rucaro-files.tar.gz -C /var/www/localhost/htdocs front/else/core/base/css/style.css front/else/core/base/js/ja/root.js front/else/core/confirm/css/style.css front/else/core/confirm/js/ja/index.js front/else/core/login/js/ja/index.js front/else/core/login/css/style.css front/else/lib/css/style.css front/else/lib/js/ja/code.js
+$copy rucaro/rucaro-files.tar.gz /tmp/rucaro-files.tar.gz
+$exec "tar zxvf /tmp/rucaro-files.tar.gz -C /var/www/localhost/htdocs"
+$exec "chown -R apache.apache /var/www/localhost"
+
+$vadesc

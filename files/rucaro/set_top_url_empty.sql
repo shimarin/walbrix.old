@@ -1,0 +1,1 @@
+update basePreference set strTopUrl='';
