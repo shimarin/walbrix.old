@@ -6,6 +6,7 @@ $require mysql.lst
 $require postfix.lst
 $require samba.lst
 $require php55.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1pimcore\2/'
 
 $require redis.lst
 $require pecl-imagick.lst
