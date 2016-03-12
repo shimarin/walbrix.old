@@ -48,9 +48,9 @@ import tempfile
 from xml.etree import ElementTree
 
 # WBUIバージョン
-version = "0.3.0"
+version = "0.3.1"
 
-guest_kernel = "/boot/vmlinuz.domU"
+guest_kernel = "/boot/kernel.domU"
 runapp_link = "/var/run/wb-run-app"
 cache_dir = "/var/cache/wb"
 
@@ -129,7 +129,7 @@ def create_volume_group(vgname, devices, tag=None, pv_tag=None):
         devices = [devices]
     device_names = " ".join(devices)
     if exec_shell("vgcreate %s %s %s" % (addtagopt, vgname, device_names)) != 0:
-        raise Exception("system.create_volume_group.vgcreate")            
+        raise Exception("system.create_volume_group.vgcreate")
 
     if pv_tag != None:
         for device in devices:
@@ -264,7 +264,7 @@ def determine_device_from_vmname(vmname):
     if len(disk) < 1: return None
     first_disk = disk[0].split(',')[0]
     if not first_disk.startswith("phy:/dev/"): return None
-    
+
     return first_disk[4:]
 
 def send_stream_via_http(stream, location, content_type, host, port=8080):
@@ -284,13 +284,13 @@ def send_stream_via_http(stream, location, content_type, host, port=8080):
 def get_apps():
     apps = []
     lvs = subprocess.Popen("lvs --noheadings --separator='|' @wbapp", shell=True, stdout=subprocess.PIPE,close_fds=True)
-    line = lvs.stdout.readline() 
+    line = lvs.stdout.readline()
     while line:
         splitted = line.split('|')
         name = splitted[0].strip()
         vg = splitted[1].strip()
         apps.append({"name":name, "device":"/dev/%s/%s" % (vg, name)})
-        line = lvs.stdout.readline() 
+        line = lvs.stdout.readline()
     return apps
 
 def get_system_keymap():
@@ -320,7 +320,7 @@ def determine_vg_and_lv_name_from_device_name(device_name):
     lvs.stdout.close()
     if lvs.wait() != 0: return None
     if line == None: return None
-    
+
     splitted = line.split('|')
     return (splitted[1].strip(), splitted[0].strip())
 
@@ -332,7 +332,7 @@ class Mount():
     def __enter__(self):
         self.real_mount_point = self.mount_point if self.mount_point != None else tempfile.mkdtemp()
         options = ""
-        if self.device_name == "/dev/shm": options = "-t tmpfs" 
+        if self.device_name == "/dev/shm": options = "-t tmpfs"
         mount_cmd = "mount %s %s %s" % (options, self.device_name, self.real_mount_point)
         if exec_shell(mount_cmd) != 0:
             raise Exception(mount_cmd)
@@ -349,7 +349,7 @@ class Snapshot():
     def __init__(self, device_name, size = 1):
         self.device_name = device_name
         self.size = size
-    
+
     def __enter__(self):
         (vgname, lvname) = determine_vg_and_lv_name_from_device_name(self.device_name)
         snapshot_name = "%s-wb-%d" % (lvname, os.getpid())
@@ -357,14 +357,14 @@ class Snapshot():
         result = exec_shell("lvcreate --snapshot --size=%dG --name %s %s" % (self.size, snapshot_name, self.device_name))
         if result != 0: raise Exception("lvcreate --snapshot")
         return self.snapshot_name
-    
+
     def __exit__(self, exc_type, exc_value, traceback):
         remove_logical_volume(self.snapshot_name)
         if exc_type: return False
         return True
 
 class WBUIUpdate:
-    
+
     def __init__(self, url = "http://hub.stbbs.net/wbui/update.xml"):
         self.url = url
 

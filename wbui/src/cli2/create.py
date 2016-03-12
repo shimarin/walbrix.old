@@ -12,7 +12,7 @@ def get_overlay_params(rootdir):
     ro_layer_match = ro_layer_re.search(cfg)
     rw_layer_match = rw_layer_re.search(cfg)
     if None in [ro_layer_match, rw_layer_match]: return None
-    
+
     return (ro_layer_match.groups()[0], rw_layer_match.groups()[0])
 
 @contextlib.contextmanager
@@ -92,23 +92,22 @@ def determine_boot_type(vmroot):
     init = os.path.join(vmroot, "sbin/init")
     grub1_cfg = os.path.join(vmroot, "boot/grub/menu.lst")
     grub2_cfg = os.path.join(vmroot, "boot/grub/grub.cfg")
+    grub1_bin = "/usr/lib/xen/boot/pv-grub-x86_64.gz"
     grub2_bin = "/usr/lib/xen/boot/pv-grub2-x86_64.gz" # https://github.com/wbrxcorp/walbrix/issues/61
 
-    # pv-grub2
+    # pv-grub2 (considered 64bit)
     if os.path.isfile(grub2_bin) and os.path.isfile(grub2_cfg):
-        if not os.path.isfile(init) or detect_arch(init) == 64:
-            return ["kernel='%s'" % grub2_bin]
+        return ["kernel='%s'" % grub2_bin]
 
-    # pv-grub1
-    if os.path.isfile(grub1_cfg):
-        bootloader = "/usr/lib/xen/boot/pv-grub-x86_%d.gz" % detect_arch(init)
-        if not os.path.isfile(bootloader):raise Exception("Bootloader %s does not exist when it's needed" % bootloader)
-        return ["kernel='%s'" % bootloader, "extra='(hd0)/boot/grub/menu.lst'"]
+    # pv-grub1 with 64bit VM
+    if os.path.isfile(grub1_bin) and os.path.isfile(grub1_cfg):
+        if not os.path.isfile(init) or detect_arch(init) == 64:
+            return ["kernel='%s'" % grub1_bin, "extra='(hd0)/boot/grub/menu.lst'"]
 
     #else
-    kernel = "/boot/vmlinuz.domU"
+    kernel = "/boot/kernel.domU"
     if not os.path.isfile(kernel): raise Exception("DomU kernel %s does not exist when it's needed" % kernel)
-    if not os.path.isfile(init): raise Exception("%s is missimg in VM" % kernel)
+    if not os.path.isfile(init): raise Exception("/sbin/init is missimg in VM")
     return ["kernel='%s'" % kernel, "root='/dev/xvda1 ro'"]
 
 def get_device_and_vmname(name, quiet=False):
@@ -117,7 +116,7 @@ def get_device_and_vmname(name, quiet=False):
 def run(name, default_memory = 128, console = False, quiet=False):
     device, name = get_device_and_vmname(name, quiet)
     make_sure_device_is_not_being_used(device)
-    
+
     with mount_vm(device, True) as tempdir:
         configfile = os.path.join(tempdir, "etc/xen/config")
         config = []
