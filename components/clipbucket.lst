@@ -1,0 +1,46 @@
+$require domU.lst
+$require domU-kernel.lst
+$require cron.lst
+$require ruby21.lst
+$require php54.lst
+$require pecl-imagick.lst
+$require mysql.lst
+$require ffmpeg.lst
+$require postfix.lst
+$sed /etc/conf.d/hostname s/^\(hostname="\).*\("\)$/\1clipbucket\2/
+
+$sed /etc/php/apache2-php5.5/php.ini s/^max_execution_time.\+$/max_execution_time = 0/ 
+$sed /etc/php/apache2-php5.5/php.ini s/^upload_max_filesize.\+$/upload_max_filesize = 512M/
+$sed /etc/php/apache2-php5.5/php.ini s/^post_max_size.\+$/post_max_size = 768M/
+
+$exec --overlay "gem install --no-ri --no-rdoc flvtool2"
+
+$set CLIPBUCKET_ZIP clipbucket-2.8.v3354-stable.zip
+$download http://jaist.dl.sourceforge.net/project/clipbucket/ClipBucket%20v2/$(CLIPBUCKET_ZIP)
+$exec "/tmp/download/$(CLIPBUCKET_ZIP) -d /tmp"
+$exec "rm -rf /var/www/localhost/htdocs"
+$exec "mv /tmp/clipbucket-*/upload /var/www/localhost/htdocs"
+$sed /var/www/localhost/htdocs/admin_area/styles/cbv2/layout/header.html s/ href="{\$baseurl}"/ href="{$baseurl}\/"/
+$sed /var/www/localhost/htdocs/admin_area/styles/cbv2/layout/login.html s/ href="{\$baseurl}"/ href="{$baseurl}\/"/
+$sed /var/www/localhost/htdocs/styles/cbv2new/layout/header.html s/ href="{\$baseurl}"/ href="{$baseurl}\/"/
+$sed /var/www/localhost/htdocs/styles/cbv2new/layout/view_item.html s/ href="{\$baseurl}"/ href="{$baseurl}\/"/
+$sed /var/www/localhost/htdocs/includes/classes/ClipBucket.class.php s/\(.link.=>BASEURL\)/\1."\/"/g
+
+## <Initial Setup>
+$copy clipbucket/setup_initial_database.sh /tmp/setup_initial_database.sh
+### <Pre-generated files>
+$copy clipbucket/dbconnect.php /var/www/localhost/htdocs/includes/dbconnect.php
+$copy clipbucket/clipbucket.php /var/www/localhost/htdocs/includes/clipbucket.php
+$exec "rm -rf /var/www/localhost/htdocs/cb_install /var/www/localhost/htdocs/files/temp/install.me"
+$copy clipbucket/initial-database.sql /tmp/initial-database.sql
+### </Pre-generated files>
+$exec "sh /tmp/setup_initial_database.sh"
+## </Initial Setup>
+
+$exec "chown -R apache.apache /var/www/localhost/htdocs"
+
+$copy clipbucket/libx264-normal.ffpreset /usr/share/ffmpeg/libx264-normal.ffpreset
+$copy clipbucket/crontab /var/spool/cron/crontabs/root
+$exec "chown root.root /var/spool/cron/crontabs/root"
+
+$vadesc

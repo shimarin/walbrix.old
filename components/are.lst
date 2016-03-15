@@ -1,0 +1,16 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$require nginx.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1are\2/'
+
+/usr/lib/libnss_wins.so
+$sed /etc/nsswitch.conf 's/^\(hosts:.* \)dns\( *\)/\1wins dns\2/'
+
+$exec --overlay "git clone --depth=1 https://github.com/agoragames/nginx-google-oauth.git /etc/nginx/nginx-google-oauth"
+
+$mkdir /var/www/localhost/htdocs
+
+$mkdir /etc/xen
+$write /etc/xen/config "memory=256\n#vif=['bridge=eth0,mac=XX:YY:ZZ:XX:YY:ZZ']"
+
+#$vadesc
