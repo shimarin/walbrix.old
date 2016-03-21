@@ -113,7 +113,7 @@ def resolve_relative_path(origin, relative):
     origin = urlparse.urlparse(origin)
     relative = urlparse.urlparse(relative)
     if relative.path == '':
-        raise ValueError('path part of URL is empty.') 
+        raise ValueError('path part of URL is empty.')
     resolved = (
         relative.scheme if relative.scheme != '' else origin.scheme,
         relative.netloc if relative.netloc != '' else origin.netloc,
@@ -135,7 +135,7 @@ def create_xen_conf(rootdir, ram=None, vcpus=None):
 
     if ram is not None: vals["memory"] = ram
     if vcpus is not None: vals["vcpus"] = vcpus
-        
+
     with open(xen_conf_file, "w") as f:
         for key, value in vals.iteritems():
             f.write("%s=%s\n" % (key, repr(value)))
@@ -201,7 +201,7 @@ def setup_vm_info(rootdir, vmname, ram, vcpus=1, root_password=None,copy_pubkey=
         set_root_password(rootdir, root_password)
     if copy_pubkey:
         copy_public_keys(rootdir)
-            
+
 def install(rootdir, archive, vmname,size,ram,vcpus=1,root_password=None,verbose=False,copy_pubkey=False):
     if archive[1] == "tar":
         with process_for_output(["tar",get_tar_decompression_option(archive[0]) + ("xvpf" if verbose else "xpf"),"-","--xattrs","--xattrs-include=*","-C",rootdir]) as tar:
@@ -279,7 +279,8 @@ def run(url, vg, name,size,btrfs,ram,vcpus=1,root_password=None,verbose=False,co
         if btrfs:
             subprocess.check_call(["mkfs.btrfs",device])
         else:
-            subprocess.check_call(["mkfs.xfs","-m","crc=0","-f",device])
+            metadata_opts = ["-m","crc=0"] if "-i686" in archive[0] and archive[1] == "tar" else [] # because grub1 cannot recognize crc
+            subprocess.check_call(["mkfs.xfs","-f"] + metadata_opts + [device])
         with util.tempmount(device, None if btrfs else "inode32", "btrfs" if btrfs else "xfs") as tmpdir:
             install(tmpdir, archive, vmname, size, ram, vcpus, root_password,verbose,copy_pubkey)
         success = True
