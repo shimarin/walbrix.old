@@ -1,1 +1,1 @@
-$write /boot/grub/grub.cfg "set default=0\nset timeout=1\n\nmenuentry 'Linux' {\n\techo 'Loading kernel ...'\n\tlinux /boot/kernel root=/dev/xvda1\n}"
+$write /boot/grub/grub.cfg "set default=0\nset timeout=1\n\nmenuentry 'Linux' {\n\techo 'Loading kernel ...'\n\tlinux /boot/kernel root=/dev/xvda1 ro\n}"
