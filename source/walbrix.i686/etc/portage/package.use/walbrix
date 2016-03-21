@@ -62,3 +62,6 @@ media-libs/sdl-mixer vorbis
 # networks
 net-dns/avahi -introspection
 
+# prevent unnecessary deps
+app-text/xmlto -text
+

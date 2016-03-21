@@ -31,3 +31,6 @@ media-libs/gd fontconfig truetype png jpeg
 dev-lang/scala binary
 app-text/poppler cjk curl jpeg2k png tiff
 
+# prevent unnecessary deps
+app-text/xmlto -text
+
