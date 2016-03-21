@@ -17,6 +17,7 @@ dev-java/commons-dbcp
 dev-java/commons-pool
 dev-java/jdbc-mysql
 dev-java/jdbc-postgresql
+dev-java/oracle-javamail
 dev-java/sbt
 dev-java/slf4j-api
 dev-java/sun-jaf
