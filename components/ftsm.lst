@@ -1,5 +1,5 @@
 $require domU.lst
-$require domU-kernel.lst
+$require domU-overlayfs-kernel.lst
 $require cron.lst
 $require flask-sqlalchemy.lst
 $package dev-python/beautifulsoup --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
@@ -26,5 +26,16 @@ $require wkhtmltopdf.lst
 $require py-gfm.lst
 $require requests.lst
 $package sys-apps/dstat
+$require iptables.lst
+
+# docker
+$package dev-lang/go
+$require perl.lst # for shasum command
+$package app-emulation/docker --use="aufs overlay -device-mapper"
+$symlink /etc/runlevels/default/docker /etc/init.d/docker
+
+
+# example redirecting port 80 -> 8080
+$write /var/lib/iptables/rules-save.example "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8080\nCOMMIT"
 
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1ftsm\2/'
