@@ -55,10 +55,7 @@ def get_running_domains():
 def merge(all_domains,running_domains):
     domains = copy.copy(all_domains)
     for uuid,domain in running_domains.iteritems():
-        if uuid in domains:
-            domains[uuid].update(domain)
-        else:
-            domains[uuid] = domain
+        if uuid in domains: domains[uuid].update(domain)
         if "name" not in domain and "xen_name" in domain: domain["name"] = domain["xen_name"]
 
     domain_list = []
