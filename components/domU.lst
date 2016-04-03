@@ -77,10 +77,11 @@ $symlink /usr/bin/less ../../bin/busybox
 
 # nmbd
 /usr/sbin/nmbd
-/var/log/samba/.keep_net-fs_samba-0
-/usr/lib/samba/charset/CP437.so
-/usr/lib/samba/charset/CP850.so
-/etc/samba/lmhosts
+$mkdir /var/log/samba
+#/usr/lib/samba/charset/CP437.so
+#/usr/lib/samba/charset/CP850.so
+#/etc/samba/lmhosts
+$mkdir /etc/samba
 $write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15'
 /etc/conf.d/samba
 /etc/init.d/samba
