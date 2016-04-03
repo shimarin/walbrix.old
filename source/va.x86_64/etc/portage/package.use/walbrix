@@ -10,7 +10,7 @@ net-fs/samba ldap
 net-nds/openldap -tcpd samba
 net-fs/nfs-utils -tcpd
 www-servers/uwsgi python lua -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool
-app-editors/emacs -gtk3 -xpm 
+app-editors/emacs -gtk3 -xpm
 mail-mta/postfix sasl
 dev-python/imaging jpeg tiff truetype
 dev-java/icedtea-bin -X -alsa cjk -gtk cups headless-awt
@@ -30,6 +30,11 @@ www-servers/nginx aio http2 nginx_modules_http_auth_pam nginx_modules_http_fancy
 media-libs/gd fontconfig truetype png jpeg
 dev-lang/scala binary
 app-text/poppler cjk curl jpeg2k png tiff
+
+# samba 4
+sys-libs/tdb python
+sys-libs/ntdb python
+sys-libs/tevent python
 
 # prevent unnecessary deps
 app-text/xmlto -text

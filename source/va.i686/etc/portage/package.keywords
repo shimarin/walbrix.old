@@ -1,10 +1,11 @@
-=sys-kernel/vanilla-sources-3.2.78
+=sys-kernel/vanilla-sources-3.2.79
 =dev-php/pecl-redis-2.2.7-r1 **
 =dev-php/PEAR-PEAR-1.9.5
 =dev-php/pear-1.9.5
 =www-servers/tomcat-8.0.30
 =dev-libs/libmemcached-1.0.18-r2
 =dev-lang/coffee-script-1.9.3-r1
+=dev-java/commons-dbcp-2.1
 =dev-ruby/bundler-1.9.10
 =www-servers/uwsgi-2.0.12
 =www-servers/nginx-1.9.12
@@ -16,7 +17,7 @@
 =dev-lang/scala-2.10.6
 =virtual/jdk-1.8.0-r2
 =virtual/jre-1.8.0-r1
-=dev-java/icedtea-bin-3.0.0_pre09-r1
+=dev-java/icedtea-bin-3.0.0_pre10
 =dev-java/icedtea-web-1.6.1-r1
 =app-eselect/eselect-java-0.2.0
 =dev-java/sbt-0.13.11

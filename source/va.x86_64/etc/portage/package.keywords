@@ -1,7 +1,8 @@
-=sys-kernel/gentoo-sources-4.5.0
-=sys-kernel/aufs-sources-3.18.27
+=sys-kernel/gentoo-sources-4.5.0-r1
+=sys-kernel/aufs-sources-3.18.29
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
+=dev-java/commons-dbcp-2.1
 =dev-python/python-magic-0.4.6-r1
 =app-text/groonga-5.0.9
 =app-text/groonga-normalizer-mysql-1.1.0
@@ -19,7 +20,7 @@
 =dev-lang/scala-2.10.6
 =virtual/jdk-1.8.0-r2
 =virtual/jre-1.8.0-r1
-=dev-java/icedtea-bin-3.0.0_pre09-r1
+=dev-java/icedtea-bin-3.0.0_pre10
 =dev-java/icedtea-web-1.6.1-r1
 =app-eselect/eselect-java-0.2.0
 =dev-java/sbt-0.13.11

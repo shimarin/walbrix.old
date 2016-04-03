@@ -1,3 +1,4 @@
 >=dev-lang/php-5.6
->=dev-java/commons-pool-2
+#>=dev-java/commons-pool-2
 >=sys-devel/binutils-2.25
+>=net-fs/samba-4
