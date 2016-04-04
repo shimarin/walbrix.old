@@ -60,15 +60,17 @@ for user in users:
 def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
     source = "-" + source if source not in ["", None] else ""
     for kernel_config in glob.glob("/etc/kernels/kernel-config-*"):
-        kernel_match = re.match(r'^kernel-config-(.[^-]+)-(.[^-]+)' + source + '$', os.path.basename(kernel_config))
+        kernel_match = re.match(r'^kernel-config-(.[^-]+)-(.[^-]+)' + source + '(-r[0-9]+)?$', os.path.basename(kernel_config))
         if kernel_match is None: continue
         #else
-        arch, version = kernel_match.groups()
+        arch, version, revision = kernel_match.groups()
+        if revision is None: revision = ""
 
-        if not os.path.isfile(("/boot/kernel-genkernel-%s-%s" + source) % (arch, version)):
-            print "Kernel %s%s needs to be built" % (version, source)
-            exec_cmd(["genkernel","--no-mountboot","--kerneldir=/usr/src/linux-%s%s" % (version, source)] + genkernel_opts)
-            return
+        if not os.path.isfile(("/boot/kernel-genkernel-%s-%s" + source + "%s") % (arch, version, revision)):
+            print "Kernel %s%s%s needs to be built" % (version, source, revision)
+            exec_cmd(["genkernel","--no-mountboot","--kerneldir=/usr/src/linux-%s%s%s" % (version, source, revision)] + genkernel_opts)
+            return True
+    return False
 
 exec_cmd(["emerge","-uDN","gentoo-sources","genkernel","splash-themes-gentoo"])
 build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natural_gentoo","all"])
