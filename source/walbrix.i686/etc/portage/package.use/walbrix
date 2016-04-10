@@ -2,7 +2,7 @@ sys-boot/grub device-mapper grub_platforms_pc grub_platforms_xen grub_platforms_
 
 sys-kernel/gentoo-sources symlink
 virtual/linux-sources firmware
-net-misc/openvpn threads passwordsave
+net-misc/openvpn threads
 net-fs/cifs-utils -acl -ads -caps 
 sys-apps/usb_modeswitch jimtcl
 app-admin/testdisk ntfs

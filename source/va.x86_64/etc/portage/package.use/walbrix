@@ -1,5 +1,5 @@
 sys-kernel/aufs-sources symlink
-net-misc/openvpn passwordsave
+net-misc/openvpn
 net-analyzer/zabbix agent
 app-admin/sudo -sendmail
 net-dns/avahi -introspection

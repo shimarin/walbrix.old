@@ -4,7 +4,7 @@ sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc grub_platfor
 sys-kernel/gentoo-sources symlink
 virtual/linux-sources firmware
 
-net-misc/openvpn threads passwordsave
+net-misc/openvpn threads
 dev-lang/python sqlite
 net-fs/cifs-utils -acl -ads -caps 
 sys-apps/usb_modeswitch jimtcl
