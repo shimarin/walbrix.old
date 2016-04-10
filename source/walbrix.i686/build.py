@@ -3,7 +3,7 @@ import subprocess,pwd,grp,glob,re,os,sys
 
 def exec_cmd(cmdline):
     shell = isinstance(cmdline,str)
-    subprocess.check_call(cmdline, shell)
+    subprocess.check_call(cmdline, shell=shell)
     #print cmdline
 
 ## add users/groups

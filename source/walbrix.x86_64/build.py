@@ -3,7 +3,7 @@ import subprocess,pwd,grp,glob,re,os
 
 def exec_cmd(cmdline):
     shell = isinstance(cmdline,str)
-    subprocess.check_call(cmdline, shell)
+    subprocess.check_call(cmdline, shell=shell)
     #print cmdline
 
 ## add users/groups
@@ -68,7 +68,10 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
 
         if not os.path.isfile(("/boot/kernel-genkernel-%s-%s" + source + "%s") % (arch, version, revision)):
             print "Kernel %s%s%s needs to be built" % (version, source, revision)
-            exec_cmd(["genkernel","--no-mountboot","--kerneldir=/usr/src/linux-%s%s%s" % (version, source, revision)] + genkernel_opts)
+            kerneldir = "/usr/src/linux-%s%s%s" % (version, source, revision)
+            if source == "-gentoo":
+                exec_cmd("grep -q probe_8259A %s/arch/x86/kernel/i8259.c && wget -O - http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/patch/?id=8c058b0b9c34d8c8d7912880956543769323e2d8 | patch -d %s -p1 -R" % (kerneldir, kerneldir))
+            exec_cmd(["genkernel","--no-mountboot","--kerneldir=%s" % kerneldir] + genkernel_opts)
             return True
     return False
 
