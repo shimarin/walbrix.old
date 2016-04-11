@@ -95,14 +95,11 @@ def determine_boot_type(vmroot):
     grub1_bin = "/usr/lib/xen/boot/pv-grub-x86_64.gz"
     grub2_bin = "/usr/lib/xen/boot/pv-grub2-x86_64.gz" # https://github.com/wbrxcorp/walbrix/issues/61
 
-    # pv-grub2 (considered 64bit)
-    if os.path.isfile(grub2_bin) and os.path.isfile(grub2_cfg):
-        return ["kernel='%s'" % grub2_bin]
-
-    # pv-grub1 with 64bit VM
-    if os.path.isfile(grub1_bin) and os.path.isfile(grub1_cfg):
-        if not os.path.isfile(init) or detect_arch(init) == 64:
-            return ["kernel='%s'" % grub1_bin, "extra='(hd0)/boot/grub/menu.lst'"]
+    # use grub when 64bit
+    if not os.path.isfile(init) or detect_arch(init) == 64:
+        # pv-grub2 (considered 64bit)
+        if os.path.isfile(grub2_bin) and os.path.isfile(grub2_cfg):
+            return ["kernel='%s'" % grub2_bin]
 
     #else
     kernel = "/boot/kernel.domU"
