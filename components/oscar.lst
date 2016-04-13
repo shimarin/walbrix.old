@@ -1,0 +1,75 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1oscar\2/'
+
+$require cron.lst
+$require samba.lst
+$require flask.lst
+$package dev-python/beautifulsoup --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
+$require pygobject.lst
+$require setuptools.lst
+$require configobj.lst
+$require apscheduler.lst
+$require python-ldap.lst
+$package dev-python/xlrd
+$package dev-python/lxml
+$package dev-python/pyinotify
+$package dev-python/pyxattr
+$package dev-python/rsa
+$package app-admin/logrotate
+$require git.lst
+$require dropbox.lst
+
+$package app-text/poppler-data
+$package app-text/poppler
+$package app-text/ps2pkm
+$package sys-apps/ed #deps: app-arch/lzip
+$package www-client/lynx --use="cjk"
+$package www-client/elinks
+$package app-i18n/nkf --use="python"
+$package app-text/wv
+$package app-text/xlhtml
+$package dev-python/jsmin
+$require emacs.lst
+
+$require groonga.lst
+
+$sed /etc/nsswitch.conf 's/^\(hosts:.*\)$/\1 wins/'
+$exec "groupadd -g 999 oscar && useradd -m -u 999 -g 999 oscar"
+$exec "echo 'export PATH=$PATH:/opt/oscar/bin' >> /home/oscar/.bashrc"
+$exec "groupmems -g cron -a oscar && groupmems -g wheel -a oscar"
+$sed /etc/sudoers 's/^# \(\%wheel ALL=(ALL) NOPASSWD: ALL\)$/\1/'
+#$copy oscar/oscar.include /etc/apache2/vhosts.d/oscar.include
+#$patch /etc/apache2/vhosts.d/00_default_vhost.conf oscar/00_default_vhost.conf.patch
+#$copy groonga/sysctl-groonga.conf /etc/sysctl.d/groonga.conf
+#$copy oscar/sysctl-oscar.conf /etc/sysctl.d/oscar.conf
+
+## Samba
+#$copy oscar/smb.conf /etc/samba/smb.conf
+$exec "chmod g+rwx /etc/samba /var/lib/samba/private"
+$exec "smbpasswd -an adm && smbpasswd -x adm"
+$exec "chmod g+rw /var/lib/samba/private/passdb.tdb"
+$exec "chgrp -R oscar /etc/samba /var/lib/samba/private"
+
+## oscar
+$exec "cd /root && git clone https://github.com/wbrxcorp/oscar.git && cd oscar && make install && cd .. && rm -rf oscar"
+#$copy oscar/oscar-watch.init /etc/init.d/oscar-watch
+#$copy oscar/oscar-sched.init /etc/init.d/oscar-sched
+#$exec "chmod 755 /etc/init.d/oscar-watch /etc/init.d/oscar-sched"
+#$symlink /etc/runlevels/default/oscar-watch /etc/init.d/oscar-watch
+#$symlink /etc/runlevels/default/oscar-sched /etc/init.d/oscar-sched
+$mkdir /var/log/oscar
+$mkdir /opt/oscar/etc
+$mkdir /var/lib/oscar
+$mkdir /var/lib/oscar/share
+$exec "/opt/oscar/bin/oscar init /var/lib/oscar/share"
+$exec "chown -R oscar.oscar /var/log/oscar /var/lib/oscar /opt/oscar"
+
+## clamav
+$package app-antivirus/clamav # dep:dev-libs/libtommath
+$sed /etc/conf.d/clamd 's/^START_CLAMD=.\+/START_CLAMD=no/'
+
+$mkdir /etc/xen
+$write /etc/xen/config "memory=1024"
+
+#$vadesc

@@ -20,8 +20,12 @@
 =dev-lang/scala-2.10.6
 =virtual/jdk-1.8.0-r2
 =virtual/jre-1.8.0-r1
-=dev-java/icedtea-bin-3.0.0_pre10
+=dev-java/icedtea-bin-3.0.0-r1
 =dev-java/icedtea-web-1.6.1-r1
 =app-eselect/eselect-java-0.2.0
 =dev-java/sbt-0.13.11
+
+#oscar
+=dev-python/APScheduler-3.0.1
+=dev-python/tzlocal-1.2
 

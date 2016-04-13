@@ -86,7 +86,7 @@ $write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = ut
 /etc/conf.d/samba
 /etc/init.d/samba
 $symlink /etc/init.d/samba.nmbd samba
-$symlink /etc/conf.d/samba.nmbd samba 
+$symlink /etc/conf.d/samba.nmbd samba
 $symlink /etc/runlevels/default/samba.nmbd /etc/init.d/samba.nmbd
 
 # timezone

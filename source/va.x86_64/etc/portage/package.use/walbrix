@@ -39,3 +39,8 @@ sys-libs/tevent python
 # prevent unnecessary deps
 app-text/xmlto -text
 
+# oscar
+www-client/lynx cjk
+app-i18n/nkf linguas_ja python
+dev-python/pygobject -cairo
+

@@ -1,0 +1,2 @@
+$package dev-libs/gobject-introspection
+$package dev-python/pygobject
