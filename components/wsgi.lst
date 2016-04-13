@@ -1,0 +1,8 @@
+$require python27.lst
+$require apache.lst
+
+# from mod_wsgi                        
+/etc/apache2/modules.d/70_mod_wsgi.conf
+/usr/lib/apache2/modules/mod_wsgi.so                           
+$sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D WSGI"/'
+

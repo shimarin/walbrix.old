@@ -173,7 +173,7 @@ class VALookup:
         source_dir = "source/va.%s" % arch
         variables = "--var=ARTIFACT=%s --var=ARCH=%s --var=REGION=%s --var=LANGUAGE=%s" % (artifact, arch, region, region_to_locale[region]["language"])
         lstfile = "components/%s.lst" % artifact
-        archive_cmd = ("tar Jcvpf ${TARGET}.tmp --xattrs '--xattrs-include=*' -C %s ." % build_dir) if format == "tar.xz" else ("mksquashfs %s ${TARGET}.tmp -noappend -comp xz" % build_dir)
+        archive_cmd = ("tar Jcvpf ${TARGET}.tmp --numeric-owner --xattrs '--xattrs-include=*' -C %s ." % build_dir) if format == "tar.xz" else ("mksquashfs %s ${TARGET}.tmp -noappend -comp xz" % build_dir)
         node = File(name)
         self.env.Command(node, lstfile_deps(lstfile, source_dir,region), """
 rm -rf %s

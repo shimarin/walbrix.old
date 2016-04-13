@@ -1,0 +1,10 @@
+--- 00_default_vhost.conf.orig	2013-09-25 20:57:20.497572304 +0900
++++ 00_default_vhost.conf	2013-09-25 20:57:33.037345872 +0900
+@@ -38,6 +38,7 @@
+ <VirtualHost *:80>
+ 	ServerName localhost
+ 	Include /etc/apache2/vhosts.d/default_vhost.include
++	Include /etc/apache2/vhosts.d/oscar.include
+ 
+ 	<IfModule mpm_peruser_module>
+ 		ServerEnvironment apache apache

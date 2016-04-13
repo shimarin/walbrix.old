@@ -1,0 +1,23 @@
+#!/sbin/runscript
+
+OSCAR_DIR=/opt/oscar
+OSCAR_BIN=$OSCAR_DIR/bin/oscar
+RUN_DIR=/run/oscar
+PIDFILE=$RUN_DIR/oscar-sched.pid
+LOGFILE=/var/log/oscar/sched.log
+USER=oscar
+
+start() {
+	[ -d "$RUN_DIR" ] || mkdir -p "$RUN_DIR" && chown $USER "$RUN_DIR" 
+
+	ebegin "Starting oscar scheduler process: oscar sched"
+	start-stop-daemon --start -u $USER --pidfile "$PIDFILE" --make-pidfile --background -d "$OSCAR_DIR" --exec "$OSCAR_BIN" -- -l "$LOGFILE" schedule
+	eend ${?}
+}
+
+stop() {
+	ebegin  "Stopping oscar scheduler process: oscar sched"
+	start-stop-daemon --stop --pidfile "$PIDFILE"
+	eend ${?}
+}
+

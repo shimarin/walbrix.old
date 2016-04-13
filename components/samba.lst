@@ -8,7 +8,7 @@ $require mit-krb5.lst
 $package net-fs/cifs-utils
 #sys-libs/tevent
 $package net-nds/openldap --use="-tcpd samba"
-$package net-fs/samba --use="ldap"
+$package net-fs/samba --use="ldap" --exclude='^/usr/lib(64)?/python.*/site-packages/samba/.*$'
 $mkdir /run/lock/samba
 $symlink /var/lock /run/lock
 $mkdir /var/lib/samba/private

@@ -98,14 +98,14 @@ def process_path(context, srcpath, dstpath, stack = None):
     dstleft, dstright = os.path.split(dstpath)
     stack.append((dstright,srcpath))
     process_path(context, srcleft, dstleft, stack)
-        
+
 def process_file(context, filename):
     if context.is_file_already_collected(filename): return
 
     src = os.path.normpath("%s%s" % (context.source, filename))
     dest = os.path.normpath("%s%s" % (context.destination, filename))
     if not os.path.lexists(src): raise Exception("%s:file not found" % (src))
-    
+
     process_path(context, os.path.normpath(os.path.dirname(src)), os.path.normpath(os.path.dirname(dest)))
 
     if os.path.isdir(src) and not os.path.islink(src): # process directory recursively
@@ -135,7 +135,7 @@ def process_file(context, filename):
         return
 
     # check file type
-    
+
     filetype = magic.from_file(dest) if chardet.detect(dest)["encoding"] == 'ascii' else ""  # non-ascii filename is not acceptable in magic
     if _elf.match(filetype):
         try:
@@ -181,7 +181,7 @@ def process_lstfile(context, lstfile):
         dst = "%s%s" % (context.destination, dst)
         print "Move file/dir: %s -> %s" % (src, dst)
         subprocess.check_call(["/bin/mv",src,dst])
-        
+
     def symlink(context, args):
         if len(args) != 2: raise Exception("$symlink directive must have 2 args")
         if not args[0].startswith('/'): raise Exception("Filename must start with '/'")
@@ -301,11 +301,11 @@ def process_lstfile(context, lstfile):
                 subprocess.check_call(["debootstrap","--no-check-gpg","--arch=%s" % arch,"--include=%s" % args.include,dist,debootstrap_dir], env=env_with_root_path())
                 subprocess.check_call(["chroot", debootstrap_dir, "apt-get","clean"])
                 progress_file = "download_cache/_debootstrap_in_progress"
-                subprocess.check_call(["tar","zcvpf",progress_file,"--xattrs","--xattrs-include=*","-C",debootstrap_dir,"."])
+                subprocess.check_call(["tar","zcvpf",progress_file,"--numeric-owner","--xattrs","--xattrs-include=*","-C",debootstrap_dir,"."])
                 os.rename(progress_file, cache_file)
             finally:
                 shutil.rmtree(debootstrap_dir)
-        subprocess.check_call(["tar","zxvpf",cache_file,"--xattrs","--xattrs-include=*","-C",context.destination])
+        subprocess.check_call(["tar","zxvpf",cache_file,"--numeric-owner","--xattrs","--xattrs-include=*","-C",context.destination])
 
     directives = {
         "$require":require,
@@ -330,7 +330,7 @@ def process_lstfile(context, lstfile):
         "$stage3":stage3.apply,
         "$squashfs":squashfs.apply
     }
-    
+
     if context.is_lstfile_already_processed(lstfile): return
     print "Processing %s" % (lstfile)
     with open(lstfile) as f:
