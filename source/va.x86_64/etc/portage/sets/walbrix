@@ -43,6 +43,7 @@ media-fonts/vlgothic
 media-gfx/wkhtmltopdf
 net-analyzer/traceroute
 net-analyzer/zabbix
+net-fs/cifs-utils
 net-fs/nfs-utils
 net-fs/samba
 net-libs/nodejs
