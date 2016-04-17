@@ -1,0 +1,16 @@
+#commons-pool-2
+$package dev-java/commons-pool
+$package dev-java/asm
+$package dev-java/cglib
+$package dev-java/ant-core
+
+#junit-4
+$package dev-java/hamcrest-core
+$package dev-java/junit
+
+#commons-dbcp
+$package dev-java/commons-logging
+$package dev-java/glassfish-transaction-api 
+/usr/share/java-config-2/virtuals/transaction-api
+$package dev-java/commons-dbcp
+
