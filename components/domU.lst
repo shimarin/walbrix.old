@@ -78,6 +78,7 @@ $symlink /usr/bin/less ../../bin/busybox
 # nmbd
 /usr/sbin/nmbd
 $mkdir /var/log/samba
+$mkdir /var/cache/samba
 #/usr/lib/samba/charset/CP437.so
 #/usr/lib/samba/charset/CP850.so
 #/etc/samba/lmhosts
