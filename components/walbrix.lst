@@ -137,7 +137,9 @@ $copy ppp/ip-down.route.sh /etc/ppp/ip-down.d/route.sh
 $require binutils.lst
 $require vim.lst
 $require sudo.lst
+/usr/bin/ftp
 /usr/bin/strace
+/usr/bin/telnet
 $package app-misc/screen
 $package app-editors/bvi
 $package app-admin/sysstat

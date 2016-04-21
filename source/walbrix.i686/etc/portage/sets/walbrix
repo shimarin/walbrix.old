@@ -36,6 +36,7 @@ net-dns/bind-tools
 net-fs/cifs-utils
 net-fs/nfs-utils
 net-fs/samba
+net-ftp/ftp
 net-misc/dhcp
 net-misc/ifenslave
 net-misc/netkit-telnetd
