@@ -1,5 +1,5 @@
 $set JAVA_VERSION 8
-$set ICEDTEA_VERSION 3.0.0-r1
+$set ICEDTEA_VERSION 3.0.1
 $require python-exec.lst
 $package dev-java/java-config --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
 #$package dev-java/java-config-wrapper
@@ -15,7 +15,7 @@ $package dev-java/java-config --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info
 #media-gfx/fontforge
 #media-fonts/arphicfonts
 $package dev-java/icedtea-bin-$(ICEDTEA_VERSION) --exclude='^\/opt\/.+\/man\/' --use="-gtk -alsa cups cjk headless-awt" # icedtea(-bin) depends on libcups.so no matter if cups USE flag is set
-$sed /opt/icedtea-bin-3.0.0/jre/lib/security/java.security 's/\/dev\/random$/\/dev\/urandom/' # http://stackoverflow.com/questions/28201794/slow-startup-on-tomcat-7-0-57-because-of-securerandom
+$sed /opt/icedtea-bin-$(ICEDTEA_VERSION)/jre/lib/security/java.security 's/\/dev\/random$/\/dev\/urandom/' # http://stackoverflow.com/questions/28201794/slow-startup-on-tomcat-7-0-57-because-of-securerandom
 $package dev-libs/nss # SSL support
 
 #sys-apps/baselayout-java

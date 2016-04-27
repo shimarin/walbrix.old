@@ -8,16 +8,16 @@
 =dev-java/commons-dbcp-2.1
 =dev-ruby/bundler-1.9.10
 =www-servers/uwsgi-2.0.12
-=www-servers/nginx-1.9.12
+=www-servers/nginx-1.9.15
 =app-misc/c_rehash-1.7-r1
 =dev-libs/openssl-1.0.2e
 
 # java8
 =dev-lang/scala-2.11.7-r1
 =dev-lang/scala-2.10.6
-=virtual/jdk-1.8.0-r2
+=virtual/jdk-1.8.0-r3
 =virtual/jre-1.8.0-r1
-=dev-java/icedtea-bin-3.0.0-r1
+=dev-java/icedtea-bin-3.0.1
 =dev-java/icedtea-web-1.6.1-r1
 =app-eselect/eselect-java-0.2.0
 =dev-java/sbt-0.13.11
