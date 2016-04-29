@@ -11,7 +11,7 @@ $set PHP_VERSION 5.5
 #media-libs/libjpeg-turbo
 $require apache.lst
 $package net-mail/mailbase
-$package dev-lang/php-$(PHP_VERSION).31 --use="apache2 gd mysql mysqli postgres xslt zip pdo truetype xmlwriter bcmath xmlreader pcntl sysvipc sockets curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap opcache" --exclude='^/usr/lib(64)?/php[0-9]+\.[0-9]+/(man|include)/'
+$package dev-lang/php-$(PHP_VERSION).34 --use="apache2 gd mysql mysqli postgres xslt zip pdo truetype xmlwriter bcmath xmlreader pcntl sysvipc sockets curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap opcache" --exclude='^/usr/lib(64)?/php[0-9]+\.[0-9]+/(man|include)/'
 $symlink /usr/bin/php php$(PHP_VERSION)
 $exec "ln -sf /usr/lib/php$(PHP_VERSION)/apache2/* /usr/lib/apache2/modules/"
 $mkdir /etc/php/apache2-php$(PHP_VERSION)/ext

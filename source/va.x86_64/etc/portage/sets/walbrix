@@ -19,6 +19,7 @@ app-text/xlhtml
 app-vim/scala-syntax
 dev-db/mysql
 dev-db/postgresql
+dev-db/redis
 dev-java/commons-dbcp
 dev-java/commons-pool
 dev-java/jdbc-mysql
@@ -28,8 +29,13 @@ dev-java/sbt
 dev-java/slf4j-api
 dev-java/sun-jaf
 dev-java/sun-javamail
+dev-lang/php
 dev-lua/luajson
 dev-lua/luasec
+dev-php/PEAR-PEAR
+dev-php/pecl-apcu
+dev-php/pecl-imagick
+dev-php/pecl-redis
 dev-python/APScheduler
 dev-python/beautifulsoup
 dev-python/chardet
@@ -56,6 +62,7 @@ dev-util/strace
 mail-mta/postfix
 media-fonts/vlgothic
 media-gfx/wkhtmltopdf
+media-video/ffmpeg
 net-analyzer/traceroute
 net-analyzer/zabbix
 net-fs/cifs-utils
@@ -79,6 +86,7 @@ sys-fs/xfsprogs
 sys-kernel/aufs-sources
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
+sys-process/lsof
 sys-process/vixie-cron
 www-apache/mod_authnz_external
 www-apache/mod_extract_forwarded

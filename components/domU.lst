@@ -63,6 +63,7 @@ $symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
 /usr/bin/iconv
 $symlink /usr/bin/less ../../bin/busybox
 /usr/bin/locale
+/usr/bin/lsof
 /usr/bin/make
 /usr/bin/rsync
 /usr/bin/strace

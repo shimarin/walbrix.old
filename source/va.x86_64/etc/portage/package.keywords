@@ -10,10 +10,10 @@
 =www-servers/nginx-1.9.15
 
 #docker
-=app-emulation/docker-1.9.0
-=dev-go/go-md2man-1.0.3
-=dev-go/blackfriday-1.2_p20150720
-=dev-go/sanitized-anchor-name-0_pre20150822
+#=app-emulation/docker-1.9.0
+#=dev-go/go-md2man-1.0.3
+#=dev-go/blackfriday-1.2_p20150720
+#=dev-go/sanitized-anchor-name-0_pre20150822
 
 #java8
 =dev-lang/scala-2.11.7-r1
@@ -29,3 +29,6 @@
 =dev-python/APScheduler-3.0.1
 =dev-python/tzlocal-1.2
 
+#owncloud
+=dev-php/PEAR-PEAR-1.9.5
+=dev-php/pear-1.9.5

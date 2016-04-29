@@ -1,0 +1,15 @@
+{
+    "id": "owncloud",
+    "version":"9.0.1",
+    "title": "ownCloud 9.0.1",
+    "description": "ownCloudは、ブラウザや WebDAVクライアントからアクセス可能なクラウドストレージを構築するためのオープンソースソフトウェアです。",
+    "images": [{"url": "http://va.walbrix.net/img/owncloud01.png"}],
+    "tarball": "http://dist.walbrix.net/va/owncloud-9.0.1-x86_64-jp.tar.xz",
+    "minimum_hd": 2,
+    "minimum_ram": 256,
+
+    "uuid":"2e18833d-03c9-4741-8c01-083829155e15",
+    "instruction": {
+        "ja":"初期ユーザー名とパスワードは admin/adminです"
+    }
+}
