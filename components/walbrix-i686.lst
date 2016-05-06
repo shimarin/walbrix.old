@@ -1,5 +1,5 @@
-/boot/kernel-genkernel-x86-3.2.79
-$symlink /boot/kernel.domU kernel-genkernel-x86-3.2.79
+/boot/kernel-genkernel-x86-3.2.80
+$symlink /boot/kernel.domU kernel-genkernel-x86-3.2.80
 
 $package sys-apps/memtest86+ --no-copy
 /boot/memtest86plus/memtest
