@@ -18,6 +18,11 @@ $require yum.lst
 # zfs
 /sbin/splat
 $package sys-fs/zfs
+$exec 'rm -f /lib/modules/*/extra/avl/zavl.ko.xz'
+$exec 'rm -f /lib/modules/*/extra/nvpair/znvpair.ko.xz'
+$exec 'rm -f /lib/modules/*/extra/unicode/zunicode.ko.xz'
+$exec 'rm -f /lib/modules/*/extra/zcommon/zcommon.ko.xz'
+$exec 'rm -f /lib/modules/*/extra/zfs/zfs.ko.xz'
 
 # misc
 /usr/bin/mpg123

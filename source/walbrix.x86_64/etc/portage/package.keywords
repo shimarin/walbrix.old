@@ -23,9 +23,9 @@
 =sys-apps/yum-3.4.3_p20130218-r1
 
 # zfs
-=sys-fs/zfs-0.6.5.4-r2
-=sys-fs/zfs-kmod-0.6.5.4-r1
-=sys-kernel/spl-0.6.5.4-r1
+=sys-fs/zfs-0.6.5.6
+=sys-fs/zfs-kmod-0.6.5.6 **
+=sys-kernel/spl-0.6.5.6 **
 
 # xen
 =app-emulation/xen-4.6.1
