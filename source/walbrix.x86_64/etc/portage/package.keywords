@@ -28,7 +28,7 @@
 =sys-kernel/spl-0.6.5.6 **
 
 # xen
-=app-emulation/xen-4.6.1
-=app-emulation/xen-tools-4.6.1
+=app-emulation/xen-4.6.1-r2
+=app-emulation/xen-tools-4.6.1-r3
 =app-emulation/xen-pvgrub-4.6.1
 
