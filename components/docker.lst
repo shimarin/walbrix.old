@@ -9,6 +9,11 @@ $require perl.lst # for shasum command
 #$package dev-go/blackfriday
 #$package dev-go/go-md2man
 #dev-db/sqlite
+
+#sys-libs/libseccomp
+#app-emulation/runc
+#app-emulation/containerd
+
 $package net-firewall/iptables
 $require git.lst
 $package app-emulation/docker --use="aufs overlay -device-mapper"
