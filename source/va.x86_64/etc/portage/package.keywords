@@ -18,7 +18,7 @@
 #java8
 =dev-lang/scala-2.11.7-r1
 =dev-lang/scala-2.10.6
-=dev-java/sbt-0.13.11
+=dev-java/sbt-bin-0.13.9
 
 #oscar
 =dev-python/APScheduler-3.0.1
