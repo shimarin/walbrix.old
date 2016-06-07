@@ -1,10 +1,10 @@
 {
     "id": "centos",
-    "version":"6.7",
-    "title": "CentOS 6.7",
+    "version":"6.8",
+    "title": "CentOS 6.8",
     "description": "レンタルサーバなどでおなじみの CentOSを、定番の Webサイト構築環境 LAMP(Linux+Apache+MySQL+PHP) がすぐに使えるように設定済みで提供しています。",
     "images": [{"url": "http://va.walbrix.net/img/centos01.png"}],
-    "tarball": "http://dist.walbrix.net/va/centos-6.7-x86_64-jp.tar.xz",
+    "tarball": "http://dist.walbrix.net/va/centos-6.8-x86_64-jp.tar.xz",
     "minimum_ram": 256, 
     "minimum_hd": 2,
 
