@@ -97,6 +97,7 @@ sys-fs/zfs
 sys-kernel/aufs-sources
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
+sys-kernel/linux-firmware
 sys-power/acpid
 sys-power/cpupower
 sys-power/nut

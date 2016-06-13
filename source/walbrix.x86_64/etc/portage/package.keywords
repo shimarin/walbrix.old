@@ -32,3 +32,4 @@
 =app-emulation/xen-tools-4.6.1-r3
 =app-emulation/xen-pvgrub-4.6.1
 
+=sys-kernel/linux-firmware-20160616
