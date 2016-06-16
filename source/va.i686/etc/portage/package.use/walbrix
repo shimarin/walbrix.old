@@ -28,6 +28,7 @@ app-text/ghostscript-gpl cups linguas_ja
 dev-vcs/git -perl -gpg
 
 net-irc/unrealircd -ssl
+net-libs/nodejs cpu_flags_x86_sse2
 
 dev-ruby/rubygems -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
 virtual/rubygems -ruby_targets_ruby19 -ruby_targets_ruby20 ruby_targets_ruby21
