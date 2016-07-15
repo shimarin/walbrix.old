@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.6.3
+=sys-kernel/gentoo-sources-4.6.4
 =app-i18n/fbterm-1.7-r1
 =sys-kernel/vanilla-sources-3.2.81
 =app-crypt/chntpw-140201
@@ -12,3 +12,5 @@
 =app-misc/c_rehash-1.7-r1
 =sys-boot/grub-2.02_beta3-r1
 =sys-kernel/linux-firmware-20160616
+=sys-cluster/drbd-8.4.3-r1
+
