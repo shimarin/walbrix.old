@@ -5,13 +5,11 @@ $require domU-kernel.lst
 
 $write /etc/yum.conf --append 'exclude=kernel,kernel-firmware'
 $write /etc/rpm/platform "$(ARCH)-centos-linux"
-$sed /etc/sysconfig/init 's/^ACTIVE_CONSOLES=.*$/ACTIVE_CONSOLES=\/dev\/hvc0/'
 $write /etc/sysconfig/network-scripts/ifcfg-eth0 'DEVICE="eth0"\nBOOTPROTO=dhcp\nONBOOT=yes\nTYPE="Ethernet"'
 
 $write /etc/securetty --append "hvc0"
 $exec "rm /etc/init/serial.conf"
 $write /etc/sysconfig/network "NETWORKING=yes\nHOSTNAME=centos"
-$patch /etc/rc.d/rc.sysinit centos/rc.sysinit.zramswap.patch
 $sed /etc/shadow 's/^\(root:\)[^:]*\(:.*\)$/\1\2/'
 $write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
 $write /etc/selinux/config "SELINUX=disabled"
@@ -39,6 +37,9 @@ $copy centos/smb.conf /etc/samba/smb.conf
 
 # update and cleanup
 $exec "yum update -y && yum clean -y all"
+
+# zram swap patch
+$patch /etc/rc.d/rc.sysinit centos/rc.sysinit.zramswap.patch
 
 $require centos-$(ARCH).lst
 $require centos-$(REGION).lst

@@ -1,8 +1,5 @@
-$set OVERLAYFS_KERNELVER 4.7.0-gentoo
-/boot/kernel-genkernel-x86_64-$(OVERLAYFS_KERNELVER)
-/boot/initramfs-genkernel-x86_64-$(OVERLAYFS_KERNELVER)
-$symlink /boot/kernel kernel-genkernel-x86_64-$(OVERLAYFS_KERNELVER)
-$symlink /boot/initramfs initramfs-genkernel-x86_64-$(OVERLAYFS_KERNELVER)
+/boot/kernel
+/boot/initramfs
 
 # modify initramfs
 $mkdir /tmp/initramfs

@@ -75,8 +75,8 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
             exec_cmd(["genkernel","--no-mountboot","--kerneldir=/usr/src/linux-%s%s%s" % (version, source, revision)] + genkernel_opts)
             return
 
-exec_cmd(["emerge","-uDN","system","aufs-sources","genkernel"])
-build_kernel_if_needed("aufs", ["--symlink","bzImage"])
+exec_cmd(["emerge","-uDN","system","vanilla-sources","genkernel"])
+build_kernel_if_needed("gentoo", ["--symlink","all"])
 
 ## emerge world
 
@@ -85,5 +85,5 @@ exec_cmd(["emerge","@preserved-rebuild"])
 
 ## build sub kernels
 
-build_kernel_if_needed("gentoo", ["all"])
+build_kernel_if_needed("", ["bzImage"])
 

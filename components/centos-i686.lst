@@ -1,3 +1,4 @@
+$sed /etc/sysconfig/init 's/^ACTIVE_CONSOLES=.*$/ACTIVE_CONSOLES=hvc0/'
 $download http://ftp.iij.ad.jp/pub/linux/fedora/epel/6/i386/mod_extract_forwarded-2.0.2-8.el6.i686.rpm
 $download http://ftp.iij.ad.jp/pub/linux/fedora/epel/6/i386/openvpn-2.3.11-1.el6.i686.rpm
 $download http://ftp.iij.ad.jp/pub/linux/fedora/epel/6/i386/pkcs11-helper-1.11-3.el6.i686.rpm

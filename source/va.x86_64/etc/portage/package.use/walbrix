@@ -1,4 +1,5 @@
-sys-kernel/aufs-sources symlink
+sys-kernel/vanilla-sources -symlink
+sys-kernel/gentoo-sources symlink
 net-misc/openvpn
 net-analyzer/zabbix agent
 app-admin/sudo -sendmail
