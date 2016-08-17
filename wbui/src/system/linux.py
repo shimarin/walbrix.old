@@ -506,22 +506,19 @@ class System:
         return uuid if uuid != "" else None
 
     def grub2exists(self):
-        GRUB2_INSTALLER = "/usr/sbin/grub2-install"
+        GRUB2_INSTALLER = "/usr/sbin/grub-install"
         if os.path.exists(GRUB2_INSTALLER) and (stat.S_IXUSR & os.stat(GRUB2_INSTALLER)[stat.ST_MODE]): #grub2
             return True
         #else
         return False
 
     def installGrub(self, device, targetDir):
-        if self.grub2exists():
-            self.getShellOutput("grub2-install --target=i386-pc --recheck --boot-directory=%s/boot %s" % (targetDir,device))
-        else:
-            self.getShellOutput("grub-install --no-floppy --recheck --root-directory=%s %s" % (targetDir,device))
+        self.getShellOutput("grub-install --target=i386-pc --recheck --boot-directory=%s/boot %s" % (targetDir,device))
 
     def installGrubEFI(self, targetDir):
         if not os.path.isdir("%s/EFI/BOOT" % targetDir):
             os.makedirs("%s/EFI/BOOT" % targetDir)
-        self.execShell("grub2-mkimage -o %s/EFI/BOOT/bootx64.efi -O x86_64-efi xfs fat part_gpt part_msdos normal linux echo all_video test multiboot multiboot2 search iso9660 gzio lvm chain configfile cpuid minicmd gfxterm font terminal" % targetDir)
+        self.execShell("grub-mkimage -o %s/EFI/BOOT/bootx64.efi -O x86_64-efi xfs fat part_gpt part_msdos normal linux echo all_video test multiboot multiboot2 search iso9660 gzio lvm chain configfile cpuid minicmd gfxterm font terminal" % targetDir)
 
     def isBlockSpecial(self, device):
         if not os.path.exists(device): return False

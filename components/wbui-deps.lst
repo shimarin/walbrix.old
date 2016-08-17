@@ -7,7 +7,7 @@ $require pyalsaaudio.lst
 $require vlgothic.lst
 $require fbterm.lst
 $require cdrkit.lst # isoinfo
-$require grub.lst # for grub2-install, grub2-mkimage
+$require grub.lst # for grub-install, grub-mkimage
 $require udev.lst # udevadm
 $require flask.lst # util
 /usr/bin/curl
