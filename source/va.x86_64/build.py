@@ -75,7 +75,7 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
             exec_cmd(["genkernel","--no-mountboot","--kerneldir=/usr/src/linux-%s%s%s" % (version, source, revision)] + genkernel_opts)
             return
 
-exec_cmd(["emerge","-uDN","system","vanilla-sources","genkernel"])
+exec_cmd(["emerge","-uDN","system","gentoo-sources","genkernel"])
 build_kernel_if_needed("gentoo", ["--symlink","all"])
 
 ## emerge world
