@@ -1,2 +1,2 @@
 $package sys-fs/fuse
-$package sys-fs/s3fs
+$package net-fs/s3fs

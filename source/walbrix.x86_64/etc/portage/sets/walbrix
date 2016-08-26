@@ -88,7 +88,7 @@ sys-fs/lvm2
 sys-fs/mdadm
 sys-fs/multipath-tools
 sys-fs/ntfs3g
-sys-fs/s3fs
+net-fs/s3fs
 sys-fs/safecopy
 sys-fs/squashfs-tools
 sys-fs/xfsdump
