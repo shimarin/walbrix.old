@@ -3,7 +3,7 @@
 =dev-python/python-magic-0.4.6-r1
 =sys-fs/aufs-headers-3.19_p20150420
 =sys-fs/aufs-util-3.19_p20150420
-=sys-kernel/aufs-sources-3.18.31
+=sys-kernel/aufs-sources-3.18.39
 =app-crypt/chntpw-140201
 =sys-cluster/drbd-8.4.3-r1
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
@@ -32,4 +32,4 @@
 =app-emulation/xen-tools-4.7.0-r1
 =app-emulation/xen-pvgrub-4.7.0
 
-=sys-kernel/linux-firmware-20160616
+=sys-kernel/linux-firmware-20160628
