@@ -1,9 +1,9 @@
-=sys-kernel/gentoo-sources-4.7.2
+=sys-kernel/gentoo-sources-4.7.5
 =app-i18n/fbterm-1.7-r1
 =dev-python/python-magic-0.4.6-r1
 =sys-fs/aufs-headers-3.19_p20150420
 =sys-fs/aufs-util-3.19_p20150420
-=sys-kernel/aufs-sources-3.18.39
+=sys-kernel/aufs-sources-3.18.40
 =app-crypt/chntpw-140201
 =sys-cluster/drbd-8.4.3-r1
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
@@ -28,7 +28,7 @@
 =sys-kernel/spl-0.6.5.7 **
 
 # xen
-=app-emulation/xen-4.7.0-r1
+=app-emulation/xen-4.7.0-r2
 =app-emulation/xen-tools-4.7.0-r1
 =app-emulation/xen-pvgrub-4.7.0
 
