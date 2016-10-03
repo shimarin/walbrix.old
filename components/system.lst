@@ -30,7 +30,6 @@ $package net-misc/iputils
 $package net-misc/openssh
 $package net-misc/rsync
 $package net-misc/wget
-$package perl-core/Data-Dumper
 $package perl-core/File-Temp
 $package sys-apps/acl
 $package sys-apps/attr
