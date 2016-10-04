@@ -2,16 +2,16 @@ $require domU.lst
 $require domU-kernel.lst
 $require cron.lst
 $require ruby21.lst
-$require php54.lst
+$require php56.lst
 $require pecl-imagick.lst
 $require mysql.lst
 $require ffmpeg.lst
 $require postfix.lst
 $sed /etc/conf.d/hostname s/^\(hostname="\).*\("\)$/\1clipbucket\2/
 
-$sed /etc/php/apache2-php5.5/php.ini s/^max_execution_time.\+$/max_execution_time = 0/ 
-$sed /etc/php/apache2-php5.5/php.ini s/^upload_max_filesize.\+$/upload_max_filesize = 512M/
-$sed /etc/php/apache2-php5.5/php.ini s/^post_max_size.\+$/post_max_size = 768M/
+$sed /etc/php/apache2-php5.6/php.ini s/^max_execution_time.\+$/max_execution_time = 0/ 
+$sed /etc/php/apache2-php5.6/php.ini s/^upload_max_filesize.\+$/upload_max_filesize = 512M/
+$sed /etc/php/apache2-php5.6/php.ini s/^post_max_size.\+$/post_max_size = 768M/
 
 $exec --overlay "gem install --no-ri --no-rdoc flvtool2"
 

@@ -55,7 +55,7 @@ media-video/ffmpeg mp3 xvid x264 x265 cpudetection faac aac mmx mmxext theora th
 # php
 dev-lang/php apache2 gd mysql mysqli postgres xslt zip pdo truetype xmlwriter bcmath xmlreader pcntl sysvipc sockets curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap
 app-eselect/eselect-php apache2
-dev-php/pecl-imagick php_targets_php5-5 -php_targets_php5-6
-dev-php/pecl-apcu php_targets_php5-5 -php_targets_php5-6
-dev-php/pecl-memcached php_targets_php5-5 -php_targets_php5-6
+dev-php/pecl-imagick php_targets_php5-6
+dev-php/pecl-apcu php_targets_php5-6
+dev-php/pecl-memcached php_targets_php5-6
 

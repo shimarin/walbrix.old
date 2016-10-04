@@ -3,7 +3,7 @@ $require domU-kernel.lst
 $require cron.lst
 $require apache.lst
 $require mysql.lst
-$require php55.lst
+$require php56.lst
 $require samba.lst
 $require postfix.lst
 $copy wordpress/smb.conf /etc/samba/smb.conf
