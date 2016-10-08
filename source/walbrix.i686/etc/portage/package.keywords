@@ -12,5 +12,5 @@
 =app-misc/c_rehash-1.7-r1
 =sys-boot/grub-2.02_beta3-r1
 =sys-kernel/linux-firmware-20160628
-=sys-cluster/drbd-8.4.3-r1
+=sys-cluster/drbd-8.4.3-r2
 
