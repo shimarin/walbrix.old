@@ -18,11 +18,10 @@ $require yum.lst
 # zfs
 /sbin/splat
 $package sys-fs/zfs
-$exec 'rm -f /lib/modules/*/extra/avl/zavl.ko.xz'
-$exec 'rm -f /lib/modules/*/extra/nvpair/znvpair.ko.xz'
-$exec 'rm -f /lib/modules/*/extra/unicode/zunicode.ko.xz'
-$exec 'rm -f /lib/modules/*/extra/zcommon/zcommon.ko.xz'
-$exec 'rm -f /lib/modules/*/extra/zfs/zfs.ko.xz'
+$write /tmp/README 'http://insights.ubuntu.com/2016/02/18/zfs-licensing-and-linux/'
+$exec 'mv /tmp/README /lib/modules/*/extra/zfs/'
+#$exec 'cd /lib/modules && tar cvf extra.tar `for i in avl nvpair unicode zcommon zfs;do echo */extra/$i/*.ko.xz; done`'
+#$exec 'cd /lib/modules && rm -f `for i in avl nvpair unicode zcommon zfs;do echo */extra/$i/*.ko.xz; done`'
 
 # misc
 /usr/bin/mpg123
