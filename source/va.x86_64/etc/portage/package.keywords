@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.8.1
+=sys-kernel/gentoo-sources-4.8.2
 =sys-kernel/vanilla-sources-3.2.82
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
@@ -9,6 +9,7 @@
 =media-gfx/wkhtmltopdf-0.12.2.1
 =www-servers/nginx-1.9.15
 =www-servers/uwsgi-2.0.13.1-r1
+=sys-block/zram-init-3.8
 
 #java8
 =dev-lang/scala-2.11.7-r1

@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.8.1-gentoo Kernel Configuration
+# Linux/x86 4.8.2-gentoo Kernel Configuration
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -1912,6 +1912,7 @@ CONFIG_DUMMY_CONSOLE_ROWS=25
 CONFIG_FRAMEBUFFER_CONSOLE=y
 # CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY is not set
 # CONFIG_FRAMEBUFFER_CONSOLE_ROTATION is not set
+# CONFIG_FB_CON_DECOR is not set
 # CONFIG_LOGO is not set
 # CONFIG_SOUND is not set
 

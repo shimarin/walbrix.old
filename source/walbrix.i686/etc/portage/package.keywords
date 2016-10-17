@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.8.1
+=sys-kernel/gentoo-sources-4.8.2
 =app-i18n/fbterm-1.7-r1
 =sys-kernel/vanilla-sources-3.2.81
 =app-crypt/chntpw-140201
@@ -11,6 +11,7 @@
 =media-gfx/fbgrab-1.3
 =app-misc/c_rehash-1.7-r1
 =sys-boot/grub-2.02_beta3-r1
+=sys-block/zram-init-3.8
 =sys-kernel/linux-firmware-20160628
 =sys-cluster/drbd-8.4.3-r2
 

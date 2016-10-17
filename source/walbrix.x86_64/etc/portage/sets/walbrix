@@ -73,6 +73,7 @@ sys-auth/nss-myhostname
 sys-block/nbd
 sys-block/open-iscsi
 sys-block/parted
+sys-block/zram-init
 sys-boot/grub
 sys-cluster/drbd
 sys-firmware/bluez-firmware

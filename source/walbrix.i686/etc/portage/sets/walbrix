@@ -69,6 +69,7 @@ sys-auth/nss-myhostname
 sys-block/nbd
 sys-block/open-iscsi
 sys-block/parted
+sys-block/zram-init
 sys-boot/grub
 sys-boot/syslinux
 sys-cluster/drbd

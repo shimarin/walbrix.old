@@ -98,5 +98,5 @@ $require timezone-$(REGION).lst
 $require locale-$(REGION).lst
 
 # zram swap
-$patch /etc/init.d/swap swap.init.patch
-$write /etc/fstab '/dev/zram0\tnone\tswap\tsw,pri=1\t0 0'
+$require zram-init.lst
+

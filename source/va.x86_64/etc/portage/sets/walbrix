@@ -80,6 +80,7 @@ sys-apps/dstat
 sys-apps/ed
 sys-auth/nss-mdns
 sys-auth/nss-myhostname
+sys-block/zram-init
 sys-fs/btrfs-progs
 sys-fs/fuse
 sys-fs/xfsprogs
