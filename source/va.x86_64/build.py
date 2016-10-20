@@ -31,10 +31,10 @@ groups = [
     #(106, "lpadmin"),
     #(107, "dhcp"),
     (110, "nginx"),
-    #(111, "haproxy"),
+    (111, "haproxy"),
     (112, "groonga"),
     (113, "clamav"),
-    #(124, "postmaster"),
+    (124, "postmaster"),
     (125, "crontab"),
     (126, "netdev"),
     #(127, "plugdev"),
@@ -47,8 +47,9 @@ users = [
     (101, "openvpn", "openvpn", "openvpn","/dev/null","/sbin/nologin"),
     (102, "avahi", "avahi", "avahi","/dev/null","/sbin/nologin"),
     (105, "zabbix", "zabbix", "zabbix","/var/lib/zabbix/home","/sbin/nologin"),
+    (106, "postmaster", "postmaster", "postmaster", "/var/spool/mail", "/sbin/nologin"),
     (110, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin"),
-    #(111, "haproxy", "haproxy", "haproxy", "/dev/null", "/sbin/nologin"),
+    (111, "haproxy", "haproxy", "haproxy", "/dev/null", "/sbin/nologin"),
     (112, "groonga", "groonga", "groonga", "/dev/null", "/sbin/nologin"),
     (113, "clamav", "clamav", "clamav", "/dev/null", "/sbin/nologin")
 ]
