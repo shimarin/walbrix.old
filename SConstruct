@@ -29,6 +29,7 @@ env.Command("$WBUI_MARKER", [Glob("wbui/src/*.py"),Glob("wbui/src/*/*.py"), "fil
 rm -rf build/wbui
 python2.7 -m compileall -q wbui/src
 mkdir -p build/wbui/usr/share/wbui && (cd wbui/src && find . themes/default -name 'themes' -prune -o -name '*.pyc' -o -name '*.png' -o -name '*.ogg' -o -name '*.css' -o -name '*.js' -o -name '*.ico' -o -name '*.html' |cpio -o -H newc) | (cd build/wbui/usr/share/wbui && cpio -idmv --no-preserve-owner)
+mkdir -p build/wbui/etc/conf.d && cp files/walbrix/conf-wb build/wbui/etc/conf.d/wb
 mkdir -p build/wbui/usr/sbin && cp files/walbrix/wb build/wbui/usr/sbin/
 mkdir -p build/wbui/etc/splash/wb/images
 cp files/splash/640x480.cfg build/wbui/etc/splash/wb/640x480.cfg

@@ -1,4 +1,7 @@
 #!/bin/sh
+source /etc/conf.d/wb
+export http_proxy
+
 WBUI_BASE=/usr/share/wbui
 
 [ $# -eq 0 ] && PYTHONPATH=${WBUI_BASE} exec python2.7 -m cli2
