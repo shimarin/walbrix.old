@@ -518,7 +518,7 @@ class System:
     def installGrubEFI(self, targetDir):
         if not os.path.isdir("%s/EFI/BOOT" % targetDir):
             os.makedirs("%s/EFI/BOOT" % targetDir)
-        self.execShell("grub-mkimage -o %s/EFI/BOOT/bootx64.efi -O x86_64-efi xfs fat part_gpt part_msdos normal linux echo all_video test multiboot multiboot2 search iso9660 gzio lvm chain configfile cpuid minicmd gfxterm font terminal" % targetDir)
+        self.execShell("grub-mkimage -o %s/EFI/BOOT/bootx64.efi -O x86_64-efi xfs fat ext2 part_gpt part_msdos normal linux echo all_video test multiboot multiboot2 search iso9660 gzio lvm chain configfile cpuid minicmd gfxterm font terminal" % targetDir)
 
     def isBlockSpecial(self, device):
         if not os.path.exists(device): return False
