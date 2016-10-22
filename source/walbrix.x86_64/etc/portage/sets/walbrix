@@ -70,6 +70,7 @@ sys-apps/usbutils
 sys-apps/yum
 sys-auth/nss-mdns
 sys-auth/nss-myhostname
+sys-block/megacli
 sys-block/nbd
 sys-block/open-iscsi
 sys-block/parted

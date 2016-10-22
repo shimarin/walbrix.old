@@ -153,6 +153,7 @@ $require usb_modeswitch.lst
 $package sys-apps/usbutils
 $require bluez.lst
 $package sys-apps/lm_sensors
+$package sys-block/megacli
 $package sys-power/cpupower
 $package sys-apps/lshw
 $require nut.lst

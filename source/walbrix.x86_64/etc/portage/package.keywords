@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.8.2
+=sys-kernel/gentoo-sources-4.8.3
 =app-i18n/fbterm-1.7-r1
 =dev-python/python-magic-0.4.6-r1
 =sys-fs/aufs-headers-3.19_p20150420
@@ -34,3 +34,4 @@
 =app-emulation/xen-pvgrub-4.7.0
 
 =sys-kernel/linux-firmware-20160628
+=sys-block/megacli-8.07.14-r1
