@@ -1,0 +1,11 @@
+#!/bin/sh
+echo "You need to download arcconf binary from microsemi website."
+echo
+echo "Visit http://storage.microsemi.com/en-us/downloads/" 
+echo "Download 'Microsemi Adaptec ARCCONF Command Line Utility' as arcconf_(VERSION_STRING).zip."
+echo 
+echo "# mkdir tmp && cd tmp"
+echo "# unzip path/to/arcconf_(VERSION_STRING).zip"
+echo "# mv tmp/linux_x64/cmdline/static_arcconf/cmdline/arcconf /opt/bin/"
+echo "# chmod 755 /opt/bin/arcconf"
+

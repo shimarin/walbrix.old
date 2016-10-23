@@ -31,6 +31,7 @@ $package sys-apps/findutils
 $package sys-apps/coreutils
 $package app-arch/xz-utils
 $package app-misc/ca-certificates
+$package media-gfx/qrencode
 $require pam.lst
 $require udev.lst
 $sed /etc/rc.conf 's/^#rc_sys.\+$/rc_sys="xenU"/'

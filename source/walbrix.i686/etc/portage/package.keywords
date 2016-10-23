@@ -1,6 +1,6 @@
-=sys-kernel/gentoo-sources-4.8.3
+=sys-kernel/gentoo-sources-4.8.4
 =app-i18n/fbterm-1.7-r1
-=sys-kernel/vanilla-sources-3.2.81
+=sys-kernel/vanilla-sources-3.2.83
 =app-crypt/chntpw-140201
 =net-analyzer/barnyard2-1.9
 =net-analyzer/snort-2.9.7.3

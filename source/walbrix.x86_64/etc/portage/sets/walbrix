@@ -25,6 +25,7 @@ dev-util/strace
 dev-vcs/git
 mail-mta/ssmtp
 media-fonts/vlgothic
+media-gfx/qrencode
 media-gfx/splash-themes-gentoo
 media-sound/alsa-utils
 media-sound/mpg123

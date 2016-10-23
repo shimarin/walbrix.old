@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 3.2.82 Kernel Configuration
+# Linux/x86 3.2.83 Kernel Configuration
 #
 CONFIG_64BIT=y
 # CONFIG_X86_32 is not set
