@@ -123,6 +123,7 @@ $package net-misc/dhcp
 $require ssmtp.lst
 $require smbclient.lst
 $require cu.lst
+$package www-servers/nginx
 
 # complementary PPP configs
 $mkdir /etc/chatscripts
