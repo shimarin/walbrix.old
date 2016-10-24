@@ -29,7 +29,7 @@ lvs --noheadings --nameprefixes -o lv_name,lv_path $BACKUP_TAG | while read line
 done
 
 if [[ "$INTERVAL" == "daily" ]]; then
-	wb rsync -v --delete / $BACKUP_ROOT/$HOSTNAME || echo `date` $HOSTNAME "rsync fail" >> $FAIL_FILE
+	wb rsync -v --delete /.overlay/profile/root/ $BACKUP_ROOT/$HOSTNAME || echo `date` $HOSTNAME "rsync fail" >> $FAIL_FILE
 fi
 
 date > $DONE_FILE
