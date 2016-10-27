@@ -1,3 +1,7 @@
 #dev-libs/libx86
-$package media-fonts/liberation-fonts
+#$package media-fonts/liberation-fonts
 $package app-i18n/fbterm
+$package media-fonts/mplus-fonts
+/etc/fonts/conf.d/README
+$copy walbrix/fonts.conf /etc/fonts/fonts.conf
+

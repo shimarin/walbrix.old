@@ -24,6 +24,7 @@ dev-util/debootstrap
 dev-util/strace
 dev-vcs/git
 mail-mta/ssmtp
+media-fonts/mplus-fonts
 media-fonts/vlgothic
 media-gfx/qrencode
 media-gfx/splash-themes-gentoo
