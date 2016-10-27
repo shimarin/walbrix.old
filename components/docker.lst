@@ -12,7 +12,7 @@ $require perl.lst # for shasum command
 
 #sys-libs/libseccomp
 #app-emulation/runc
-#app-emulation/containerd
+$package app-emulation/containerd
 
 $package net-firewall/iptables
 $require git.lst
