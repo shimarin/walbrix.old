@@ -24,6 +24,7 @@
 #oscar
 =dev-python/APScheduler-3.0.1
 =dev-python/tzlocal-1.2
+=net-fs/samba-4.2.14  # https://bugzilla.samba.org/show_bug.cgi?id=11849
 
 #owncloud
 =dev-php/PEAR-PEAR-1.9.5
