@@ -32,4 +32,12 @@ if [[ "$INTERVAL" == "daily" ]]; then
 	wb rsync -v --delete /.overlay/profile/root/ $BACKUP_ROOT/$HOSTNAME || echo `date` $HOSTNAME "rsync fail" >> $FAIL_FILE
 fi
 
+if [ ${BACKUP_ROOT:0:1} = '/' ] && [ `basename $BACKUP_ROOT` = 'head' ] && btrfs subvolume sync $BACKUP_ROOT && btrfs subvolume sync `dirname $BACKUP_ROOT`; then
+	DOW=`LANG=C date +%a`
+	PARENT_VOLUME=`dirname $BACKUP_ROOT`
+	SNAPSHOT=$PARENT_VOLUME/$DOW
+	[ -d $SNAPSHOT ] && btrfs filesystem sync $SNAPSHOT && btrfs subvolume delete $SNAPSHOT
+	btrfs subvolume snapshot -r $BACKUP_ROOT $SNAPSHOT || echo "Failed to create snapshot $SNAPSHOT" >> $FAIL_FILE
+fi
+
 date > $DONE_FILE
