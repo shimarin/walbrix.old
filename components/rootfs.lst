@@ -12,3 +12,5 @@ $mkdir /var/lib
 /var/spool/.keep
 /mnt/.keep
 $symlink /etc/mtab /proc/self/mounts
+$touch /etc/fstab
+
