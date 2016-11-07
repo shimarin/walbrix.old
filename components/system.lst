@@ -10,6 +10,7 @@ $package app-arch/gzip
 $package app-arch/tar
 $package app-arch/unzip
 $package app-arch/xz-utils
+$package app-arch/zip
 $require nano.lst
 $package app-misc/ca-certificates
 $package app-misc/mime-types

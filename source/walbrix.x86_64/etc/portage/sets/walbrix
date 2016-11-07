@@ -3,6 +3,7 @@ app-admin/sudo
 app-admin/sysklogd
 app-admin/sysstat
 app-admin/testdisk
+app-arch/zip
 app-backup/fsarchiver
 app-cdr/cdrkit
 app-crypt/chntpw
