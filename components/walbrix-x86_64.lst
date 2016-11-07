@@ -1,5 +1,5 @@
-/boot/kernel-genkernel-x86_64-3.18.43-aufs-r1
-$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.18.43-aufs-r1
+/boot/kernel-genkernel-x86_64-3.18.44-aufs
+$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.18.44-aufs
 
 # 32-bit compat
 $require lib32.lst
