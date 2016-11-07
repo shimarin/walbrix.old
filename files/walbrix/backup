@@ -33,9 +33,7 @@ if [[ "$INTERVAL" == "daily" ]]; then
 fi
 
 if [ ${BACKUP_ROOT:0:1} = '/' ] && [ `basename $BACKUP_ROOT` = 'head' ] && btrfs subvolume sync $BACKUP_ROOT && btrfs subvolume sync `dirname $BACKUP_ROOT`; then
-	DOW=`LANG=C date +%a`
-	PARENT_VOLUME=`dirname $BACKUP_ROOT`
-	SNAPSHOT=$PARENT_VOLUME/$DOW
+	SNAPSHOT=`dirname $BACKUP_ROOT`/`LANG=C date +%a`
 	[ -d $SNAPSHOT ] && btrfs filesystem sync $SNAPSHOT && btrfs subvolume delete $SNAPSHOT
 	btrfs subvolume snapshot -r $BACKUP_ROOT $SNAPSHOT || echo "Failed to create snapshot $SNAPSHOT" >> $FAIL_FILE
 fi
