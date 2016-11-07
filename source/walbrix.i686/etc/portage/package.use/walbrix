@@ -15,35 +15,6 @@ sys-power/nut usb
 sys-cluster/drbd heartbeat pacemaker xen
 net-fs/nfs-utils -tcpd
 
-app-editors/vim python -python_targets_python3_4
-dev-python/markdown -python_targets_python3_4
-dev-python/pypam -python_targets_python3_4
-dev-python/setuptools -python_targets_python3_4
-dev-python/lxml -python_targets_python3_4
-dev-libs/boost -python_targets_python3_4
-dev-libs/libnl -python_targets_python3_4
-sys-fs/cryptsetup -python_targets_python3_4
-dev-python/pycrypto -python_targets_python3_4
-dev-python/pyyaml -python_targets_python3_4
-dev-python/httplib2 -python_targets_python3_4
-dev-python/pyasn1 -python_targets_python3_4
-dev-python/markupsafe -python_targets_python3_4
-dev-python/jinja -python_targets_python3_4
-dev-python/python-magic -python_targets_python3_4
-dev-python/six -python_targets_python3_4
-dev-python/python-dateutil -python_targets_python3_4
-sys-apps/kmod lzma -python_targets_python3_4
-sys-apps/file -python_targets_python3_4
-dev-libs/libxml2 -python_targets_python3_4
-sys-apps/util-linux -python_targets_python3_4
-dev-python/blinker -python_targets_python3_4
-dev-python/itsdangerous -python_targets_python3_4
-dev-python/simplejson -python_targets_python3_4
-dev-python/werkzeug  -python_targets_python3_4
-dev-python/flask -python_targets_python3_4
-dev-python/pyxattr -python_targets_python3_4
-dev-python/certifi -python_targets_python3_4
- 
 sys-libs/zlib static-libs
 media-libs/libjpeg-turbo static-libs
 virtual/jpeg static-libs
@@ -52,9 +23,9 @@ media-libs/libpng static-libs
 media-libs/freetype static-libs
 
 # wbui
-dev-python/numpy -python_targets_python3_4
-dev-python/pygame -python_targets_python3_4
-dev-python/pyalsaaudio -python_targets_python3_4
+dev-python/numpy -python_targets_python3_5
+dev-python/pygame -python_targets_python3_5
+dev-python/pyalsaaudio -python_targets_python3_5
 media-libs/libsdl alsa fbcon
 media-libs/sdl-image jpeg png webp
 media-libs/sdl-mixer vorbis
