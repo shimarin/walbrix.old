@@ -1,0 +1,10 @@
+#!/bin/bash
+source /etc/wb/alert
+[ -z "$ALERT_RECIPENT" ] && exit
+
+STATUS=`MegaCli -AdpAllInfo -aALL -NoLog|egrep '^  (Degraded|Failed)'|grep -v ' 0'`;
+
+if [ "x$STATUS" != "x" ]; then
+  echo -e "Subject: RAID WARNING @ `hostname`\n\n$STATUS"|/usr/sbin/sendmail "$ALERT_RECIPIENT"
+fi
+

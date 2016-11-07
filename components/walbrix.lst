@@ -71,6 +71,10 @@ $copy walbrix/backup /etc/cron.daily/backup
 $symlink /etc/cron.weekly/backup ../cron.daily/backup
 $symlink /etc/cron.monthly/backup ../cron.daily/backup
 
+# alert cron scripts
+$write /etc/wb/alert "#ALERT_RECIPIENT=your@email.address"
+$copy walbrix/megaraid_alert /etc/cron.hourly/megaraid-alert
+
 # storage and filesystems
 $require mdadm.lst
 $require nfs.lst
