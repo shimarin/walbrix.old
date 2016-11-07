@@ -20,6 +20,7 @@ $package dev-python/rsa
 $package app-admin/logrotate
 $require git.lst
 $require dropbox.lst
+$package sys-fs/inotify-tools
 
 $package app-text/poppler-data
 $package app-text/poppler

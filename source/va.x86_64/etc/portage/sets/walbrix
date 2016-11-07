@@ -84,6 +84,7 @@ sys-auth/nss-myhostname
 sys-block/zram-init
 sys-fs/btrfs-progs
 sys-fs/fuse
+sys-fs/inotify-tools
 sys-fs/xfsprogs
 sys-kernel/vanilla-sources
 sys-kernel/genkernel
