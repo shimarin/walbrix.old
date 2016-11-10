@@ -14,6 +14,7 @@ dev-db/mysql -perl
 sys-power/nut usb
 sys-cluster/drbd heartbeat pacemaker xen
 net-fs/nfs-utils -tcpd
+sys-apps/kmod lzma
 
 sys-libs/zlib static-libs
 media-libs/libjpeg-turbo static-libs

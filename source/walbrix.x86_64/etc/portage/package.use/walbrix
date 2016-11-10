@@ -16,6 +16,7 @@ net-fs/samba -server -aio -netapi
 dev-db/mysql -perl
 sys-power/nut usb
 net-fs/nfs-utils -tcpd
+sys-apps/kmod lzma
 
 # splash
 sys-libs/zlib static-libs
