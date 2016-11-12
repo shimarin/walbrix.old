@@ -29,9 +29,9 @@
 =sys-kernel/spl-0.6.5.8 **
 
 # xen
-=app-emulation/xen-4.7.0-r2
-=app-emulation/xen-tools-4.7.0-r1
-=app-emulation/xen-pvgrub-4.7.0
+=app-emulation/xen-4.7.1
+=app-emulation/xen-tools-4.7.1
+=app-emulation/xen-pvgrub-4.7.1
 
 =sys-kernel/linux-firmware-20160628
 =sys-block/megacli-8.07.14-r1
