@@ -30,6 +30,8 @@ elif [ "$CMD" = "exec" ]; then
     fi
     DATABASE=$1
     shift
+elif [ "$CMD" = "shell" ]; then
+    true
 else
     echo "Invalid command"
     exit -1
@@ -74,6 +76,9 @@ elif [ "$CMD" = "exec" ]; then
     for sql in $@; do
         /usr/bin/mysql --socket=$SOCKET -u root "$DATABASE" -e "$sql" || FAIL=1
     done
+elif [ "$CMD" = "shell" ]; then
+    export MYSQL_UNIX_PORT="$SOCKET"
+    sh -c "$*" || FAIL=1
 fi
 
 kill `cat $PIDFILE`

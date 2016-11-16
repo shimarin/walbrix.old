@@ -1,0 +1,40 @@
+$require domU.lst
+$require domU-kernel.lst
+$require cron.lst
+$require mysql.lst
+$require postfix.lst
+$require bundler.lst
+$require samba.lst
+$require git.lst
+$require passenger.lst
+$require rmagick.lst
+
+$package dev-ruby/mysql2
+$package dev-vcs/mercurial
+$package dev-vcs/subversion
+
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1redmine\2/'
+
+$set REDMINE_TAR redmine-3.3.1.tar.gz
+$download http://www.redmine.org/releases/$(REDMINE_TAR)
+$exec "tar zxvf /tmp/download/$(REDMINE_TAR) -C /var/www/localhost"
+$exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/redmine-* /var/www/localhost/htdocs"
+$copy redmine/database.yml /var/www/localhost/htdocs/config/database.yml
+$copy redmine/configuration.yml /var/www/localhost/htdocs/config/configuration.yml
+$exec --overlay "cd /var/www/localhost/htdocs && bundle install"
+$exec "chown -R apache.apache /var/www/localhost"
+$exec "rm -rf /usr/local/lib64/ruby/gems/*/cache /usr/local/lib64/ruby/gems/*/gems/nokogiri-*/ext/nokogiri/tmp /usr/local/lib64/ruby/gems/*/gems/nokogiri-*/ports/archives"
+
+# create database
+$mkdir /tmp/mysql
+$copy mysql/operate.sh /tmp/mysql/operate.sh
+$exec "/tmp/mysql/operate.sh createdb redmine"
+
+# setup rails app
+$copy redmine/setup.sh /tmp/setup.sh
+$exec "/tmp/mysql/operate.sh shell /tmp/setup.sh"
+
+# configure apache
+$sed /etc/apache2/vhosts.d/default_vhost.include 's/root@localhost/redmine@example.com/'
+$sed /etc/apache2/vhosts.d/default_vhost.include 's/^DocumentRoot "\/var\/www\/localhost\/htdocs"$/DocumentRoot "\/var\/www\/localhost\/htdocs\/public"/'
+

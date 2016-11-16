@@ -58,7 +58,12 @@ dev-python/rsa
 dev-python/twisted-names
 dev-python/unittest2
 dev-python/xlrd
+dev-ruby/bundler
+dev-ruby/mysql2
+dev-ruby/rmagick
 dev-util/strace
+dev-vcs/mercurial
+dev-vcs/subversion
 mail-mta/postfix
 media-fonts/vlgothic
 media-gfx/qrencode
@@ -94,6 +99,7 @@ sys-process/vixie-cron
 www-apache/mod_authnz_external
 www-apache/mod_extract_forwarded
 www-apache/mod_wsgi
+www-apache/passenger
 www-client/elinks
 www-client/lynx
 www-servers/nginx

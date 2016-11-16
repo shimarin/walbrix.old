@@ -1,0 +1,5 @@
+$require apache.lst
+$package dev-ruby/rack
+$package www-apache/passenger
+$sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D PASSENGER"/'
+

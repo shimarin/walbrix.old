@@ -59,3 +59,17 @@ dev-php/pecl-imagick php_targets_php5-6
 dev-php/pecl-apcu php_targets_php5-6
 dev-php/pecl-memcached php_targets_php5-6
 
+# ruby
+virtual/rubygems -ruby_targets_ruby20
+dev-ruby/rubygems -ruby_targets_ruby20
+dev-ruby/bundler -ruby_targets_ruby20
+dev-ruby/rdoc -ruby_targets_ruby20
+dev-ruby/rake -ruby_targets_ruby20
+dev-ruby/racc -ruby_targets_ruby20
+dev-ruby/json -ruby_targets_ruby20
+dev-ruby/mysql2 -ruby_targets_ruby20
+dev-ruby/rmagick -ruby_targets_ruby20
+www-apache/passenger -ruby_targets_ruby20
+dev-ruby/rack -ruby_targets_ruby20
+virtual/ruby-ssl -ruby_targets_ruby20
+
