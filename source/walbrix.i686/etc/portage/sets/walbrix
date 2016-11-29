@@ -49,6 +49,7 @@ net-misc/s3cmd
 net-misc/taylor-uucp
 net-misc/vconfig
 net-misc/wakeonlan
+net-misc/whois
 net-misc/wol
 net-wireless/bluez
 net-wireless/iw

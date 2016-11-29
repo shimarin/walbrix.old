@@ -81,6 +81,7 @@ net-misc/netkit-telnetd
 net-misc/ntp
 net-misc/openvpn
 net-misc/s3cmd
+net-misc/whois
 net-proxy/haproxy
 sys-apps/dstat
 sys-apps/ed

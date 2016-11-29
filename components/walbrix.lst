@@ -118,6 +118,7 @@ $package net-analyzer/netcat
 $package net-misc/wakeonlan
 $package net-misc/ifenslave
 $package net-misc/vconfig
+$package net-misc/whois
 $package net-misc/wol
 $package sys-apps/ethtool
 $require zabbix-agent.lst

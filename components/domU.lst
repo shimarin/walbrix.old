@@ -21,6 +21,7 @@ $package app-arch/cpio
 $package sys-apps/grep
 $package app-arch/gzip
 $package net-misc/iputils
+$package net-misc/whois
 $package sys-apps/sed
 $package app-arch/tar
 $package sys-apps/sysvinit
