@@ -1,0 +1,5 @@
+INTERFACES=""
+CONFIGS="/etc/hostapd/hostapd.conf"
+OPTIONS=""
+RC_AFTER="network-bridge"
+

@@ -37,3 +37,7 @@ net-dns/avahi -introspection
 # prevent unnecessary deps
 app-text/xmlto -text
 
+# assume EC algorythms are safe
+dev-libs/openssl -bindist
+net-misc/openssh -bindist
+

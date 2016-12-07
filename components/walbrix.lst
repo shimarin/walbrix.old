@@ -1,4 +1,5 @@
 $require system.lst
+$require portage-configs.lst
 $require kernel.lst
 $require grub.lst
 $require xen.lst

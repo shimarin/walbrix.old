@@ -6,3 +6,8 @@ $package dev-python/m2crypto
 $package net-wireless/crda
 $package net-wireless/iw
 $package net-wireless/wpa_supplicant
+$package net-wireless/hostapd
+$copy walbrix/conf-hostapd /etc/conf.d/hostapd
+$copy walbrix/hostapd.conf /etc/hostapd/hostapd.conf
+/usr/sbin/rfkill
+
