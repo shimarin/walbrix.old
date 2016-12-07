@@ -1,3 +1,4 @@
 $package net-dialup/ppp
+$package net-dialup/ppp-scripts
 $package net-dialup/rp-pppoe
 
