@@ -1,2 +1,2 @@
-$package sys-libs/ncurses-5.9-r5
+$package sys-libs/ncurses-6.0-r1
 $package app-editors/nano
