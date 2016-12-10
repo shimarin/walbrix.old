@@ -1,6 +1,6 @@
 $require groonga.lst
 $require mysql.lst
-$set MYSQL_VERSION 5.6.28
+$set MYSQL_VERSION 5.6.34
 $download http://cdn.mysql.com/Downloads/MySQL-5.6/mysql-$(MYSQL_VERSION).tar.gz
 $exec "cd /tmp && tar zxvf /tmp/download/mysql-*.tar.gz"
 $exec --overlay "cd /tmp/mysql-* && cmake . && cd libservices && make && mv libmysqlservices.a /usr/lib/"
