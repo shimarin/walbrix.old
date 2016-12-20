@@ -6,7 +6,7 @@ $package dev-java/ant-core
 
 #junit-4
 $package dev-java/hamcrest-core
-$package dev-java/junit
+$package dev-java/junit-4.12-r1
 
 #commons-dbcp
 $package dev-java/commons-logging
