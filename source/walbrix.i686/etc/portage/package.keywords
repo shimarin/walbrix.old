@@ -15,3 +15,4 @@
 =sys-kernel/linux-firmware-20160628
 =sys-cluster/drbd-8.4.3-r2
 =sys-block/megacli-8.07.14-r1
+=net-analyzer/tcpdump-4.8.1
