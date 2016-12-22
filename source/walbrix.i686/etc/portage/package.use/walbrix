@@ -33,6 +33,7 @@ media-libs/sdl-mixer vorbis
 
 # networks
 net-dns/avahi -introspection
+net-fs/s3fs openssl
 
 # prevent unnecessary deps
 app-text/xmlto -text

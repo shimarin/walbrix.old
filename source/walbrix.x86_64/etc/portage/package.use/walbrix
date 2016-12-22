@@ -49,6 +49,7 @@ net-dns/avahi -introspection
 
 # misc
 media-sound/mpg123 alsa
+net-fs/s3fs openssl
 
 # assume EC algorythms are safe
 dev-libs/openssl -bindist
