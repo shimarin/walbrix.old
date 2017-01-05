@@ -4,8 +4,8 @@
 =sys-fs/aufs-headers-3.19_p20150420
 =dev-java/commons-dbcp-2.1
 =dev-python/python-magic-0.4.6-r1
-=app-text/groonga-5.0.9
-=app-text/groonga-normalizer-mysql-1.1.0
+=app-text/groonga-6.1.2
+=app-text/groonga-normalizer-mysql-1.1.1
 =media-gfx/wkhtmltopdf-0.12.2.1
 =www-servers/nginx-1.9.15
 =www-servers/uwsgi-2.0.13.1-r1
