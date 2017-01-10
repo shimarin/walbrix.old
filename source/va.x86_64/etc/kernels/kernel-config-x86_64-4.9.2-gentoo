@@ -1,7 +1,20 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.9.0-gentoo Kernel Configuration
+# Linux/x86 4.9.2-gentoo Kernel Configuration
 #
+
+#
+# Gentoo Linux
+#
+CONFIG_GENTOO_LINUX=y
+CONFIG_GENTOO_LINUX_UDEV=y
+CONFIG_GENTOO_LINUX_PORTAGE=y
+
+#
+# Support for init systems, system and service managers
+#
+CONFIG_GENTOO_LINUX_INIT_SCRIPT=y
+# CONFIG_GENTOO_LINUX_INIT_SYSTEMD is not set
 CONFIG_64BIT=y
 CONFIG_X86_64=y
 CONFIG_X86=y
@@ -3094,16 +3107,3 @@ CONFIG_ARCH_HAS_SG_CHAIN=y
 CONFIG_ARCH_HAS_PMEM_API=y
 CONFIG_ARCH_HAS_MMIO_FLUSH=y
 CONFIG_SBITMAP=y
-
-#
-# Gentoo Linux
-#
-CONFIG_GENTOO_LINUX=y
-CONFIG_GENTOO_LINUX_UDEV=y
-CONFIG_GENTOO_LINUX_PORTAGE=y
-
-#
-# Support for init systems, system and service managers
-#
-CONFIG_GENTOO_LINUX_INIT_SCRIPT=y
-# CONFIG_GENTOO_LINUX_INIT_SYSTEMD is not set
