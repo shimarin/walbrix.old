@@ -17,6 +17,7 @@ dev-db/mysql -perl
 sys-power/nut usb
 net-fs/nfs-utils -tcpd
 sys-apps/kmod lzma
+dev-libs/libxml2 python
 
 # splash
 sys-libs/zlib static-libs
