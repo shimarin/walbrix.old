@@ -87,8 +87,12 @@ def run(device, image, yes = False, no_bios = False, xen_vga = None): # image ca
             f.write("loopback loop /walbrix\n")
             f.write("source (loop)/grub.cfg\n")
         with open("%s/boot/grub/walbrix.cfg" % tmpdir, "w") as f:
-            f.write("set WALBRIX_BOOT=UUID=%s\n" % boot_partition_uuid)
-            if xen_vga is not None: f.write("set WALBRIX_XEN_VGA=%s\n" % xen_vga)
+            #f.write("set WALBRIX_BOOT=UUID=%s\n" % boot_partition_uuid)
+            f.write("#set WALBRIX_DOM0_MEM=1024M\n")
+            f.write("#set WALBRIX_GRUB_DEFAULT=0\n")
+            f.write("#set WALBRIX_GRUB_TIMEOUT=3\n")
+            if xen_vga: f.write("set WALBRIX_XEN_VGA=%s\n" % xen_vga)
+            else: f.write("#set WALBRIX_XEN_VGA=gfx-640x480x32\n")
 
         # copy system image
         print "Installing Walbrix..."
