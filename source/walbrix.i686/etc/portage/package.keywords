@@ -12,6 +12,6 @@
 =app-misc/c_rehash-1.7-r1
 =sys-boot/grub-2.02_beta3-r1
 =sys-block/zram-init-3.8
-=sys-kernel/linux-firmware-20160628
+=sys-kernel/linux-firmware-20170113
 =sys-block/megacli-8.07.14-r1
 =net-analyzer/tcpdump-4.8.1

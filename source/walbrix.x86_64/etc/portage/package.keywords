@@ -3,7 +3,7 @@
 =dev-python/python-magic-0.4.6-r1
 =sys-fs/aufs-headers-3.19_p20150420
 =sys-fs/aufs-util-3.19_p20150420
-=sys-kernel/aufs-sources-3.18.45-r1
+=sys-kernel/aufs-sources-3.18.47
 =app-crypt/chntpw-140201
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
 =sys-block/thin-provisioning-tools-0.4.1
@@ -32,5 +32,5 @@
 =app-emulation/xen-tools-4.7.1-r5
 =app-emulation/xen-pvgrub-4.7.1-r1
 
-=sys-kernel/linux-firmware-20160628
+=sys-kernel/linux-firmware-20170113
 =sys-block/megacli-8.07.14-r1
