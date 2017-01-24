@@ -92,6 +92,7 @@ sys-fs/btrfs-progs
 sys-fs/fuse
 sys-fs/inotify-tools
 sys-fs/xfsprogs
+sys-kernel/aufs-sources
 sys-kernel/vanilla-sources
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
