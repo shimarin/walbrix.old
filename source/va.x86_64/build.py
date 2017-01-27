@@ -73,7 +73,14 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
 
         if not os.path.isfile(("/boot/kernel-genkernel-%s-%s" + source + "%s") % (arch, version, revision)):
             print "Kernel %s%s%s needs to be built" % (version, source, revision)
-            exec_cmd(["genkernel","--no-mountboot","--kerneldir=/usr/src/linux-%s%s%s" % (version, source, revision)] + genkernel_opts)
+            kerneldir = "/usr/src/linux-%s%s%s" % (version, source, revision)
+            if source == "-aufs":
+                print "Applying AUFS on overlayfs patch..."
+                if subprocess.call(["grep","-q","overlay","%s/fs/aufs/branch.c" % kerneldir],shell=False) != 0:
+                    exec_cmd("wget -O - https://gist.githubusercontent.com/shimarin/d9bb3727edbb36f32eb315739e35cbfe/raw/b952a9c905b1ce9182ca602e493c5d9bae8c64e9/allow-aufs-to-work-on-overlayfs.patch | patch %s/fs/aufs/branch.c -p1" % kerneldir)
+                else:
+                    print "Patch has already been applied."
+            exec_cmd(["genkernel","--no-mountboot","--kerneldir=%s" % kerneldir] + genkernel_opts)
             return
 
 exec_cmd(["emerge","-uDN","system","gentoo-sources","genkernel"])
