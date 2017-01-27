@@ -133,8 +133,13 @@ if [ "${BOOT_PARTITION}" = "CDROM" ]; then
     BOOT_PARTITION=`blkid | grep -e 'LABEL="WBINSTALL.*".\+TYPE="iso9660"' | cut -d ':' -f 1`
 fi
 
-if echo "${BOOT_PARTITION}" | grep -qs '^\(LABEL\|UUID\)='; then
+if echo "${BOOT_PARTITION}" | grep -qs '^\LABEL='; then
     BOOT_PARTITION=`busybox findfs "${BOOT_PARTITION}"`
+fi
+
+if echo "${BOOT_PARTITION}" | grep -qs '^\UUID='; then
+    # you need to use blkid -U instead of findfs when you want to find CDROM as well
+    BOOT_PARTITION=`blkid -U "${BOOT_PARTITION#UUID=}"`
 fi
 
 if [ -z "${BOOT_PARTITION}" ]; then
