@@ -1,5 +1,6 @@
 $require domU.lst
-$require domU-kernel.lst
+$require domU-overlayfs-kernel.lst
+$require domU-aufs-kernel.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1docker\2/'
 
 $package sys-fs/aufs-util
