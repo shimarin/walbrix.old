@@ -1,7 +1,7 @@
 $rpmbootstrap --arch=i686 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/6.8/os/i386/Packages/centos-release-6-8.el6.centos.12.3.i686.rpm' --include='vim-minimal less initscripts passwd tar which net-tools'
 $rpmbootstrap --arch=x86_64 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/6.8/os/x86_64/Packages/centos-release-6-8.el6.centos.12.3.x86_64.rpm' --include='vim-minimal less initscripts passwd tar which net-tools'
 
-$require domU-kernel.lst
+$require domU-conservative-kernel.lst
 
 $write /etc/yum.conf --append 'exclude=kernel,kernel-firmware'
 $write /etc/rpm/platform "$(ARCH)-centos-linux"
