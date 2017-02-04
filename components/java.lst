@@ -1,6 +1,5 @@
 $set JAVA_VERSION 8
 $set ICEDTEA_VERSION 3.2.0
-$require python-exec.lst
 $package dev-java/java-config --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
 #$package dev-java/java-config-wrapper
 
