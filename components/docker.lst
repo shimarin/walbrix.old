@@ -11,6 +11,8 @@ $require perl.lst # for shasum command
 #$package dev-go/go-md2man
 #dev-db/sqlite
 
+$require s3cmd.lst
+
 #sys-libs/libseccomp
 #app-emulation/runc
 $package app-emulation/containerd
