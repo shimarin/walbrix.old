@@ -3,7 +3,7 @@ $rpmbootstrap --arch=x86_64 'http://ftp.kddilabs.jp/pub/Linux/distributions/Cent
 
 $require domU-conservative-kernel.lst
 
-$write /etc/yum.conf --append 'exclude=kernel,kernel-firmware'
+$write /etc/yum.conf --append 'exclude=kernel,kernel-firmware,kernel-debug'
 $write /etc/rpm/platform "$(ARCH)-centos-linux"
 $write /etc/sysconfig/network-scripts/ifcfg-eth0 'DEVICE="eth0"\nBOOTPROTO=dhcp\nONBOOT=yes\nTYPE="Ethernet"'
 
