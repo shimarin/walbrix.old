@@ -10,7 +10,7 @@
 =dev-util/scons-2.3.5
 =dev-lang/ocaml-4.01.0
 =media-gfx/fbgrab-1.3
-=sys-boot/grub-2.02_beta3-r1
+=sys-boot/grub-2.02_rc1
 =sys-block/zram-init-3.8
 
 #snort
