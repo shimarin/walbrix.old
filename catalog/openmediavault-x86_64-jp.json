@@ -1,0 +1,14 @@
+{
+    "id": "openmediavault",
+    "version":"3.0.59",
+    "title": "OpenMediaVault 3.0.59",
+    "description": "DebianベースのNASアプライアンスです。",
+    "tarball": "http://dist.walbrix.net/va/openmediavault-3.0.59-x86_64-jp.tar.xz",
+    "minimum_hd": 2,
+    "minimum_ram": 1024,
+
+    "uuid":"1f9d1225-fcce-4483-8942-6dd922fdd407",
+    "instruction": {
+        "ja":"初期ユーザー名とパスワードは admin/openmediavaultです"
+    }
+}

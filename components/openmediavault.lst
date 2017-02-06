@@ -1,0 +1,21 @@
+$require debian-common.lst
+$write /etc/hostname "openmediavault"
+$write /usr/sbin/policy-rc.d "#!/bin/sh\nexit 101"
+$exec 'chmod 755 /usr/sbin/policy-rc.d' # prevent daemons being spawned
+$exec 'echo "deb http://packages.openmediavault.org/public erasmus main" > /etc/apt/sources.list.d/openmediavault.list'
+$exec 'echo "deb http://packages.omv-extras.org/debian/ erasmus main" >> /etc/apt/sources.list.d/omv-extras-org-erasmus.list'
+$exec 'apt-key adv --keyserver http://packages.openmediavault.org/public/archive.key --recv-keys 7E7A6C592EF35D13'
+$exec 'apt-get update'
+$exec 'echo postfix postfix/mailname string localhost | debconf-set-selections'
+$exec 'echo postfix postfix/main_mailer_type string "Internet Site" | debconf-set-selections'
+$exec 'echo keyboard-configuration keyboard-configuration/variant string "English (US)" | debconf-set-selections'
+$exec 'echo console-setup console-setup/codeset47 string "Guess optimal character set" | debconf-set-selections'
+$exec 'echo console-setup console-setup/charmap47 string UTF-8 | debconf-set-selections'
+$exec 'echo mdadm mdadm/initrdstart string all | debconf-set-selections'
+$exec 'echo openmediavault openmediavault/run-initsystem string "" | debconf-set-selections'
+$exec 'echo proftpd-basic shared/proftpd/inetd_or_standalone string standalone | debconf-set-selections'
+$exec 'apt-get install -y openmediavault-keyring postfix libnss-myhostname'
+$exec 'apt-get update'
+$exec 'rm -f /usr/sbin/policy-rc.d' # allow daemons being spawned
+$write /root/install-omv "#!/bin/sh\napt-get install -y openmediavault && apt-get install -y --force-yes openmediavault-omvextrasorg && apt-get update && omv-initsystem && rm -rf /var/cache/apt/archives"
+$exec 'chmod 755 /root/install-omv'
