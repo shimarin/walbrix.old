@@ -1,0 +1,27 @@
+$require debian-$(ARCH).lst
+$write /usr/sbin/policy-rc.d "#!/bin/sh\nexit 101"
+$exec 'chmod 755 /usr/sbin/policy-rc.d' # prevent daemons being spawned
+$exec "apt-get update && apt-get install -y samba && apt-get upgrade -y"
+$exec 'rm -f /usr/sbin/policy-rc.d' # allow daemons being spawned
+$sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
+#$sed /lib/systemd/system/getty@.service 's/tty[0-9]/hvc0/'
+#$exec "mv /etc/systemd/system/getty.target.wants/getty@tty1.service /etc/systemd/system/getty.target.wants/getty@hvc0.service"
+$write /etc/network/interfaces.d/eth0 'auto eth0\niface eth0 inet dhcp'
+$write /etc/fstab '/dev/xvda1\t/\txfs\tnoatime\t0 0\n#/dev/zram0\tnone\tswap\tsw,pri=1\t0 0'
+$write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
+$sed /etc/ssh/sshd_config 's/^PermitRootLogin .\+$/PermitRootLogin yes/'
+
+$exec 'mkdir -p /root/.ssh && chmod 700 /root/.ssh && touch /root/.ssh/authorized_keys'
+$write /etc/apt/sources.lst 'deb http://ftp.jp.debian.org/debian wheezy main contrib\ndeb http://security.debian.org/ wheezy/updates main contrib non-free'
+
+$exec 'rm -f /etc/ssh/ssh_host_*'
+$copy debian/sshd-keygen /usr/sbin/sshd-keygen
+$patch /lib/systemd/system/ssh.service debian/ssh.service.patch
+
+$copy debian/rc.local /etc/rc.local
+
+$require timezone-$(REGION).lst
+
+$exec 'rm /sbin/init'
+$symlink /sbin/init ../lib/systemd/systemd
+$deltree /var/cache/apt/archives
