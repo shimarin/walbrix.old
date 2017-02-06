@@ -1,0 +1,4 @@
+$require python27.lst
+$package dev-java/java-config --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
+#$package dev-java/java-config-wrapper
+
