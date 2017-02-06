@@ -1,7 +1,6 @@
 sys-kernel/vanilla-sources -symlink
 sys-kernel/gentoo-sources symlink
 net-misc/openvpn
-net-analyzer/zabbix agent
 app-admin/sudo -sendmail
 net-dns/avahi -introspection
 dev-util/strace -perl
@@ -72,4 +71,8 @@ dev-ruby/rmagick -ruby_targets_ruby20
 www-apache/passenger -ruby_targets_ruby20
 dev-ruby/rack -ruby_targets_ruby20
 virtual/ruby-ssl -ruby_targets_ruby20
+
+# zabbix
+net-analyzer/zabbix agent frontend java mysql openipmi proxy server
+sys-libs/openipmi snmp
 

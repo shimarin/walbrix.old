@@ -1,0 +1,2 @@
+$package net-analyzer/net-snmp
+$package sys-libs/openipmi --use=snmp
