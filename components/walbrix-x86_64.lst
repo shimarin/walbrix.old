@@ -16,10 +16,10 @@ $require debootstrap.lst
 $require yum.lst
 
 # zfs
-#/sbin/splat
-#$package sys-fs/zfs
-#$write /tmp/README 'http://insights.ubuntu.com/2016/02/18/zfs-licensing-and-linux/'
-#$exec 'mv /tmp/README /lib/modules/*/extra/zfs/'
+/sbin/splat
+$package sys-fs/zfs
+$write /tmp/README 'http://insights.ubuntu.com/2016/02/18/zfs-licensing-and-linux/'
+$exec 'mv /tmp/README /lib/modules/*/extra/zfs/'
 
 # misc
 /usr/bin/mpg123
