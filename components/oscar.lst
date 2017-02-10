@@ -59,6 +59,7 @@ $copy oscar/oscar-sched.init /etc/init.d/oscar-sched
 $exec "chmod 755 /etc/init.d/oscar-watch /etc/init.d/oscar-sched"
 $symlink /etc/runlevels/default/oscar-watch /etc/init.d/oscar-watch
 $symlink /etc/runlevels/default/oscar-sched /etc/init.d/oscar-sched
+$copy oscar/restart-crashed-services /etc/cron.hourly/restart-crashed-services
 $mkdir /var/log/oscar
 $mkdir /opt/oscar/etc
 $mkdir /var/lib/oscar
