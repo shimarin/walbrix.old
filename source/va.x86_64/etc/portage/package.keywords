@@ -11,11 +11,14 @@
 =www-servers/nginx-1.9.15
 =www-servers/uwsgi-2.0.13.1-r1
 =sys-block/zram-init-3.8
+=net-fs/nfs-utils-1.3.4
 
 #docker
-=app-emulation/docker-1.12.2
+=app-emulation/docker-1.13.1
+=app-emulation/docker-proxy-0.8.0_p20161111
 =app-emulation/containerd-0.2.4
 =app-emulation/runc-1.0.0_rc2
+=sys-process/tini-0.13.2
 
 #java8
 =dev-lang/scala-2.11.7-r1

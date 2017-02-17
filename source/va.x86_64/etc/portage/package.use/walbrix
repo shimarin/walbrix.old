@@ -5,6 +5,7 @@ app-admin/sudo -sendmail
 net-dns/avahi -introspection
 dev-util/strace -perl
 app-emulation/docker -device-mapper aufs overlay btrfs
+sys-process/tini static
 sys-libs/libseccomp static-libs
 dev-vcs/git -perl -gpg
 net-fs/samba ldap
