@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.9.11
+=sys-kernel/gentoo-sources-4.10.0
 =sys-kernel/aufs-sources-4.9.11
 =sys-kernel/vanilla-sources-3.16.39
 =sys-fs/aufs-util-3.19_p20150420
@@ -12,6 +12,9 @@
 =www-servers/uwsgi-2.0.13.1-r1
 =sys-block/zram-init-3.8
 =net-fs/nfs-utils-1.3.4
+=net-libs/libtirpc-1.0.1
+=net-nds/rpcbind-0.2.4
+
 
 #docker
 =app-emulation/docker-1.13.1
@@ -37,3 +40,4 @@
 #ruby
 =dev-ruby/bundler-1.9.10
 =dev-ruby/mysql2-0.4.5
+
