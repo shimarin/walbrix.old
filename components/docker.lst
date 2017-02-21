@@ -24,8 +24,19 @@ $symlink /etc/runlevels/default/docker /etc/init.d/docker
 
 $require nodejs.lst
 $exec "npm install -g grunt-cli"
-$exec --overlay "cd /root && git clone https://github.com/crosbymichael/dockerui.git && cd dockerui && npm install"
-$copy docker/dockerui.init /etc/init.d/dockerui
-$symlink /etc/runlevels/default/dockerui /etc/init.d/dockerui
+
+# docker ui
+#$exec --overlay "cd /root && git clone https://github.com/crosbymichael/dockerui.git && cd dockerui && npm install"
+#$copy docker/dockerui.init /etc/init.d/dockerui
+#$symlink /etc/runlevels/default/dockerui /etc/init.d/dockerui
+
+# nginx
+$require nginx.lst
+$write /etc/nginx/proxy.map "aipo.example.com http://aipo.local;\nowncloud.example.com http://owncloud.local;"
+$copy revproxy/nginx.conf /etc/nginx/nginx.conf
+$copy revproxy/proxy.conf /etc/nginx/proxy.conf
+$mkdir /etc/ssl/nginx
+$exec "openssl genrsa 2048 > /etc/ssl/nginx/nginx.key"
+$exec "openssl req -new -subj /CN=www.example.com -key /etc/ssl/nginx/nginx.key | openssl x509 -days 3650 -req -signkey /etc/ssl/nginx/nginx.key > /etc/ssl/nginx/nginx.pem"
 
 $vadesc
