@@ -1,7 +1,7 @@
 $require domU.lst
-$require domU-kernel.lst
-#$require domU-aufs-kernel.lst
+$require domU-overlayfs-kernel.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1docker\2/'
+$write --append /etc/fstab "/.overlay/data01 /var/lib/docker none bind 0 0"
 
 $package sys-fs/aufs-util
 $package dev-lang/go
@@ -20,6 +20,7 @@ $package app-emulation/containerd
 $package net-firewall/iptables
 $require git.lst
 $package app-emulation/docker --use="aufs overlay -device-mapper"
+$mkdir /var/lib/docker
 $symlink /etc/runlevels/default/docker /etc/init.d/docker
 
 $require nodejs.lst

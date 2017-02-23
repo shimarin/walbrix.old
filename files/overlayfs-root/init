@@ -26,6 +26,7 @@ CMDLINE=$(cat /proc/cmdline)
 ROOT_PARTITION=/dev/xvda1
 RO_LAYER=/system
 RW_LAYER=/rw
+DATADIRS="/data01 /data02"
 LOCALE=ja_JP
 INIT_OPTS=''
 SOFTLEVEL=default
@@ -90,6 +91,11 @@ mkdir -p /mnt/orig_root${RW_LAYER} /mnt/orig_root/work
 rm -rf /mnt/orig_root${RW_LAYER}/tmp /mnt/orig_root${RW_LAYER}/var/tmp # cleanup temporary dirs
 rm -f /mnt/orig_root${RW_LAYER}/etc/mtab # mtab should always point /proc/mounts
 rm -f /mnt/orig_root${RW_LAYER}/etc/ld.so.cache
+
+# create datadirs if not exist (mainly for docker)
+for i in $DATADIRS; do
+	mkdir -p /mnt/orig_root${i}
+done
 
 if ! mount -t overlay -o lowerdir=/mnt/system,upperdir=/mnt/orig_root${RW_LAYER},workdir=/mnt/orig_root/work overlay /newroot; then
 	bad_msg "Unable to mount /newroot"
