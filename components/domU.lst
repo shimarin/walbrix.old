@@ -26,6 +26,7 @@ $package net-misc/whois
 $package sys-apps/sed
 $package app-arch/tar
 $package sys-apps/sysvinit
+$require supervisor.lst
 $sed /etc/inittab 's/ tty1 linux/ --noclear hvc0 linux/'
 $sed /etc/inittab 's/^c\([2-6]\):/#c\1:/'
 $package sys-apps/diffutils
