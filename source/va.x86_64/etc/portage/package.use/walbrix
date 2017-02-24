@@ -50,7 +50,7 @@ www-servers/apache apache2_modules_proxy_connect apache2_modules_proxy apache2_m
 www-apache/mod_extract_forwarded mod_proxy
 
 # owncloud
-media-video/ffmpeg mp3 xvid x264 x265 cpudetection faac aac mmx mmxext theora threads truetype vorbis webp cpu_flags_x86_3dnow cpu_flags_x86_3dnowext cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_sse3 cpu_flags_x86_mmx cpu_flags_x86_mmxext cpu_flags_x86_ssse3
+media-video/ffmpeg mp3 xvid x264 x265 cpudetection mmx mmxext theora threads truetype vorbis webp cpu_flags_x86_3dnow cpu_flags_x86_3dnowext cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_sse3 cpu_flags_x86_mmx cpu_flags_x86_mmxext cpu_flags_x86_ssse3
 
 # php
 dev-lang/php apache2 gd mysql mysqli postgres xslt zip pdo truetype xmlwriter bcmath xmlreader pcntl sysvipc sockets curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap
