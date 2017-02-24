@@ -1,5 +1,6 @@
 app-admin/logrotate
 app-admin/sudo
+app-admin/supervisor
 app-admin/sysklogd
 app-antivirus/clamav
 app-arch/zip

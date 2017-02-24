@@ -1,2 +1,3 @@
 #>=dev-java/commons-pool-2
 >=dev-lang/php-7
+>=dev-php/pecl-apcu-5
