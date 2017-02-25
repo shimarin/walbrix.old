@@ -1,4 +1,4 @@
-Copyright (c) 2010-2015 Walbrix Corporation
+Copyright (c) 2010-2017 Walbrix Corporation
 
 The code is PROPRIETARY except modules which contain individual LICENSE.txt, copyright notice or equivalent.
 
