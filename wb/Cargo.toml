@@ -1,0 +1,14 @@
+[package]
+name = "wb"
+version = "0.1.0"
+authors = ["Tomoatsu Shimada <shimada@walbrix.com>"]
+
+[dependencies]
+docopt = "0.7.0"
+sdl = "0.3.6"
+rustc-serialize = "0.3.22"
+
+[dependencies.cpython]
+version = "0.1"
+default-features = false
+features = ["python27-sys"]
