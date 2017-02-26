@@ -50,9 +50,12 @@ touch $TARGET
 env['SYSTEM_64_MARKER'] = "build/walbrix/x86_64/.done"
 env['SYSTEM_32_MARKER'] = "build/walbrix/i686/.done"
 
-env.Command("$SYSTEM_64_MARKER", lstfile_deps("components/walbrix.lst","source/walbrix.x86_64"), """
+env.Command("wb/target/release/wb", Glob("wb/src/*.rs"), "cd wb && cargo build --release")
+
+env.Command("$SYSTEM_64_MARKER", lstfile_deps("components/walbrix.lst","source/walbrix.x86_64") + ["wb/target/release/wb"], """
 rm -rf build/walbrix/x86_64
 ./collect --source source/walbrix.x86_64 --var=ARCH=x86_64 components/walbrix.lst build/walbrix/x86_64
+cp -a wb/target/release/wb build/walbrix/x86_64/usr/sbin/wb.bin
 ./kernelver -n build/walbrix/x86_64/boot/kernel > $TARGET
 """)
 
