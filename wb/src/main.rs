@@ -9,23 +9,24 @@ extern crate regex;
 
 mod wb;
 
+static VALID_SUBCOMMANDS: &'static [&'static str] = &[
+    "hoge","fuga","foobar"
+];
+
 static USAGE: &'static str = "
 Usage:
     wb hoge <hoge-fuga>...
-    wb <other-cmd> [<other-cmd-args>...]
 ";
 
 #[derive(RustcDecodable, Debug)]
 struct Args {
     cmd_hoge: bool,
-    arg_hoge_fuga: Vec<String>,
-    arg_other_cmd: String,
-    arg_other_cmd_args: Vec<String>
+    arg_hoge_fuga: Vec<String>
 }
 
 fn fallback_to_python(cmd:&str, args:Vec<String>) {
     let wbui_base = &wb::wbui_base();
-    let python_module_name = &match cmd {
+    let python_module_name = match cmd {
         "import" => "import_vm".to_string(),
         x => x.replace("-", "_")
     };
@@ -42,10 +43,15 @@ fn fallback_to_python(cmd:&str, args:Vec<String>) {
 }
 
 pub fn main() {
+    let mut args = std::env::args().skip(1);
+    if let Some(cmd) = args.next() {
+        if !VALID_SUBCOMMANDS.iter().any(|c| c == &cmd) { fallback_to_python(&cmd, args.collect()) }
+    }
+    // else
     let args: Args = docopt::Docopt::new(USAGE).and_then(|d| d.decode()).unwrap_or_else(|e| e.exit());
     if args.cmd_hoge {
         wb::hoge::main(args.arg_hoge_fuga);
     } else {
-        fallback_to_python(&args.arg_other_cmd, args.arg_other_cmd_args);
+        println!("Command not implemented.");
     }
 }
