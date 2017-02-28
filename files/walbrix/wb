@@ -2,7 +2,13 @@
 source /etc/conf.d/wb
 export http_proxy
 
-WBUI_BASE=/usr/share/wbui
+WBUI_BASE=${WBUI_BASE:-/usr/share/wbui}
+WB_BIN=`dirname $0`/wb.bin
+
+export WBUI_BASE
+[ -x ${WB_BIN} ] && exec ${WB_BIN} $@
+
+# else
 
 [ $# -eq 0 ] && PYTHONPATH=${WBUI_BASE} exec python2.7 -m cli2
 
@@ -19,3 +25,4 @@ fi
 
 #else (for backward compatibility)
 exec /usr/bin/python2.7 ${WBUI_BASE}/wb.pyc $@
+
