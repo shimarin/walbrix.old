@@ -32,6 +32,7 @@ dev-java/slf4j-api
 dev-java/sun-jaf
 dev-java/sun-javamail
 dev-lang/php
+dev-lang/rust
 dev-lua/luajson
 dev-lua/luasec
 dev-php/PEAR-PEAR

@@ -95,6 +95,6 @@ exec_cmd(["emerge","@preserved-rebuild"])
 
 ## build sub kernels
 
-build_kernel_if_needed("aufs", ["bzImage"])
+#build_kernel_if_needed("aufs", ["bzImage"])
 build_kernel_if_needed("", ["bzImage"])
 

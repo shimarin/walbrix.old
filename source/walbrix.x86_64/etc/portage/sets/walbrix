@@ -103,10 +103,10 @@ sys-fs/squashfs-tools
 sys-fs/xfsdump
 sys-fs/xfsprogs
 sys-fs/zfs
-sys-kernel/aufs-sources
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
 sys-kernel/linux-firmware
+sys-kernel/vanilla-sources
 sys-power/acpid
 sys-power/cpupower
 sys-power/nut

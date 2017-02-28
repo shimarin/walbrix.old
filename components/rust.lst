@@ -1,0 +1,8 @@
+$package dev-util/re2c 
+$package app-eselect/eselect-rust
+$package dev-util/ninja
+$package net-libs/libssh2
+$package sys-devel/llvm
+$package dev-lang/rust
+$Package dev-util/cargo
+

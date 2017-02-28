@@ -1,9 +1,9 @@
-=sys-kernel/gentoo-sources-4.9.12
+=sys-kernel/gentoo-sources-4.9.13
 =app-i18n/fbterm-1.7-r1
 =dev-python/python-magic-0.4.6-r1
-=sys-fs/aufs-headers-3.19_p20150420
-=sys-fs/aufs-util-3.19_p20150420
-=sys-kernel/aufs-sources-3.18.47
+#=sys-fs/aufs-headers-3.19_p20150420
+#=sys-fs/aufs-util-3.19_p20150420
+=sys-kernel/vanilla-sources-3.16.41
 =app-crypt/chntpw-140201
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
 =sys-block/thin-provisioning-tools-0.4.1

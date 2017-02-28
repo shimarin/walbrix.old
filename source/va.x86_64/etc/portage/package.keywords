@@ -1,6 +1,5 @@
-=sys-kernel/gentoo-sources-4.10.0
-=sys-kernel/aufs-sources-4.9.11
-=sys-kernel/vanilla-sources-3.16.39
+=sys-kernel/gentoo-sources-4.10.1
+=sys-kernel/vanilla-sources-3.16.41
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =dev-java/commons-dbcp-2.1
@@ -40,4 +39,9 @@
 #ruby
 =dev-ruby/bundler-1.9.10
 =dev-ruby/mysql2-0.4.5
+
+#rust
+=sys-devel/llvm-3.9.1-r1
+=dev-lang/rust-1.15.1
+=dev-util/cargo-0.16.0
 
