@@ -2,7 +2,7 @@ $require domU.lst
 $require domU-overlayfs-kernel.lst
 #$write /etc/fstab '/dev/xvda1\t/\txfs\tdefaults\t0 0\n#/dev/xvdb1\t/var/lib/backup\tbtrfs\tcompress-force,autodefrag\t0 0\n'
 $require samba.lst
-$write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15\nmax protocol=SMB2\n\n[export]\nguest ok=yes\nwritable=no\npath=/var/lib/backup/export\nacl check permissions=no\n'
+$write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15\n\n[export]\nguest ok=yes\nwritable=no\npath=/var/lib/backup/export\nacl check permissions=no\n'
 $require cron.lst
 $require nfs.lst
 $write /etc/exports '#/var/lib/backup/head *(ro,no_subtree_check)'
