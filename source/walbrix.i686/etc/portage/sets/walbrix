@@ -44,7 +44,8 @@ net-misc/dhcp
 net-misc/ifenslave
 net-misc/netkit-telnetd
 net-misc/ntp
-net-misc/openvpn
+# move net-misc/openvpn net-vpn/openvpn
+net-vpn/openvpn
 net-misc/s3cmd
 net-misc/taylor-uucp
 net-misc/vconfig

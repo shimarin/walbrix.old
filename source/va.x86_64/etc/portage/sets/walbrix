@@ -82,7 +82,7 @@ net-misc/curl
 net-misc/dropbox-cli
 net-misc/netkit-telnetd
 net-misc/ntp
-net-misc/openvpn
+net-vpn/openvpn
 net-misc/s3cmd
 net-misc/whois
 net-proxy/haproxy
