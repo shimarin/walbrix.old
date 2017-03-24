@@ -1,6 +1,7 @@
 sys-kernel/vanilla-sources -symlink
 sys-kernel/gentoo-sources symlink
-net-misc/openvpn
+# move net-misc/openvpn net-vpn/openvpn
+net-vpn/openvpn
 app-admin/sudo -sendmail
 net-dns/avahi -introspection
 dev-util/strace -perl
