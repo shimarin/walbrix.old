@@ -23,5 +23,6 @@
 =sys-kernel/spl-0.6.5.9
 
 =sys-kernel/linux-firmware-20170314
+=sys-apps/hwids-20170328
 =sys-block/megacli-8.07.14-r1
 
