@@ -1,8 +1,8 @@
-$rpmbootstrap 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/7.1.1503/os/x86_64/Packages/centos-release-7-1.1503.el7.centos.2.8.x86_64.rpm' --include='vim-minimal less initscripts passwd tar net-tools'
+$rpmbootstrap 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/7.3.1611/os/x86_64/Packages/centos-release-7-3.1611.el7.centos.x86_64.rpm' --include='vim-minimal less initscripts passwd tar net-tools'
 
 $require domU-kernel.lst
 
-$write /etc/yum.conf --append 'exclude=kernel,kernel-firmware'
+$write /etc/yum.conf --append 'exclude=kernel,kernel-firmware,kernel-debug'
 $write /etc/rpm/platform "$(ARCH)-centos-linux"
 $sed /etc/sysconfig/init 's/^ACTIVE_CONSOLES=.*$/ACTIVE_CONSOLES=\/dev\/hvc0/'
 $write /etc/sysconfig/network-scripts/ifcfg-eth0 'DEVICE="eth0"\nBOOTPROTO=dhcp\nONBOOT=yes\nTYPE="Ethernet"'
@@ -28,18 +28,19 @@ $exec "systemctl enable smb.service"
 $exec "systemctl enable httpd.service"
 $exec "systemctl enable mariadb.service"
 $exec "systemctl enable vsftpd.service"
+$exec "systemctl enable avahi-daemon.service"
 $write /etc/httpd/conf.d/remoteip.conf '<IfModule remoteip_module>\n    RemoteIPHeader X-Forwarded-For\n    RemoteIPTrustedProxy 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 169.254.0.0/16 127.0.0.0/8\n</IfModule>'
 $sed /etc/httpd/conf/httpd.conf 's/LogFormat "%h/LogFormat "%a/'
 $copy centos/index.html /var/www/html/index.html
 
-$download https://files.phpmyadmin.net/phpMyAdmin/4.4.11/phpMyAdmin-4.4.11-all-languages.tar.xz
+$download https://files.phpmyadmin.net/phpMyAdmin/4.0.10.20/phpMyAdmin-4.0.10.20-all-languages.tar.xz
 $exec "tar Jxvf /tmp/download/phpMyAdmin-*.xz -C /var/www/html && mv /var/www/html/phpMyAdmin-* /var/www/html/phpmyadmin"
 $copy phpmyadmin/config.inc.php /var/www/html/phpmyadmin/config.inc.php
 $exec "chown -R apache.apache /var/www /var/log/httpd"
 #patchsinglefile /etc/my.cnf centos/my.cnf.patch
 $copy centos/smb.conf /etc/samba/smb.conf
 
-$download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/o/openvpn-2.3.7-1.el7.x86_64.rpm
+$download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/o/openvpn-2.3.14-1.el7.x86_64.rpm
 $download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/p/pkcs11-helper-1.11-3.el7.x86_64.rpm
 $exec "rpm -ivh /tmp/download/*.rpm"
 
