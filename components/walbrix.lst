@@ -157,6 +157,7 @@ $require ansible.lst
 $package media-gfx/qrencode
 
 # hardware
+/etc/udev/hwdb.bin
 $require usb_modeswitch.lst
 $package sys-apps/usbutils
 $require bluez.lst
