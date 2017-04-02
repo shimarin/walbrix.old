@@ -48,7 +48,8 @@ net-libs/nodejs
 net-misc/curl
 net-misc/netkit-telnetd
 net-misc/ntp
-net-misc/openvpn
+# move net-misc/openvpn net-vpn/openvpn
+net-vpn/openvpn
 net-proxy/haproxy
 sys-auth/nss-mdns
 sys-auth/nss-myhostname
