@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.9.20
+=sys-kernel/gentoo-sources-4.9.21
 =app-i18n/fbterm-1.7-r1
 =sys-kernel/vanilla-sources-3.16.43
 =app-crypt/chntpw-140201
@@ -12,6 +12,11 @@
 =net-analyzer/snort-2.9.7.3
 =net-analyzer/barnyard2-1.9
 =net-libs/daq-2.0.2
+
+#xen
+=app-emulation/xen-4.7.2
+=app-emulation/xen-tools-4.7.2
+=app-emulation/xen-pvgrub-4.7.2
 
 # yum
 =dev-python/pyliblzma-0.5.3-r1
