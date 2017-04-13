@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.9.21
+=sys-kernel/gentoo-sources-4.9.22
 =app-i18n/fbterm-1.7-r1
 =sys-kernel/vanilla-sources-3.2.88
 =app-crypt/chntpw-140201
@@ -12,3 +12,4 @@
 =sys-apps/hwids-20170328
 =sys-block/megacli-8.07.14-r1
 =sys-boot/grub-2.02_rc2
+=app-admin/ansible-2.2.2.0
