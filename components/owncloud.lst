@@ -17,7 +17,7 @@ $require pecl-apcu.lst
 #copy owncloud/smb.conf /etc/samba/smb.conf
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1owncloud\2/'
 
-$set OWNCLOUD_TAR owncloud-9.0.2.tar.bz2
+$set OWNCLOUD_TAR owncloud-9.1.4.tar.bz2
 $download https://download.owncloud.org/community/$(OWNCLOUD_TAR)
 $exec "tar jxvf /tmp/download/$(OWNCLOUD_TAR) -C /var/www/localhost"
 $exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/owncloud /var/www/localhost/htdocs"
@@ -53,7 +53,7 @@ $sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;default_charset.\+$/default
 $write /var/spool/cron/crontabs/apache '*/15  *  *  *  * php -f /var/www/localhost/htdocs/cron.php'
 
 # libsmbclient-php
-$exec --overlay "pecl install channel://pecl.php.net/smbclient-0.8.0"
+$exec --overlay "pecl install channel://pecl.php.net/smbclient-0.9.0"
 $write /etc/php/apache2-php5.6/ext/smbclient.ini "extension=smbclient.so"
 $write /etc/php/cli-php5.6/ext/smbclient.ini "extension=smbclient.so"
 $symlink /etc/php/apache2-php5.6/ext-active/smbclient.ini ../ext/smbclient.ini
