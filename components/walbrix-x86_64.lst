@@ -23,6 +23,5 @@ $exec 'mv /tmp/README /lib/modules/*/extra/zfs/'
 
 # misc
 /usr/bin/mpg123
-/usr/lib64/mpg123/output_alsa.la
 /usr/lib64/mpg123/output_alsa.so
 
