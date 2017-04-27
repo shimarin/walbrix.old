@@ -4,6 +4,7 @@ app-admin/supervisor
 app-admin/sysklogd
 app-antivirus/clamav
 app-arch/zip
+app-crypt/certbot
 app-editors/emacs
 app-editors/nano
 app-editors/nvi

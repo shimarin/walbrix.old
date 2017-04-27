@@ -5,6 +5,7 @@ $require uwsgi.lst
 $require twisted-names.lst
 $require postfix.lst
 $require git.lst
+$require certbot.lst
 $package net-proxy/haproxy
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1revproxy\2/'
 

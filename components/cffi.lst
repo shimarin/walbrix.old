@@ -1,0 +1,3 @@
+$require python27.lst
+$package dev-python/pycparser
+$package dev-python/cffi

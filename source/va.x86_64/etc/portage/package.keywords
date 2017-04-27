@@ -45,3 +45,10 @@
 =dev-lang/rust-1.15.1
 =dev-util/cargo-0.16.0
 
+#certbot
+=dev-python/parsedatetime-2.1
+=dev-python/pyrfc3339-1.0
+=app-crypt/certbot-0.13.0
+=app-crypt/acme-0.13.0
+=dev-python/zope-component-4.3.0
+

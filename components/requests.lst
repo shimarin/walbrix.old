@@ -1,6 +1,6 @@
+$require cffi.lst
 $package dev-python/chardet
 $package dev-python/requests
-
 $package dev-python/enum34
 $package dev-python/pyasn1
 $package dev-python/py
@@ -9,7 +9,6 @@ $package dev-python/idna
 $package dev-python/ply
 #$package dev-python/pytest
 $package dev-python/pycparser
-$package dev-python/cffi
 $package dev-python/cryptography
 $package dev-python/pyopenssl
 $package dev-python/ndg-httpsclient
