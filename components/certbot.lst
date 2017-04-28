@@ -15,4 +15,7 @@ $package dev-python/pytz
 $package dev-python/six
 $package dev-python/zope-interface
 $package dev-python/chardet
-
+$mkdir /etc/letsencrypt
+$write /etc/letsencrypt/cli.ini 'authenticator = webroot\nwebroot-path = /var/www/localhost/htdocs\ncert-name = nginx\n#email = you@example.com\n#agree-tos = True\n#domains = domain1.tld,domain2.tld,domain3.tld'
+$write /etc/cron.weekly/certbot-renew '#!/bin/sh\ntty -s || exec >/dev/null 2>&1\n[ -d /etc/letsencrypt/live ] && certbot renew --renew-hook "service nginx reload"'
+$exec "chmod +x /etc/cron.weekly/certbot-renew"

@@ -1,0 +1,4 @@
+$require certbot.lst
+$package dev-python/pyparsing
+$package app-crypt/certbot-nginx
+

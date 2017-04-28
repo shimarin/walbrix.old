@@ -51,4 +51,5 @@
 =app-crypt/certbot-0.13.0
 =app-crypt/acme-0.13.0
 =dev-python/zope-component-4.3.0
+=app-crypt/certbot-nginx-0.13.0
 

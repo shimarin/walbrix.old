@@ -28,15 +28,18 @@ def get_ipaddress(ifname):
 def get_proxy_map():
     return open("/etc/nginx/proxy.map").read()
 
+def get_cli_ini():
+    return open("/etc/letsencrypt/cli.ini").read()
+
 def application(env, start_response):
     start_response('200 OK', [('Content-Type','application/json')])
     ipv4_address = get_ipaddress(get_interface_reaches_default_gateway())
     proxy_map = get_proxy_map()
-    return json.dumps({"ipv4_address":ipv4_address,"proxy_map":proxy_map})
+    cli_ini = get_cli_ini()
+    return json.dumps({"ipv4_address":ipv4_address,"proxy_map":proxy_map,"cli_ini":cli_ini})
 
 def func(a, b):
     print a, b
 
 if __name__ == '__main__':
     print application(None, func)
-
