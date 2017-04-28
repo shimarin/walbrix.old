@@ -6,7 +6,7 @@
 =media-gfx/fbgrab-1.3
 =sys-block/zram-init-3.8
 =net-fs/nfs-utils-1.3.4
-=sys-boot/grub-2.02_rc2
+=sys-boot/grub-2.02
 =app-admin/ansible-2.2.2.0
 
 #snort

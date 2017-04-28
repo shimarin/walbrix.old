@@ -11,5 +11,5 @@
 =sys-kernel/linux-firmware-20170314
 =sys-apps/hwids-20170328
 =sys-block/megacli-8.07.14-r1
-=sys-boot/grub-2.02_rc2
+=sys-boot/grub-2.02
 =app-admin/ansible-2.2.2.0
