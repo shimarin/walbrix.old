@@ -40,7 +40,7 @@ $exec "chown -R apache.apache /var/www /var/log/httpd"
 #patchsinglefile /etc/my.cnf centos/my.cnf.patch
 $copy centos/smb.conf /etc/samba/smb.conf
 
-$download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/o/openvpn-2.3.14-1.el7.x86_64.rpm
+$download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/o/openvpn-2.4.1-2.el7.x86_64.rpm
 $download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/p/pkcs11-helper-1.11-3.el7.x86_64.rpm
 $exec "rpm -ivh /tmp/download/*.rpm"
 
