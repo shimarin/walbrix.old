@@ -30,6 +30,7 @@ $exec "systemctl enable mariadb.service"
 $exec "systemctl enable vsftpd.service"
 $exec "systemctl enable avahi-daemon.service"
 $write /etc/httpd/conf.d/remoteip.conf '<IfModule remoteip_module>\n    RemoteIPHeader X-Forwarded-For\n    RemoteIPTrustedProxy 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 169.254.0.0/16 127.0.0.0/8\n</IfModule>'
+$patch /etc/httpd/conf/httpd.conf centos/httpd.conf.patch
 $sed /etc/httpd/conf/httpd.conf 's/LogFormat "%h/LogFormat "%a/'
 $copy centos/index.html /var/www/html/index.html
 

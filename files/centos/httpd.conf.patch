@@ -1,0 +1,11 @@
+--- httpd.conf.orig	2017-04-29 09:29:17.287781628 +0900
++++ httpd.conf	2017-04-29 09:29:28.028255458 +0900
+@@ -148,7 +148,7 @@
+     # It can be "All", "None", or any combination of the keywords:
+     #   Options FileInfo AuthConfig Limit
+     #
+-    AllowOverride None
++    AllowOverride All
+ 
+     #
+     # Controls who can get stuff from this server.
