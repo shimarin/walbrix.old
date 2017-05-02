@@ -1,10 +1,10 @@
 $require groonga.lst
 $require mysql.lst
-$set MYSQL_VERSION 5.6.34
+$set MYSQL_VERSION 5.6.35
 $download http://cdn.mysql.com/Downloads/MySQL-5.6/mysql-$(MYSQL_VERSION).tar.gz
 $exec "cd /tmp && tar zxvf /tmp/download/mysql-*.tar.gz"
 $exec --overlay "cd /tmp/mysql-* && cmake . && cd libservices && make && mv libmysqlservices.a /usr/lib/"
-$download http://packages.groonga.org/source/mroonga/mroonga-5.09.tar.gz
+$download http://packages.groonga.org/source/mroonga/mroonga-6.13.tar.gz
 $exec "cd /tmp && tar zxvf /tmp/download/mroonga-*.tar.gz"
 $exec --overlay "cd /tmp/mroonga-* && ./configure --with-mysql-source=/tmp/mysql-$(MYSQL_VERSION) && make && make install"
 
