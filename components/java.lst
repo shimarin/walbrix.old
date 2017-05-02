@@ -12,7 +12,7 @@ $require java-config.lst
 #x11-libs/libXtst
 #media-gfx/fontforge
 #media-fonts/arphicfonts
-$package dev-java/icedtea-bin-$(ICEDTEA_VERSION) --exclude='^\/opt\/.+\/man\/' --use="-gtk -alsa cups headless-awt" # icedtea(-bin) depends on libcups.so no matter if cups USE flag is set
+$package dev-java/icedtea-bin-$(ICEDTEA_VERSION)-r1 --exclude='^\/opt\/.+\/man\/' --use="-gtk -alsa cups headless-awt" # icedtea(-bin) depends on libcups.so no matter if cups USE flag is set
 $sed /opt/icedtea-bin-$(ICEDTEA_VERSION)/jre/lib/security/java.security 's/\/dev\/random$/\/dev\/urandom/' # http://stackoverflow.com/questions/28201794/slow-startup-on-tomcat-7-0-57-because-of-securerandom
 $package dev-libs/nss # SSL support
 

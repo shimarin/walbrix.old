@@ -1,3 +1,4 @@
 #>=dev-java/commons-pool-2
 >=dev-lang/php-7
 >=dev-php/pecl-apcu-5
+=dev-java/icedtea-bin-7.2.6.8
