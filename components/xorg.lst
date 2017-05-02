@@ -80,7 +80,6 @@ $package x11-drivers/xf86-video-v4l
 $package x11-drivers/xf86-video-dummy
 $package x11-drivers/xf86-video-vesa
 $package x11-drivers/xf86-video-trident
-$package x11-drivers/xf86-input-evdev
 $package x11-drivers/xf86-video-nv
 $package x11-drivers/xf86-video-glint
 #x11-libs/glamor
