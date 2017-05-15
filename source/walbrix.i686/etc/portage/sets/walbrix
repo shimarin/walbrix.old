@@ -1,4 +1,5 @@
 app-admin/ansible
+app-admin/eclean-kernel
 app-admin/sudo
 app-admin/sysklogd
 app-admin/sysstat

@@ -1,4 +1,5 @@
 app-admin/logrotate
+app-admin/eclean-kernel
 app-admin/sudo
 app-admin/supervisor
 app-admin/sysklogd
