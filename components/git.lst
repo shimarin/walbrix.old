@@ -7,7 +7,6 @@ $exec 'rm /usr/libexec/git-core/git-remote-http && ln -s git-remote-ftps /usr/li
 
 #/usr/libexec/git-core/git-instaweb
 $exec 'rm /usr/libexec/git-core/git-cvsimport && ln -s git-instaweb /usr/libexec/git-core/git-cvsimport'
-$exec 'rm /usr/libexec/git-core/git-relink && ln -s git-instaweb /usr/libexec/git-core/git-relink'
 $exec 'rm /usr/libexec/git-core/git-difftool && ln -s git-instaweb /usr/libexec/git-core/git-difftool'
 $exec 'rm /usr/libexec/git-core/git-cvsserver && ln -s git-instaweb /usr/libexec/git-core/git-cvsserver'
 $exec 'rm /usr/libexec/git-core/git-cvsexportcommit && ln -s git-instaweb /usr/libexec/git-core/git-cvsexportcommit'
