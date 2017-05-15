@@ -6,7 +6,7 @@ app-admin/sysklogd
 app-antivirus/clamav
 app-arch/zip
 app-crypt/certbot
-app-crypt/certbot-nginx
+#app-crypt/certbot-nginx
 app-editors/emacs
 app-editors/nano
 app-editors/nvi

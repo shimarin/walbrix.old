@@ -4,7 +4,7 @@ $require nginx.lst
 $require uwsgi.lst
 $require twisted-names.lst
 $require postfix.lst
-$require certbot-nginx.lst
+$require certbot.lst
 $package net-proxy/haproxy
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1http2\2/'
 
