@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.10.15-gentoo Kernel Configuration
+# Linux/x86 4.10.16-gentoo Kernel Configuration
 #
 
 #
@@ -1685,7 +1685,6 @@ CONFIG_MTD_NAND_IDS=m
 # CONFIG_MTD_NAND_CS553X is not set
 # CONFIG_MTD_NAND_NANDSIM is not set
 # CONFIG_MTD_NAND_PLATFORM is not set
-# CONFIG_MTD_NAND_OXNAS is not set
 # CONFIG_MTD_NAND_HISI504 is not set
 # CONFIG_MTD_NAND_MTK is not set
 CONFIG_MTD_ONENAND=m
