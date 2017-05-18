@@ -25,7 +25,7 @@ def useradd_if_not_exists(uid, name, group, added_for,homedir, shell):
 groups = [
     (101, "openvpn"),
     (102, "avahi"),
-    #(103, "messagebus"),
+    (103, "messagebus"),
     #(104, "tcpdump"),
     (105, "zabbix"),
     #(106, "lpadmin"),
@@ -39,19 +39,22 @@ groups = [
     (126, "netdev"),
     #(127, "plugdev"),
     #(128, "ssmtp"),
-    (129, "docker")
+    (129, "docker"),
+    (130, "jenkins")
 ]
 
 users = [
     #(uid, name, group, added_for, homedir, shell)
     (101, "openvpn", "openvpn", "openvpn","/dev/null","/sbin/nologin"),
     (102, "avahi", "avahi", "avahi","/dev/null","/sbin/nologin"),
+    (103, "messagebus", "messagebus", "messagebus", "/dev/null", "/sbin/nologin"),
     (105, "zabbix", "zabbix", "zabbix","/var/lib/zabbix/home","/sbin/nologin"),
     (106, "postmaster", "postmaster", "postmaster", "/var/spool/mail", "/sbin/nologin"),
     (110, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin"),
     (111, "haproxy", "haproxy", "haproxy", "/dev/null", "/sbin/nologin"),
     (112, "groonga", "groonga", "groonga", "/dev/null", "/sbin/nologin"),
-    (113, "clamav", "clamav", "clamav", "/dev/null", "/sbin/nologin")
+    (113, "clamav", "clamav", "clamav", "/dev/null", "/sbin/nologin"),
+    (114, "jenkins", "jenkins", "jenkins", "/var/lib/jenkins", "/sbin/nologin")
 ]
 
 for group in groups:

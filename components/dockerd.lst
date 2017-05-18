@@ -1,0 +1,11 @@
+# docker itself (not an entire vm image)
+$package sys-fs/aufs-util
+$package dev-lang/go
+$require perl.lst # for shasum command
+$package app-emulation/containerd
+$require iptables.lst
+$require git.lst
+$package app-emulation/docker --use="aufs overlay -device-mapper"
+$package app-emulation/docker-proxy
+$mkdir /var/lib/docker
+$symlink /etc/runlevels/default/docker /etc/init.d/docker

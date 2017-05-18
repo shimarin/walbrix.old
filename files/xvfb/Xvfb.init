@@ -3,10 +3,12 @@
 XVFB=/usr/bin/Xvfb
 XVFBARGS="-screen 0 1024x768x24 -nolisten tcp"
 PIDFILE=/run/Xvfb.pid 
+XAUTHORITY=/root/.Xauthority
  
 start() {
         ebegin "Starting virtual X frame buffer: Xvfb"
         start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --background --exec $XVFB -- $XVFBARGS
+        xauth -f $XAUTHORITY add :0 . `mcookie`
         eend ${?}
 }
  

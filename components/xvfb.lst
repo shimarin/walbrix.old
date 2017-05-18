@@ -1,4 +1,5 @@
 $package x11-apps/xkbcomp
+$package x11-apps/xauth
 $package x11-misc/xkeyboard-config
 $package media-libs/fontconfig
 /usr/share/fonts/vlgothic/VL-PGothic-Regular.ttf
@@ -9,3 +10,10 @@ $package x11-drivers/xf86-video-dummy
 $copy xvfb/Xvfb.init /etc/init.d/Xvfb
 $write --append /etc/profile.env "export DISPLAY=:0"
 $symlink /etc/runlevels/default/Xvfb /etc/init.d/Xvfb
+
+# VNC is useful to peek what's going on the vfb
+$package x11-misc/x11vnc
+$sed /etc/conf.d/x11vnc.conf.d 's/^#X11VNC_OPTS=""$/X11VNC_OPTS="-noxdamage"/'
+$exec "echo 'WrLNwLrcrxM=' | base64 -d > /etc/x11vnc.pass"
+$symlink /etc/runlevels/default/x11vnc.init.d /etc/init.d/x11vnc.init.d
+

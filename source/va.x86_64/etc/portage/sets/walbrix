@@ -67,6 +67,7 @@ dev-python/xlrd
 dev-ruby/bundler
 dev-ruby/mysql2
 dev-ruby/rmagick
+dev-util/jenkins-bin
 dev-util/strace
 dev-vcs/mercurial
 dev-vcs/subversion
@@ -107,11 +108,13 @@ www-apache/mod_authnz_external
 www-apache/mod_extract_forwarded
 www-apache/mod_wsgi
 www-apache/passenger
+www-client/chromium
 www-client/elinks
 www-client/lynx
 www-servers/nginx
 www-servers/tomcat
 www-servers/uwsgi
 x11-base/xorg-server
+x11-misc/x11vnc
 x11-proto/dri2proto # to build xorg-server without mesa
 

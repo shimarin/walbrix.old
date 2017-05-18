@@ -13,7 +13,7 @@
 =net-fs/nfs-utils-1.3.4
 =net-libs/libtirpc-1.0.1
 =net-nds/rpcbind-0.2.4
-
+=dev-util/jenkins-bin-2.57
 
 #docker
 =app-emulation/docker-1.13.1

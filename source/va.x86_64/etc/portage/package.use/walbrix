@@ -82,3 +82,22 @@ dev-ruby/kpeg -ruby_targets_ruby21
 net-analyzer/zabbix agent frontend java mysql openipmi proxy server
 sys-libs/openipmi snmp
 
+# chromium
+media-libs/mesa -bindist -classic -dri3 -gallium -gbm -llvm -nptl -video_cards_intel -video_cards_radeon -video_cards_nouveau -video_cards_radeonsi
+www-client/chromium -hangouts -proprietary-codecs -system-ffmpeg
+dev-libs/libxml2 icu
+x11-libs/cairo X
+media-libs/harfbuzz icu -cairo -graphite -introspection
+sys-libs/zlib minizip
+x11-misc/xdg-utils -perl
+app-text/xmlto text
+
+media-libs/flac -cxx
+dev-libs/elfutils -bzip2 -utils
+x11-libs/gdk-pixbuf -introspection
+dev-libs/atk -introspection
+app-accessibility/at-spi2-core -introspection
+x11-libs/pango -introspection
+gnome-base/librsvg -introspection
+x11-libs/gtk+ -introspection
+

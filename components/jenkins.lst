@@ -1,0 +1,24 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1jenkins\2/'
+$write --append /etc/fstab "/.overlay/data01 /var/lib/docker none bind 0 0"
+
+$require java.lst
+$package dev-util/jenkins-bin
+$exec "cd /tmp && jar xf /opt/jenkins/jenkins.war WEB-INF/jenkins-cli.jar && mv /tmp/WEB-INF/jenkins-cli.jar /opt/jenkins/jenkins.jar"
+$write /usr/bin/jenkins '#!/bin/sh\nsource /etc/conf.d/jenkins\nJENKINS_URL="http://localhost:$JENKINS_PORT" java -jar /opt/jenkins/jenkins-cli.jar $@'
+$exec "chmod +x /usr/bin/jenkins"
+$symlink /etc/runlevels/default/jenkins /etc/init.d/jenkins
+$require nss-myhostname.lst
+
+$require dockerd.lst
+$require s3cmd.lst
+$require nodejs.lst
+$require sbt.lst
+$require chromium.lst
+$require xvfb.lst
+$require postfix.lst
+
+# redirect port 80 -> 8080
+$require iptables.lst
+$write /var/lib/iptables/rules-save "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8080\nCOMMIT"
