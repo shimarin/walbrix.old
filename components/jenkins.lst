@@ -20,6 +20,7 @@ $require sbt.lst
 $require chromium.lst
 $require xvfb.lst
 $require postfix.lst
+$require git-lfs.lst
 
 # redirect port 80 -> 8080
 $require iptables.lst

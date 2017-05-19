@@ -69,6 +69,7 @@ dev-ruby/mysql2
 dev-ruby/rmagick
 dev-util/jenkins-bin
 dev-util/strace
+dev-vcs/git-lfs
 dev-vcs/mercurial
 dev-vcs/subversion
 mail-mta/postfix

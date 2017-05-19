@@ -1,0 +1,2 @@
+$require git.lst
+$package dev-vcs/git-lfs
