@@ -271,13 +271,14 @@ def process_lstfile(context, lstfile):
     def download(context, args):
         parser = argparse.ArgumentParser()
         parser.add_argument("--filename", type=str, help="filename to save")
+        parser.add_argument("--nocache", action="store_true", help="disable using cache")
         parser.add_argument("url", type=str, help="URL to download")
         args = parser.parse_args(args)
         url = context.apply_variables(args.url)
         filename = os.path.basename(url) if args.filename is None else context.apply_variables(args.filename)
         cache_file = "download_cache/%s" % filename
         progress_file = "download_cache/_download_in_progress"
-        if not os.path.exists(cache_file):
+        if args.nocache or not os.path.exists(cache_file):
             mkdir_p("download_cache")
             subprocess.check_call(["wget","-O",progress_file,url])
             os.rename(progress_file, cache_file)
