@@ -7,9 +7,15 @@ $require java.lst
 $package dev-util/jenkins-bin
 $download --nocache http://mirrors.jenkins.io/war/latest/jenkins.war
 $exec "mv /tmp/download/jenkins.war /opt/jenkins/jenkins.war"
-$exec "cd /tmp && jar xf /opt/jenkins/jenkins.war WEB-INF/jenkins-cli.jar && mv /tmp/WEB-INF/jenkins-cli.jar /opt/jenkins/jenkins.jar"
+$exec "cd /tmp && jar xf /opt/jenkins/jenkins.war WEB-INF/jenkins-cli.jar && mv /tmp/WEB-INF/jenkins-cli.jar /opt/jenkins/jenkins-cli.jar"
 $write /usr/bin/jenkins '#!/bin/sh\nsource /etc/conf.d/jenkins\nJENKINS_URL="http://localhost:$JENKINS_PORT" java -jar /opt/jenkins/jenkins-cli.jar $@'
 $exec "chmod +x /usr/bin/jenkins"
+$sed /etc/passwd 's/^\(jenkins:.\+:\)\/sbin\/nologin$/\1\/bin\/bash/'
+$exec "mkdir /var/lib/jenkins/.ssh && chmod 700 /var/lib/jenkins/.ssh"
+$touch /var/lib/jenkins/.ssh/authorized_keys
+$write /var/lib/jenkins/.ssh/config "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null"
+$exec "chown -R jenkins.jenkins /var/lib/jenkins/.ssh"
+
 $symlink /etc/runlevels/default/jenkins /etc/init.d/jenkins
 $require nss-myhostname.lst
 
@@ -21,6 +27,10 @@ $require chromium.lst
 $require xvfb.lst
 $require postfix.lst
 $require git-lfs.lst
+$require pptpclient.lst
+
+$exec "usermod -aG docker jenkins"
+$write /etc/sudoers.d/jenkins "jenkins ALL=(ALL) ALL, NOPASSWD: /usr/sbin/pon, /usr/sbin/poff"
 
 # redirect port 80 -> 8080
 $require iptables.lst

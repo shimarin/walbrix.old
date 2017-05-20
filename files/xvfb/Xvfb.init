@@ -1,7 +1,9 @@
-#!/sbin/runscript
+#!/sbin/openrc-run
 
 XVFB=/usr/bin/Xvfb
-XVFBARGS="-screen 0 1024x768x24 -nolisten tcp"
+XVFB_SCREEN=${XVFBSCREEN:-0}
+XVFB_DIMENSION=${XVFB_DIMENSION:-1024x768x24}
+XVFBARGS="-screen $XVFB_SCREEN $XVFB_DIMENSION -nolisten tcp"
 PIDFILE=/run/Xvfb.pid 
 XAUTHORITY=/root/.Xauthority
  

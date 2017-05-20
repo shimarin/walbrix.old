@@ -8,6 +8,7 @@ $package x11-drivers/xf86-video-fbdev
 $package x11-drivers/xf86-input-mouse
 $package x11-drivers/xf86-video-dummy
 $copy xvfb/Xvfb.init /etc/init.d/Xvfb
+$copy xvfb/conf-Xvfb /etc/conf.d/Xvfb
 $write --append /etc/profile.env "export DISPLAY=:0"
 $symlink /etc/runlevels/default/Xvfb /etc/init.d/Xvfb
 

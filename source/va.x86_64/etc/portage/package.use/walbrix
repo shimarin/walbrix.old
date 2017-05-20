@@ -9,6 +9,7 @@ app-emulation/docker -device-mapper aufs overlay btrfs
 sys-process/tini static
 sys-libs/libseccomp static-libs
 dev-vcs/git -perl -gpg
+dev-vcs/git-lfs -doc
 net-fs/samba ldap
 net-nds/openldap -tcpd samba
 net-fs/nfs-utils -tcpd
@@ -77,12 +78,6 @@ dev-ruby/power_assert -ruby_targets_ruby21
 dev-ruby/test-unit -ruby_targets_ruby21
 dev-ruby/minitest -ruby_targets_ruby21
 dev-ruby/kpeg -ruby_targets_ruby21
-dev-ruby/rdiscount -ruby_targets_ruby21
-dev-ruby/mustache -ruby_targets_ruby21
-dev-ruby/rake-compiler -ruby_targets_ruby21
-dev-ruby/fast_xs -ruby_targets_ruby21
-dev-ruby/hpricot -ruby_targets_ruby21
-app-text/ronn -ruby_targets_ruby21
 
 # zabbix
 net-analyzer/zabbix agent frontend java mysql openipmi proxy server
