@@ -6,7 +6,7 @@ $require cron.lst
 $require samba.lst
 $require wsgi.lst
 $require flask.lst
-$package dev-python/beautifulsoup --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
+$require beautifulsoup.lst
 $require pygobject.lst
 $require setuptools.lst
 $require configobj.lst

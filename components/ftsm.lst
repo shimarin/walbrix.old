@@ -2,7 +2,7 @@ $require domU.lst
 $require domU-overlayfs-kernel.lst
 $require cron.lst
 $require flask-sqlalchemy.lst
-$package dev-python/beautifulsoup --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
+$require beautifulsoup.lst
 $package dev-python/feedparser --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
 $package dev-python/httplib2 --exclude='^/usr/lib(64)?/(python3.2/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
 $require git.lst
