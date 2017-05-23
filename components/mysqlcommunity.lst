@@ -1,0 +1,32 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$require nginx.lst
+
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1mysqlcommunity\2/'
+
+$package dev-libs/libaio
+
+$set MYSQL_ARCHIVE mysql-5.7.18-linux-glibc2.5-x86_64
+$download https://cdn.mysql.com//Downloads/MySQL-5.7/$(MYSQL_ARCHIVE).tar.gz
+$mkdir /usr/local
+$exec "tar zxvf /tmp/download/$(MYSQL_ARCHIVE).tar.gz -C /usr/local"
+$symlink /usr/local/mysql $(MYSQL_ARCHIVE)
+$write /usr/local/mysql/my.cnf "[mysqld]\nuser=mysql"
+$exec "chown -R mysql.mysql /usr/local/mysql/"
+
+#setup ncurses5
+$set NCURSES_ARCHIVE ncurses-5.9
+$download https://ftp.gnu.org/pub/gnu/ncurses/$(NCURSES_ARCHIVE).tar.gz
+$exec "tar zxvf /tmp/download/$(NCURSES_ARCHIVE).tar.gz -C /tmp"
+$exec --overlay "cd /tmp/$(NCURSES_ARCHIVE) && CPPFLAGS='-P' ./configure --prefix=/usr/local/mysql --with-shared && make && make install"
+
+$write /etc/ld.so.conf.d/99mysql-community.conf "/usr/local/mysql/lib"
+$exec /sbin/ldconfig
+$exec "/usr/local/mysql/bin/mysqld --initialize-insecure --user=mysql"
+
+$write /etc/env.d/99mysql-community 'PATH="/usr/local/mysql/bin"\nROOTPATH="/usr/local/mysql/bin"'
+$exec --overlay "env-update"
+
+$copy mysql/mysql-community.init /etc/init.d/mysql-community
+$symlink /etc/runlevels/default/mysql-community /etc/init.d/mysql-community
+

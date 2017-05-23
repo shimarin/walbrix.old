@@ -1,0 +1,35 @@
+#!/sbin/openrc-run
+
+depend() {
+	use net.lo
+	# localmount needed for $basedir
+	need localmount
+}
+
+start() {
+        ebegin "Starting MySQL Community Server"
+	/usr/local/mysql/support-files/mysql.server start
+        eend ${?}
+}
+ 
+stop() {
+        ebegin  "Stopping MySQL Community Server"
+	/usr/local/mysql/support-files/mysql.server stop
+        eend ${?}
+}
+
+restart() {
+	ebegin "Restarting MySQL Community Server"
+	/usr/local/mysql/support-files/mysql.server restart
+	eend ${?}
+}
+
+reload() {
+	ebegin "Reloading MySQL Community Server"
+	/usr/local/mysql/support-files/mysql.server reload
+	eend ${?}
+}
+
+status() {
+	/usr/local/mysql/support-files/mysql.server status
+}
