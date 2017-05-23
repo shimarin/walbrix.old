@@ -8,7 +8,7 @@
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
 =media-gfx/fbgrab-1.3
 =sys-block/zram-init-3.8
-=sys-kernel/linux-firmware-20170314
+=sys-kernel/linux-firmware-20170519
 =sys-apps/hwids-20170328
 =sys-block/megacli-8.07.14-r1
 =sys-boot/grub-2.02
