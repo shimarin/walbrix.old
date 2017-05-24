@@ -20,7 +20,7 @@ def useradd_if_not_exists(uid, name, group, added_for,homedir, shell):
         return pwd.getpwnam(name)
     except KeyError:
         pass
-    exec_cmd(["useradd","-c","added by portage for %s" % added_for, "-d",homedir,"-u",str(uid),"-g",group,"-s",shell,name])
+    exec_cmd(["useradd","-c","added by portage for %s" % added_for, "-d",homedir,"-M","-u",str(uid),"-g",group,"-s",shell,name])
 
 groups = [
     (101, "openvpn"),
