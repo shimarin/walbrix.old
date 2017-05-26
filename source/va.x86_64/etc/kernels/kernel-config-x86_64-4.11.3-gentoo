@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.11.2-gentoo Kernel Configuration
+# Linux/x86 4.11.3-gentoo Kernel Configuration
 #
 
 #
@@ -579,7 +579,7 @@ CONFIG_PHYSICAL_ALIGN=0x1000000
 CONFIG_HOTPLUG_CPU=y
 # CONFIG_BOOTPARAM_HOTPLUG_CPU0 is not set
 # CONFIG_DEBUG_HOTPLUG_CPU0 is not set
-CONFIG_COMPAT_VDSO=y
+# CONFIG_COMPAT_VDSO is not set
 # CONFIG_LEGACY_VSYSCALL_NATIVE is not set
 CONFIG_LEGACY_VSYSCALL_EMULATE=y
 # CONFIG_LEGACY_VSYSCALL_NONE is not set
