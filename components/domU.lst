@@ -84,6 +84,8 @@ $symlink /usr/bin/less ../../bin/busybox
 /usr/sbin/nmbd
 $mkdir /var/log/samba
 $mkdir /var/cache/samba
+$mkdir /var/lib/samba/private
+$exec "chmod 700 /var/lib/samba/private"
 #/usr/lib/samba/charset/CP437.so
 #/usr/lib/samba/charset/CP850.so
 #/etc/samba/lmhosts
