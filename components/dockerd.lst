@@ -1,5 +1,4 @@
 # docker itself (not an entire vm image)
-$package sys-fs/aufs-util
 $package dev-lang/go
 $require perl.lst # for shasum command
 $package app-emulation/containerd
