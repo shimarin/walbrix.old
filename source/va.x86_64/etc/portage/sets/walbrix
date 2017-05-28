@@ -68,6 +68,7 @@ dev-ruby/bundler
 dev-ruby/mysql2
 dev-ruby/rmagick
 dev-util/jenkins-bin
+dev-util/nvidia-cuda-toolkit
 dev-util/strace
 dev-vcs/git-lfs
 dev-vcs/mercurial
@@ -97,6 +98,7 @@ sys-apps/ed
 sys-auth/nss-mdns
 sys-auth/nss-myhostname
 sys-block/zram-init
+sys-firmware/nvidia-firmware
 sys-fs/btrfs-progs
 sys-fs/fuse
 sys-fs/inotify-tools

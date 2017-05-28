@@ -54,3 +54,7 @@
 =dev-python/zope-component-4.3.0
 =app-crypt/certbot-nginx-0.14.1
 
+#cuda
+=dev-util/nvidia-cuda-toolkit-8.0.61
+=sys-firmware/nvidia-firmware-340.32
+

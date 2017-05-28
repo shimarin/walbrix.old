@@ -1,0 +1,16 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$require kernel-modules.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1nvidia\2/'
+$write --append /etc/fstab "/.overlay/data01 /var/lib/docker none bind 0 0"
+
+$require dockerd.lst
+$require s3cmd.lst
+$require chromium.lst
+$require xvfb.lst
+$require postfix.lst
+
+$package sys-apps/pciutils
+$package dev-util/nvidia-cuda-toolkit
+$package x11-drivers/nvidia-drivers
+
