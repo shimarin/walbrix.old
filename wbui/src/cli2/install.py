@@ -129,10 +129,14 @@ def run(device, image, yes = False, no_bios = False, xen_vga = None): # image ca
     profile_volume = "/dev/%s/profile" % vgname
     subprocess.check_call(["mkfs.xfs","-q",profile_volume])
 
-    # install ins file if exists
-    ins_file = image + ".ins"
-    if os.path.isfile(ins_file):
-        with create_install_disk.tempmount(profile_volume, "rw", "xfs") as tempdir:
+    # initialize profile volume
+    with create_install_disk.tempmount(profile_volume, "rw", "xfs") as tempdir:
+        # create profile partition marker
+        with open(os.path.join(tempdir, boot_partition_uuid), "w") as f:
+            f.write("This is a marker file which indicates that this partition is the profile partition for a boot partition specifically UUID'ed as its filename")
+        # install ins file if exists
+        ins_file = image + ".ins"
+        if os.path.isfile(ins_file):
             rw_layer = os.path.join(tempdir,"root")
             os.mkdir(rw_layer)
             subprocess.call(["tar","xvf",ins_file,"-C",rw_layer])
