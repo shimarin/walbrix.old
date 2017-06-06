@@ -6,6 +6,7 @@ $write --append /etc/fstab "/.overlay/data01 /var/lib/docker none bind 0 0"
 $require dockerd.lst
 
 $require s3cmd.lst
+$require postfix.lst
 
 $require nodejs.lst
 $exec "npm install -g grunt-cli"
