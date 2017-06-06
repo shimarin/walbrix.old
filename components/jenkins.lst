@@ -9,6 +9,7 @@ $download --nocache http://mirrors.jenkins.io/war/latest/jenkins.war
 $exec "mv /tmp/download/jenkins.war /opt/jenkins/jenkins.war"
 $exec "cd /tmp && jar xf /opt/jenkins/jenkins.war WEB-INF/jenkins-cli.jar && mv /tmp/WEB-INF/jenkins-cli.jar /opt/jenkins/jenkins-cli.jar"
 $write /usr/bin/jenkins '#!/bin/sh\nsource /etc/conf.d/jenkins\nJENKINS_URL="http://localhost:$JENKINS_PORT" java -jar /opt/jenkins/jenkins-cli.jar $@'
+$sed /etc/conf.d/jenkins 's/^JENKINS_ENABLE_ACCESS_LOG=.*$/JENKINS_ENABLE_ACCESS_LOG="yes"/'
 $exec "chmod +x /usr/bin/jenkins"
 $sed /etc/passwd 's/^\(jenkins:.\+:\)\/sbin\/nologin$/\1\/bin\/bash/'
 $exec "mkdir /var/lib/jenkins/.ssh && chmod 700 /var/lib/jenkins/.ssh"
