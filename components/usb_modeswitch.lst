@@ -1,3 +1,5 @@
 $package dev-lang/jimtcl
 #dev-libs/libusb
 $package sys-apps/usb_modeswitch --use="jimtcl"
+$mkdir /var/lib/usb_modeswitch
+
