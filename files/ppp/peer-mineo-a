@@ -1,0 +1,8 @@
+noauth
+connect "/usr/sbin/chat -v -f /etc/chatscripts/3g -T mineo.jp -U *99***1#"
+230400
+crtscts
+noipdefault 
+user "mineo@k-opti.com"
+persist
+maxfail 0

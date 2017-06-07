@@ -1,9 +1,0 @@
-noauth
-connect "/usr/sbin/chat -v -f /etc/chatscripts/3g -T dream.jp -U *99***1#"
-230400
-crtscts
-defaultroute
-noipdefault 
-user "user@dream.jp"
-persist
-maxfail 0
