@@ -136,7 +136,9 @@ $mkdir /etc/chatscripts
 $copy ppp/chatscript-3g /etc/chatscripts/3g
 $copy ppp/pap-secrets /etc/ppp/pap-secrets
 $mkdir /etc/ppp/peers
-$copy ppp/peer-DTI /etc/ppp/peers/DTI
+$copy ppp/peer-mineo-d /etc/ppp/peers/mineo-d
+$copy ppp/peer-mineo-a /etc/ppp/peers/mineo-a
+$copy ppp/peer-interlink /etc/ppp/peers/interlink
 $copy ppp/ip-up.route.sh /etc/ppp/ip-up.d/route.sh
 $copy ppp/ip-down.route.sh /etc/ppp/ip-down.d/route.sh
 

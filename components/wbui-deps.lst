@@ -36,6 +36,6 @@ $require openssl.lst
 $package dev-libs/libcdio # iso-read
 $package sys-fs/lvm2 # for lvs vgs pvs...
 $package sys-apps/pciutils # lspci
-$package sys-apps/kmod # modinfo
+$require kmod.lst # modinfo
 
 $mkdir /var/cache/wb

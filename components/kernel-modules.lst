@@ -1,4 +1,4 @@
-$package sys-apps/kmod
+$require kmod.lst
 $kernel /boot/kernel
 /lib/modules/$(KERNEL_VERSION)
 /lib/firmware

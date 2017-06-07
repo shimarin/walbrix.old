@@ -1,5 +1,5 @@
 $package sys-apps/util-linux
-$package sys-apps/kmod
+$require kmod.lst
 $package sys-fs/eudev
 $package sys-fs/udev-init-scripts
 $mkdir /etc/udev/rules.d
