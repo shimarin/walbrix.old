@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.10.17
+=sys-kernel/gentoo-sources-4.11.6
 =app-i18n/fbterm-1.7-r1
 =sys-kernel/vanilla-sources-3.16.43
 =app-crypt/chntpw-140201
@@ -6,7 +6,6 @@
 =media-gfx/fbgrab-1.3
 =sys-block/zram-init-3.8
 =net-fs/nfs-utils-1.3.4
-=sys-boot/grub-2.02
 =app-admin/ansible-2.2.2.0
 
 #snort
@@ -24,9 +23,9 @@
 =sys-apps/yum-3.4.3_p20130218-r1
 
 # zfs
-=sys-fs/zfs-0.6.5.9
-=sys-fs/zfs-kmod-0.6.5.9
-=sys-kernel/spl-0.6.5.9
+=sys-fs/zfs-0.6.5.10
+=sys-fs/zfs-kmod-0.6.5.10
+=sys-kernel/spl-0.6.5.10
 
 # hardware
 =sys-kernel/linux-firmware-20170519

@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.10.17
+=sys-kernel/gentoo-sources-4.11.6
 =app-i18n/fbterm-1.7-r1
 =sys-kernel/vanilla-sources-3.2.89
 =app-crypt/chntpw-140201
@@ -11,6 +11,5 @@
 =sys-kernel/linux-firmware-20170519
 =sys-apps/hwids-20170328
 =sys-block/megacli-8.07.14-r1
-=sys-boot/grub-2.02
 =app-admin/ansible-2.2.2.0
 =sys-apps/usb_modeswitch-2.3.0
