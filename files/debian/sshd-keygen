@@ -1,7 +1,4 @@
 #!/bin/sh
-if [ ! -e /etc/ssh/ssh_host_key ] ; then
-    /usr/bin/ssh-keygen -t rsa1 -f /etc/ssh/ssh_host_key -N '' || exit 1
-fi
 for t in dsa rsa ecdsa ed25519; do
     if [ ! -e /etc/ssh/ssh_host_${t}_key ] ; then
         /usr/bin/ssh-keygen -t ${t} -f /etc/ssh/ssh_host_${t}_key -N '' || exit 1
