@@ -1,10 +1,10 @@
 {
     "id": "debian",
-    "version": "8.2",
-    "title": "Debian GNU/Linux 8.1(jessie)", 
+    "version": "9.0",
+    "title": "Debian GNU/Linux 9.0(stretch)", 
     "description": "1993年発足の老舗 Linuxディストリビューションです。他の多くのディストリビューションの派生元にもなっていることから、その安定性・完成度の高さが伺えます。（サーバ向けのヘッドレス仕様で作成されます。GUIはありません）", 
     "images": [{"url": "http://va.walbrix.net/img/debian01.png"}],
-    "tarball": "http://dist.walbrix.net/va/debian-8.2-x86_64-jp.tar.xz",
+    "tarball": "http://dist.walbrix.net/va/debian-9.0-x86_64-jp.tar.xz",
     "minimum_hd": 2,
     "minimum_ram": 96,
 
