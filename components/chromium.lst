@@ -27,5 +27,10 @@ $package x11-misc/xdg-utils
 #dev-libs/jsoncpp-0.10.2-r1  USE="-doc {-test}" 
 #media-libs/harfbuzz
 #x11-libs/gtk+-2.24.28-r1
+$package gnome-base/gconf # for chromedriver
 $package media-libs/mesa
 $package www-client/chromium # kernel needs USER_NS
+
+$download https://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip
+$exec "cd /tmp/download && unzip chromedriver_linux64.zip && mv chromedriver /usr/bin/"
+
