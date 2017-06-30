@@ -73,6 +73,7 @@ dev-util/strace
 dev-vcs/git-lfs
 dev-vcs/mercurial
 dev-vcs/subversion
+gnome-base/gconf
 mail-mta/postfix
 media-fonts/vlgothic
 media-gfx/qrencode

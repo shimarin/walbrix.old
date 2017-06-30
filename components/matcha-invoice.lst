@@ -1,0 +1,25 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$require cron.lst
+$require apache.lst
+$require mysql.lst
+$require postfix.lst
+$require samba.lst
+$require php56.lst
+$require pecl-apcu.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1matcha-invoice\2/'
+
+$set VERSION 2.5.9
+$download http://va.walbrix.net/src/matcha-invoice-$(VERSION).zip
+$exec "cd /tmp && unzip /tmp/download/matcha-invoice-$(VERSION).zip && cp -a /tmp/matcha-invoice-$(VERSION)/. /var/www/localhost/htdocs/"
+$copy matcha-invoice/installed.php /var/www/localhost/htdocs/app/config/installed.php
+$touch /var/www/localhost/htdocs/app/config/finish
+$exec "chown -R apache.apache /var/www/localhost"
+
+# create database
+$mkdir /tmp/mysql
+$copy mysql/operate.sh /tmp/mysql/operate.sh
+$exec "/tmp/mysql/operate.sh createdb matcha-invoice"
+$copy matcha-invoice/initial-database.sql /tmp/initial-database.sql
+$exec "/tmp/mysql/operate.sh exec matcha-invoice 'source /tmp/initial-database.sql'"
+
