@@ -1,4 +1,9 @@
-$require java.lst
+$require java-config.lst
+$package dev-libs/nss # SSL support
+$package app-eselect/eselect-java
+$package media-libs/libjpeg-turbo
+/etc/fonts/fonts.conf
+/usr/share/fonts/vlgothic/VL-PGothic-Regular.ttf
 
 #x11-proto/xproto
 #x11-proto/xextproto

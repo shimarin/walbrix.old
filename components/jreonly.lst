@@ -1,0 +1,17 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$require cron.lst
+$require git.lst
+$require emacs.lst
+$require vim.lst
+$require s3cmd.lst
+$require java-oracle.lst
+$require sbt.lst
+$package app-admin/logrotate
+$require postfix.lst
+$package app-misc/screen
+$package app-misc/tmux
+$require iptables.lst
+
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1oracle-jre\2/'
+
