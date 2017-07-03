@@ -21,6 +21,8 @@ $mkdir /etc/php/cli-php$(PHP_VERSION)/ext
 $mkdir /etc/php/cli-php$(PHP_VERSION)/ext-active
 
 $sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;date\.timezone.*$/date.timezone=Asia\/Tokyo/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^upload_max_filesize.\+$/upload_max_filesize = 128M/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^post_max_size.\+$/post_max_size = 256M/'
 $sed /etc/php/cli-php$(PHP_VERSION)/php.ini 's/^;date\.timezone.*$/date.timezone=Asia\/Tokyo/'
 $sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D PHP5"/'
 
