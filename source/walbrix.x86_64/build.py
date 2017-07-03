@@ -84,7 +84,7 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
 exec_cmd(["emerge","-uDN","gentoo-sources","genkernel","splash-themes-gentoo"])
 if build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natural_gentoo","all"]):
     try:
-        exec_cmd(["emerge","-1","zfs-kmod","spl"])
+        exec_cmd(["emerge","-1","spl","zfs-kmod"])
     except subprocess.CalledProcessError:
         print "Looks like ZFS modules are not compatible with this kernel."
 
