@@ -98,3 +98,6 @@ exec_cmd(["emerge","@preserved-rebuild"])
 #build_kernel_if_needed("aufs", ["bzImage"])
 build_kernel_if_needed("", ["bzImage"])
 
+exec_cmd("tar zcvf /root/nvidia-drivers.tar.gz -C / `equery files -f obj,sym,conf,cmd nvidia-drivers | sed 's/ -> .*$//' | egrep -v '^\/usr\/share'`")
+
+

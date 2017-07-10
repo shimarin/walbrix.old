@@ -57,3 +57,5 @@ net-fs/s3fs openssl
 dev-libs/openssl -bindist
 net-misc/openssh -bindist
 
+# hardware
+x11-drivers/nvidia-drivers -X acpi driver -gtk3 kms -multilib -tools
