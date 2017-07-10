@@ -1,5 +1,6 @@
 sys-kernel/vanilla-sources -symlink
 sys-kernel/gentoo-sources symlink
+sys-apps/kmod lzma
 # move net-misc/openvpn net-vpn/openvpn
 net-vpn/openvpn
 app-admin/sudo -sendmail

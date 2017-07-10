@@ -1,0 +1,20 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1amdgpu\2/'
+
+$require kernel-modules.lst
+$package sys-apps/pciutils
+
+$set AMDGPUPRO_VERSION 17.10-429170
+$copy amdgpu/amdgpu-pro-$(AMDGPUPRO_VERSION).tar.xz /tmp/amdgpu-pro-$(AMDGPUPRO_VERSION).tar.xz
+$exec "cd /tmp && tar xf amdgpu-pro-$(AMDGPUPRO_VERSION).tar.xz && for i in amdgpu-pro-$(AMDGPUPRO_VERSION)/*.deb; do ar x $i && tar xf data.tar.xz; done"
+$mkdir /tmp/lib
+$mkdir /tmp/etc/ld.so.conf.d
+$write /tmp/etc/ld.so.conf.d/amdgpu-pro-x86_64.conf "/opt/amdgpu-pro/lib/x86_64-linux-gnu"
+$exec "tar zcf /root/amdgpu-pro.tar.gz -C /tmp opt etc"
+$exec "tar xf /root/amdgpu-pro.tar.gz -C /"
+
+$exec "tar zcf /root/amdgpu-pro-firmware.tar.gz -C /tmp/usr/src/amdgpu-pro-$(AMDGPUPRO_VERSION) firmware"
+$exec "tar xf /root/amdgpu-pro-firmware.tar.gz -C /lib"
+
+$require s3cmd.lst
