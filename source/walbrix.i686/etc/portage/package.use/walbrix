@@ -24,6 +24,8 @@ app-arch/bzip2 static-libs
 media-libs/libpng static-libs
 media-libs/freetype static-libs
 
+sys-libs/ncurses tinfo
+
 # wbui
 dev-python/numpy -python_targets_python3_5
 dev-python/pygame -python_targets_python3_5

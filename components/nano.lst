@@ -1,2 +1,3 @@
 $package sys-libs/ncurses-6.0-r1
+/usr/lib/libtinfo.so.5
 $package app-editors/nano
