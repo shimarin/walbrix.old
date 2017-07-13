@@ -27,6 +27,7 @@ $package x11-misc/xdg-utils
 #dev-libs/jsoncpp-0.10.2-r1  USE="-doc {-test}" 
 #media-libs/harfbuzz
 #x11-libs/gtk+-2.24.28-r1
+$package x11-libs/gdk-pixbuf
 $package gnome-base/gconf # for chromedriver
 $package media-libs/mesa
 $package www-client/chromium # kernel needs USER_NS
