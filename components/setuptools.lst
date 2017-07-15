@@ -1,4 +1,6 @@
 $package dev-python/setuptools --exclude='^/usr/lib(64)?/python3.*/'
 $package dev-python/packaging --exclude='^/usr/lib(64)?/python3.*/'
 $package dev-python/certifi --exclude='^/usr/lib(64)?/python3.*/'
+$package dev-python/pyparsing --exclude='^/usr/lib(64)?/python3.*/'
+$package dev-python/appdirs --exclude='^/usr/lib(64)?/python3.*/'
 
