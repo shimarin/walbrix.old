@@ -20,8 +20,11 @@ dev-db/mysql
 dev-libs/libisoburn
 dev-python/chardet
 dev-python/flask
+dev-python/future
 dev-python/pyalsaaudio
+dev-python/pyparsing
 dev-python/pygame
+dev-python/pyusb
 dev-util/debootstrap
 dev-util/strace
 dev-vcs/git
@@ -33,6 +36,7 @@ media-gfx/splash-themes-gentoo
 media-sound/alsa-utils
 media-sound/mpg123
 net-analyzer/barnyard2
+net-analyzer/net-snmp
 net-analyzer/netcat
 net-analyzer/nmap
 net-analyzer/snort

@@ -13,3 +13,4 @@
 =sys-block/megacli-8.07.14-r1
 =app-admin/ansible-2.2.2.0
 =sys-apps/usb_modeswitch-2.3.0
+=dev-python/pyusb-1.0.0

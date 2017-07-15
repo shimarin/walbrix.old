@@ -130,6 +130,7 @@ $require ssmtp.lst
 $require smbclient.lst
 $require cu.lst
 $package www-servers/nginx
+$package net-analyzer/net-snmp
 
 # complementary PPP configs
 $mkdir /etc/chatscripts
@@ -170,6 +171,12 @@ $package sys-power/cpupower
 $package sys-apps/lshw
 $require nut.lst
 $require omronups.lst
+
+# for some raspi-like IoT purposes
+$package dev-python/pyusb
+
+# Python3 compat
+$package dev-python/future
 
 # arch specific
 $require walbrix-$(ARCH).lst

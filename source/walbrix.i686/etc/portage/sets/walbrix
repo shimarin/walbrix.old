@@ -18,8 +18,11 @@ app-misc/screen
 app-portage/gentoolkit
 dev-db/mysql
 dev-python/flask
+dev-python/future
 dev-python/pyalsaaudio
 dev-python/pygame
+dev-python/pyparsing
+dev-python/pyusb
 dev-util/strace
 mail-mta/ssmtp
 media-fonts/mplus-fonts
@@ -28,6 +31,7 @@ media-gfx/qrencode
 media-gfx/splash-themes-gentoo
 media-sound/alsa-utils
 net-analyzer/barnyard2
+net-analyzer/net-snmp
 net-analyzer/netcat
 net-analyzer/nmap
 net-analyzer/snort

@@ -49,6 +49,7 @@ dev-vcs/git -perl -gpg
 
 # networks
 net-dns/avahi -introspection
+net-analyzer/net-snmp python
 
 # misc
 media-sound/mpg123 alsa
