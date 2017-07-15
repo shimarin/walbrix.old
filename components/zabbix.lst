@@ -19,6 +19,7 @@ $package dev-java/json-simple
 # net-analyzer/fping
 /usr/sbin/fping
 /usr/sbin/fping6
+$exec "chmod u=rwsx,g=rx,o=rx /usr/sbin/fping /usr/sbin/fping6"
 
 $package net-analyzer/zabbix --use="frontend java mysql openipmi server"
 $exec "chown -R zabbix.zabbix /etc/zabbix"

@@ -82,7 +82,7 @@ dev-ruby/minitest -ruby_targets_ruby21
 dev-ruby/kpeg -ruby_targets_ruby21
 
 # zabbix
-net-analyzer/zabbix agent frontend java mysql openipmi proxy server
+net-analyzer/zabbix agent frontend java mysql openipmi proxy server snmp
 sys-libs/openipmi snmp
 
 # chromium
