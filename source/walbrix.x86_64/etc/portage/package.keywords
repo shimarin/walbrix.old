@@ -30,7 +30,7 @@
 # hardware
 =sys-kernel/linux-firmware-20170622
 =sys-firmware/b43-firmware-6.30.163.46
-=sys-apps/hwids-20170328
+=sys-apps/hwids-20170715
 =sys-block/megacli-8.07.14-r1
 =sys-apps/usb_modeswitch-2.3.0
 =x11-drivers/nvidia-drivers-384.47

@@ -9,7 +9,7 @@
 =media-gfx/fbgrab-1.3
 =sys-block/zram-init-3.8
 =sys-kernel/linux-firmware-20170622
-=sys-apps/hwids-20170328
+=sys-apps/hwids-20170715
 =sys-block/megacli-8.07.14-r1
 =app-admin/ansible-2.2.2.0
 =sys-apps/usb_modeswitch-2.3.0
