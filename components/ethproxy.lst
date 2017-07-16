@@ -1,0 +1,15 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1ethproxy\2/'
+
+$require twisted-web.lst
+$require nss-myhostname.lst
+$require s3cmd.lst
+$require git.lst
+$package app-misc/screen
+
+$exec "cd /root && git clone https://github.com/Atrides/eth-proxy.git"
+
+# redirect port 80 -> 8080
+$require iptables.lst
+$write /var/lib/iptables/rules-save "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8080\nCOMMIT"
