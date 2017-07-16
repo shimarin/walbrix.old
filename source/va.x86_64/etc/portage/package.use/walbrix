@@ -37,6 +37,7 @@ media-gfx/imagemagick perl jpeg jpeg2k png truetype webp -openmp
 media-libs/gd fontconfig truetype png jpeg
 dev-lang/scala binary
 app-text/poppler cjk curl jpeg2k png tiff
+sys-libs/ncurses tinfo
 
 # samba 4
 sys-libs/tdb python

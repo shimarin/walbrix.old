@@ -5,4 +5,5 @@ $package dev-python/py --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|
 #$package dev-python/pytest --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
 $package dev-python/pycparser --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
 $package dev-python/pyopenssl --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
+$exec --overlay "python2 -c 'from twisted.plugin import IPlugin, getPlugins;list(getPlugins(IPlugin))'"
 $package dev-python/twisted-core --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'

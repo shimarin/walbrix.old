@@ -64,6 +64,7 @@ dev-python/pyyaml
 dev-python/requests
 dev-python/rsa
 dev-python/twisted-names
+dev-python/twisted-web
 dev-python/unittest2
 dev-python/xlrd
 dev-ruby/bundler

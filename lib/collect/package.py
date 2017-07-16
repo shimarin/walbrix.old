@@ -31,7 +31,11 @@ def process_package(context, package_dir, exclude_patterns, expected_use_flags, 
                 filename = ' '.join(splitted[1:-2])
             elif ent_type == "sym":
                 filename = ' '.join(splitted[1:-1]).split(" -> ")[0]
-            if filename is not None and is_needed(filename, exclude_patterns):
+
+            src = os.path.normpath("%s%s" % (context.source, filename))
+            dest = os.path.normpath("%s%s" % (context.destination, filename))
+
+            if filename is not None and is_needed(filename, exclude_patterns) and (os.path.exists(src) or not os.path.exists(dest)):
                 collect.process_file(context, filename)
             line = f.readline()
 
