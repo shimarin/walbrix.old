@@ -17,6 +17,7 @@ app-i18n/fbterm
 app-misc/screen
 app-portage/gentoolkit
 dev-db/mysql
+dev-libs/jansson
 dev-python/flask
 dev-python/future
 dev-python/pyalsaaudio

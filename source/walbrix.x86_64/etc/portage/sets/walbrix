@@ -17,6 +17,7 @@ app-i18n/fbterm
 app-misc/screen
 app-portage/gentoolkit
 dev-db/mysql
+dev-libs/jansson
 dev-libs/libisoburn
 dev-python/chardet
 dev-python/flask
