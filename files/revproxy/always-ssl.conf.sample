@@ -2,7 +2,15 @@ server {
 	listen 80;
 	listen [::]:80;
 	server_name sslonly.example.com;
-	return 301 https://$host$request_uri;
+
+	location /.well-known {
+		root /var/www/localhost/htdocs;
+	}
+
+	location / {
+		return 301 https://$host$request_uri;
+	}
+
         access_log off;
 }
 
