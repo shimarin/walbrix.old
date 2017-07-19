@@ -1,0 +1,30 @@
+#!/sbin/openrc-run
+
+depend() {
+    need net
+    use dns logger
+}
+
+start() {
+    JAVA_HOME=`java-config --jre-home`
+    COMMAND=$JAVA_HOME/bin/java
+
+    JAVA_PARAMS="$SELENIUM_JAVA_OPTIONS -jar $SELENIUM_JAR"
+
+    # Don't use --daemon here, because in this case stop will not work
+    PARAMS="-log /var/log/selenium/selenium-server.log"
+    [ -n "$SELENIUM_PORT" ] && PARAMS="$PARAMS -port $SELENIUM_PORT"
+    [ -n "$SELENIUM_ARGS_ARGS" ] && PARAMS="$PARAMS $SELENIUM_ARGS"
+
+    ebegin "Starting ${SVCNAME}"
+    start-stop-daemon --start --quiet --background \
+        --make-pidfile --pidfile $SELENIUM_PIDFILE \
+        --exec "${COMMAND}" -- $JAVA_PARAMS $PARAMS
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping ${SVCNAME}"
+    start-stop-daemon --stop --quiet --pidfile $SELENIUM_PIDFILE
+    eend $?
+}

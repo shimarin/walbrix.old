@@ -1,0 +1,19 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1selenium\2/'
+
+$require chromium.lst
+$require xvfb.lst
+
+$require java.lst
+$set VERSION 3.4.0
+$download https://selenium-release.storage.googleapis.com/3.4/selenium-server-standalone-$(VERSION).jar
+$mkdir /usr/share/selenium
+$mkdir /var/log/selenium
+$exec "mv /tmp/download/selenium-server-standalone-$(VERSION).jar /usr/share/selenium/selenium-server-standalone.jar"
+
+$copy selenium/selenium-server.init /etc/init.d/selenium-server
+$copy selenium/selenium-server.conf /etc/conf.d/selenium-server
+$copy selenium/selenium-server.logrotate /etc/logrotate.d/selenium-server
+$symlink /etc/runlevels/default/selenium-server /etc/init.d/selenium-server
+
