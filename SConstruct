@@ -72,8 +72,8 @@ echo "set WALBRIX_BUILD_ID=`cat build/wbui/usr/share/wbui/commit-id`" >> $TARGET
 echo "set WALBRIX_UPDATE_URL=http://update.walbrix.net" >> $TARGET
 """)
 
-env.Command("build/walbrix/.done", ["$SYSTEM_64_MARKER", "$SYSTEM_32_MARKER","build/walbrix/walbrix.cfg","files/walbrix/grub.cfg","files/walbrix/install.cfg","files/walbrix/background.png"], """
-cp files/walbrix/grub.cfg files/walbrix/install.cfg files/walbrix/background.png build/walbrix/
+env.Command("build/walbrix/.done", ["$SYSTEM_64_MARKER", "$SYSTEM_32_MARKER","build/walbrix/walbrix.cfg","files/walbrix/grub.cfg","files/walbrix/grub-noxen.cfg","files/walbrix/install.cfg","files/walbrix/background.png"], """
+cp files/walbrix/grub.cfg files/walbrix/grub-noxen.cfg files/walbrix/install.cfg files/walbrix/background.png build/walbrix/
 touch $TARGET
 """)
 
