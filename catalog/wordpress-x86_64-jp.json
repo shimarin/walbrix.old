@@ -1,0 +1,18 @@
+{
+    "description": "WordPress (ワードプレス) は、オープンソースのブログ／CMS プラットフォームです。セマンティック Web、コードやデザインの美しさ、Web 標準、ユーザビリティなどを意識して開発されています。",
+    "version":"4.4",
+    "title": "WordPress 4.8",
+    "minimum_hd": 2,
+    "tarball": "http://dist.walbrix.net/va/wordpress-4.8-x86_64-jp.squashfs",
+    "minimum_ram": 256,
+    "images": [{"url": "http://va.walbrix.net/img/wordpress01.png"}],
+    "id": "wordpress",
+
+    "uuid":"d89b4ff2-186d-4299-882d-190aea1bb34a",
+    "instruction": {
+        "ja":"Webブラウザでアクセスするとセットアップが開始されます",
+        "en":"Please access using web browser to begin setup"
+    },
+    "upload_command":"s3cmd put -P wordpress-x86_64-jp.json s3://va.walbrix.net/x86_64/"
+}
+

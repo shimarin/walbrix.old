@@ -1,5 +1,5 @@
 $require domU.lst
-$require domU-kernel.lst
+$require domU-overlayfs-kernel.lst
 $require cron.lst
 $require apache.lst
 $require mysql.lst
@@ -9,7 +9,7 @@ $require postfix.lst
 $copy wordpress/smb.conf /etc/samba/smb.conf
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1wordpress\2/'
 
-$set WORDPRESS_TAR wordpress-4.4-$(LANGUAGE).tar.gz
+$set WORDPRESS_TAR wordpress-4.8-$(LANGUAGE).tar.gz
 $download http://$(LANGUAGE).wordpress.org/release-archive/$(LANGUAGE)/$(WORDPRESS_TAR)
 $exec "tar zxvf /tmp/download/$(WORDPRESS_TAR) -C /var/www/localhost"
 
