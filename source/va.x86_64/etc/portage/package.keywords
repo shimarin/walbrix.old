@@ -58,3 +58,5 @@
 =dev-util/nvidia-cuda-toolkit-8.0.61
 =sys-firmware/nvidia-firmware-340.32
 
+#chromium
+=www-client/chromium-60.0.3112.40

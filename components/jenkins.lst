@@ -26,6 +26,7 @@ $require nodejs.lst
 $require sbt.lst
 $require chromium.lst
 $require xvfb.lst
+$require fluxbox.lst
 $require postfix.lst
 $require git-lfs.lst
 $require pptpclient.lst

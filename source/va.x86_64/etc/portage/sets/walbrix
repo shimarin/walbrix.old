@@ -125,4 +125,5 @@ www-servers/uwsgi
 x11-base/xorg-server
 x11-misc/x11vnc
 x11-proto/dri2proto # to build xorg-server without mesa
+x11-wm/fluxbox
 

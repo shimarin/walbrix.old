@@ -88,7 +88,7 @@ sys-libs/openipmi snmp
 
 # chromium
 media-libs/mesa -bindist -classic -dri3 gallium -gbm -llvm -nptl -video_cards_intel -video_cards_radeon video_cards_nouveau -video_cards_radeonsi
-www-client/chromium -hangouts -proprietary-codecs -system-ffmpeg
+www-client/chromium -hangouts -proprietary-codecs system-ffmpeg
 dev-libs/libxml2 icu
 x11-libs/cairo X
 media-libs/harfbuzz icu -cairo -graphite -introspection
@@ -104,4 +104,6 @@ app-accessibility/at-spi2-core -introspection
 x11-libs/pango -introspection
 gnome-base/librsvg -introspection
 x11-libs/gtk+ -introspection
+x11-wm/fluxbox -imlib -systray -toolbar
+
 
