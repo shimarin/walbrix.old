@@ -48,7 +48,8 @@ users = [
     (105, "zabbix", "zabbix", "zabbix","/var/lib/zabbix/home","/sbin/nologin"),
     (106, "snort", "snort", "snort","/dev/null","/sbin/nologin"),
     (107, "dhcp", "dhcp", "dhcp","/var/lib/dhcp","/sbin/nologin"),
-    (108, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin")
+    (108, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin"),
+    (109, "motion", "motion", "motion", "/var/lib/motion", "/sbin/nologin")
 ]
 
 for group in groups:
@@ -87,7 +88,6 @@ if build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=nat
         exec_cmd(["emerge","-1","spl","zfs-kmod","nvidia-drivers"])
     except subprocess.CalledProcessError:
         print "Looks like ZFS or NVIDIA modules are not compatible with this kernel."
-    exec_cmd("tar zcvf /root/nvidia-drivers.tar.gz -C / `equery files -f obj,sym,conf,cmd nvidia-drivers | sed 's/ -> .*$//' | egrep -v '^\/usr\/share'`")
 
 ## emerge world
 

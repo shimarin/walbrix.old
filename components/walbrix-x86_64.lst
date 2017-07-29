@@ -21,7 +21,12 @@ $package sys-fs/zfs
 $write /tmp/README 'http://insights.ubuntu.com/2016/02/18/zfs-licensing-and-linux/'
 $exec 'mv /tmp/README /lib/modules/*/extra/zfs/'
 
+# non-free
+$mkdir /usr/share/non-free
+$exec --overlay "tar zcvf - -C / `equery files -f obj,sym,conf,cmd nvidia-drivers | sed 's/ -> .*$//' | egrep -v '^\/usr\/share'`|openssl enc -blowfish -k 'I agree to the end user license agreement' > /usr/share/non-free/nvidia-drivers.tar.gz.blowfish"
+
 # misc
 /usr/bin/mpg123
 /usr/lib64/mpg123/output_alsa.so
+$package media-video/motion
 

@@ -53,6 +53,7 @@ net-analyzer/net-snmp python
 
 # misc
 media-sound/mpg123 alsa
+media-video/motion v4l 
 net-fs/s3fs openssl
 
 # assume EC algorythms are safe
