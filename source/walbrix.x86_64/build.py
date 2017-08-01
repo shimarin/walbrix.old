@@ -48,8 +48,7 @@ users = [
     (105, "zabbix", "zabbix", "zabbix","/var/lib/zabbix/home","/sbin/nologin"),
     (106, "snort", "snort", "snort","/dev/null","/sbin/nologin"),
     (107, "dhcp", "dhcp", "dhcp","/var/lib/dhcp","/sbin/nologin"),
-    (108, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin"),
-    (109, "motion", "motion", "motion", "/var/lib/motion", "/sbin/nologin")
+    (108, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin")
 ]
 
 for group in groups:
