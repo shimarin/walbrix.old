@@ -82,6 +82,7 @@ media-fonts/vlgothic
 media-gfx/qrencode
 media-gfx/wkhtmltopdf
 media-video/ffmpeg
+media-video/motion
 net-analyzer/traceroute
 net-analyzer/zabbix
 net-dialup/pptpclient

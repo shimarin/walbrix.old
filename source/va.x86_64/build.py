@@ -54,7 +54,8 @@ users = [
     (111, "haproxy", "haproxy", "haproxy", "/dev/null", "/sbin/nologin"),
     (112, "groonga", "groonga", "groonga", "/dev/null", "/sbin/nologin"),
     (113, "clamav", "clamav", "clamav", "/dev/null", "/sbin/nologin"),
-    (114, "jenkins", "jenkins", "jenkins", "/var/lib/jenkins", "/sbin/nologin")
+    (114, "jenkins", "jenkins", "jenkins", "/var/lib/jenkins", "/sbin/nologin"),
+    (115, "motion", "video", "motion", "/var/lib/motion", "/sbin/nologin")
 ]
 
 for group in groups:

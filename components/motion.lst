@@ -1,0 +1,19 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1motion\2/'
+
+$require mysql.lst
+
+# create database
+$mkdir /tmp/mysql
+$copy mysql/operate.sh /tmp/mysql/operate.sh
+$exec "/tmp/mysql/operate.sh createdb motion"
+
+$require s3cmd.lst
+$package media-video/motion
+$copy motion/motion.conf /etc/motion/motion.conf
+$symlink /etc/runlevels/default/motion /etc/init.d/motion
+
+# redirect port 80 -> 8081 (stream)
+$require iptables.lst
+$write /var/lib/iptables/rules-save "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8081\nCOMMIT"

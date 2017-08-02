@@ -105,5 +105,5 @@ x11-libs/pango -introspection
 gnome-base/librsvg -introspection
 x11-libs/gtk+ -introspection
 x11-wm/fluxbox -imlib -systray -toolbar
-
+media-video/motion ffmpeg mysql
 
