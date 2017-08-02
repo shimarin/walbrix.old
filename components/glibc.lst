@@ -7,6 +7,7 @@
 /lib/libnss_compat.so.2 
 /lib/libnss_files.so.2
 /lib/libnss_dns.so.2
+/lib/libnss_db.so.2
 
 /etc/ld.so.conf
 /etc/ld.so.conf.d
