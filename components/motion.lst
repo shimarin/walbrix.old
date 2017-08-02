@@ -2,6 +2,8 @@ $require domU.lst
 $require domU-overlayfs-kernel.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1motion\2/'
 
+$require cron.lst
+$require nginx.lst
 $require mysql.lst
 
 # create database
