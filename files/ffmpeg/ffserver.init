@@ -1,0 +1,21 @@
+#!/sbin/openrc-run
+# Copyright 1999-2017 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+PIDFILE=/run/ffserver.pid
+
+depend() {
+	need net
+}
+
+start() {
+	ebegin "Starting ffserver"
+	start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --background --exec ffserver
+	eend ${?}
+}
+
+stop() {
+	ebegin "Stopping ffserver"
+	start-stop-daemon --stop --pidfile $PIDFILE
+	eend ${?}
+}
