@@ -37,6 +37,7 @@ media-gfx/splash-themes-gentoo
 media-sound/alsa-utils
 media-sound/mpg123
 media-video/ffmpeg
+media-video/mjpg-streamer
 net-analyzer/barnyard2
 net-analyzer/net-snmp
 net-analyzer/netcat

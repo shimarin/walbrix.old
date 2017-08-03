@@ -31,4 +31,4 @@ $exec --overlay "tar zcvf - -C / `equery files -f obj,sym,conf,cmd nvidia-driver
 /usr/bin/ffmpeg
 /usr/bin/ffserver
 $copy ffmpeg/ffserver.init /etc/init.d/ffserver
-
+$package media-video/mjpg-streamer

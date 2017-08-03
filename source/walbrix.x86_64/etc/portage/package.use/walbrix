@@ -54,6 +54,7 @@ net-analyzer/net-snmp python
 # misc
 media-sound/mpg123 alsa
 media-video/ffmpeg alsa cpudetection v4l cpu_flags_x86_3dnow cpu_flags_x86_3dnowext cpu_flags_x86_aes cpu_flags_x86_sse4_1 cpu_flags_x86_sse4_2 cpu_flags_x86_avx cpu_flags_x86_avx2 cpu_flags_x86_fma3 cpu_flags_x86_fma4 cpu_flags_x86_sse3 cpu_flags_x86_ssse3 cpu_flags_x86_xop
+media-video/mjpg-streamer input_uvc output_http input_control output_autofocus output_file output_rtsp output_udp
 net-fs/s3fs openssl
 
 # assume EC algorythms are safe
