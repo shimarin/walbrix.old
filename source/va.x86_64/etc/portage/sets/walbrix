@@ -96,6 +96,7 @@ net-misc/netkit-telnetd
 net-misc/ntp
 net-vpn/openvpn
 net-misc/s3cmd
+net-misc/usbip
 net-misc/whois
 net-proxy/haproxy
 sys-apps/dstat

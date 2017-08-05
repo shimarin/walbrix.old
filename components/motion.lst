@@ -1,10 +1,19 @@
 $require domU.lst
 $require domU-overlayfs-kernel.lst
+$require kernel-modules.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1motion\2/'
 
 $require cron.lst
 $require nginx.lst
-$require mysql.lst
+$require mysql-python.lst
+$require git.lst
+
+$package sys-apps/usbutils
+/usr/sbin/usbip
+$copy usbip/usbip.init /etc/init.d/usbip
+$copy usbip/usbip.conf /etc/conf.d/usbip
+
+$exec --overlay "cd /tmp && git clone --depth 1 https://github.com/kasbert/epsolar-tracer.git && cd epsolar-tracer/xr_usb_serial_common-1a && make && mv /tmp/epsolar-tracer/xr_usb_serial_common-1a/xr_usb_serial_common.ko /lib/modules/$(KERNEL_VERSION)/ && depmod"
 
 # create database
 $mkdir /tmp/mysql
@@ -16,6 +25,4 @@ $package media-video/motion
 $copy motion/motion.conf /etc/motion/motion.conf
 $symlink /etc/runlevels/default/motion /etc/init.d/motion
 
-# redirect port 80 -> 8081 (stream)
 $require iptables.lst
-$write /var/lib/iptables/rules-save "*nat\n-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8081\nCOMMIT"
