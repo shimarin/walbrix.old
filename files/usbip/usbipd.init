@@ -1,0 +1,26 @@
+#!/sbin/openrc-run
+# Copyright 1999-2017 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+PIDFILE=/run/usbipd.pid
+
+depend() {
+	need net
+}
+
+start() {
+	ebegin "Starting usbipd"
+	modprobe -q usbip_host
+	start-stop-daemon --start --pidfile $PIDFILE --exec /usr/sbin/usbipd -- -D --pid $PIDFILE
+	for i in $AUTOBIND; do
+		usbip bind --busid=$i
+	done
+	eend ${?}
+}
+
+stop() {
+	ebegin "Stopping usbipd"
+	start-stop-daemon --stop --pidfile $PIDFILE
+	eend ${?}
+}
+

@@ -22,13 +22,15 @@ $write /tmp/README 'http://insights.ubuntu.com/2016/02/18/zfs-licensing-and-linu
 $exec 'mv /tmp/README /lib/modules/*/extra/zfs/'
 
 # non-free
-$mkdir /usr/share/non-free
-$exec --overlay "tar zcvf - -C / `equery files -f obj,sym,conf,cmd nvidia-drivers | sed 's/ -> .*$//' | egrep -v '^\/usr\/share'`|openssl enc -blowfish -k 'I agree to the end user license agreement' > /usr/share/non-free/nvidia-drivers.tar.gz.blowfish"
+$exec --overlay "tar zcvf - -C /lib/modules/$(KERNEL_VERSION)/video . | openssl enc -blowfish -k 'I agree to the end user license agreement' > /lib/modules/$(KERNEL_VERSION)/video/nvidia.tar.gz.blowfish"
 
 # misc
 /usr/bin/mpg123
 /usr/lib64/mpg123/output_alsa.so
-/usr/bin/ffmpeg
-/usr/bin/ffserver
-$copy ffmpeg/ffserver.init /etc/init.d/ffserver
-$package media-video/mjpg-streamer
+/usr/sbin/usbip
+/usr/sbin/usbipd
+$copy usbip/usbipd.init /etc/init.d/usbipd
+$copy usbip/usbipd.conf /etc/conf.d/usbipd
+$copy usbip/usbip.init /etc/init.d/usbip
+$copy usbip/usbip.conf /etc/conf.d/usbip
+

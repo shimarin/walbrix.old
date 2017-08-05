@@ -1,0 +1,27 @@
+#!/sbin/openrc-run
+# Copyright 1999-2017 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+depend() {
+	need net
+}
+
+start() {
+	ebegin "Starting usbip"
+	modprobe -q vhci_hcd
+	for i in $AUTOATTACH; do
+		HOST=`echo $i | cut -d ':' -f1`
+		BUS=`echo $i | cut -d ':' -f2`
+		/usr/sbin/usbip attach -r $HOST -b $BUS
+	done
+	eend ${?}
+}
+
+stop() {
+	ebegin "Stopping usbip"
+	for i in `/usr/sbin/usbip port|egrep '^Port [0-9]+:'|sed 's/^Port \([0-9]\+\):.*/\1/'`; do
+		/usr/sbin/usbip detach -p $i
+	done
+	eend ${?}
+}
+

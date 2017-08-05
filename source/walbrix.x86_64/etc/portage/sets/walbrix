@@ -36,8 +36,6 @@ media-gfx/qrencode
 media-gfx/splash-themes-gentoo
 media-sound/alsa-utils
 media-sound/mpg123
-media-video/ffmpeg
-media-video/mjpg-streamer
 net-analyzer/barnyard2
 net-analyzer/net-snmp
 net-analyzer/netcat
@@ -56,10 +54,10 @@ net-misc/dhcp
 net-misc/ifenslave
 net-misc/netkit-telnetd
 net-misc/ntp
-# move net-misc/openvpn net-vpn/openvpn
 net-vpn/openvpn
 net-misc/s3cmd
 net-misc/taylor-uucp
+net-misc/usbip
 net-misc/vconfig
 net-misc/wakeonlan
 net-misc/whois
