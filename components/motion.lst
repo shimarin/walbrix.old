@@ -24,5 +24,6 @@ $require s3cmd.lst
 $package media-video/motion
 $copy motion/motion.conf /etc/motion/motion.conf
 $symlink /etc/runlevels/default/motion /etc/init.d/motion
+/usr/bin/ffmpeg
 
 $require iptables.lst
