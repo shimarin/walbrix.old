@@ -101,6 +101,7 @@ net-misc/whois
 net-proxy/haproxy
 sys-apps/dstat
 sys-apps/ed
+sys-apps/usbutils
 sys-auth/nss-mdns
 sys-auth/nss-myhostname
 sys-block/zram-init
