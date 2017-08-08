@@ -23,6 +23,8 @@ $exec 'mv /tmp/README /lib/modules/*/extra/zfs/'
 
 # non-free
 $exec --overlay "tar zcvf - -C /lib/modules/$(KERNEL_VERSION)/video . | openssl enc -blowfish -k 'I agree to the end user license agreement' > /lib/modules/$(KERNEL_VERSION)/video/nvidia.tar.gz.blowfish"
+# To decrypt:
+# openssl blowfish -d < nvidia.tar.gz.blowfish | tar zxvf -
 
 # misc
 /usr/bin/mpg123
