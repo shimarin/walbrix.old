@@ -38,6 +38,7 @@ dev-java/sun-jaf
 dev-java/sun-javamail
 dev-lang/php
 dev-lang/rust
+dev-libs/amdgpu-pro-opencl
 dev-lua/luajson
 dev-lua/luasec
 dev-php/PEAR-PEAR

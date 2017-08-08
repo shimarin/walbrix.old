@@ -100,5 +100,6 @@ exec_cmd(["emerge","@preserved-rebuild"])
 build_kernel_if_needed("", ["bzImage"])
 #build_kernel_if_needed("aufs", ["bzImage"])
 
-exec_cmd("tar zcvf /root/nvidia-cuda-toolkit.tar.gz -C / `equery files -f obj,sym,conf,cmd nvidia-cuda-toolkit | sed 's/ -> .*$//' | egrep -v '^\/usr\/share'`")
+exec_cmd("tar zcvf /root/nvidia-drivers.tar.gz -C / `equery files -f obj,sym,conf,cmd nvidia-drivers | sed 's/ -> .*$//' | egrep -v '^\/usr\/share' | egrep -v '^\/lib\/modules'`")
+exec_cmd("tar zcvf /root/amdgpu-pro-opencl.tar.gz -C / `equery files -f obj,sym,conf,cmd amdgpu-pro-opencl | sed 's/ -> .*$//'`")
 

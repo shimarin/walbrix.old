@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.12.4
+=sys-kernel/gentoo-sources-4.12.5
 =sys-kernel/vanilla-sources-3.16.46
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
@@ -54,9 +54,10 @@
 =dev-python/zope-component-4.3.0
 =app-crypt/certbot-nginx-0.14.1
 
-#cuda
+#GPU
 =dev-util/nvidia-cuda-toolkit-8.0.61
 =sys-firmware/nvidia-firmware-340.32
+=dev-libs/amdgpu-pro-opencl-17.30.458935-r1
 
 #import usb
 =net-misc/usbip-3.19

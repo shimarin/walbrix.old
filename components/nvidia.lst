@@ -14,3 +14,4 @@ $package sys-apps/pciutils
 $package dev-util/nvidia-cuda-toolkit
 $package x11-drivers/nvidia-drivers
 
+$exec --overlay "tar zcvf /root/nvidia-drivers.tar.gz -C / `equery files -f obj,sym,conf,cmd nvidia-drivers | sed 's/ -> .*$//' | egrep -v '^\/usr\/share'`"
