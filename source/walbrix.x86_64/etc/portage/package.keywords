@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.12.5
+=sys-kernel/gentoo-sources-4.12.7
 =app-i18n/fbterm-1.7-r1
 =sys-kernel/vanilla-sources-3.16.46
 =app-crypt/chntpw-140201
@@ -23,9 +23,9 @@
 =sys-apps/yum-3.4.3_p20130218-r1
 
 # zfs
-=sys-fs/zfs-0.7.0
-=sys-fs/zfs-kmod-0.7.0
-=sys-kernel/spl-0.7.0
+=sys-fs/zfs-0.7.1
+=sys-fs/zfs-kmod-0.7.1
+=sys-kernel/spl-0.7.1
 
 # hardware
 =sys-kernel/linux-firmware-20170622
