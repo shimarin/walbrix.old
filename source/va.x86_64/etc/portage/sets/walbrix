@@ -56,10 +56,12 @@ dev-python/httplib2
 dev-python/jsmin
 dev-python/lxml
 dev-python/markdown
+dev-python/matplotlib
 dev-python/mysql-python
 dev-python/pygobject
 dev-python/pyinotify
 dev-python/python-ldap
+dev-python/pyusb
 dev-python/pyxattr
 dev-python/pyyaml
 dev-python/requests

@@ -1,0 +1,4 @@
+$package dev-python/numpy
+$package media-fonts/stix-fonts
+$package dev-python/matplotlib
+
