@@ -131,6 +131,7 @@ $require smbclient.lst
 $require cu.lst
 $package www-servers/nginx
 $package net-analyzer/net-snmp
+/usr/bin/iperf3
 
 # complementary PPP configs
 $mkdir /etc/chatscripts

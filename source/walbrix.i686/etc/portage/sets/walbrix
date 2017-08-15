@@ -48,6 +48,7 @@ net-fs/samba
 net-ftp/ftp
 net-misc/dhcp
 net-misc/ifenslave
+net-misc/iperf
 net-misc/netkit-telnetd
 net-misc/ntp
 # move net-misc/openvpn net-vpn/openvpn
