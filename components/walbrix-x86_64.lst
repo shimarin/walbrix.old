@@ -19,7 +19,7 @@ $require yum.lst
 /sbin/splat
 $package sys-fs/zfs
 $write /tmp/README 'http://insights.ubuntu.com/2016/02/18/zfs-licensing-and-linux/'
-$exec 'mv /tmp/README /lib/modules/*/extra/zfs/'
+$exec 'if [ -d /lib/modules/*/extra/zfs ]; then mv /tmp/README /lib/modules/*/extra/zfs/; fi'
 
 # non-free
 $exec --overlay "tar zcvf - -C /lib/modules/$(KERNEL_VERSION)/video . | openssl enc -blowfish -k 'I agree to the end user license agreement' > /lib/modules/$(KERNEL_VERSION)/video/nvidia.tar.gz.blowfish"
