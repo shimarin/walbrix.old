@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.13.0
+=sys-kernel/gentoo-sources-4.13.1
 =sys-kernel/vanilla-sources-3.16.47
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
@@ -49,10 +49,10 @@
 #certbot
 =dev-python/parsedatetime-2.1
 =dev-python/pyrfc3339-1.0
-=app-crypt/certbot-0.14.1
-=app-crypt/acme-0.15.0
+=app-crypt/certbot-0.18.1
+=app-crypt/acme-0.18.1
 =dev-python/zope-component-4.3.0
-=app-crypt/certbot-nginx-0.14.1
+=app-crypt/certbot-nginx-0.18.1
 
 #GPU
 =dev-util/nvidia-cuda-toolkit-8.0.61
