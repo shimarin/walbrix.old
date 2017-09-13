@@ -28,7 +28,7 @@
 =sys-kernel/spl-0.7.1
 
 # hardware
-=sys-kernel/linux-firmware-20170622
+=sys-kernel/linux-firmware-20170906
 =sys-firmware/b43-firmware-6.30.163.46
 =sys-apps/hwids-20170715
 =sys-block/megacli-8.07.14-r1
