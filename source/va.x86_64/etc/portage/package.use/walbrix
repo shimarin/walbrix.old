@@ -106,4 +106,5 @@ gnome-base/librsvg -introspection
 x11-libs/gtk+ -introspection
 x11-wm/fluxbox -imlib -systray -toolbar
 media-video/motion ffmpeg mysql v4l
+app-misc/mosquitto websockets
 

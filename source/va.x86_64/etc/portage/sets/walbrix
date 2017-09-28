@@ -13,6 +13,7 @@ app-editors/nvi
 app-editors/vim
 app-emulation/docker
 app-i18n/nkf
+app-misc/mosquitto
 app-misc/screen
 app-misc/tmux
 app-portage/gentoolkit
@@ -74,7 +75,6 @@ dev-ruby/bundler
 dev-ruby/mysql2
 dev-ruby/rmagick
 dev-util/jenkins-bin
-dev-util/nvidia-cuda-toolkit
 dev-util/strace
 dev-vcs/git-lfs
 dev-vcs/mercurial

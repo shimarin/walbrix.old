@@ -40,7 +40,8 @@ groups = [
     #(127, "plugdev"),
     #(128, "ssmtp"),
     (129, "docker"),
-    (130, "jenkins")
+    (130, "jenkins"),
+    (131, "mosquitto")
 ]
 
 users = [
@@ -55,7 +56,8 @@ users = [
     (112, "groonga", "groonga", "groonga", "/dev/null", "/sbin/nologin"),
     (113, "clamav", "clamav", "clamav", "/dev/null", "/sbin/nologin"),
     (114, "jenkins", "jenkins", "jenkins", "/var/lib/jenkins", "/sbin/nologin"),
-    (115, "motion", "video", "motion", "/var/lib/motion", "/sbin/nologin")
+    (115, "motion", "video", "motion", "/var/lib/motion", "/sbin/nologin"),
+    (116, "mosquitto", "mosquitto", "mosquitto", "/dev/null", "/sbin/nologin")
 ]
 
 for group in groups:
@@ -85,10 +87,15 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
                 else:
                     print "Patch has already been applied."
             exec_cmd(["genkernel","--no-mountboot","--kerneldir=%s" % kerneldir] + genkernel_opts)
-            return
+            return True
+    return False
 
 exec_cmd(["emerge","-uDN","system","gentoo-sources","genkernel"])
-build_kernel_if_needed("gentoo", ["--symlink","all"])
+if build_kernel_if_needed("gentoo", ["--symlink","all"]):
+    try:
+        exec_cmd(["emerge","-1","--keep-going","nvidia-drivers"])
+    except subprocess.CalledProcessError:
+        print "Looks like NVIDIA modules are not compatible with this kernel."
 
 ## emerge world
 
