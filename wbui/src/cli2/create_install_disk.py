@@ -6,7 +6,7 @@ DEFAULT_SYSTEM_IMAGE="/.overlay/boot/walbrix"
 MINIMUM_DISK_SIZE_IN_GB=1
 MAX_BIOS_FRIENDLY_DISK_SIZE=2199023255552
 
-GRUB_MODULES=["xfs","fat","ntfs","ntfscomp","ext2","part_gpt","part_msdos","normal","linux","echo","all_video","test","probe","multiboot","multiboot2","search","iso9660","gzio","lvm","chain","configfile","cpuid","minicmd","gfxterm","font","terminal","squash4","loopback","videoinfo","videotest","png","gfxterm_background"]
+GRUB_MODULES=["xfs","fat","ntfs","ntfscomp","ext2","part_gpt","part_msdos","normal","linux","echo","all_video","serial","test","probe","multiboot","multiboot2","search","iso9660","gzio","lvm","chain","configfile","cpuid","minicmd","gfxterm","font","terminal","squash4","loopback","videoinfo","videotest","png","gfxterm_background"]
 
 def ioctl_read_uint32(fd, req):
     buf = array.array('c', [chr(0)] * 4)
