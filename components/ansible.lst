@@ -1,3 +1,4 @@
+$require paramiko.lst
 $package net-misc/sshpass
 $package dev-python/pycrypto
 $package dev-python/pyyaml
