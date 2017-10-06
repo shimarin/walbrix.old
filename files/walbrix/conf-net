@@ -10,7 +10,7 @@ fallback_eth0="apipa"
 #link_ppp0="/dev/serial/by-id/usb-HUAWEI_Technology_HUAWEI_Mobile-if00-port0"
 #pppd_ppp0="call DTI"
 
-## example for prividing multiple ethernet devices for VMs
+## example for providing multiple ethernet devices for VMs
 #xenvif_eth0=0
 #xenvif_eth1=1
 #xenvif_eth2=2
