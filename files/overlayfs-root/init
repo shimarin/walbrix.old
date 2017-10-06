@@ -119,7 +119,7 @@ mount --move /sys /newroot/sys
 mount --move /proc /newroot/proc
 
 # for MySQL on overlayfs (see https://github.com/docker/for-linux/issues/72)
-find /newroot/var/lib/mysql -type f -exec touch {} \;
+find /newroot/var/lib/mysql -type f -exec touch -ac {} \;
 
 exec /sbin/switch_root /newroot /sbin/init "${INIT_OPTS}"
 
