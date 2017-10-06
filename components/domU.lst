@@ -101,6 +101,9 @@ $symlink /etc/runlevels/default/samba.nmbd /etc/init.d/samba.nmbd
 # timezone
 $require timezone-$(REGION).lst
 
+# update env vars
+$exec --overlay "env-update"
+
 # locale
 $require locale-$(REGION).lst
 
