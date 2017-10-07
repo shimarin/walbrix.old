@@ -97,6 +97,7 @@ net-misc/curl
 net-misc/dropbox-cli
 net-misc/netkit-telnetd
 net-misc/ntp
+net-misc/wol
 net-vpn/openvpn
 net-misc/s3cmd
 net-misc/usbip
@@ -116,6 +117,7 @@ sys-fs/xfsprogs
 sys-kernel/vanilla-sources
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
+sys-process/at
 sys-process/lsof
 sys-process/vixie-cron
 www-apache/mod_authnz_external
