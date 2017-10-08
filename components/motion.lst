@@ -29,5 +29,7 @@ $package dev-python/pyusb
 $require matplotlib.lst
 $require vlgothic.lst
 $require uwsgi.lst
+$package net-misc/wol
+$package sys-process/at
 
 $require iptables.lst
