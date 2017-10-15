@@ -57,7 +57,7 @@
 #GPU
 =dev-util/nvidia-cuda-toolkit-8.0.61
 =sys-firmware/nvidia-firmware-340.32
-=dev-libs/amdgpu-pro-opencl-17.30.458935-r1
+=dev-libs/amdgpu-pro-opencl-17.30.465504
 
 #usb stuffs
 =net-misc/usbip-3.19
