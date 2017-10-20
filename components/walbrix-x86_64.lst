@@ -1,5 +1,5 @@
-/boot/kernel-genkernel-x86_64-3.16.48
-$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.16.48
+/boot/kernel-genkernel-x86_64-3.16.49
+$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.16.49
 
 # 32-bit compat
 $require lib32.lst
@@ -22,7 +22,7 @@ $write /tmp/README 'http://insights.ubuntu.com/2016/02/18/zfs-licensing-and-linu
 $exec 'if [ -d /lib/modules/*/extra/zfs ]; then mv /tmp/README /lib/modules/*/extra/zfs/; fi'
 
 # non-free
-$exec --overlay "tar zcvf - -C /lib/modules/$(KERNEL_VERSION)/video . | openssl enc -blowfish -k 'I agree to the end user license agreement' > /lib/modules/$(KERNEL_VERSION)/video/nvidia.tar.gz.blowfish"
+$exec --overlay "tar zcvf - -C /lib/modules/$(KERNEL_VERSION)/video/*.ko . | openssl enc -blowfish -k 'I agree to the end user license agreement' > /lib/modules/$(KERNEL_VERSION)/video/nvidia.tar.gz.blowfish"
 # To decrypt:
 # openssl blowfish -d < nvidia.tar.gz.blowfish | tar zxvf -
 
