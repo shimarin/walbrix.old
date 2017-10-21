@@ -1,0 +1,9 @@
+--- xr_usb_serial_hal.c.orig	2017-10-21 23:00:39.242380763 +0900
++++ xr_usb_serial_hal.c	2017-10-21 23:00:59.712225134 +0900
+@@ -488,6 +488,7 @@
+     }
+ 		
+     xr_usb_serial_set_reg(xr_usb_serial, xr_usb_serial->reg_map.uart_flow_addr, flow);
++    gpio_mode = 0x0b; // FIXME hardcoded to RS-485
+     xr_usb_serial_set_reg(xr_usb_serial, xr_usb_serial->reg_map.uart_gpio_mode_addr, gpio_mode);
+ 	return 0;
