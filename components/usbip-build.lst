@@ -1,0 +1,3 @@
+/lib/libwrap.so.0
+$exec --overlay 'cd /usr/src/linux-$(KERNEL_VERSION)/tools/usb/usbip && ./autogen.sh && ./configure --prefix=/usr --with-usbids-dir=/usr/share/misc && make && make install && make clean'
+
