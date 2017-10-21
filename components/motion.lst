@@ -13,7 +13,8 @@ $package sys-apps/usbutils
 $copy usbip/usbip.init /etc/init.d/usbip
 $copy usbip/usbip.conf /etc/conf.d/usbip
 
-$exec --overlay "cd /tmp && git clone --depth 1 https://github.com/kasbert/epsolar-tracer.git && cd epsolar-tracer/xr_usb_serial_common-1a && KERNELDIR=/lib/modules/$(KERNEL_VERSION)/build make && mv /tmp/epsolar-tracer/xr_usb_serial_common-1a/xr_usb_serial_common.ko /lib/modules/$(KERNEL_VERSION)/ && depmod $(KERNEL_VERSION)"
+#$exec --overlay "cd /tmp && git clone --depth 1 https://github.com/kasbert/epsolar-tracer.git && cd epsolar-tracer/xr_usb_serial_common-1a && KERNELDIR=/lib/modules/$(KERNEL_VERSION)/build make && mv /tmp/epsolar-tracer/xr_usb_serial_common-1a/xr_usb_serial_common.ko /lib/modules/$(KERNEL_VERSION)/ && depmod $(KERNEL_VERSION)"
+$require exar-usb-uart.lst
 
 # create database
 $mkdir /tmp/mysql

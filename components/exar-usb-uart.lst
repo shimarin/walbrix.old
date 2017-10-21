@@ -1,0 +1,4 @@
+$set EXAR_USB_SERIAL xr_usb_serial_common_lnx-3.6-and-newer-pak
+$download --filename=$(EXAR_USB_SERIAL).zip 'https://www.exar.com/content/document.ashx?id=21651'
+$exec --overlay 'export KERNELDIR=/lib/modules/$(KERNEL_VERSION)/build && cd /usr/src && unzip /tmp/download/$(EXAR_USB_SERIAL).zip && cd $(EXAR_USB_SERIAL) && make && make modules_install && make clean && depmod $(KERNEL_VERSION)'
+
