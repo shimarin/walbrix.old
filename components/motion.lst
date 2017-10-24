@@ -9,8 +9,8 @@ $require mysql-python.lst
 $require git.lst
 
 $package sys-apps/usbutils
-#/usr/sbin/usbip
-$require usbip-build.lst
+/usr/sbin/usbip
+#$require usbip-build.lst
 $copy usbip/usbip.init /etc/init.d/usbip
 $copy usbip/usbip.conf /etc/conf.d/usbip
 

@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.13.8
+=sys-kernel/gentoo-sources-4.13.9
 =sys-kernel/vanilla-sources-3.16.49
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
@@ -60,6 +60,6 @@
 =dev-libs/amdgpu-pro-opencl-17.30.465504
 
 #usb stuffs
-=net-misc/usbip-3.19
+=net-misc/usbip-4.13
 =dev-python/pyusb-1.0.0
 
