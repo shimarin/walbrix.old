@@ -27,6 +27,7 @@ $package media-video/motion
 $copy motion/motion.conf /etc/motion/motion.conf
 $symlink /etc/runlevels/default/motion /etc/init.d/motion
 /usr/bin/ffmpeg
+$package media-tv/v4l-utils
 $package dev-python/pyusb
 $require matplotlib.lst
 $require vlgothic.lst
