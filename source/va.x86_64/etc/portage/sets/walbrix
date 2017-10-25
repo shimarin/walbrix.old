@@ -32,7 +32,6 @@ dev-java/jdbc-mysql
 dev-java/jdbc-postgresql
 dev-java/json-simple
 dev-java/oracle-javamail
-dev-java/oracle-jre-bin
 dev-java/sbt-bin
 dev-java/slf4j-api
 dev-java/sun-jaf
