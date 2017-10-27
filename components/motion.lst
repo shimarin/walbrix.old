@@ -24,6 +24,7 @@ $exec "/tmp/mysql/operate.sh createdb motion"
 
 $require s3cmd.lst
 $package media-video/motion
+$package media-libs/opencv
 $copy motion/motion.conf /etc/motion/motion.conf
 $symlink /etc/runlevels/default/motion /etc/init.d/motion
 /usr/bin/ffmpeg

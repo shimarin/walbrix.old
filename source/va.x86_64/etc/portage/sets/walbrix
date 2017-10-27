@@ -83,6 +83,7 @@ mail-mta/postfix
 media-fonts/vlgothic
 media-gfx/qrencode
 media-gfx/wkhtmltopdf
+media-libs/opencv
 media-tv/v4l-utils
 media-video/ffmpeg
 media-video/motion
