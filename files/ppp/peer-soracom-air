@@ -1,8 +1,9 @@
 noauth
-connect "/usr/sbin/chat -v -f /etc/chatscripts/3g -T oracom.io -U *99***1#"
+connect "/usr/sbin/chat -v -f /etc/chatscripts/3g -T soracom.io -U *99***1#"
 230400
 crtscts
 noipdefault 
 user "sora"
 persist
 maxfail 0
+novjccomp
