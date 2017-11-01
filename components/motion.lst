@@ -36,4 +36,5 @@ $require uwsgi.lst
 $package net-misc/wol
 $package sys-process/at
 
+$require flask.lst
 $require iptables.lst
