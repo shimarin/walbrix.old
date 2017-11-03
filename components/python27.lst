@@ -1,4 +1,4 @@
-$package dev-lang/python-2.7.12
+$package dev-lang/python-2.7.14
 $symlink /usr/bin/python python2.7
 $package dev-lang/python-exec
 
