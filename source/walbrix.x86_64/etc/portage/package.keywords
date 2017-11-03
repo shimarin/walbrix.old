@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.13.10
+=sys-kernel/gentoo-sources-4.13.11
 =app-i18n/fbterm-1.7-r1
 =sys-kernel/vanilla-sources-3.16.49
 =app-crypt/chntpw-140201
@@ -35,7 +35,7 @@
 =sys-apps/hwids-20171003
 =sys-block/megacli-8.07.14-r1
 =sys-apps/usb_modeswitch-2.3.0
-=x11-drivers/nvidia-drivers-384.47
+=x11-drivers/nvidia-drivers-387.22
 =dev-python/pyusb-1.0.0
 =net-misc/usbip-4.13
 
