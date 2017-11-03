@@ -4,7 +4,7 @@ $require mock.lst
 $require acme.lst
 $require urllib3.lst
 $package dev-python/configargparse
-$package dev-python/parsedatetime
+$require parsedatetime.lst
 $package dev-python/pyparsing
 $package dev-python/appdirs
 $package dev-python/zope-event
