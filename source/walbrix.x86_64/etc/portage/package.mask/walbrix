@@ -1,2 +1,5 @@
 #>=sys-fs/udev-214 # due to weird behaviour at "udevadm settle"
 >=net-fs/samba-4
+>=app-emulation/xen-4.8
+>=app-emulation/xen-tools-4.8
+>=app-emulation/xen-pvgrub-4.8
