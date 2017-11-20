@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 3.16.49 Kernel Configuration
+# Linux/x86 3.16.50 Kernel Configuration
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -1992,7 +1992,6 @@ CONFIG_STAGING=y
 # CONFIG_DX_SEP is not set
 # CONFIG_CRYSTALHD is not set
 # CONFIG_FB_XGI is not set
-# CONFIG_BCM_WIMAX is not set
 # CONFIG_FT1000 is not set
 
 #
