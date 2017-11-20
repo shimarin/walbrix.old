@@ -1,6 +1,8 @@
 sys-boot/grub device-mapper grub_platforms_pc grub_platforms_xen grub_platforms_efi-64
 
 sys-kernel/gentoo-sources symlink
+sys-kernel/genkernel -firmware
+sys-apps/util-linux static-libs
 virtual/linux-sources firmware
 # move net-misc/openvpn net-vpn/openvpn
 net-vpn/openvpn threads

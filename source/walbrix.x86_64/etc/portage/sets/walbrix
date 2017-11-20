@@ -50,6 +50,7 @@ net-fs/cifs-utils
 net-fs/nfs-utils
 net-fs/samba
 net-ftp/ftp
+net-libs/libqmi
 net-misc/dhcp
 net-misc/ifenslave
 net-misc/iperf

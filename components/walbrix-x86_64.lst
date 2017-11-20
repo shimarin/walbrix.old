@@ -1,5 +1,5 @@
-/boot/kernel-genkernel-x86_64-3.16.49
-$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.16.49
+/boot/kernel-genkernel-x86_64-3.16.50
+$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.16.50
 
 # 32-bit compat
 $require lib32.lst
