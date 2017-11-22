@@ -7,6 +7,7 @@
 !*/etc/portage
 */etc/portage/*
 !*/etc/portage/sets
+!*/etc/portage/patches
 !*/etc/portage/package.*
 */etc/portage/package.*/*
 !*/etc/portage/package.*/walbrix
