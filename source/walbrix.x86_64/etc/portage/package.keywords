@@ -1,4 +1,5 @@
-=sys-kernel/gentoo-sources-4.14.0
+=sys-kernel/gentoo-sources-4.14.1
+=sys-kernel/linux-headers-4.13
 =app-i18n/fbterm-1.7-r1
 =sys-kernel/vanilla-sources-3.16.50
 =app-crypt/chntpw-140201
@@ -14,9 +15,9 @@
 =net-libs/daq-2.0.2
 
 #xen
-#=app-emulation/xen-4.7.3
-#=app-emulation/xen-tools-4.7.3
-#=app-emulation/xen-pvgrub-4.7.3
+=app-emulation/xen-4.9.0
+=app-emulation/xen-tools-4.9.0
+=app-emulation/xen-pvgrub-4.9.0
 
 # yum
 =dev-python/pyliblzma-0.5.3-r1
