@@ -19,7 +19,7 @@ $download $(AIPO_DOWNLOAD)$(AIPO_SOURCE)
 $exec "mv /tmp/download/$(AIPO_SOURCE) /root/"
 
 $set AIPO_HOME /usr/local/aipo
-$set TOMCAT_HOME /var/lib/tomcat-8
+$set TOMCAT_HOME /var/lib/tomcat-8.5
 $set POSTGRES_USER aipo_postgres                                              
 $set DIST_DIR /tmp/aipo-*/dist
 
@@ -40,7 +40,7 @@ $exec "dd if=/dev/urandom bs=16 count=1|base64 > $(TOMCAT_HOME)/webapps/ROOT/WEB
 $exec "cp $(TOMCAT_HOME)/webapps/ROOT/WEB-INF/conf/securityTokenKey.txt $(TOMCAT_HOME)/webapps/container/WEB-INF/classes/aipo/"
 $exec "chown -R tomcat.tomcat $(TOMCAT_HOME)"
 
-$sed /etc/conf.d/tomcat-8 's/^#JAVA_OPTS=.\+/JAVA_OPTS="-server -Xmx512M -Xms64M -Xss256k -Dsun.nio.cs.map=x-windows-iso2022jp\/ISO-2022-JP"/'
+$sed /etc/conf.d/tomcat-8.5 's/^#JAVA_OPTS=.\+/JAVA_OPTS="-server -Xmx512M -Xms64M -Xss256k -Dsun.nio.cs.map=x-windows-iso2022jp\/ISO-2022-JP"/'
 
 $mkdir /tmp/postgresql
 $copy postgresql/operate.sh /tmp/postgresql/operate.sh
