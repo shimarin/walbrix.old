@@ -31,7 +31,7 @@
 =app-misc/pax-utils-1.2.2-r2
 
 # hardware
-=sys-kernel/linux-firmware-20171009
+=sys-kernel/linux-firmware-20171123
 =sys-firmware/b43-firmware-6.30.163.46
 =sys-apps/hwids-20171003
 =sys-block/megacli-8.07.14-r1
