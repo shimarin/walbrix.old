@@ -1,2 +1,3 @@
 #>=sys-fs/udev-214 # due to weird behaviour at "udevadm settle"
 >=net-fs/samba-4
+>=sys-devel/gcc-6.4.0
