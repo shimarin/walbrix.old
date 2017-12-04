@@ -1,4 +1,6 @@
 $package dev-python/numpy
 $package media-fonts/stix-fonts
+$package dev-python/cycler
+$package dev-python/versioneer
 $package dev-python/matplotlib
 

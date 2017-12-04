@@ -1,5 +1,5 @@
-=sys-kernel/gentoo-sources-4.14.1
-=sys-kernel/vanilla-sources-3.16.50
+=sys-kernel/gentoo-sources-4.14.3
+=sys-kernel/vanilla-sources-3.16.51
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =dev-java/commons-dbcp-2.1
@@ -16,6 +16,12 @@
 =dev-util/jenkins-bin-2.57
 =dev-vcs/git-lfs-2.1.1
 
+#python
+=dev-python/setuptools-36.7.2
+=dev-python/cycler-0.10.0
+=dev-python/versioneer-0.16
+=dev-python/matplotlib-1.5.3-r2
+
 #docker
 =app-emulation/docker-1.13.1
 =app-emulation/docker-proxy-0.8.0_p20161111
@@ -30,7 +36,7 @@
 =dev-java/sbt-bin-0.13.15
 
 #oscar
-=dev-python/APScheduler-3.0.1
+=dev-python/APScheduler-3.3.1
 =dev-python/tzlocal-1.2
 =net-fs/samba-4.2.14  # https://bugzilla.samba.org/show_bug.cgi?id=11849
 
