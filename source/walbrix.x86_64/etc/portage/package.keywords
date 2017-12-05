@@ -19,9 +19,9 @@
 =net-libs/daq-2.0.2
 
 #xen
-=app-emulation/xen-4.9.0
-=app-emulation/xen-tools-4.9.0
-=app-emulation/xen-pvgrub-4.9.0
+=app-emulation/xen-4.9.1
+=app-emulation/xen-tools-4.9.1
+=app-emulation/xen-pvgrub-4.9.1
 
 # yum
 =dev-python/pyliblzma-0.5.3-r1
