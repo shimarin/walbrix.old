@@ -28,6 +28,7 @@ $require chromium.lst
 $require xvfb.lst
 $require fluxbox.lst
 $require postfix.lst
+$require mysql.lst
 $require git-lfs.lst
 $require pptpclient.lst
 
