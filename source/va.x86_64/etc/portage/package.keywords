@@ -61,10 +61,10 @@
 =app-crypt/certbot-nginx-0.20.0
 
 #GPU
-=x11-drivers/nvidia-drivers-387.22
+=x11-drivers/nvidia-drivers-387.34
 =dev-util/nvidia-cuda-toolkit-8.0.61
 =sys-firmware/nvidia-firmware-340.32
-=dev-libs/amdgpu-pro-opencl-17.40.492261
+=dev-libs/amdgpu-pro-opencl-17.50.511655
 
 #usb stuffs
 =net-misc/usbip-4.13
