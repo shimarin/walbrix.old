@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.14.8-gentoo-r1 Kernel Configuration
+# Linux/x86 4.14.9-gentoo Kernel Configuration
 #
 
 #
@@ -6182,8 +6182,8 @@ CONFIG_DEFAULT_IO_DELAY_TYPE=0
 # CONFIG_DEBUG_NMI_SELFTEST is not set
 CONFIG_X86_DEBUG_FPU=y
 # CONFIG_PUNIT_ATOM_DEBUG is not set
-CONFIG_FRAME_POINTER_UNWINDER=y
-# CONFIG_GUESS_UNWINDER is not set
+CONFIG_UNWINDER_FRAME_POINTER=y
+# CONFIG_UNWINDER_GUESS is not set
 
 #
 # Security options
