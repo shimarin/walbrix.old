@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.14.8-r1
+=sys-kernel/gentoo-sources-4.14.9
 =sys-kernel/vanilla-sources-3.16.51
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
@@ -20,7 +20,9 @@
 =dev-python/setuptools-36.7.2
 =dev-python/cycler-0.10.0
 =dev-python/versioneer-0.16
-=dev-python/matplotlib-1.5.3-r2
+=dev-python/matplotlib-2.1.0-r1
+=dev-python/subprocess32-3.2.7
+=media-libs/qhull-2015.2
 
 #docker
 =app-emulation/docker-1.13.1

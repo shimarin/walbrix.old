@@ -2,5 +2,10 @@ $package dev-python/numpy
 $package media-fonts/stix-fonts
 $package dev-python/cycler
 $package dev-python/versioneer
+$package dev-python/subprocess32
+$package dev-python/functools32
+$package dev-python/backports
+$package dev-python/backports-functools-lru-cache
+$package media-libs/qhull
 $package dev-python/matplotlib
 
