@@ -50,6 +50,7 @@ net-fs/cifs-utils
 net-fs/nfs-utils
 net-fs/samba
 net-ftp/ftp
+net-libs/libmicrohttpd
 net-libs/libqmi
 net-misc/dhcp
 net-misc/ifenslave
@@ -77,6 +78,7 @@ sys-apps/ethtool
 sys-apps/fbset
 sys-apps/gptfdisk
 sys-apps/hdparm
+sys-apps/hwloc
 sys-apps/kexec-tools
 sys-apps/lm_sensors
 sys-apps/lshw

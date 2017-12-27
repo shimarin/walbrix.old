@@ -37,4 +37,6 @@ $copy usbip/usbip.init /etc/init.d/usbip
 $copy usbip/usbip.conf /etc/conf.d/usbip
 $package dev-libs/ocl-icd
 $package x11-libs/libdrm
+/usr/lib64/libmicrohttpd.so.12
+/usr/lib64/libhwloc.so.5
 
