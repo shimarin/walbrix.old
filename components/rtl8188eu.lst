@@ -1,0 +1,2 @@
+$exec "rm -rf /lib/modules/$(KERNEL_VERSION)/kernel/drivers/staging/rtl8188eu"
+$exec --overlay "git clone --depth=1 https://github.com/lwfinger/rtl8188eu.git /usr/src/rtl8188eu && cd /usr/src/rtl8188eu && export KVER=$(KERNEL_VERSION) && make all && make install && make clean"
