@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.14.10-gentoo Kernel Configuration
+# Linux/x86 4.14.11-gentoo Kernel Configuration
 #
 
 #
@@ -6968,6 +6968,7 @@ CONFIG_KEYS_COMPAT=y
 # CONFIG_SECURITY_DMESG_RESTRICT is not set
 # CONFIG_SECURITY is not set
 CONFIG_SECURITYFS=y
+CONFIG_PAGE_TABLE_ISOLATION=y
 # CONFIG_INTEL_TXT is not set
 CONFIG_HAVE_HARDENED_USERCOPY_ALLOCATOR=y
 # CONFIG_HARDENED_USERCOPY is not set
