@@ -1,6 +1,5 @@
-$package net-fs/samba --use="client smbclient winbind" --no-copy
+$package net-fs/samba --use="client winbind" --no-copy
 /usr/bin/nmblookup
 /usr/bin/smbclient
 /usr/lib/libnss_wins.so
-/usr/lib/samba/charset/CP850.so
 $mkdir /var/cache/samba

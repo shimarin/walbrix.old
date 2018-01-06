@@ -13,7 +13,10 @@ app-admin/testdisk ntfs
 app-admin/sudo -sendmail pam
 net-analyzer/zabbix sqlite agent proxy curl snmp
 sys-apps/smartmontools minimal
-net-fs/samba -server -aio -netapi
+net-fs/samba -system-mitkrb5 winbind client
+sys-libs/tevent python
+sys-libs/tdb python
+sys-libs/ldb -ldap
 dev-db/mysql -perl
 sys-power/nut usb
 net-fs/nfs-utils -tcpd

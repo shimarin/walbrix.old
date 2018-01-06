@@ -13,7 +13,9 @@ app-admin/sudo -sendmail pam
 net-analyzer/zabbix sqlite agent proxy curl snmp
 dev-lang/python sqlite
 sys-apps/smartmontools minimal
-net-fs/samba -server -aio -netapi
+net-fs/samba -system-mitkrb5 winbind client
+sys-libs/tevent python
+sys-libs/tdb python
 dev-db/mysql -perl
 sys-power/nut usb
 sys-cluster/drbd heartbeat pacemaker xen
