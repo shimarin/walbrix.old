@@ -1,7 +1,7 @@
 =sys-kernel/gentoo-sources-4.14.12
 =sys-kernel/linux-headers-4.13
 =app-i18n/fbterm-1.7-r1
-=sys-kernel/vanilla-sources-3.16.51
+=sys-kernel/vanilla-sources-3.16.52
 =app-crypt/chntpw-140201
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
 =media-gfx/fbgrab-1.3
