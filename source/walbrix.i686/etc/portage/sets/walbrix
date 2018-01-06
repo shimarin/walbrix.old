@@ -110,7 +110,6 @@ sys-fs/xfsprogs
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
 sys-kernel/linux-firmware
-sys-kernel/vanilla-sources
 sys-power/acpid
 sys-power/cpupower
 sys-power/nut
