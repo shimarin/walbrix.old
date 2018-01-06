@@ -4,7 +4,7 @@ fallback_eth0="apipa"
 ## WiFI example (see /etc/wpa_supplicant/wpa_supplicant.conf as well)
 #module_wlan0="wpa_supplicant dhcpcd"
 #config_wlan0="dhcp"
-#wpa_supplicant_wlan0="-Dnl80211"
+#wpa_supplicant_wlan0="-Dnl80211,wext"
 
 ## example for 3G PPP connection to DTI using HUAWEI 3G modem
 #config_ppp0="ppp"
