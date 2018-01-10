@@ -1,6 +1,6 @@
 =sys-kernel/gentoo-sources-4.14.12
 =sys-kernel/linux-headers-4.13
-=app-i18n/fbterm-1.7-r1
+=app-i18n/fbterm-1.7-r3
 =sys-kernel/vanilla-sources-3.16.52
 =app-crypt/chntpw-140201
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
@@ -25,10 +25,10 @@
 
 # yum
 =dev-python/pyliblzma-0.5.3-r1
-=sys-apps/yum-3.4.3_p20130218-r1
+=sys-apps/yum-3.4.3_p20170619
 
 # zfs
-=sys-fs/zfs-0.7.5
+=sys-fs/zfs-0.7.5-r1
 =sys-fs/zfs-kmod-0.7.5
 =sys-kernel/spl-0.7.5
 =sys-kernel/genkernel-3.5.1.1 # zfs needs this version
@@ -36,12 +36,11 @@
 
 # hardware
 =sys-kernel/linux-firmware-20171206
-=sys-firmware/b43-firmware-6.30.163.46
 =sys-apps/hwids-20171003
 =sys-block/megacli-8.07.14-r1
 =sys-apps/usb_modeswitch-2.3.0
 =x11-drivers/nvidia-drivers-387.34
-=dev-python/pyusb-1.0.0
+=dev-python/pyusb-1.0.2
 =net-misc/usbip-4.13
 =net-libs/libqmi-1.18.0
 

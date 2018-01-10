@@ -35,7 +35,6 @@ dev-java/oracle-javamail
 dev-java/sbt-bin
 dev-java/slf4j-api
 dev-java/sun-jaf
-dev-java/sun-javamail
 dev-lang/php
 dev-lang/rust
 dev-libs/amdgpu-pro-opencl
@@ -64,6 +63,7 @@ dev-python/python-ldap
 dev-python/pyusb
 dev-python/pyxattr
 dev-python/pyyaml
+dev-python/restkit
 dev-python/requests
 dev-python/rsa
 dev-python/twisted-names

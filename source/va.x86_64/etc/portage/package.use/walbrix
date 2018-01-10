@@ -22,7 +22,7 @@ dev-java/icedtea-bin -X -alsa cjk -gtk cups headless-awt
 app-text/ghostscript-gpl cups
 app-text/groonga mecab
 dev-lang/python sqlite
-dev-qt/qtwebkit -gstreamer
+dev-qt/qtwebkit -gstreamer printsupport
 x11-base/xorg-server xvfb minimal -glamor
 x11-base/xorg-drivers -video_cards_glint -video_cards_intel -video_cards_mach64 -video_cards_mga -video_cards_nouveau -video_cards_nv -video_cards_amdgpu -video_cards_r128 -video_cards_radeon -video_cards_radeonsi -video_cards_savage -video_cards_tdfx -video_cards_trident -video_cards_v4l -video_cards_vesa -video_cards_via -video_cards_vmware
 x11-libs/libdrm -video_cards_intel video_cards_nouveau -video_cards_radeon -video_cards_vmware
@@ -30,6 +30,7 @@ x11-libs/libXfont truetype
 x11-libs/pixman cpu_flags_x86_ssse3
 x11-drivers/nvidia-drivers uvm X -tools -abi_x86_32
 dev-python/markdown pygments
+dev-python/ipython -smp
 dev-libs/openssl -bindist
 net-misc/openssh -bindist
 www-servers/nginx aio http2 nginx_modules_http_auth_pam nginx_modules_http_fancyindex nginx_modules_http_cache_purge nginx_modules_http_lua nginx_modules_http_spdy nginx_modules_http_realip nginx_modules_http_mp4 nginx_modules_http_flv nginx_modules_http_stub_status nginx_modules_mail_smtp nginx_modules_mail_pop3 nginx_modules_mail_imap
@@ -109,4 +110,11 @@ x11-libs/gtk+ -introspection
 x11-wm/fluxbox -imlib -systray -toolbar
 media-video/motion ffmpeg mysql v4l
 app-misc/mosquitto websockets
+
+dev-libs/libpcre pcre16
+dev-qt/qtwebkit printsupport
+x11-libs/libxkbcommon X
+x11-libs/libxcb xkb
+dev-qt/qtcore icu
+dev-qt/qtnetwork -bindist
 

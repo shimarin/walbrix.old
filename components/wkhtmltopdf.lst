@@ -1,4 +1,25 @@
 $require xvfb.lst
 $package dev-qt/qtgui
+
+#sys-libs/libunwind
+#dev-libs/double-conversion
+#dev-util/google-perftools
+#dev-libs/leveldb
+#x11-libs/xcb-util-renderutil
+#x11-libs/xcb-util-wm
+#x11-libs/xcb-util-keysyms
+#x11-libs/libxkbcommon
+#dev-qt/qtcore
+#dev-qt/qtnetwork
+#dev-qt/qtsql
+#dev-qt/qtxmlpatterns
+#x11-libs/xcb-util
+#x11-libs/xcb-util-image
+#x11-libs/xcb-util-cursor
+#dev-qt/qtwidgets
+#dev-qt/qtprintsupport
+#dev-qt/qtsvg
+#dev-qt/qtwebkit
+
 /usr/bin/wkhtmltoimage
 /usr/bin/wkhtmltopdf

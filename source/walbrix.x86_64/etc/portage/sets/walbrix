@@ -6,7 +6,6 @@ app-admin/sysstat
 app-admin/testdisk
 app-arch/zip
 app-backup/fsarchiver
-app-cdr/cdrkit
 app-crypt/chntpw
 app-editors/bvi
 app-editors/nano
@@ -96,7 +95,6 @@ sys-block/parted
 sys-block/zram-init
 sys-boot/grub
 sys-cluster/drbd
-sys-firmware/b43-firmware
 sys-firmware/bluez-firmware
 sys-fs/bcache-tools
 sys-fs/btrfs-progs

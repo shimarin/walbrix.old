@@ -6,14 +6,14 @@
 =dev-python/python-magic-0.4.6-r1
 =app-text/groonga-6.1.2
 =app-text/groonga-normalizer-mysql-1.1.1
-=media-gfx/wkhtmltopdf-0.12.2.1
+=media-gfx/wkhtmltopdf-0.12.4-r1
 =www-servers/nginx-1.9.15
 =www-servers/uwsgi-2.0.13.1-r1
 =sys-block/zram-init-3.8
 =net-fs/nfs-utils-1.3.4
 =net-libs/libtirpc-1.0.1
 =net-nds/rpcbind-0.2.4
-=dev-util/jenkins-bin-2.57
+=dev-util/jenkins-bin-2.97
 =dev-vcs/git-lfs-2.1.1
 
 #python
@@ -47,7 +47,7 @@
 =dev-php/pear-1.9.5
 
 #ruby
-=dev-ruby/mysql2-0.4.5
+=dev-ruby/mysql2-0.4.10
 
 #rust
 =sys-devel/llvm-3.9.1-r1
@@ -70,5 +70,5 @@
 
 #usb stuffs
 =net-misc/usbip-4.13
-=dev-python/pyusb-1.0.0
+=dev-python/pyusb-1.0.2
 
