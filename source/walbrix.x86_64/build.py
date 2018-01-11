@@ -76,11 +76,6 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
                     exec_cmd("wget -O - http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/patch/?id=8c058b0b9c34d8c8d7912880956543769323e2d8 | patch -d %s -p1 -R" % kerneldir)
                 else:
                     print "i8259 patch has already been reverted."
-                print "Reverting xen_netback patch cc8737a5"
-                if subprocess.call(["grep","-q","{ { .ctx = NULL,", "%s/drivers/net/xen-netback/interface.c" % kerneldir],shell=False) == 0:
-                    exec_cmd("wget -O - https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/patch/?id=cc8737a5fe9051b7fa052b08c57ddb9f539c389a | patch -d %s -p1 -R" % kerneldir)
-                else:
-                    print "xen_netback patch has already been reverted."
             exec_cmd(["genkernel","--no-mountboot","--kerneldir=%s" % kerneldir] + genkernel_opts)
             return True
     return False
