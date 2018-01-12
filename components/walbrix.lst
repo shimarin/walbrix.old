@@ -101,7 +101,7 @@ $require drbd.lst
 #$patch /etc/xen/scripts/block-drbd xen/block-drbd.patch
 $package sys-block/open-iscsi
 $package sys-fs/bcache-tools
-$package sys-apps/smartmontools --use="minimal"
+$package sys-apps/smartmontools
 /usr/bin/lsscsi
 
 # networks
