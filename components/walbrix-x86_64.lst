@@ -1,5 +1,5 @@
-/boot/kernel-genkernel-x86_64-3.16.52
-$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.16.52
+/boot/kernel-genkernel-x86_64-3.16.53
+$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.16.53
 
 # 32-bit compat
 $require lib32.lst
@@ -36,7 +36,8 @@ $copy usbip/usbipd.conf /etc/conf.d/usbipd
 $copy usbip/usbip.init /etc/init.d/usbip
 $copy usbip/usbip.conf /etc/conf.d/usbip
 $package dev-libs/ocl-icd
-$package x11-libs/libdrm
+$exec --overlay "eselect opencl set ocl-icd"
+#$package x11-libs/libdrm
 /usr/lib64/libmicrohttpd.so.12
 /usr/lib64/libhwloc.so.5
 

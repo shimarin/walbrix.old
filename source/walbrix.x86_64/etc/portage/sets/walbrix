@@ -18,6 +18,7 @@ app-portage/gentoolkit
 dev-db/mysql
 dev-libs/jansson
 dev-libs/libisoburn
+dev-libs/ocl-icd
 dev-python/chardet
 dev-python/flask
 dev-python/future
