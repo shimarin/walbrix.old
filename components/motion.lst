@@ -8,6 +8,8 @@ $require nginx.lst
 $require mysql-python.lst
 $require git.lst
 
+$require restkit.lst
+
 $package sys-apps/usbutils
 /usr/sbin/usbip
 #$require usbip-build.lst
