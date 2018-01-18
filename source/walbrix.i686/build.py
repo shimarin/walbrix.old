@@ -1,5 +1,5 @@
 #!/usr/bin/python2.7
-import subprocess,pwd,grp,glob,re,os,sys
+import subprocess,pwd,grp,glob,re,os,sys,multiprocessing
 
 def exec_cmd(cmdline):
     shell = isinstance(cmdline,str)
@@ -60,6 +60,8 @@ for user in users:
 ## emerge/build main kernel
 
 def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
+    cpu_count = multiprocessing.cpu_count()
+    concurrency_opts = [ "--makeopts=\"-j%d\"" % (cpu_count + 1) ] if cpu_count > 1 else []
     source = "-" + source if source not in ["", None] else ""
     for kernel_config in glob.glob("/etc/kernels/kernel-config-*"):
         kernel_match = re.match(r'^kernel-config-(.[^-]+)-(.[^-]+)' + source + '(-r[0-9]+)?$', os.path.basename(kernel_config))
@@ -70,7 +72,7 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
 
         if not os.path.isfile(("/boot/kernel-genkernel-%s-%s" + source + "%s") % (arch, version, revision)):
             print "Kernel %s%s%s needs to be built" % (version, source, revision)
-            exec_cmd(["genkernel","--no-mountboot","--kerneldir=/usr/src/linux-%s%s%s" % (version, source, revision)] + genkernel_opts)
+            exec_cmd(["genkernel","--no-mountboot","--kerneldir=/usr/src/linux-%s%s%s" % (version, source, revision)] + concurrency_opts + genkernel_opts)
             return True
     return False
 

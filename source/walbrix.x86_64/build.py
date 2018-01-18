@@ -1,5 +1,5 @@
 #!/usr/bin/python2.7
-import subprocess,pwd,grp,glob,re,os
+import subprocess,pwd,grp,glob,re,os,multiprocessing
 
 def exec_cmd(cmdline):
     shell = isinstance(cmdline,str)
@@ -59,6 +59,8 @@ for user in users:
 
 ## emerge/build main kernel
 def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
+    cpu_count = multiprocessing.cpu_count()
+    concurrency_opts = [ "--makeopts=\"-j%d\"" % (cpu_count + 1) ] if cpu_count > 1 else []
     source = "-" + source if source not in ["", None] else ""
     for kernel_config in glob.glob("/etc/kernels/kernel-config-*"):
         kernel_match = re.match(r'^kernel-config-(.[^-]+)-(.[^-]+)' + source + '(-r[0-9]+)?$', os.path.basename(kernel_config))
@@ -76,7 +78,7 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
                     exec_cmd("wget -O - http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/patch/?id=8c058b0b9c34d8c8d7912880956543769323e2d8 | patch -d %s -p1 -R" % kerneldir)
                 else:
                     print "i8259 patch has already been reverted."
-            exec_cmd(["genkernel","--no-mountboot","--kerneldir=%s" % kerneldir] + genkernel_opts)
+            exec_cmd(["genkernel","--no-mountboot","--kerneldir=%s" % kerneldir] + concurrency_opts + genkernel_opts)
             return True
     return False
 
