@@ -13,6 +13,9 @@
 # for python 3.5
 =dev-python/setuptools-36.7.2
 
+# Xen
+=app-emulation/xen-pvgrub-4.9.1
+
 #snort
 =net-analyzer/snort-2.9.7.3
 =net-analyzer/barnyard2-1.9
