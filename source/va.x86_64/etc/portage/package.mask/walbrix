@@ -2,3 +2,4 @@
 >=dev-lang/php-7
 >=dev-php/pecl-apcu-5
 =dev-java/icedtea-bin-7.2.6.8
+>=media-gfx/imagemagick-7 # rmagick doesn't follow imagemagick7

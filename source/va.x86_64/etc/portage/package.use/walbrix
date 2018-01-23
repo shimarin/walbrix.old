@@ -14,7 +14,7 @@ dev-vcs/git-lfs -doc
 net-fs/samba ldap
 net-nds/openldap -tcpd samba
 net-fs/nfs-utils -tcpd
-www-servers/uwsgi python lua -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool
+www-servers/uwsgi python lua -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool -ruby_targets_ruby22
 app-editors/emacs -gtk3 -xpm
 mail-mta/postfix sasl
 dev-python/imaging jpeg tiff truetype
@@ -68,22 +68,22 @@ dev-php/pecl-redis -php_targets_php7-0
 dev-php/pecl-memcached php_targets_php5-6
 
 # ruby
-virtual/rubygems -ruby_targets_ruby21
-dev-ruby/rubygems -ruby_targets_ruby21
-dev-ruby/bundler -ruby_targets_ruby21
-dev-ruby/rdoc -ruby_targets_ruby21
-dev-ruby/rake -ruby_targets_ruby21
-dev-ruby/racc -ruby_targets_ruby21
-dev-ruby/json -ruby_targets_ruby21
-dev-ruby/mysql2 -ruby_targets_ruby21
-dev-ruby/rmagick -ruby_targets_ruby21
-www-apache/passenger -ruby_targets_ruby21
-dev-ruby/rack -ruby_targets_ruby21
-virtual/ruby-ssl -ruby_targets_ruby21
-dev-ruby/power_assert -ruby_targets_ruby21
-dev-ruby/test-unit -ruby_targets_ruby21
-dev-ruby/minitest -ruby_targets_ruby21
-dev-ruby/kpeg -ruby_targets_ruby21
+virtual/rubygems -ruby_targets_ruby22
+dev-ruby/rubygems -ruby_targets_ruby22
+dev-ruby/bundler -ruby_targets_ruby22
+dev-ruby/rdoc -ruby_targets_ruby22
+dev-ruby/rake -ruby_targets_ruby22
+dev-ruby/racc -ruby_targets_ruby22
+dev-ruby/json -ruby_targets_ruby22
+dev-ruby/mysql2 -ruby_targets_ruby22
+dev-ruby/rmagick -ruby_targets_ruby22
+www-apache/passenger -ruby_targets_ruby22
+dev-ruby/rack -ruby_targets_ruby22
+virtual/ruby-ssl -ruby_targets_ruby22
+dev-ruby/power_assert -ruby_targets_ruby22
+dev-ruby/test-unit -ruby_targets_ruby22
+dev-ruby/minitest -ruby_targets_ruby22
+dev-ruby/net-telnet -ruby_targets_ruby22
 
 # zabbix
 net-analyzer/zabbix agent frontend java mysql openipmi proxy server snmp
@@ -117,4 +117,4 @@ x11-libs/libxkbcommon X
 x11-libs/libxcb xkb
 dev-qt/qtcore icu
 dev-qt/qtnetwork -bindist
-
+net-analyzer/linkchecker sqlite

@@ -87,6 +87,7 @@ media-libs/opencv
 media-tv/v4l-utils
 media-video/ffmpeg
 media-video/motion
+net-analyzer/linkchecker
 net-analyzer/traceroute
 net-analyzer/zabbix
 net-dialup/pptpclient
