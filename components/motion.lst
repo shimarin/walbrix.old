@@ -39,4 +39,6 @@ $package net-misc/wol
 $package sys-process/at
 
 $require flask.lst
+$package www-servers/spawn-fcgi
+$package www-misc/fcgiwrap
 $require iptables.lst

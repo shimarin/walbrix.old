@@ -129,7 +129,9 @@ www-apache/passenger
 www-client/chromium
 www-client/elinks
 www-client/lynx
+www-misc/fcgiwrap
 www-servers/nginx
+www-servers/spawn-fcgi
 www-servers/tomcat
 www-servers/uwsgi
 x11-base/xorg-server
