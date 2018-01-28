@@ -122,8 +122,6 @@ $package net-misc/vconfig
 $package net-misc/whois
 $package net-misc/wol
 $package sys-apps/ethtool
-$require zabbix-agent.lst
-$require zabbix-proxy.lst
 $require snort.lst
 $package net-misc/dhcp
 $require ssmtp.lst

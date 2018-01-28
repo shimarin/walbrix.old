@@ -1,6 +1,9 @@
 /boot/kernel-genkernel-x86_64-3.16.53
 $symlink /boot/kernel.domU kernel-genkernel-x86_64-3.16.53
 
+$require zabbix-agent.lst
+$require zabbix-proxy.lst
+
 # 32-bit compat
 $require lib32.lst
 
