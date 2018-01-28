@@ -126,4 +126,5 @@ sys-process/lsof
 sys-process/vixie-cron
 virtual/linux-sources
 www-servers/nginx
+x11-libs/libdrm
 

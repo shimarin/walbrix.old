@@ -37,7 +37,7 @@ $copy usbip/usbip.init /etc/init.d/usbip
 $copy usbip/usbip.conf /etc/conf.d/usbip
 $package dev-libs/ocl-icd
 $exec --overlay "eselect opencl set ocl-icd"
-#$package x11-libs/libdrm
+/usr/lib64/libdrm.so.2
 /usr/lib64/libmicrohttpd.so.12
 /usr/lib64/libhwloc.so.5
 
