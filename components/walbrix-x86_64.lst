@@ -44,3 +44,6 @@ $exec --overlay "eselect opencl set ocl-icd"
 /usr/lib64/libmicrohttpd.so.12
 /usr/lib64/libhwloc.so.5
 
+$write /etc/sysctl.d/nr_hugepages.conf '#vm.nr_hugepages=128'
+$write /etc/modprobe.d/blacklist.conf '#blacklist nouveau'
+
