@@ -1,5 +1,4 @@
 $package sys-apps/keyutils
-$package net-libs/libnfsidmap
 $package net-libs/libtirpc
 $package net-nds/rpcbind
 $package net-fs/nfs-utils --use="-tcpd"

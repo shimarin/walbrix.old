@@ -6,7 +6,6 @@ $require urllib3.lst
 $package dev-python/configargparse
 $require parsedatetime.lst
 $package dev-python/pyparsing
-$package dev-python/appdirs
 $package dev-python/zope-event
 $package dev-python/funcsigs
 $package dev-python/pyrfc3339

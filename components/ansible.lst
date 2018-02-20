@@ -1,10 +1,8 @@
 $require paramiko.lst
 $package net-misc/sshpass
-$package dev-python/pycrypto
 $package dev-python/pyyaml
 $package dev-python/httplib2
 $package dev-python/pyasn1
 $package dev-python/markupsafe
 $package dev-python/jinja
-$package dev-python/keyczar
 $package app-admin/ansible
