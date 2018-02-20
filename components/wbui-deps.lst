@@ -6,7 +6,7 @@ $package dev-python/python-magic
 $require pyalsaaudio.lst
 $require vlgothic.lst
 $require fbterm.lst
-$require cdrkit.lst # isoinfo
+$package app-cdr/cdrtools # isoinfo
 $require grub.lst # for grub-install, grub-mkimage
 $require udev.lst # udevadm
 $require flask.lst # util

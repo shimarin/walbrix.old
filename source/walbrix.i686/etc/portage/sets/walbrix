@@ -6,6 +6,7 @@ app-admin/sysstat
 app-admin/testdisk
 app-arch/zip
 app-backup/fsarchiver
+app-cdr/cdrtools
 app-crypt/chntpw
 app-editors/bvi
 app-editors/nano
@@ -17,6 +18,7 @@ app-misc/screen
 app-portage/gentoolkit
 dev-db/mysql
 dev-libs/jansson
+dev-libs/libcdio
 dev-python/flask
 dev-python/future
 dev-python/pyalsaaudio
