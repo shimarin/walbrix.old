@@ -33,7 +33,6 @@
 
 # hardware
 =sys-kernel/linux-firmware-20180213
-=sys-apps/hwids-20171003
 =sys-block/megacli-8.07.14-r1
 =sys-apps/usb_modeswitch-2.3.0
 =x11-drivers/nvidia-drivers-390.12
