@@ -24,6 +24,11 @@
 =dev-python/subprocess32-3.2.7
 =media-libs/qhull-2015.2
 
+# Let's encrypt
+=app-crypt/certbot-0.22.0
+=app-crypt/acme-0.22.0
+=app-crypt/certbot-nginx-0.22.0
+
 #docker
 =app-emulation/docker-1.13.1
 =app-emulation/docker-proxy-0.8.0_p20161111
