@@ -1,7 +1,7 @@
 =sys-kernel/gentoo-sources-4.15.5
 =dev-libs/klibc-2.0.4-r3
 =app-i18n/fbterm-1.7-r3
-=sys-kernel/vanilla-sources-3.16.54
+=sys-kernel/vanilla-sources-3.16.55
 =app-crypt/chntpw-140201
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
 =sys-block/zram-init-3.8
