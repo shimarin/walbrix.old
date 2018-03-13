@@ -8,6 +8,8 @@
 =net-misc/s3cmd-2.0.0
 
 # Xen
+=app-emulation/xen-4.10.0
+=app-emulation/xen-tools-4.10.0
 =app-emulation/xen-pvgrub-4.9.1
 
 #snort
