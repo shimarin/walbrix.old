@@ -12,7 +12,7 @@ $write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
 $sed /etc/ssh/sshd_config 's/^PermitRootLogin .\+$/PermitRootLogin yes/'
 
 $exec 'mkdir -p /root/.ssh && chmod 700 /root/.ssh && touch /root/.ssh/authorized_keys'
-$write /etc/apt/sources.lst 'deb http://ftp.jp.debian.org/debian wheezy main contrib\ndeb http://security.debian.org/ wheezy/updates main contrib non-free'
+$write /etc/apt/sources.lst 'deb http://ftp.jp.debian.org/debian stretch main contrib\ndeb http://security.debian.org/ stretch/updates main contrib non-free'
 
 $exec 'rm -f /etc/ssh/ssh_host_*'
 $copy debian/sshd-keygen /usr/sbin/sshd-keygen

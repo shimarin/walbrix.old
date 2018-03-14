@@ -1,10 +1,4 @@
---- ssh.service	2015-03-23 08:08:49.000000000 +0900
-+++ ssh.service.new	2015-07-05 19:34:18.131305256 +0900
-@@ -5,6 +5,7 @@
- 
- [Service]
- EnvironmentFile=-/etc/default/ssh
-+ExecStartPre=/usr/sbin/sshd-keygen
- ExecStart=/usr/sbin/sshd -D $SSHD_OPTS
- ExecReload=/bin/kill -HUP $MAINPID
- KillMode=process
+8c8
+< ExecStartPre=/usr/sbin/sshd -t
+---
+> ExecStartPre=/usr/sbin/sshd-keygen && /usr/sbin/sshd -t
