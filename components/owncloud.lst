@@ -17,7 +17,7 @@ $require pecl-apcu.lst
 #copy owncloud/smb.conf /etc/samba/smb.conf
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1owncloud\2/'
 
-$set OWNCLOUD_TAR owncloud-10.0.4.tar.bz2
+$set OWNCLOUD_TAR owncloud-10.0.7.tar.bz2
 $download https://download.owncloud.org/community/$(OWNCLOUD_TAR)
 $exec "tar jxvf /tmp/download/$(OWNCLOUD_TAR) -C /var/www/localhost"
 $exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/owncloud /var/www/localhost/htdocs"
