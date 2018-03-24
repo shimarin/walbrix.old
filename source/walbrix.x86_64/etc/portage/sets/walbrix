@@ -96,7 +96,7 @@ sys-block/open-iscsi
 sys-block/parted
 sys-block/zram-init
 sys-boot/grub
-sys-cluster/drbd
+sys-cluster/drbd-utils
 sys-firmware/bluez-firmware
 sys-fs/bcache-tools
 sys-fs/btrfs-progs

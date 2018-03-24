@@ -36,7 +36,7 @@ media-libs/freetype static-libs
 app-emulation/xen efi
 app-emulation/xen-tools api pygrub xend hvm qemu ocaml python -ovmf
 sys-apps/kexec-tools lzma xen
-sys-cluster/drbd heartbeat pacemaker xen
+sys-cluster/drbd-utils xen
 #app-emulation/qemu xen
 
 # wbui
