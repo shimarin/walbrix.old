@@ -12,7 +12,7 @@
 =sys-kernel/linux-firmware-20180314
 =sys-apps/hwids-20180315
 =sys-block/megacli-8.07.14-r1
-=sys-apps/usb_modeswitch-2.3.0
+=sys-apps/usb_modeswitch-2.5.2
 =dev-python/pyusb-1.0.2
 =dev-python/setuptools-36.7.2
 =net-misc/s3cmd-2.0.0
