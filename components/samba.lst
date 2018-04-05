@@ -12,8 +12,8 @@ $package dev-python/mimeparse
 $package dev-python/linecache2
 $package dev-python/traceback2
 $package dev-python/unittest2
-$package dev-python/testtools
 $package dev-python/subunit
+$require testtools.lst
 
 $package net-fs/cifs-utils
 #sys-libs/tevent
