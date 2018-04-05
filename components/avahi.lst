@@ -1,4 +1,5 @@
 #dev-libs/libdaemon
+$package sys-apps/dbus # for mdnsresponder-compat
 $package net-dns/avahi --use="-introspection"
 $symlink /etc/runlevels/default/avahi-daemon /etc/init.d/avahi-daemon
 

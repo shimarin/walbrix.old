@@ -4,7 +4,7 @@ sys-apps/kmod lzma
 # move net-misc/openvpn net-vpn/openvpn
 net-vpn/openvpn
 app-admin/sudo -sendmail
-net-dns/avahi -introspection
+net-dns/avahi -introspection mdnsresponder-compat dbus
 dev-util/strace -perl
 app-emulation/docker -device-mapper aufs overlay btrfs
 sys-process/tini static
@@ -119,3 +119,5 @@ x11-libs/libxcb xkb
 dev-qt/qtcore icu
 dev-qt/qtnetwork -bindist
 net-analyzer/linkchecker sqlite
+net-misc/ntp zeroconf
+
