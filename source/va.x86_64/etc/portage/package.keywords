@@ -1,5 +1,5 @@
-=sys-kernel/gentoo-sources-4.16.0
-=sys-kernel/vanilla-sources-3.16.55
+=sys-kernel/gentoo-sources-4.16.1
+=sys-kernel/vanilla-sources-3.16.56
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =dev-java/commons-dbcp-2.1
@@ -61,7 +61,7 @@
 =dev-util/cargo-0.24.0
 
 #GPU
-=x11-drivers/nvidia-drivers-390.25
+=x11-drivers/nvidia-drivers-390.48
 =dev-util/nvidia-cuda-toolkit-8.0.61
 =sys-firmware/nvidia-firmware-340.32
 =dev-libs/amdgpu-pro-opencl-17.50.511655
