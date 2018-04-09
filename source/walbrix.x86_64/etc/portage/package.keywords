@@ -32,7 +32,7 @@
 =sys-apps/hwids-20180315
 =sys-block/megacli-8.07.14-r1
 =sys-apps/usb_modeswitch-2.5.2
-=x11-drivers/nvidia-drivers-390.25
+=x11-drivers/nvidia-drivers-390.48
 =dev-python/pyusb-1.0.2
 =net-misc/usbip-4.13
 =net-libs/libqmi-1.18.0
