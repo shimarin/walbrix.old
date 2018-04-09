@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.16.0
+=sys-kernel/gentoo-sources-4.16.1
 =dev-libs/klibc-2.0.4-r3
 =app-i18n/fbterm-1.7-r3
 =sys-kernel/vanilla-sources-3.16.55
