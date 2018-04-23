@@ -9,6 +9,7 @@ $require ffmpeg.lst
 $require php56.lst
 $require redis.lst
 $require pecl-imagick.lst
+$package sys-fs/btrfs-progs
 #require components/libreoffice.lst
 #$package dev-php/xcache # replaced by opcache in PHP5.5
 $package dev-php/pecl-redis
@@ -17,7 +18,7 @@ $require pecl-apcu.lst
 #copy owncloud/smb.conf /etc/samba/smb.conf
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1owncloud\2/'
 
-$set OWNCLOUD_TAR owncloud-10.0.7.tar.bz2
+$set OWNCLOUD_TAR owncloud-10.0.8.tar.bz2
 $download https://download.owncloud.org/community/$(OWNCLOUD_TAR)
 $exec "tar jxvf /tmp/download/$(OWNCLOUD_TAR) -C /var/www/localhost"
 $exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/owncloud /var/www/localhost/htdocs"
