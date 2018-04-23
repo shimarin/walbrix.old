@@ -32,6 +32,6 @@ $package gnome-base/gconf # for chromedriver
 $package media-libs/mesa
 $package www-client/chromium # kernel needs USER_NS
 
-$download --nocache https://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip
+$download --nocache https://chromedriver.storage.googleapis.com/2.38/chromedriver_linux64.zip
 $exec "cd /tmp/download && unzip chromedriver_linux64.zip && mv chromedriver /usr/bin/"
 
