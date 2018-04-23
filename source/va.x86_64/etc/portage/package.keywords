@@ -15,6 +15,7 @@
 =net-nds/rpcbind-0.2.4
 =dev-util/jenkins-bin-2.97
 =dev-vcs/git-lfs-2.1.1
+=media-video/motion-4.1.1
 
 #python
 =dev-python/setuptools-36.7.2
