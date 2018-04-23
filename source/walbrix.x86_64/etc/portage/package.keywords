@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.16.2
+=sys-kernel/gentoo-sources-4.16.3
 =dev-libs/klibc-2.0.4-r3
 =app-i18n/fbterm-1.7-r3
 =sys-kernel/vanilla-sources-3.16.55
@@ -28,7 +28,7 @@
 =sys-kernel/genkernel-3.5.1.1 # zfs needs this version
 
 # hardware
-=sys-kernel/linux-firmware-20180412
+=sys-kernel/linux-firmware-20180416
 =sys-apps/hwids-20180315
 =sys-block/megacli-8.07.14-r1
 =sys-apps/usb_modeswitch-2.5.2
