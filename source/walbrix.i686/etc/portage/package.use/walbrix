@@ -43,6 +43,7 @@ media-libs/sdl-mixer vorbis
 net-dns/avahi -introspection
 net-fs/s3fs openssl
 net-analyzer/net-snmp python
+dev-python/netaddr -cli
 
 # prevent unnecessary deps
 app-text/xmlto -text

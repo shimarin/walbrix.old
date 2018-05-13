@@ -58,6 +58,7 @@ net-analyzer/net-snmp python
 media-sound/mpg123 alsa
 net-fs/s3fs openssl
 app-arch/rpm python
+dev-python/netaddr -cli
 
 # assume EC algorythms are safe
 dev-libs/openssl -bindist
