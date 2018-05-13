@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.16.3-gentoo Kernel Configuration
+# Linux/x86 4.16.8-gentoo Kernel Configuration
 #
 
 #
@@ -4823,7 +4823,6 @@ CONFIG_ACERHDF=m
 # CONFIG_ALIENWARE_WMI is not set
 CONFIG_ASUS_LAPTOP=m
 # CONFIG_DELL_SMBIOS is not set
-# CONFIG_DELL_LAPTOP is not set
 # CONFIG_DELL_WMI is not set
 CONFIG_DELL_WMI_AIO=m
 # CONFIG_DELL_WMI_LED is not set

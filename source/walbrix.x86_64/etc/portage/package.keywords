@@ -1,6 +1,6 @@
-=sys-kernel/gentoo-sources-4.16.3
+=sys-kernel/gentoo-sources-4.16.8
 =dev-libs/klibc-2.0.4-r3
-=app-i18n/fbterm-1.7-r3
+=app-i18n/fbterm-1.7-r5
 =sys-kernel/vanilla-sources-3.16.55
 =app-crypt/chntpw-140201
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
@@ -36,3 +36,4 @@
 =dev-python/pyusb-1.0.2
 =net-misc/usbip-4.13
 =net-libs/libqmi-1.18.0
+
