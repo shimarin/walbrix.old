@@ -18,6 +18,9 @@ $package dev-libs/libisoburn  # for /usr/bin/xorriso
 $require debootstrap.lst
 $require yum.lst
 
+# storage
+$require open-iscsi.lst
+
 # zfs
 /sbin/splat
 $package sys-fs/zfs
