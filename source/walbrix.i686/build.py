@@ -76,8 +76,8 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
             return True
     return False
 
-exec_cmd(["emerge","-uDN","gentoo-sources","genkernel","splash-themes-gentoo"])
-build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natural_gentoo","all"])
+exec_cmd(["emerge","-uDN","gentoo-sources","genkernel"])
+build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","all"])
 
 ## emerge world
 

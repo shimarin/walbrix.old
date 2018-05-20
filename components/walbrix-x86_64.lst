@@ -7,6 +7,10 @@ $require zabbix-proxy.lst
 # 32-bit compat
 $require lib32.lst
 
+# splash
+$require splashutils.lst
+/etc/splash/natural_gentoo
+
 $package dev-vcs/git
 
 # to self-build walbrix

@@ -8,8 +8,6 @@ $require zram-init.lst
 $require install.lst  # defines softlevel 'rescue' and 'install'
 
 # boot
-$require splashutils.lst
-/etc/splash/natural_gentoo
 $package sys-apps/kexec-tools
 $write /etc/fstab 'overlay\t/\toverlay\tdefaults\t0 0\n'
 $write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
