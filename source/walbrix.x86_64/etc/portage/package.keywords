@@ -6,6 +6,7 @@
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
 =sys-block/zram-init-3.8
 =net-misc/s3cmd-2.0.0
+=sys-apps/util-linux-2.32-r3
 
 # Xen
 =app-emulation/xen-4.10.0

@@ -11,6 +11,7 @@
 =sys-block/zram-init-3.8
 =sys-kernel/linux-firmware-20180518
 =sys-apps/hwids-20180315
+=sys-apps/util-linux-2.32-r3
 =sys-block/megacli-8.07.14-r1
 =sys-apps/usb_modeswitch-2.5.2
 =dev-python/pyusb-1.0.2

@@ -63,7 +63,6 @@ net-misc/wol
 net-wireless/bluez
 net-wireless/hostapd
 net-wireless/iw
-net-wireless/rfkill
 net-wireless/wireless-tools
 net-wireless/wpa_supplicant
 sys-apps/cciss_vol_status
