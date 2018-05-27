@@ -62,7 +62,7 @@
 =dev-util/cargo-0.24.0
 
 #GPU
-=x11-drivers/nvidia-drivers-396.18-r1
+=x11-drivers/nvidia-drivers-396.24
 =dev-util/nvidia-cuda-toolkit-8.0.61
 =sys-firmware/nvidia-firmware-340.32
 =dev-libs/amdgpu-pro-opencl-17.50.511655
