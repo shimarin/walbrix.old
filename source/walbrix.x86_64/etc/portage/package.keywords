@@ -29,7 +29,7 @@
 =sys-kernel/genkernel-3.5.1.1 # zfs needs this version
 
 # hardware
-=sys-kernel/linux-firmware-20180518
+=sys-kernel/linux-firmware-20180525
 =sys-apps/hwids-20180315
 =sys-block/megacli-8.07.14-r1
 =sys-apps/usb_modeswitch-2.5.2
