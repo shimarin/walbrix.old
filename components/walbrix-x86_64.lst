@@ -26,7 +26,7 @@ $require yum.lst
 $require open-iscsi.lst
 
 # zfs
-/sbin/splat
+#/sbin/splat
 $package sys-fs/zfs
 $write /tmp/README 'http://insights.ubuntu.com/2016/02/18/zfs-licensing-and-linux/'
 $exec 'if [ -d /lib/modules/*/extra/zfs ]; then mv /tmp/README /lib/modules/*/extra/zfs/; fi'

@@ -23,9 +23,9 @@
 =sys-apps/yum-3.4.3_p20170619
 
 # zfs
-=sys-fs/zfs-0.7.9999
-=sys-fs/zfs-kmod-0.7.9999
-=sys-kernel/spl-0.7.9999
+=sys-fs/zfs-9999 **
+=sys-fs/zfs-kmod-9999 **
+=sys-kernel/spl-9999 **
 =sys-kernel/genkernel-3.5.1.1 # zfs needs this version
 
 # hardware
