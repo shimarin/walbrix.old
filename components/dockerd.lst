@@ -6,5 +6,6 @@ $require iptables.lst
 $require git.lst
 $package app-emulation/docker --use="aufs overlay -device-mapper"
 $package app-emulation/docker-proxy
+$package app-emulation/runc
 $mkdir /var/lib/docker
 $symlink /etc/runlevels/default/docker /etc/init.d/docker
