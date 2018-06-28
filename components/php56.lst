@@ -1,5 +1,5 @@
 $set PHP_VERSION 5.6
-$set PHP_REVISION 35-r1
+$set PHP_REVISION 36
 #dev-libs/mm
 #media-libs/t1lib
 #media-libs/libpng
