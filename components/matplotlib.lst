@@ -7,5 +7,6 @@ $package dev-python/functools32
 $package dev-python/backports
 $package dev-python/backports-functools-lru-cache
 $package media-libs/qhull
+$package dev-python/kiwisolver
 $package dev-python/matplotlib
 
