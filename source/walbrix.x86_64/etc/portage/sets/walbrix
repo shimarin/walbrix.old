@@ -14,6 +14,7 @@ app-editors/vim
 app-emulation/xen
 app-emulation/xen-pvgrub
 app-i18n/fbterm
+app-misc/beep
 app-misc/screen
 app-portage/gentoolkit
 dev-db/mysql
