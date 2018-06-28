@@ -1,0 +1,7 @@
+#$package dev-libs/npth
+$package dev-libs/libgpg-error
+#$package dev-libs/libassuan
+#$package dev-libs/libksba
+$package app-crypt/pinentry
+$package app-crypt/gnupg
+

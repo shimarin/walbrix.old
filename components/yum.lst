@@ -1,6 +1,3 @@
-#dev-libs/libksba
-#dev-libs/libassuan
-#dev-libs/pth
 #dev-libs/nspr
 $package dev-python/pycurl
 $package dev-python/urlgrabber
@@ -8,8 +5,7 @@ $package dev-python/pyliblzma
 #dev-libs/nss
 #dev-libs/libxml2 --use="python"
 $package dev-python/sqlitecachec
-$package app-crypt/pinentry
-$package app-crypt/gnupg
+$require gnupg.lst
 $package app-arch/rpm
 $package sys-apps/yum
 
