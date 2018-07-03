@@ -16,6 +16,7 @@ app-emulation/xen-pvgrub
 app-i18n/fbterm
 app-misc/beep
 app-misc/screen
+app-portage/cpuid2cpuflags
 app-portage/gentoolkit
 dev-db/mysql
 dev-libs/jansson
