@@ -5,7 +5,7 @@ $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1gateone\2/'
 $require tornado.lst
 $package dev-python/six --exclude='^/usr/lib(64)?/python3.*/'
 $package dev-python/futures
-$package dev-python/html5lib --exclude='^/usr/lib(64)?/python3.*/'
+$require html5lib.lst
 
 $exec --overlay "cd /tmp && git clone --depth=1 https://github.com/liftoff/GateOne.git"
 $exec "cd /tmp/GateOne && python setup.py install"

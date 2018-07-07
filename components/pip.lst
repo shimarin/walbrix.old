@@ -2,7 +2,7 @@ $require requests.lst
 $package dev-python/retrying
 $package dev-python/colorama
 $package dev-python/distlib
-$package dev-python/html5lib
+$require html5lib.lst
 $package dev-python/progress
 $package dev-python/pbr
 $package dev-python/lockfile
