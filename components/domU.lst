@@ -80,6 +80,7 @@ $symlink /usr/bin/less ../../bin/busybox
 /usr/bin/which
 /usr/bin/zip
 /usr/sbin/xfs_growfs
+/usr/sbin/tmpwatch
 
 # nmbd
 /usr/sbin/nmbd

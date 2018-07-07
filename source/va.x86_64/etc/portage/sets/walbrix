@@ -3,6 +3,7 @@ app-admin/eclean-kernel
 app-admin/sudo
 app-admin/supervisor
 app-admin/sysklogd
+app-admin/tmpwatch
 app-antivirus/clamav
 app-arch/zip
 app-crypt/certbot
