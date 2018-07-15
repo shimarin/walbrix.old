@@ -92,7 +92,7 @@ sys-boot/grub
 sys-boot/syslinux
 sys-cluster/drbd-utils
 sys-firmware/bluez-firmware
-sys-fs/bcache-tools
+#sys-fs/bcache-tools # undefined symbol 'crc64'
 sys-fs/btrfs-progs
 sys-fs/cryptsetup
 sys-fs/ddrescue
