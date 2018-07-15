@@ -1,5 +1,5 @@
-/boot/kernel-genkernel-x86_64-3.16.56
-$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.16.56
+/boot/kernel-genkernel-x86_64-3.16.57
+$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.16.57
 
 $require zabbix-agent.lst
 $require zabbix-proxy.lst
@@ -24,6 +24,7 @@ $require yum.lst
 
 # storage
 $require open-iscsi.lst
+$package sys-fs/bcache-tools
 
 # zfs
 #/sbin/splat
