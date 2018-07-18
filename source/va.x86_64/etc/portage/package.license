@@ -1,2 +1,3 @@
 dev-java/oracle-jre-bin Oracle-BCLA-JavaSE
 dev-util/nvidia-cuda-toolkit NVIDIA-CUDA
+dev-libs/amdgpu-pro-opencl AMD-GPU-PRO-EULA
