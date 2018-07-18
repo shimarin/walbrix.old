@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.17.6
+=sys-kernel/gentoo-sources-4.17.7
 =dev-libs/klibc-2.0.4-r3
 =app-i18n/fbterm-1.7-r5
 =sys-kernel/vanilla-sources-3.16.57
@@ -9,8 +9,8 @@
 =sys-apps/util-linux-2.32-r3
 
 # Xen
-=app-emulation/xen-4.10.0
-=app-emulation/xen-tools-4.10.0
+=app-emulation/xen-4.11.0
+=app-emulation/xen-tools-4.11.0
 =app-emulation/xen-pvgrub-4.9.1
 
 #snort
