@@ -14,7 +14,7 @@
 =net-libs/libtirpc-1.0.1
 =net-nds/rpcbind-0.2.4
 =dev-util/jenkins-bin-2.97
-=dev-vcs/git-lfs-2.1.1
+=dev-vcs/git-lfs-2.4.2
 =media-video/motion-4.1.1
 
 #python
