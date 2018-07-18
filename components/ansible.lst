@@ -5,4 +5,4 @@ $package dev-python/httplib2
 $package dev-python/pyasn1
 $package dev-python/markupsafe
 $package dev-python/jinja
-$package app-admin/ansible
+$package app-admin/ansible --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
