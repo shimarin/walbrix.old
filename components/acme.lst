@@ -1,4 +1,5 @@
 $require cryptography.lst
 $package dev-python/requests
+$package dev-python/requests-toolbelt
 $package app-crypt/acme
 
