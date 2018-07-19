@@ -162,6 +162,16 @@ def process_lstfile(context, lstfile):
             print "$mkdir '%s'" % arg
             mkdir_p(name)
 
+    def del_(context, args):
+        if len(args) < 1: raise Exception("$del directive gets at least 1 argument")
+        for arg in args:
+            path = context.apply_variables(arg)
+            name = "%s%s" % (context.destination, path)
+            if not os.path.lexists(name): raise Exception("'%s' does not exist." % path)
+            if os.path.isdir(name): raise Exception("'%s' is directory. Use $deltree instead." % path)
+            print "$del '%s'" % path
+            os.remove(name)
+
     def deltree(context, args):
         if len(args) < 1: raise Exception("$deltree directive gets at least 1 argument")
         for arg in args:
@@ -314,6 +324,7 @@ def process_lstfile(context, lstfile):
         "$kernel":kernel.apply,
         "$exec":execute.apply,
         "$mkdir":mkdir,
+        "$del":del_,
         "$deltree":deltree,
         "$symlink":symlink,
         "$sed":sed,

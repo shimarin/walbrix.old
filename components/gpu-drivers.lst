@@ -1,0 +1,3 @@
+$exec --overlay "tar cvf - `equery files -f obj,sym,conf,cmd nvidia-drivers amdgpu-pro-opencl | sed 's/ -> .*$//' | egrep -v '^\/usr\/share\/' | egrep -v '^\/usr\/lib32\/'` | tar xvf - -C /"
+$deltree /var/cache
+$del /etc/ld.so.cache
