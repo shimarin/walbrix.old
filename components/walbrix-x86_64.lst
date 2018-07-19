@@ -29,9 +29,7 @@ $write /tmp/README 'http://insights.ubuntu.com/2016/02/18/zfs-licensing-and-linu
 $exec 'if [ -d /lib/modules/*/extra/zfs ]; then mv /tmp/README /lib/modules/*/extra/zfs/; fi'
 
 # non-free
-$exec --overlay "tar zcvf - -C /lib/modules/$(KERNEL_VERSION)/video . | openssl enc -blowfish -k 'I agree to the end user license agreement' > /tmp/nvidia.tar.gz.blowfish && mv /tmp/nvidia.tar.gz.blowfish /lib/modules/$(KERNEL_VERSION)/video/"
-# To decrypt:
-# openssl blowfish -d < nvidia.tar.gz.blowfish | tar zxvf -
+$exec "cd /lib/modules/$(KERNEL_VERSION)/video && zip -P 'I agree to the end user license agreement' -m -0 nvidia.zip *.ko"
 
 # misc
 /usr/bin/mpg123

@@ -1,6 +1,5 @@
 $require kmod.lst
 $kernel /boot/kernel
 /lib/modules/$(KERNEL_VERSION)
-$exec "rm -f /lib/modules/$(KERNEL_VERSION)/video/nvidia*" # remove nvidia's proprietary driver
 /lib/firmware
 $exec "/sbin/depmod $(KERNEL_VERSION)"
