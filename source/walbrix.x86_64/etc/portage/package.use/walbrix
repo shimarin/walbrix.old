@@ -33,6 +33,7 @@ virtual/jpeg static-libs
 app-arch/bzip2 static-libs
 media-libs/libpng static-libs
 media-libs/freetype static-libs
+media-gfx/splashutils fbcondecor
 
 # xen
 app-emulation/xen efi

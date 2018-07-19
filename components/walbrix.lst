@@ -5,6 +5,10 @@ $require grub.lst
 $require xen.lst
 $require zram-init.lst
 
+# splash
+$require splashutils.lst
+/etc/splash/natural_gentoo
+
 $require install.lst  # defines softlevel 'rescue' and 'install'
 
 # boot
@@ -28,6 +32,7 @@ $copy walbrix/init /tmp/initramfs/init.walbrix
 $copy splash/640x480.cfg /tmp/initramfs/etc/splash/wb/640x480.cfg
 $copy splash/background-640x480.png /tmp/initramfs/etc/splash/wb/images/background-640x480.png
 $copy splash/verbose-640x480.png /tmp/initramfs/etc/splash/wb/images/verbose-640x480.png
+$exec --overlay 'cp -av /usr/share/splashutils/initrd.splash /tmp/initramfs/etc/'
 $exec 'cd /tmp/initramfs && unxz -c /boot/initramfs | cpio -idm && mv /tmp/initramfs/init /tmp/initramfs/init.gentoo && mv /tmp/initramfs/init.walbrix /tmp/initramfs/init && (find .|cpio -o -H newc) | xz -c --check=crc32 > /boot/initramfs'
 $deltree /tmp/initramfs
 

@@ -65,20 +65,19 @@ rm -rf build/walbrix/i686
 ./kernelver -n build/walbrix/i686/boot/kernel > $TARGET
 """)
 
-env.Command("build/walbrix/walbrix.cfg", ["$SYSTEM_64_MARKER","$SYSTEM_32_MARKER","$WBUI_MARKER"], """
-#[ "`cat $SYSTEM_64_MARKER`" = "`cat $SYSTEM_32_MARKER`" ]
+env.Command("build/walbrix/walbrix.cfg", ["$SYSTEM_64_MARKER","$WBUI_MARKER"], """
 echo "set WALBRIX_VERSION=`cat $SYSTEM_64_MARKER`" > $TARGET
 echo "set WALBRIX_BUILD_ID=`cat build/wbui/usr/share/wbui/commit-id`" >> $TARGET
 echo "set WALBRIX_UPDATE_URL=http://update.walbrix.net" >> $TARGET
 """)
 
-env.Command("build/walbrix/.done", ["$SYSTEM_64_MARKER", "$SYSTEM_32_MARKER","build/walbrix/walbrix.cfg","files/walbrix/grub.cfg","files/walbrix/grub-noxen.cfg","files/walbrix/install.cfg","files/walbrix/background.png"], """
+env.Command("build/walbrix/.done", ["$SYSTEM_64_MARKER", "build/walbrix/walbrix.cfg","files/walbrix/grub.cfg","files/walbrix/grub-noxen.cfg","files/walbrix/install.cfg","files/walbrix/background.png"], """
 cp files/walbrix/grub.cfg files/walbrix/grub-noxen.cfg files/walbrix/install.cfg files/walbrix/background.png build/walbrix/
 touch $TARGET
 """)
 
 env.Command("walbrix", ["build/walbrix/.done", "$WBUI_MARKER", "$LOCALE_MARKER"], """
-mksquashfs build/walbrix/* build/wbui build/locale $TARGET -noappend
+mksquashfs build/walbrix/* build/wbui build/locale $TARGET -noappend -comp xz
 echo s3cmd put -P $TARGET s3://dist.walbrix.net/walbrix
 """)
 env.Command("install", ["walbrix","/.overlay/boot/walbrix"],"""
@@ -140,10 +139,9 @@ env.Command(boot_iso9660, lstfile_deps("components/boot-iso9660.lst","source/wal
 
 for region in ["jp"]:
     # CD
-    iso9660_deps = ["$SYSTEM_64_MARKER","files/iso9660/grub.cfg","files/iso9660/isolinux.cfg","build/installer/install.32","build/installer/wbui"] + boot_iso9660 + ["source/walbrix.i686/usr/share/syslinux/isolinux.bin","source/walbrix.i686/usr/share/syslinux/libutil.c32","source/walbrix.i686/usr/share/syslinux/ldlinux.c32","source/walbrix.i686/usr/share/syslinux/menu.c32"]
-    iso9660_files = "boot/boot.img=build/boot-iso9660/boot.img boot/efiboot.img=build/boot-iso9660/efiboot.img boot/grub/grub.cfg=files/iso9660/grub.cfg boot/grub/fonts/unicode.pf2=build/walbrix/i686/usr/share/grub/unicode.pf2 EFI/BOOT/bootx64.efi=build/boot-iso9660/bootx64.efi boot/isolinux/isolinux.bin=source/walbrix.i686/usr/share/syslinux/isolinux.bin boot/isolinux/libutil.c32=source/walbrix.i686/usr/share/syslinux/libutil.c32 boot/isolinux/ldlinux.c32=source/walbrix.i686/usr/share/syslinux/ldlinux.c32 boot/isolinux/menu.c32=source/walbrix.i686/usr/share/syslinux/menu.c32 boot/isolinux/isolinux.cfg=files/iso9660/isolinux.cfg kernel.32=build/walbrix/i686/boot/kernel install.32=build/installer/install.32 wbui=build/installer/wbui EFI/Walbrix/kernel=build/walbrix/x86_64/boot/kernel EFI/Walbrix/initramfs=build/walbrix/x86_64/boot/initramfs"
+    iso9660_deps = ["$SYSTEM_64_MARKER","files/iso9660/grub.cfg","files/iso9660/isolinux.cfg","build/installer/wbui"] + boot_iso9660 + ["source/walbrix.i686/usr/share/syslinux/isolinux.bin","source/walbrix.i686/usr/share/syslinux/libutil.c32","source/walbrix.i686/usr/share/syslinux/ldlinux.c32","source/walbrix.i686/usr/share/syslinux/menu.c32"]
+    iso9660_files = "boot/boot.img=build/boot-iso9660/boot.img boot/efiboot.img=build/boot-iso9660/efiboot.img boot/grub/grub.cfg=files/iso9660/grub.cfg boot/grub/fonts/unicode.pf2=build/walbrix/x86_64/usr/share/grub/unicode.pf2 EFI/BOOT/bootx64.efi=build/boot-iso9660/bootx64.efi"
     env.Command("walbrix-%s.iso" % region, iso9660_deps + ["walbrix"], "xorriso -as mkisofs $MKISOFS_OPTS -b boot/boot.img -V WBINSTALL -o $TARGET %s walbrix=walbrix" % iso9660_files)
-    env.Command("walbrix-isolinux-%s.iso" % region, iso9660_deps + ["walbrix"], "xorriso -as mkisofs $MKISOFS_OPTS -b boot/isolinux/isolinux.bin -V WBINSTALL -o $TARGET %s walbrix=walbrix" % iso9660_files)
     env.Command("desktop-%s.iso" % region, iso9660_deps + ["desktop"], "xorriso -as mkisofs $MKISOFS_OPTS -V WBINSTALL -o $TARGET %s walbrix=desktop" % iso9660_files)
 
 ### SOURCE DVD ###
