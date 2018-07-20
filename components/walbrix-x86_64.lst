@@ -30,6 +30,7 @@ $exec 'if [ -d /lib/modules/$(KERNEL_VERSION)/extra/zfs ]; then mv /tmp/README /
 
 # non-free
 $exec "if [ -d /lib/modules/$(KERNEL_VERSION)/video ]; then cd /lib/modules/$(KERNEL_VERSION)/video && zip -P 'I agree to the end user license agreement' -m -0 nvidia.zip *.ko; fi"
+#makeself --nocomp --target /lib/modules/$(KERNEL_VERSION)/video --nox11 --ssl-encrypt /lib/modules/$(KERNEL_VERSION)/video /lib/modules/$(KERNEL_VERSION)/video/nvidia.run nvidia /sbin/depmod
 
 # misc
 /usr/bin/mpg123
