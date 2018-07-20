@@ -24,12 +24,12 @@ $package sys-fs/bcache-tools
 
 # zfs
 #/sbin/splat
-$package sys-fs/zfs
+$package --optional sys-fs/zfs
 $write /tmp/README 'http://insights.ubuntu.com/2016/02/18/zfs-licensing-and-linux/'
-$exec 'if [ -d /lib/modules/*/extra/zfs ]; then mv /tmp/README /lib/modules/*/extra/zfs/; fi'
+$exec 'if [ -d /lib/modules/$(KERNEL_VERSION)/extra/zfs ]; then mv /tmp/README /lib/modules/$(KERNEL_VERSION)/extra/zfs/; fi'
 
 # non-free
-$exec "cd /lib/modules/$(KERNEL_VERSION)/video && zip -P 'I agree to the end user license agreement' -m -0 nvidia.zip *.ko"
+$exec "if [ -d /lib/modules/$(KERNEL_VERSION)/video ]; then cd /lib/modules/$(KERNEL_VERSION)/video && zip -P 'I agree to the end user license agreement' -m -0 nvidia.zip *.ko; fi"
 
 # misc
 /usr/bin/mpg123
