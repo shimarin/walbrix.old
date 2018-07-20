@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.17.7
+=sys-kernel/gentoo-sources-4.17.8
 =dev-libs/klibc-2.0.4-r3
 =app-i18n/fbterm-1.7-r5
 =sys-kernel/vanilla-sources-3.16.57
@@ -23,9 +23,9 @@
 =sys-apps/yum-3.4.3_p20170619
 
 # zfs
-=sys-fs/zfs-9999 **
-=sys-fs/zfs-kmod-9999 **
-=sys-kernel/spl-9999 **
+=sys-fs/zfs-0.7.9
+=sys-fs/zfs-kmod-0.7.9
+=sys-kernel/spl-0.7.9
 =sys-kernel/genkernel-3.5.1.1 # zfs needs this version
 
 # hardware
