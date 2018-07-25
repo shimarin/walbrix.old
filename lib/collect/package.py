@@ -44,6 +44,7 @@ def apply(context, args, dry_run = False):
     parser.add_argument("--exclude", action="append", default=[], help="exclude pattern(can be used multiple times)")
     parser.add_argument("--use", type=str, default="", help="USE flags to be expected")
     parser.add_argument("--no-copy", action="store_true", help="just make sure that package exists")
+    parser.add_argument("--optional", action="store_true", help="just ignore if not exist")
     parser.add_argument("package", type=str, help="package name")
     args = parser.parse_args(args)
     target_package = context.apply_variables(args.package)
@@ -51,6 +52,9 @@ def apply(context, args, dry_run = False):
     if len(match) < 1:
         match = glob.glob(os.path.normpath("%s/var/db/pkg/%s-[0-9]*/CONTENTS" % (context.source, target_package)))
     if len(match) < 1:
+        if args.optional:
+            print "Package doesn't match: '%s'" % target_package
+            return None
         raise Exception("Package doesn't match: '%s'" % target_package)
     elif len(match) > 1:
         raise Exception("Package anbiguous: '%s', %d packages match" % (target_package, len(match)))

@@ -69,25 +69,21 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
         arch, version, revision = kernel_match.groups()
         if revision is None: revision = ""
 
-        if not os.path.isfile(("/boot/kernel-genkernel-%s-%s" + source + "%s") % (arch, version, revision)):
+        kernel_filename = ("/boot/kernel-genkernel-%s-%s" + source + "%s") % (arch, version, revision)
+        if not os.path.isfile(kernel_filename):
             print "Kernel %s%s%s needs to be built" % (version, source, revision)
             kerneldir = "/usr/src/linux-%s%s%s" % (version, source, revision)
-            if source == "-gentoo":
-                print "Reverting i8259 patch 8c058b0b"
-                if subprocess.call(["grep","-q","probe_8259A","%s/arch/x86/kernel/i8259.c" % kerneldir],shell=False) == 0:
-                    exec_cmd("wget -O - http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/patch/?id=8c058b0b9c34d8c8d7912880956543769323e2d8 | patch -d %s -p1 -R" % kerneldir)
-                else:
-                    print "i8259 patch has already been reverted."
             exec_cmd(["genkernel","--no-mountboot","--kerneldir=%s" % kerneldir] + concurrency_opts + genkernel_opts)
             return True
     return False
 
 exec_cmd(["emerge","-uDN","gentoo-sources","genkernel","splash-themes-gentoo"])
-if build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natural_gentoo","all"]):
-    try:
-        exec_cmd(["emerge","-1","--keep-going","spl","zfs-kmod","nvidia-drivers"])
-    except subprocess.CalledProcessError:
-        print "Looks like ZFS or NVIDIA modules are not compatible with this kernel."
+build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natural_gentoo","all"])
+
+kernel_build_time = os.path.getmtime(os.path.realpath("/boot/kernel"))
+for pkg in ["sys-kernel/spl","sys-fs/zfs-kmod","x11-drivers/nvidia-drivers"]:
+    build_times = [os.path.getmtime(f) for f in glob.glob("/var/db/pkg/%s-*/BUILD_TIME" % pkg)]
+    if len(build_times) > 0 and max(build_times) < kernel_build_time: exec_cmd(["emerge","-1",pkg])
 
 ## emerge world
 

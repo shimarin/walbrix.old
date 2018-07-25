@@ -116,7 +116,6 @@ sys-fs/safecopy
 sys-fs/squashfs-tools
 sys-fs/xfsdump
 sys-fs/xfsprogs
-sys-fs/zfs
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
 sys-kernel/linux-firmware
