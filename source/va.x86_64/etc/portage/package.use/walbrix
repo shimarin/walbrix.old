@@ -31,7 +31,7 @@ x11-libs/libXfont truetype
 x11-libs/pixman cpu_flags_x86_ssse3
 x11-drivers/nvidia-drivers uvm X -tools -abi_x86_32
 dev-python/markdown pygments
-dev-python/ipython -smp
+dev-python/restkit -cli
 dev-libs/openssl -bindist
 net-misc/openssh -bindist
 www-servers/nginx aio http2 nginx_modules_http_auth_pam nginx_modules_http_fancyindex nginx_modules_http_cache_purge nginx_modules_http_lua nginx_modules_http_spdy nginx_modules_http_realip nginx_modules_http_mp4 nginx_modules_http_flv nginx_modules_http_stub_status nginx_modules_mail_smtp nginx_modules_mail_pop3 nginx_modules_mail_imap
