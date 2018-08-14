@@ -6,8 +6,8 @@
 =sys-block/zram-init-3.8
 
 # Xen
-=app-emulation/xen-4.11.0
-=app-emulation/xen-tools-4.11.0
+=app-emulation/xen-4.11.0-r1
+=app-emulation/xen-tools-4.11.0-r1
 =app-emulation/xen-pvgrub-4.9.1
 
 #snort
