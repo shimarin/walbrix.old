@@ -89,6 +89,7 @@ def run(device, image, yes = False, no_bios = False, xen_vga = None): # image ca
         with open("%s/boot/grub/walbrix.cfg" % tmpdir, "w") as f:
             #f.write("set WALBRIX_BOOT=UUID=%s\n" % boot_partition_uuid)
             f.write("#set WALBRIX_DOM0_MEM=1024M\n")
+            f.write("#set WALBRIX_DOM0_MODEL=pvh\n")
             f.write("#set WALBRIX_GRUB_DEFAULT=0\n")
             f.write("#set WALBRIX_GRUB_TIMEOUT=3\n")
             f.write("#set WALBRIX_PCI_PASSTHROUGH_DEVICES=(AA:BB.C)(XX:YY.Z)\n")
