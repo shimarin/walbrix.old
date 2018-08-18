@@ -2,4 +2,4 @@
 >=dev-lang/php-7
 >=dev-php/pecl-apcu-5
 >=media-gfx/imagemagick-7 # rmagick doesn't follow imagemagick7
->=sys-libs/ncurses-6.1
+#>=sys-libs/ncurses-6.1
