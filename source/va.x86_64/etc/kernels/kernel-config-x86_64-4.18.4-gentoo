@@ -1,10 +1,10 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.18.3-gentoo Kernel Configuration
+# Linux/x86 4.18.4-gentoo Kernel Configuration
 #
 
 #
-# Compiler: gcc (Gentoo 6.4.0-r1 p1.3) 6.4.0
+# Compiler: gcc (Gentoo 7.3.0-r3 p1.4) 7.3.0
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -45,7 +45,7 @@ CONFIG_ARCH_SUPPORTS_UPROBES=y
 CONFIG_FIX_EARLYCON_MEM=y
 CONFIG_PGTABLE_LEVELS=4
 CONFIG_CC_IS_GCC=y
-CONFIG_GCC_VERSION=60400
+CONFIG_GCC_VERSION=70300
 CONFIG_CLANG_VERSION=0
 CONFIG_IRQ_WORK=y
 CONFIG_BUILDTIME_EXTABLE_SORT=y
