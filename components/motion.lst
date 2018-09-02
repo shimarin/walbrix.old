@@ -33,6 +33,7 @@ $symlink /etc/runlevels/default/motion /etc/init.d/motion
 /usr/bin/ffmpeg
 $package media-tv/v4l-utils
 $package dev-python/pyusb
+$require requests.lst
 $require matplotlib.lst
 $require vlgothic.lst
 $require uwsgi.lst
