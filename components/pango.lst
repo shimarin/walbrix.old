@@ -1,0 +1,2 @@
+$package x11-libs/pango
+#$package dev-libs/fribidi
