@@ -4,6 +4,7 @@ $require nginx.lst
 $require uwsgi.lst
 $require twisted-names.lst
 $require postfix.lst
+$require git.lst
 $require certbot-nginx.lst
 $require cron.lst
 $package net-proxy/haproxy
@@ -29,6 +30,11 @@ $copy revproxy/ssl-site.conf.sample /etc/nginx/conf.d/ssl-site.conf.sample
 $mkdir /etc/ssl/nginx
 $exec "openssl genrsa 2048 > /etc/ssl/nginx/nginx.key"
 $exec "openssl req -new -subj /CN=www.example.com -key /etc/ssl/nginx/nginx.key | openssl x509 -days 3650 -req -signkey /etc/ssl/nginx/nginx.key > /etc/ssl/nginx/nginx.pem"
+
+$write /etc/ssl/nginx/README.certbot "rm nginx.pem nginx.key\nln -s /etc/letsencrypt/live/nginx/fullchain.pem nginx.pem\nln -s /etc/letsencrypt/live/nginx/privkey.pem nginx.key"
+
+$mkdir /var/cache/nginx
+$exec "chown nginx /var/cache/nginx"
 
 $mkdir /var/www/localhost/htdocs
 $copy revproxy/index.html /var/www/localhost/htdocs/index.html
