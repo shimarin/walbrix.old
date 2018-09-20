@@ -20,6 +20,7 @@ $package dev-qt/qtgui
 #dev-qt/qtprintsupport
 #dev-qt/qtsvg
 #dev-qt/qtwebkit
+#dev-libs/hyphen # needs app-text/hunspell
 
 /usr/bin/wkhtmltoimage
 /usr/bin/wkhtmltopdf
