@@ -93,6 +93,7 @@ def run(device, image, yes = False, no_bios = False, xen_vga = None): # image ca
             f.write("#set WALBRIX_GRUB_DEFAULT=0\n")
             f.write("#set WALBRIX_GRUB_TIMEOUT=3\n")
             f.write("#set WALBRIX_PCI_PASSTHROUGH_DEVICES=(AA:BB.C)(XX:YY.Z)\n")
+            f.write("#set LINUX_DISABLE_SPECTRE_MITIGATIONS=1\n")
             if xen_vga: f.write("set WALBRIX_XEN_VGA=%s\n" % xen_vga)
             else: f.write("#set WALBRIX_XEN_VGA=gfx-640x480x32\n")
 
