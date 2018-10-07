@@ -1,4 +1,5 @@
 $require perl.lst # for mysql_install_db
+$package dev-db/mysql-connector-c # for my_print_defaults needed by mysql_install_db
 
 #dev-libs/libaio
 #app-arch/libarchive
