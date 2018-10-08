@@ -1,5 +1,5 @@
-=sys-kernel/gentoo-sources-4.18.8
-=sys-kernel/vanilla-sources-3.16.57
+=sys-kernel/gentoo-sources-4.18.12
+=sys-kernel/vanilla-sources-3.16.59
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =dev-java/commons-dbcp-2.1
@@ -24,11 +24,6 @@
 =dev-python/matplotlib-2.1.0-r1
 =dev-python/subprocess32-3.2.7
 =media-libs/qhull-2015.2
-
-# Let's encrypt
-=app-crypt/certbot-0.26.1
-=app-crypt/acme-0.26.0
-=app-crypt/certbot-nginx-0.26.0
 
 #docker
 =app-emulation/docker-1.13.1
