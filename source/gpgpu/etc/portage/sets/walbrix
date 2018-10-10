@@ -7,7 +7,7 @@ app-editors/nvi
 app-misc/beep
 app-misc/screen
 app-portage/cpuid2cpuflags
-#dev-libs/ocl-icd
+dev-libs/ocl-icd
 dev-python/future
 dev-util/strace
 dev-vcs/git
