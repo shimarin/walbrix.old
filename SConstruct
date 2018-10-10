@@ -48,7 +48,7 @@ touch $TARGET
 ### WALBRIX ###
 
 env['SYSTEM_64_MARKER'] = "build/walbrix/x86_64/.done"
-env['SYSTEM_32_MARKER'] = "build/walbrix/i686/.done"
+env['GPGPU_MARKER'] = "build/walbrix/gpgpu/.done"
 
 env.Command("wb/target/release/wb", Glob("wb/src/*.rs"), "cd wb && cargo build --release")
 
@@ -59,10 +59,10 @@ cp -a wb/target/release/wb build/walbrix/x86_64/usr/sbin/wb.bin
 ./kernelver -n build/walbrix/x86_64/boot/kernel > $TARGET
 """)
 
-env.Command("$SYSTEM_32_MARKER", lstfile_deps("components/walbrix.lst","source/walbrix.i686"), """
-rm -rf build/walbrix/i686
-./collect --source source/walbrix.i686 --var=ARCH=i686 components/walbrix.lst build/walbrix/i686
-./kernelver -n build/walbrix/i686/boot/kernel > $TARGET
+env.Command("$GPGPU_MARKER", lstfile_deps("components/walbrix.lst","source/gpgpu"), """
+rm -rf build/walbrix/gpgpu
+./collect --source source/gpgpu --var=ARCH=x86_64 components/gpgpu.lst build/walbrix/gpgpu
+./kernelver -n build/walbrix/gpgpu/boot/kernel > $TARGET
 """)
 
 env.Command("build/walbrix/walbrix.cfg", ["$SYSTEM_64_MARKER","$WBUI_MARKER"], """
@@ -71,7 +71,7 @@ echo "set WALBRIX_BUILD_ID=`cat build/wbui/usr/share/wbui/commit-id`" >> $TARGET
 echo "set WALBRIX_UPDATE_URL=http://update.walbrix.net" >> $TARGET
 """)
 
-env.Command("build/walbrix/.done", ["$SYSTEM_64_MARKER", "build/walbrix/walbrix.cfg","files/walbrix/grub.cfg","files/walbrix/grub-noxen.cfg","files/walbrix/install.cfg","files/walbrix/background.png"], """
+env.Command("build/walbrix/.done", ["$SYSTEM_64_MARKER", "$GPGPU_MARKER", "build/walbrix/walbrix.cfg","files/walbrix/grub.cfg","files/walbrix/grub-noxen.cfg","files/walbrix/install.cfg","files/walbrix/background.png"], """
 cp files/walbrix/grub.cfg files/walbrix/grub-noxen.cfg files/walbrix/install.cfg files/walbrix/background.png build/walbrix/
 touch $TARGET
 """)

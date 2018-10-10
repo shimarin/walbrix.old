@@ -1,0 +1,5 @@
+=sys-kernel/gentoo-sources-4.18.13
+=sys-block/zram-init-3.8
+sys-kernel/linux-firmware
+sys-apps/hwids
+

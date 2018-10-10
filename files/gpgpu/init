@@ -1,0 +1,229 @@
+#!/bin/sh
+
+# execute original initrc script if "walbrix.boot" is not specified
+mount -t proc -o noexec,nosuid,nodev proc /proc >/dev/null 2>&1
+if ! /bin/busybox grep -q '\bwalbrix.boot=' /proc/cmdline; then
+    busybox umount /proc && exec ./init.gentoo $@
+fi
+
+. /etc/initrd.defaults
+. /etc/initrd.scripts
+
+splash() {
+	return 0
+}
+
+[ -e /etc/initrd.splash ] && . /etc/initrd.splash
+
+# Clean input/output
+exec >${CONSOLE} <${CONSOLE} 2>&1
+
+mount -o remount,rw / >/dev/null 2>&1
+
+# Prevent superfluous printks from being printed to the console
+echo 1 > /proc/sys/kernel/printk
+
+# Set up symlinks
+/bin/busybox --install -s
+
+CMDLINE=$(cat /proc/cmdline)
+
+BOOT_PARTITION=/dev/sda1
+LOCALE=ja_JP
+PROFILE_PARTITION=''
+INIT_OPTS=''
+QUIET=''
+
+for x in ${CMDLINE}
+do
+	case "${x}" in
+		walbrix.boot=*)
+			BOOT_PARTITION=${x#*=}
+		;;
+		walbrix.profile=*)
+			PROFILE_PARTITION=${x#*=}
+		;;
+		walbrix.locale=*)
+			LOCALE=${x#*=}
+		;;
+	        scandelay=*)
+			SDELAY=${x#*=}
+		;;
+		scandelay)
+			SDELAY=1
+		;;
+		init_opts=*)
+			INIT_OPTS=${x#*=}
+		;;
+		softlevel=*)
+			SOFTLEVEL=${x#*=}
+		;;
+	esac
+done
+
+quiet_kmsg
+
+splash 'init'
+
+cmdline_hwopts
+
+# Mount devfs, sysfs
+mount_devfs
+mount_sysfs
+
+# Initialize mdev
+good_msg 'Activating mdev'
+
+# Serialize hotplug events
+touch /dev/mdev.seq
+
+# Setup hotplugging for firmware loading
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+
+# Load modules listed in MY_HWOPTS if /lib/modules exists for the running kernel
+if [ -z "${DO_modules}" ]
+then
+	good_msg 'Skipping module load; disabled via commandline'
+elif [ -d "/lib/modules/${KV}" ]
+then
+	good_msg 'Loading modules'
+	# Load appropriate kernel modules
+	if [ "${NODETECT}" != '1' ]
+	then
+		for modules in ${MY_HWOPTS}
+		do
+			modules_scan ${modules}
+		done
+	fi
+	# Always eval doload=...
+	modules_load ${MDOLIST}
+else
+	good_msg 'Skipping module load; no modules in the ramdisk!'
+fi
+
+# Ensure that device nodes are properly configured
+mdev -s || bad_msg "mdev -s failed"
+
+# Apply scan delay if specified
+sdelay
+
+cd /
+
+USE_LVM_NORMAL=1
+#USE_MDADM=1
+
+# Setup md device nodes if they dont exist
+#setup_md_device
+
+# Scan volumes
+startVolumes
+
+setup_keymap
+
+mkdir -p "${NEW_ROOT}"
+CHROOT="${NEW_ROOT}"
+
+mkdir /mnt/boot
+mkdir /mnt/system
+mkdir /mnt/profile
+
+# determine devices
+good_msg 'Determining boot device ...'
+if [ "${BOOT_PARTITION}" = "CDROM" ]; then
+    BOOT_PARTITION=`blkid | grep -e 'LABEL="WBINSTALL.*".\+TYPE="iso9660"' | cut -d ':' -f 1`
+fi
+
+if echo "${BOOT_PARTITION}" | grep -qs '^\LABEL='; then
+    BOOT_PARTITION=`busybox findfs "${BOOT_PARTITION}"`
+fi
+
+if echo "${BOOT_PARTITION}" | grep -qs '^\UUID='; then
+    # you need to use blkid -U instead of findfs when you want to find CDROM as well
+    BOOT_PARTITION=`blkid -U "${BOOT_PARTITION#UUID=}"`
+fi
+
+if [ -z "${BOOT_PARTITION}" ]; then
+    bad_msg "Unable to determine boot partition (specified by walbrix.boot= kernel arg)"
+    exec sh
+fi
+
+if echo "${PROFILE_PARTITION}" | grep -qs '^\(LABEL\|UUID\)='; then
+    PROFILE_PARTITION=`busybox findfs "${PROFILE_PARTITION}"`
+fi
+
+if ! mount -r "${BOOT_PARTITION}" /mnt/boot; then
+    bad_msg "Unable to mount $BOOT_PARTITION"
+    exec sh
+fi
+
+if ! mount -o loop,ro /mnt/boot/walbrix /mnt/system; then
+    bad_msg "Unable to mount $BOOT_PARTITION/walbrix"
+    exec sh
+fi
+
+if [ -z "${PROFILE_PARTITION}" ]; then
+    BOOT_PARTITION_UUID=`blkid -o value -s UUID $BOOT_PARTITION`
+    if [ -n "${BOOT_PARTITION_UUID}" ]; then
+        PROFILE_PARTITION=/dev/wbvg-${BOOT_PARTITION_UUID}/profile
+    fi
+    if [ -z "${PROFILE_PARTITION}" -o ! -b "${PROFILE_PARTITION}" ]; then
+        PROFILE_PARTITION=/dev/wbvg/profile
+    fi
+fi
+
+if [ "${SOFTLEVEL}" != "rescue" -a  "${SOFTLEVEL}" != "install" ]; then # https://github.com/wbrxcorp/walbrix/issues/22
+    mount "${PROFILE_PARTITION}" /mnt/profile || bad_msg "Unable to mount $PROFILE_PARTITION. Attempting tmpfs"
+fi
+
+if ! grep -qs '/mnt/profile' /proc/mounts; then
+    mount -t tmpfs tmpfs /mnt/profile || bad_msg "Unable to mount tmpfs"
+fi
+
+rm -rf /mnt/profile/work # cleanup overlayfs workdir
+mkdir -p /mnt/profile/root /mnt/profile/work
+rm -rf /mnt/profile/root/tmp /mnt/profile/root/var/tmp # cleanup temporary dirs
+rm -f /mnt/profile/root/etc/mtab # mtab should always point /proc/mounts
+rm -f /mnt/profile/root/etc/ld.so.cache # https://github.com/wbrxcorp/walbrix/issues/16
+
+if ! mount -t overlay -o lowerdir=/mnt/system/wbui:/mnt/system/gpgpu,upperdir=/mnt/profile/root,workdir=/mnt/profile/work overlay /newroot; then
+	bad_msg "Unable to mount /newroot"
+fi
+
+mkdir -p /newroot/.overlay/boot && mount --move /mnt/boot /newroot/.overlay/boot
+#mkdir -p /newroot/mnt/system && mount --move /mnt/system /newroot/mnt/system
+mkdir -p /newroot/.overlay/profile && mount --move /mnt/profile /newroot/.overlay/profile
+
+# https://github.com/wbrxcorp/walbrix/blob/master/wbui/src/cli2/update.py#L4
+touch /newroot/.overlay/.lock
+
+# https://github.com/wbrxcorp/walbrix/issues/8
+if [ -f /newroot/.overlay/boot/walbrix.cur ];then
+     mount -o remount,rw /newroot/.overlay/boot && mv -f /newroot/.overlay/boot/walbrix.cur /newroot/.overlay/boot/walbrix.old
+     mount -o remount,ro /newroot/.overlay/boot
+fi
+
+if [ `grep '/newroot/.overlay/profile' /proc/mounts | awk '{print $1}'` = "tmpfs" ]; then
+    if [ "${SOFTLEVEL}" == "install" ]; then
+        echo 'hostname="install"' > /newroot/etc/conf.d/hostname
+    else
+        # some useful modification for rescue environment
+        sed -i 's/\/usr\/sbin\/wbgetty/\/sbin\/agetty/' /newroot/etc/inittab
+        sed -i 's/tty1 linux/--autologin root tty1 linux/' /newroot/etc/inittab
+        echo 'hostname="rescue"' > /newroot/etc/conf.d/hostname
+    fi
+    if [ -f /newroot/.overlay/boot/walbrix.emg ]; then
+        # extract emergency files (typically hostname, openssh, openvpn files and authorized_keys)
+        tar xvf /newroot/.overlay/boot/walbrix.emg -C /newroot
+    fi
+fi
+
+mount --move /dev /newroot/dev
+mount --move /sys /newroot/sys
+mount --move /proc /newroot/proc
+
+exec /sbin/switch_root /newroot /sbin/init "${INIT_OPTS}"
+
+# If we get here, something bad has happened
+splash 'verbose'
+
+exec /bin/sh

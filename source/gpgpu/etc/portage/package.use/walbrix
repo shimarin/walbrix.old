@@ -1,0 +1,9 @@
+sys-kernel/gentoo-sources symlink
+virtual/linux-sources firmware
+sys-apps/util-linux static-libs
+app-admin/sudo -sendmail pam
+sys-apps/kmod lzma
+dev-vcs/git -perl -gpg
+net-dns/avahi -introspection dbus
+sys-libs/ncurses tinfo
+x11-drivers/nvidia-drivers -X acpi driver -gtk3 kms uvm -multilib -tools -abi_x86_32
