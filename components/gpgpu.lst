@@ -72,6 +72,7 @@ $copy gpgpu/grub.cfg /boot/grub/grub.cfg
 
 # system services
 $require cron.lst
+$require acpi.lst
 
 # prevent to get profile layer unmounted
 $write /etc/conf.d/localmount 'no_umounts="/.overlay/boot|/.overlay/profile"'
@@ -94,6 +95,7 @@ $require tcpdump.lst
 $package net-misc/dhcp
 $require ssmtp.lst
 $require cu.lst
+$require ntp.lst
 /usr/bin/curl
 
 # tools
