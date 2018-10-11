@@ -129,6 +129,7 @@ $exec "if [ -d /lib/modules/$(KERNEL_VERSION)/video ]; then cd /lib/modules/$(KE
 # misc
 $package dev-libs/ocl-icd
 $exec --overlay "eselect opencl set ocl-icd"
+/usr/lib64/libuv.so.1
 /usr/lib64/libdrm.so.2
 /usr/lib64/libdrm_amdgpu.so.1
 /usr/lib64/libmicrohttpd.so.12
