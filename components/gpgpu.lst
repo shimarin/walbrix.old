@@ -1,6 +1,7 @@
 $require rootfs.lst
 /usr/bin/ldd
 $package sys-apps/baselayout
+$package sys-apps/pciutils # lspci
 $require dev.lst
 $require bash.lst
 $require glibc.lst
@@ -45,6 +46,7 @@ $require udev.lst
 $package sys-libs/timezone-data
 $package sys-process/procps
 
+$require lvm.lst
 $require portage-configs.lst
 $require kernel.lst
 
