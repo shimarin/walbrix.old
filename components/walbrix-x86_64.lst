@@ -28,10 +28,6 @@ $package --optional sys-fs/zfs
 $write /tmp/README 'http://insights.ubuntu.com/2016/02/18/zfs-licensing-and-linux/'
 $exec 'if [ -d /lib/modules/$(KERNEL_VERSION)/extra/zfs ]; then mv /tmp/README /lib/modules/$(KERNEL_VERSION)/extra/zfs/; fi'
 
-# non-free
-$exec "if [ -d /lib/modules/$(KERNEL_VERSION)/video ]; then cd /lib/modules/$(KERNEL_VERSION)/video && zip -P 'I agree to the end user license agreement' -m -0 nvidia.zip *.ko; fi"
-#makeself --nocomp --target /lib/modules/$(KERNEL_VERSION)/video --nox11 --ssl-encrypt /lib/modules/$(KERNEL_VERSION)/video /lib/modules/$(KERNEL_VERSION)/video/nvidia.run nvidia /sbin/depmod
-
 # misc
 /usr/bin/mpg123
 /usr/lib64/mpg123/output_alsa.so
@@ -41,15 +37,6 @@ $copy usbip/usbipd.init /etc/init.d/usbipd
 $copy usbip/usbipd.conf /etc/conf.d/usbipd
 $copy usbip/usbip.init /etc/init.d/usbip
 $copy usbip/usbip.conf /etc/conf.d/usbip
-$package dev-libs/ocl-icd
-$exec --overlay "eselect opencl set ocl-icd"
-/usr/lib64/libdrm.so.2
-/usr/lib64/libdrm_amdgpu.so.1
-/usr/lib64/libmicrohttpd.so.12
 /usr/lib64/libhwloc.so.5
 /usr/lib64/libuv.so.1
-/usr/share/libdrm/amdgpu.ids
-
-$write /etc/sysctl.d/nr_hugepages.conf '#vm.nr_hugepages=128'
-$write /etc/modprobe.d/blacklist.conf '#blacklist nouveau'
 
