@@ -14,6 +14,7 @@ dev-vcs/git-lfs -doc
 net-fs/samba ldap
 net-nds/openldap -tcpd samba
 net-fs/nfs-utils -tcpd
+net-libs/nodejs inspector icu
 www-servers/uwsgi python lua -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool -ruby_targets_ruby22 -php_targets_php7-1
 app-editors/emacs -gtk3 -xpm
 mail-mta/postfix sasl
