@@ -27,7 +27,7 @@ dev-qt/qtwebkit -gstreamer printsupport
 dev-libs/libpcre2 pcre16
 x11-base/xorg-server xvfb minimal -glamor
 x11-base/xorg-drivers -video_cards_glint -video_cards_intel -video_cards_mach64 -video_cards_mga -video_cards_nouveau -video_cards_nv -video_cards_amdgpu -video_cards_r128 -video_cards_radeon -video_cards_radeonsi -video_cards_savage -video_cards_tdfx -video_cards_trident -video_cards_v4l -video_cards_vesa -video_cards_via -video_cards_vmware
-x11-libs/libdrm -video_cards_intel video_cards_nouveau -video_cards_radeon -video_cards_vmware
+x11-libs/libdrm video_cards_intel video_cards_nouveau -video_cards_radeon -video_cards_vmware
 x11-libs/libXfont truetype
 x11-libs/pixman cpu_flags_x86_ssse3
 x11-drivers/nvidia-drivers uvm X -tools -abi_x86_32
@@ -59,7 +59,8 @@ www-servers/apache apache2_modules_proxy_connect apache2_modules_proxy apache2_m
 www-apache/mod_extract_forwarded mod_proxy
 
 # owncloud
-media-video/ffmpeg mp3 xvid x264 x265 cpudetection mmx mmxext theora threads truetype v4l vorbis webp cpu_flags_x86_3dnow cpu_flags_x86_3dnowext cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_sse3 cpu_flags_x86_mmx cpu_flags_x86_mmxext cpu_flags_x86_ssse3
+media-video/ffmpeg mp3 xvid x264 x265 vpx cpudetection mmx mmxext theora threads truetype v4l vorbis webp vaapi vdpau cpu_flags_x86_3dnow cpu_flags_x86_3dnowext cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_sse3 cpu_flags_x86_mmx cpu_flags_x86_mmxext cpu_flags_x86_ssse3 cpu_flags_x86_aes cpu_flags_x86_avx cpu_flags_x86_avx2 cpu_flags_x86_fma3 cpu_flags_x86_fma4 cpu_flags_x86_sse4_1 cpu_flags_x86_sse4_2 cpu_flags_x86_xop
+x11-libs/libva X vdpau -video_cards_nouveau video_cards_i965 video_cards_nvidia
 
 # php
 dev-lang/php apache2 gd mysql mysqli postgres xslt zip pdo truetype xmlwriter bcmath xmlreader pcntl sysvipc sockets curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap

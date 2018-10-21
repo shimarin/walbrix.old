@@ -11,5 +11,6 @@
 #media-libs/freetype
 #media-libs/x265
 #media-libs/libtheora
+$require libva.lst
 $package media-video/ffmpeg --use="mp3 xvid x264 x265 cpudetection theora threads truetype vorbis webp cpu_flags_x86_3dnow cpu_flags_x86_3dnowext cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_sse3 cpu_flags_x86_mmx cpu_flags_x86_mmxext cpu_flags_x86_ssse3" --exclude='^/usr/share/ffmpeg/examples/'
 
