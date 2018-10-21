@@ -2,7 +2,9 @@ $require perl.lst # for mysql_install_db
 $package dev-db/mysql-connector-c # for my_print_defaults needed by mysql_install_db
 
 #dev-libs/libaio
+#dev-libs/protobuf
 #app-arch/libarchive
+#app-arch/lz4
 $package dev-db/mysql --exclude='/var/run/'
 $sed /etc/mysql/my.cnf 's/^log-bin$/#log-bin/'  # disable binary log
 
