@@ -1,5 +1,6 @@
 app-admin/sysklogd
 app-admin/sysstat
+app-arch/lz4
 app-arch/zip
 app-editors/bvi
 app-editors/nano

@@ -77,8 +77,8 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
             return True
     return False
 
-exec_cmd(["emerge","-uDN","gentoo-sources","genkernel","splash-themes-gentoo"])
-build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natural_gentoo","all"])
+exec_cmd(["emerge","-uDN","gentoo-sources","genkernel","splash-themes-gentoo","lz4"])
+build_kernel_if_needed("gentoo", ["--lvm","--mdadm","--symlink","--splash=natural_gentoo","--no-compress-initramfs","all"])
 
 kernel_build_time = os.path.getmtime(os.path.realpath("/boot/kernel"))
 for pkg in ["sys-kernel/spl","sys-fs/zfs-kmod","x11-drivers/nvidia-drivers"]:

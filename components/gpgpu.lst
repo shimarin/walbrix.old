@@ -65,7 +65,7 @@ $write --append /etc/sysctl.conf 'net.nf_conntrack_max = 65536'
 # modify initramfs
 $mkdir /tmp/initramfs/etc
 $copy gpgpu/init /tmp/initramfs/init.walbrix
-$exec 'cd /tmp/initramfs && unxz -c /boot/initramfs | cpio -idm && mv /tmp/initramfs/init /tmp/initramfs/init.gentoo && mv /tmp/initramfs/init.walbrix /tmp/initramfs/init && (find .|cpio -o -H newc) | xz -c --check=crc32 > /boot/initramfs'
+$exec 'cd /tmp/initramfs && cat /boot/initramfs | cpio -idm && mv /tmp/initramfs/init /tmp/initramfs/init.gentoo && mv /tmp/initramfs/init.walbrix /tmp/initramfs/init && (find .|cpio -o -H newc) > /boot/initramfs'
 $deltree /tmp/initramfs
 
 # bootloader config
