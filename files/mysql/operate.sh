@@ -45,10 +45,11 @@ if [ "$CMD" = "initdb" ]; then
     mkdir -p $MY_DATADIR
     chown -R mysql:mysql $MY_DATADIR
     chmod 0750 $MY_DATADIR
-    /usr/share/mysql/scripts/mysql_install_db --basedir=/usr --cross-bootstrap
+    /usr/sbin/mysqld --initialize-insecure --user=mysql --datadir=$MY_DATADIR
+    #/usr/bin/mysql_install_db --basedir=/usr --cross-bootstrap
 fi
 
-/usr/sbin/mysqld --skip-networking --user=mysql --log-warnings=0 --basedir=/usr\
+/usr/sbin/mysqld --skip-networking --user=mysql --log_error_verbosity=1 --basedir=/usr\
  --datadir=$MY_DATADIR --max_allowed_packet=8M --net_buffer_length=16K\
  --default-storage-engine=MyISAM --socket=$SOCKET --pid-file=$PIDFILE &
 maxtry=15
@@ -67,9 +68,9 @@ if [ "$CMD" = "initdb" ]; then
 elif [ "$CMD" = "createdb" ]; then
     /usr/bin/mysql --socket=$SOCKET -u root -e "create database \`$DATABASE\`" || FAIL=1
     if [ -z "$PASSWORD" ]; then
-        /usr/bin/mysql --socket=$SOCKET -u root -e "grant all privileges on \`$DATABASE\`.* to \`$USERNAME\`@localhost" || FAIL=1
+        /usr/bin/mysql --socket=$SOCKET -u root -e "create user \`$USERNAME\`@localhost; grant all privileges on \`$DATABASE\`.* to \`$USERNAME\`@localhost" || FAIL=1
     else
-        /usr/bin/mysql --socket=$SOCKET -u root -e "grant all privileges on \`$DATABASE\`.* to \`$USERNAME\`@localhost identified by '$PASSWORD'" || FAIL=1
+        /usr/bin/mysql --socket=$SOCKET -u root -e "create user \`$USERNAME\`@localhost identified by '$PASSWORD'; grant all privileges on \`$DATABASE\`.* to \`$USERNAME\`@localhost" || FAIL=1
     fi
 elif [ "$CMD" = "exec" ]; then
     IFS=$'\t'

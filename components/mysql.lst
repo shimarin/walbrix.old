@@ -14,5 +14,7 @@ $sed /etc/mysql/my.cnf 's/^log-bin$/#log-bin/'  # disable binary log
 $package dev-db/mysql-init-scripts
 $symlink /etc/runlevels/default/mysql /etc/init.d/mysql
 
+$mkdir /var/log/mysql
+$exec "chown -R mysql.mysql /var/log/mysql"
 $copy mysql/operate.sh /operate.sh
 $exec "/operate.sh initdb && rm /operate.sh"
