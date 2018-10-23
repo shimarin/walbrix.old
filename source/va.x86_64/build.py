@@ -92,8 +92,8 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
             return True
     return False
 
-exec_cmd(["emerge","-uDN","system","gentoo-sources","genkernel"])
-if build_kernel_if_needed("gentoo", ["--symlink","all"]):
+exec_cmd(["emerge","-uDN","system","gentoo-sources","genkernel","lzop"])
+if build_kernel_if_needed("gentoo", ["--no-compress-initramfs","--no-ramdisk-modules","--symlink","all"]):
     try:
         exec_cmd(["emerge","-1","--keep-going","nvidia-drivers"])
     except subprocess.CalledProcessError:
