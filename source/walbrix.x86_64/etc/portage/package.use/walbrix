@@ -54,8 +54,8 @@ media-libs/sdl-mixer vorbis
 dev-vcs/git -perl -gpg
 
 # networks
-net-dns/avahi -introspection
 net-analyzer/net-snmp python
+net-dns/avahi -introspection dbus
 
 # misc
 media-sound/mpg123 alsa
