@@ -1,4 +1,4 @@
-$rpmbootstrap 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/7.3.1611/os/x86_64/Packages/centos-release-7-3.1611.el7.centos.x86_64.rpm' --include='vim-minimal less initscripts passwd tar net-tools'
+$rpmbootstrap 'http://ftp.kddilabs.jp/pub/Linux/distributions/CentOS/7/os/x86_64/Packages/centos-release-7-5.1804.el7.centos.x86_64.rpm' --include='vim-minimal less initscripts passwd tar net-tools'
 
 $require domU-kernel.lst
 
@@ -41,8 +41,8 @@ $exec "chown -R apache.apache /var/www /var/log/httpd"
 #patchsinglefile /etc/my.cnf centos/my.cnf.patch
 $copy centos/smb.conf /etc/samba/smb.conf
 
-$download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/o/openvpn-2.4.1-2.el7.x86_64.rpm
-$download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/p/pkcs11-helper-1.11-3.el7.x86_64.rpm
+$download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/Packages/o/openvpn-2.4.6-1.el7.x86_64.rpm
+$download http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/7/x86_64/Packages/p/pkcs11-helper-1.11-3.el7.x86_64.rpm
 $exec "rpm -ivh /tmp/download/*.rpm"
 
 $require centos-$(REGION).lst
