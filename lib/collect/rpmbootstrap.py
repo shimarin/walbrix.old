@@ -1,5 +1,5 @@
 import argparse,subprocess,os,re,shutil,base64,hashlib
-import collect
+import collect,execute
 
 def apply(context, args):
     parser = argparse.ArgumentParser()
@@ -28,18 +28,14 @@ def apply(context, args):
             with open("%s/etc/resolv.conf" % rpmbootstrap_dir, "w") as f:
                 f.write("nameserver 8.8.8.8\n")
             env_with_root_path = collect.env_with_root_path()
-            subprocess.check_call(prefix + ["chroot",rpmbootstrap_dir,"rpm","--initdb"], env=env_with_root_path)
-            subprocess.check_call(prefix + ["chroot",rpmbootstrap_dir,"rpm","-ivh", releaserpm], env=env_with_root_path)
-            subprocess.check_call(["mount","-o","bind","/dev","%s/dev" % rpmbootstrap_dir])
-            try:
-                subprocess.check_call(prefix + ["chroot",rpmbootstrap_dir,"yum","install","-y","yum"], env=env_with_root_path)
-                if include is not None:
-                    subprocess.check_call(prefix + ["chroot",rpmbootstrap_dir,"yum","install","-y"] + include.split(), env=env_with_root_path)
-                subprocess.check_call(prefix + ["chroot",rpmbootstrap_dir,"yum","clean","-y","all"], env=env_with_root_path)
-                shutil.rmtree("%s/var/cache/yum/base/packages" % rpmbootstrap_dir, True)
-                collect.mkdir_p("%s/var/cache/yum/base/packages" % rpmbootstrap_dir)
-            finally:
-                subprocess.check_call(["umount","%s/dev" % rpmbootstrap_dir])
+            execute.do_chroot(rpmbootstrap_dir, "rpm --initdb", envvars=env_with_root_path)
+            execute.do_chroot(rpmbootstrap_dir, "rpm -ivh %s --nodeps" % releaserpm, envvars=env_with_root_path)
+            execute.do_chroot(rpmbootstrap_dir, "yum install -y yum", envvars=env_with_root_path)
+            if include is not None:
+                execute.do_chroot(rpmbootstrap_dir,"yum install -y %s" % include, envvars=env_with_root_path)
+            execute.do_chroot(rpmbootstrap_dir,"yum clean -y all", envvars=env_with_root_path)
+            shutil.rmtree("%s/var/cache/yum/base/packages" % rpmbootstrap_dir, True)
+            collect.mkdir_p("%s/var/cache/yum/base/packages" % rpmbootstrap_dir)
         
             progress_file = "download_cache/_rpmbootstrap_in_progress"
             subprocess.check_call(["tar","zcvpf",progress_file,"--xattrs","--xattrs-include=*","-C",rpmbootstrap_dir,"."])
