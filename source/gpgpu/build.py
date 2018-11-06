@@ -68,7 +68,7 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
             return True
     return False
 
-exec_cmd(["emerge","-uDN","gentoo-sources","genkernel","lz4"])
+exec_cmd(["emerge","-uDN","gentoo-sources","genkernel","app-arch/lz4"])
 build_kernel_if_needed("gentoo", ["--lvm","--symlink","--no-compress-initramfs","--no-ramdisk-modules","all"])
 
 kernel_build_time = os.path.getmtime(os.path.realpath("/boot/kernel"))
