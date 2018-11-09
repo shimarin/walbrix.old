@@ -1,0 +1,51 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$require cron.lst
+$require apache.lst
+$require mysql.lst
+$require postfix.lst
+$require samba.lst
+$require php56.lst
+$require pecl-apcu.lst
+#copy owncloud/smb.conf /etc/samba/smb.conf
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1openpne\2/'
+
+$set OPENPNE_TAR OpenPNE-3.8.29.tar.gz
+$download https://github.com/openpne/OpenPNE3/archive/$(OPENPNE_TAR)
+$exec "tar xvf /tmp/download/$(OPENPNE_TAR) -C /var/www"
+$exec "rm -rf /var/www/localhost"
+$exec "mv /var/www/OpenPNE3-OpenPNE-* /var/www/localhost"
+$exec "ln -s web /var/www/localhost/htdocs"
+
+# create database
+$mkdir /tmp/mysql
+$copy mysql/operate.sh /tmp/mysql/operate.sh
+$exec "/tmp/mysql/operate.sh createdb openpne"
+
+# config files
+$exec "cd /var/www/localhost/config/ && cp ProjectConfiguration.class.php.sample ProjectConfiguration.class.php && cp OpenPNE.yml.sample OpenPNE.yml"
+
+# setup
+$write /tmp/setup.sh 'cd /var/www/localhost && ./symfony openpne:fast-install --internet --dbms=mysql --dbuser=openpne --dbpassword="" --dbhost=localhost --dbname=openpne --dbsock=/tmp/mysqld.sock'
+$exec "chmod 755 /tmp/setup.sh && /tmp/mysql/operate.sh shell /tmp/setup.sh"
+$sed /var/www/localhost/config/databases.yml 's/;unix_socket=\/tmp\/mysqld.sock//'
+
+# delete files for develepment
+$exec "cd /var/www/localhost && ./symfony project:clear-controllers"
+
+$exec "chown -R apache.apache /var/www/localhost"
+
+# TODO: setup postfix
+# /etc/postfix/virtual
+#  example.com anything
+#  @example.com openpne_user
+# /etc/aliases
+#  openpne_user: "| php /var/www/localhost/symfony openpne:execute-mail-action"
+
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^upload_max_filesize.\+$/upload_max_filesize = 512M/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^post_max_size.\+$/post_max_size = 768M/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^memory_limit.\+$/memory_limit=512M/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;mbstring.func_overload.\+$/mbstring.func_overload=0/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;always_populate_raw_post_data.\+$/always_populate_raw_post_data=-1/'
+$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;default_charset.\+$/default_charset="UTF-8"/'
+$write /var/spool/cron/crontabs/apache '0 6 * * * sh /var/www/localhost/bin/send_daily_news.cron /var/www/localhost /usr/bin/php\n0 6 * * * sh /var/www/localhost/bin/birthday_mail.cron /var/www/localhost /usr/bin/php'
