@@ -28,6 +28,7 @@ dev-python/future
 dev-python/pyalsaaudio
 dev-python/pyparsing
 dev-python/pygame
+dev-python/pyserial
 dev-python/pyusb
 dev-util/debootstrap
 dev-util/strace
