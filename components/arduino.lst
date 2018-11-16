@@ -1,0 +1,14 @@
+$mkdir /etc/portage
+$write /etc/portage/repos.conf '[localrepo]\nlocation = /usr/local/portage'
+$mkdir /usr/local/portage/metadata
+$write /usr/local/portage/metadata/layout.conf 'masters = gentoo\nauto-sync = false'
+$mkdir /usr/local/portage/profiles
+/usr/lib64/libmpc.so.3
+/usr/lib64/libmpfr.so.4
+$exec --overlay 'crossdev -s4 avr'
+$exec --overlay 'eclean --deep packages'
+$exec --overlay 'quickpkg --include-config=y gcc-config java-config eselect-java icedtea-bin arduino-ctags sys-devel/crossdev dev-libs/libserialport dev-embedded/avrdude dev-embedded/arduino-builder dev-embedded/arduino-listserialportsc dev-util/astyle dev-embedded/arduino'
+$exec --overlay 'for i in gcc-config java-config eselect-java icedtea-bin arduino-ctags crossdev libserialport avrdude arduino-builder arduino-listserialportsc astyle arduino; do tar xvf /usr/portage/packages/*/$i-[0123456789]*.tbz2; done'
+$exec --overlay 'cp -av /usr/lib/. /usr/lib64/'
+$deltree /var/cache /usr/share/doc /usr/lib
+$del /etc/ld.so.cache

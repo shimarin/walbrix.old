@@ -5,6 +5,7 @@ sys-kernel/genkernel -firmware
 sys-apps/kmod lzma
 app-admin/sudo -sendmail
 net-dns/avahi -introspection mdnsresponder-compat dbus
+dev-util/astyle java
 dev-util/strace -perl
 app-emulation/docker -device-mapper aufs overlay btrfs
 sys-process/tini static
