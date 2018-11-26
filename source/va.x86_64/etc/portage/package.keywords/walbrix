@@ -1,5 +1,5 @@
-=sys-kernel/gentoo-sources-4.19.2
-=sys-kernel/vanilla-sources-3.16.60
+=sys-kernel/gentoo-sources-4.19.4
+=sys-kernel/vanilla-sources-3.16.61
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =dev-java/commons-dbcp-2.1
@@ -15,7 +15,6 @@
 =net-nds/rpcbind-0.2.4
 =dev-util/jenkins-bin-2.97
 =dev-vcs/git-lfs-2.4.2
-=media-video/motion-4.1.1
 =sys-devel/gcc-config-2.0
 
 #python
@@ -52,15 +51,9 @@
 =dev-ruby/mysql2-0.4.10
 =dev-ruby/rmagick-2.16.0
 
-#rust
-=virtual/rust-1.23.0
-=dev-lang/rust-1.23.0-r1
-=dev-util/cargo-0.24.0
-
 #GPU
 =dev-util/nvidia-cuda-toolkit-8.0.61
 =sys-firmware/nvidia-firmware-340.32
-=x11-drivers/nvidia-drivers-410.66
 =dev-libs/amdgpu-pro-opencl-18.20.606296
 
 #usb stuffs
@@ -72,3 +65,8 @@
 
 # arduino
 =dev-embedded/arduino-1.8.7
+
+# motion
+=media-video/motion-4.1.1-r1
+=media-video/ffmpeg-4.1
+=media-libs/opencv-3.4.1-r4
