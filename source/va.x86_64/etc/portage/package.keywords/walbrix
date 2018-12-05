@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.19.4
+=sys-kernel/gentoo-sources-4.19.6
 =sys-kernel/vanilla-sources-3.16.61
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
@@ -69,4 +69,8 @@
 # motion
 =media-video/motion-4.1.1-r1
 =media-video/ffmpeg-4.1
-=media-libs/opencv-3.4.1-r4
+=media-libs/opencv-3.4.1-r5
+
+# misc
+=games-server/minecraft-server-1.13.2
+

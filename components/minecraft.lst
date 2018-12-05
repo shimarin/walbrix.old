@@ -1,0 +1,16 @@
+$require domU.lst
+$require domU-overlayfs-kernel.lst
+$require cron.lst
+$require java.lst
+$require nginx.lst
+
+$package app-misc/screen
+$package games-server/minecraft-server
+$symlink /etc/runlevels/default/minecraft-server /etc/init.d/minecraft-server
+
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1minecraft\2/'
+
+
+$mkdir /etc/xen
+$write /etc/xen/config "memory=1280"
+

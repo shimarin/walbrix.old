@@ -80,6 +80,7 @@ dev-util/strace
 dev-vcs/git-lfs
 dev-vcs/mercurial
 dev-vcs/subversion
+games-server/minecraft-server
 gnome-base/gconf
 mail-mta/postfix
 media-fonts/vlgothic
