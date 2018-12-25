@@ -7,3 +7,17 @@ dev-vcs/git -perl -gpg
 net-dns/avahi -introspection dbus
 sys-libs/ncurses tinfo
 x11-drivers/nvidia-drivers -X acpi driver -gtk3 kms uvm -multilib -tools -abi_x86_32
+
+# omit ruby 2.3
+dev-lang/ruby -rdoc
+dev-ruby/json -ruby_targets_ruby23
+dev-ruby/minitest -ruby_targets_ruby23
+dev-ruby/power_assert -ruby_targets_ruby23
+dev-ruby/test-unit -ruby_targets_ruby23
+dev-ruby/net-telnet -ruby_targets_ruby23
+dev-ruby/rubygems -ruby_targets_ruby23
+dev-ruby/rake -ruby_targets_ruby23
+dev-ruby/did_you_mean -ruby_targets_ruby23
+dev-ruby/xmlrpc -ruby_targets_ruby23
+virtual/rubygems -ruby_targets_ruby23
+
