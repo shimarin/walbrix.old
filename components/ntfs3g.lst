@@ -1,2 +1,2 @@
-$package sys-fs/fuse
+$require fuse.lst
 $package sys-fs/ntfs3g

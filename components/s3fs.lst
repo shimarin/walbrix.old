@@ -1,2 +1,2 @@
-$package sys-fs/fuse
+$require fuse.lst
 $package net-fs/s3fs

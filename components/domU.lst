@@ -57,7 +57,7 @@ $write /etc/conf.d/net 'config_eth0="noop\ndhcp"'
 $sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
 
 $package net-analyzer/traceroute
-$package sys-fs/fuse
+$require fuse.lst
 
 $symlink /etc/init.d/net.eth0 net.lo
 $symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0

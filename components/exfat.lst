@@ -1,3 +1,3 @@
-$package sys-fs/fuse
+$require fuse.lst
 $package sys-fs/exfat-utils
 $package sys-fs/fuse-exfat
