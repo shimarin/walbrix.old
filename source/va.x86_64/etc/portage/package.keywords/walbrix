@@ -1,5 +1,5 @@
-=sys-kernel/gentoo-sources-4.19.6
-=sys-kernel/vanilla-sources-3.16.61
+=sys-kernel/gentoo-sources-4.20.0
+=sys-kernel/vanilla-sources-3.16.62
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =dev-java/commons-dbcp-2.1
@@ -50,10 +50,12 @@
 #ruby
 =dev-ruby/mysql2-0.4.10
 =dev-ruby/rmagick-2.16.0
+=www-apache/passenger-5.3.7
 
 #GPU
 =dev-util/nvidia-cuda-toolkit-8.0.61
 =sys-firmware/nvidia-firmware-340.32
+=x11-drivers/nvidia-drivers-415.25
 =dev-libs/amdgpu-pro-opencl-18.20.606296
 
 #usb stuffs

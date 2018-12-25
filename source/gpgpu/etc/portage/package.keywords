@@ -1,5 +1,4 @@
-=sys-kernel/gentoo-sources-4.19.1
+=sys-kernel/gentoo-sources-4.20.0
 sys-kernel/linux-firmware
 sys-apps/hwids
-=x11-drivers/nvidia-drivers-410.66
-
+=x11-drivers/nvidia-drivers-415.25
