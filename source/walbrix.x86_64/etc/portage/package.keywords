@@ -7,9 +7,9 @@
 =sys-boot/grub-2.02-r3 # to support XFS sparse inodes
 
 # Xen
-=app-emulation/xen-4.11.0-r2
-=app-emulation/xen-tools-4.11.0-r2
-=app-emulation/xen-pvgrub-4.11.0
+=app-emulation/xen-4.11.1
+=app-emulation/xen-tools-4.11.1
+=app-emulation/xen-pvgrub-4.11.1
 
 #snort
 =net-analyzer/snort-2.9.7.3
