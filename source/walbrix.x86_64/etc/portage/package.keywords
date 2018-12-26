@@ -14,7 +14,7 @@
 #snort
 =net-analyzer/snort-2.9.7.3
 =net-analyzer/barnyard2-1.9
-=net-libs/daq-2.0.2
+=net-libs/daq-2.0.6-r1
 
 # yum
 =dev-python/pyliblzma-0.5.3-r1
