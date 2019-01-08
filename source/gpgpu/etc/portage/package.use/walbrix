@@ -7,6 +7,12 @@ dev-vcs/git -perl -gpg
 net-dns/avahi -introspection dbus
 sys-libs/ncurses tinfo
 x11-drivers/nvidia-drivers -X acpi driver -gtk3 kms uvm -multilib -tools -abi_x86_32
+app-emulation/docker -device-mapper
+
+# nmbd
+net-fs/samba -acl -pam -system-mitkrb5
+sys-libs/ldb -ldap -python
+sys-libs/talloc -python
 
 # omit ruby 2.3
 dev-lang/ruby -rdoc

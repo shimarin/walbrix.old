@@ -42,6 +42,7 @@ $package sys-apps/which
 $package sys-devel/make
 $package sys-devel/patch
 $package sys-fs/e2fsprogs
+$package sys-fs/xfsprogs # mkfs.xfs, xfs_growfs
 $require udev.lst
 $package sys-libs/timezone-data
 $package sys-process/procps
@@ -99,6 +100,24 @@ $require ssmtp.lst
 $require cu.lst
 $require ntp.lst
 /usr/bin/curl
+/sbin/brctl
+
+# nmbd
+/usr/sbin/nmbd
+$mkdir /var/log/samba
+$mkdir /var/cache/samba
+$mkdir /var/lib/samba/private
+$exec "chmod 700 /var/lib/samba/private"
+#/usr/lib/samba/charset/CP437.so
+#/usr/lib/samba/charset/CP850.so
+#/etc/samba/lmhosts
+$mkdir /etc/samba
+$write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15'
+/etc/conf.d/samba
+/etc/init.d/samba
+$symlink /etc/init.d/samba.nmbd samba
+$symlink /etc/conf.d/samba.nmbd samba
+$symlink /etc/runlevels/default/samba.nmbd /etc/init.d/samba.nmbd
 
 # tools
 $require binutils.lst
@@ -122,8 +141,6 @@ $package sys-apps/lshw
 # Python3 compat
 $package dev-python/future
 
-$package dev-vcs/git
-
 # non-free
 $exec "if [ -d /lib/modules/$(KERNEL_VERSION)/video ]; then cd /lib/modules/$(KERNEL_VERSION)/video && zip -P 'I agree to the end user license agreement' -m -0 nvidia.zip *.ko; fi"
 #makeself --nocomp --target /lib/modules/$(KERNEL_VERSION)/video --nox11 --ssl-encrypt /lib/modules/$(KERNEL_VERSION)/video /lib/modules/$(KERNEL_VERSION)/video/nvidia.run nvidia /sbin/depmod
@@ -139,6 +156,24 @@ $exec --overlay "eselect opencl set ocl-icd"
 /usr/share/libdrm/amdgpu.ids
 
 $write /etc/sysctl.d/nr_hugepages.conf 'vm.nr_hugepages=128'
+
+# docker
+#$require perl.lst # for shasum command
+$package dev-db/sqlite
+$package sys-process/tini
+$package app-emulation/containerd
+$require iptables.lst
+$require git.lst
+$package app-emulation/docker --use="overlay -device-mapper"
+$package app-emulation/docker-proxy
+$package app-emulation/runc
+$mkdir /var/lib/docker
+
+# openvpn
+$require openvpn.lst
+$copy walbrix/ca.crt /etc/openvpn/ca.crt
+$copy walbrix/openvpn.conf /etc/openvpn/openvpn.conf
+
 
 $require timezone-jp.lst
 
