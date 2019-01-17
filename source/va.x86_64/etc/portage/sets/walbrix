@@ -99,7 +99,6 @@ net-fs/nfs-utils
 net-fs/samba
 net-libs/nodejs
 net-misc/curl
-net-misc/dropbox-cli
 net-misc/netkit-telnetd
 net-misc/ntp
 net-misc/wol

@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-4.20.0
+=sys-kernel/gentoo-sources-4.20.3
 =sys-kernel/vanilla-sources-3.16.62
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
@@ -56,7 +56,7 @@
 =dev-util/nvidia-cuda-toolkit-8.0.61
 =sys-firmware/nvidia-firmware-340.32
 =x11-drivers/nvidia-drivers-415.25
-=dev-libs/amdgpu-pro-opencl-18.20.606296
+=dev-libs/amdgpu-pro-opencl-18.20.684755
 
 #usb stuffs
 =net-misc/usbip-4.13
