@@ -17,6 +17,7 @@ net-nds/openldap -tcpd samba
 net-fs/nfs-utils -tcpd
 net-libs/nodejs inspector icu
 www-servers/uwsgi python lua -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool -ruby_targets_ruby23 -php_targets_php7-1
+www-apache/mod_wsgi python_single_target_python2_7 -python_single_target_python3_6
 app-editors/emacs -gtk3 -xpm
 mail-mta/postfix sasl
 dev-python/imaging jpeg tiff truetype
