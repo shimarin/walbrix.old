@@ -1,5 +1,6 @@
 $package app-text/groonga --use="mecab"
 $package app-text/groonga-normalizer-mysql
+#$package dev-libs/onigmo
 $mkdir /etc/sysctl.d
 $write /etc/sysctl.d/groonga.conf 'vm.overcommit_memory=1\nvm.max_map_count=262144'
 
