@@ -68,7 +68,7 @@ $exec "/opt/oscar/bin/oscar init /var/lib/oscar/share"
 $exec "chown -R oscar.oscar /var/log/oscar /var/lib/oscar /opt/oscar"
 
 ## clamav
-$package app-antivirus/clamav # dep:dev-libs/libtommath
+$package app-antivirus/clamav # dep:dev-libs/libtommath,dev-libs/libmspack
 $sed /etc/conf.d/clamd 's/^START_CLAMD=.\+/START_CLAMD=no/'
 
 $mkdir /etc/xen

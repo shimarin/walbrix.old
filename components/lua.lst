@@ -1,6 +1,6 @@
 $package dev-lang/lua
 $package dev-lua/lpeg
-$package dev-lua/luajson
+$package dev-lua/luajson # depends on dev-lang/luajit
 $package dev-lua/luasocket
 $package dev-lua/luasec
 
