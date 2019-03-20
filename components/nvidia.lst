@@ -12,6 +12,8 @@ $require postfix.lst
 
 $package sys-apps/pciutils
 $package dev-util/nvidia-cuda-toolkit
-$package x11-drivers/nvidia-drivers
+
+$package x11-libs/libXxf86vm # needed by nvidia-drivers(+tools)
+$package x11-drivers/nvidia-drivers # needs dev-libs/jansson when tools use flag is set
 
 $exec --overlay "tar zcvf /root/nvidia-drivers.tar.gz -C / `equery files -f obj,sym,conf,cmd nvidia-drivers | sed 's/ -> .*$//' | egrep -v '^\/usr\/share'`"

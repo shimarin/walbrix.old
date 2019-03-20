@@ -1,3 +1,5 @@
-$exec --overlay "tar cvf - `equery files -f obj,sym,conf,cmd nvidia-drivers amdgpu-pro-opencl | sed 's/ -> .*$//' | egrep -v '^\/usr\/share\/' | egrep -v '^\/usr\/lib32\/' | egrep -v '^\/lib(64)?\/modules\/'` | tar xvf - -C /"
+$exec --overlay "tar cvf - `equery files -f obj,sym,conf,cmd nvidia-drivers libX11 libXext libxcb libXau libXdmcp libXxf86vm jansson amdgpu-pro-opencl | sed 's/ -> .*$//' | egrep -v '^\/usr\/share\/' | egrep -v '^\/usr\/lib32\/' | egrep -v '^\/lib(64)?\/modules\/'` | tar xvf - -C /"
 $deltree /var/cache
+$deltree /usr/include
+$deltree /usr/lib64/pkgconfig
 $del /etc/ld.so.cache

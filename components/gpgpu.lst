@@ -144,6 +144,10 @@ $package dev-python/future
 # non-free
 $exec "if [ -d /lib/modules/$(KERNEL_VERSION)/video ]; then cd /lib/modules/$(KERNEL_VERSION)/video && zip -P 'I agree to the end user license agreement' -m -0 nvidia.zip *.ko; fi"
 #makeself --nocomp --target /lib/modules/$(KERNEL_VERSION)/video --nox11 --ssl-encrypt /lib/modules/$(KERNEL_VERSION)/video /lib/modules/$(KERNEL_VERSION)/video/nvidia.run nvidia /sbin/depmod
+$exec --overlay --store=LIBNVIDIA_GTK2SO 'cd /usr/lib64 && ls libnvidia-gtk2.so.*'
+/usr/bin/nvidia-settings
+/usr/lib64/$(LIBNVIDIA_GTK2SO)
+$exec 'rm -f /usr/bin/nvidia-settings /usr/lib64/libnvidia-gtk2.so*'
 
 # misc
 $package dev-libs/ocl-icd
@@ -174,6 +178,8 @@ $require openvpn.lst
 $copy walbrix/ca.crt /etc/openvpn/ca.crt
 $copy walbrix/openvpn.conf /etc/openvpn/openvpn.conf
 
+# X11
+/usr/bin/xauth
 
 $require timezone-jp.lst
 
