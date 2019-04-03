@@ -1,15 +1,15 @@
-=sys-kernel/gentoo-sources-5.0.3
+=sys-kernel/gentoo-sources-5.0.5
 =app-i18n/fbterm-1.7-r5
-=sys-kernel/vanilla-sources-3.16.63
+=sys-kernel/vanilla-sources-3.16.64
 =app-crypt/chntpw-140201
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
 =sys-block/zram-init-3.8
 =sys-boot/grub-2.02-r3 # to support XFS sparse inodes
 
 # Xen
-=app-emulation/xen-4.11.1
-=app-emulation/xen-tools-4.11.1
-=app-emulation/xen-pvgrub-4.11.1
+=app-emulation/xen-4.12.0
+=app-emulation/xen-tools-4.12.0
+=app-emulation/xen-pvgrub-4.12.0
 
 #snort
 =net-analyzer/snort-2.9.7.3
