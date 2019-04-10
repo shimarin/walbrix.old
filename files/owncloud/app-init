@@ -5,7 +5,7 @@ CONFIG_PHP=${DOCUMENT_ROOT}/config/config.php
 
 start() {
     ebegin "Starting ${SVCNAME}"
-    if [ ! -f "${DOCUMENT_ROOT}/.ocdata" ]; then
+    if [ ! -f "${DOCUMENT_ROOT}/data/.ocdata" ]; then
         cd "${DOCUMENT_ROOT}"
         occ maintenance:install --database=mysql --database-name=owncloud --database-user=owncloud --database-pass='' --admin-user=admin --admin-pass=admin
         sed -i "s/0 => .*,/0 => \$_SERVER['SERVER_NAME'],/" ${CONFIG_PHP} && chown apache.apache ${CONFIG_PHP}
