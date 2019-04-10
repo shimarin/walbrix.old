@@ -41,6 +41,7 @@ www-servers/nginx aio luajit http2 nginx_modules_http_auth_pam nginx_modules_htt
 media-gfx/imagemagick perl jpeg jpeg2k png truetype webp -openmp
 media-libs/gd fontconfig truetype png jpeg
 media-libs/opencv jpeg png threads v4l ffmpeg
+media-libs/libv4l jpeg
 dev-lang/scala binary
 app-text/poppler cjk curl jpeg2k png tiff
 sys-libs/ncurses tinfo
