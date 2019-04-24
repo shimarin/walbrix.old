@@ -1,5 +1,5 @@
 $set JAVA_VERSION 8
-$set ICEDTEA_VERSION 3.9.0
+$set ICEDTEA_VERSION 3.10.0
 $require java-config.lst
 
 #media-fonts/dejavu

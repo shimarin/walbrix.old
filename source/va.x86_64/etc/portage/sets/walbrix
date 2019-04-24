@@ -30,7 +30,7 @@ dev-embedded/arduino
 dev-java/commons-dbcp
 dev-java/commons-pool
 dev-java/hawtjni-runtime
-dev-java/jdbc-mysql
+#dev-java/jdbc-mysql # needs xerces which is too obsolete to build
 dev-java/jdbc-postgresql
 dev-java/json-simple
 dev-java/oracle-javamail
