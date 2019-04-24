@@ -4,7 +4,7 @@
 =app-crypt/chntpw-140201
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
 =sys-block/zram-init-3.8
-=sys-boot/grub-2.02-r3 # to support XFS sparse inodes
+=sys-boot/grub-2.04_rc1
 
 # Xen
 =app-emulation/xen-4.12.0
