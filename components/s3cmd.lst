@@ -1,5 +1,4 @@
 $require python27.lst
-$require setuptools.lst
 $package dev-python/python-magic
 $package dev-python/six
 $package dev-python/python-dateutil
