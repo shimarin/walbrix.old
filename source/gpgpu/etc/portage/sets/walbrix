@@ -12,6 +12,7 @@ app-portage/cpuid2cpuflags
 dev-libs/libuv
 dev-libs/ocl-icd
 dev-python/future
+dev-python/paho-mqtt
 dev-util/strace
 dev-vcs/git
 mail-mta/ssmtp

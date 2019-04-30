@@ -161,6 +161,9 @@ $exec --overlay "eselect opencl set ocl-icd"
 
 $write /etc/sysctl.d/nr_hugepages.conf 'vm.nr_hugepages=128'
 
+# MQTT
+$package dev-python/paho-mqtt
+
 # docker
 #$require perl.lst # for shasum command
 $package dev-db/sqlite

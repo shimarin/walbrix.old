@@ -10,6 +10,7 @@ $require git.lst
 
 $require restkit.lst
 
+$package dev-python/paho-mqtt
 $package sys-apps/usbutils
 /usr/sbin/usbip
 #$require usbip-build.lst
