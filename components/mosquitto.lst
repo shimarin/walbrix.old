@@ -1,0 +1,5 @@
+$package app-misc/mosquitto
+$require avahi.lst
+$copy mosquitto/mosquitto.service /etc/avahi/services/mosquitto.service
+$symlink /etc/runlevels/default/mosquitto /etc/init.d/mosquitto
+
