@@ -46,10 +46,14 @@ $package sys-fs/xfsprogs # mkfs.xfs, xfs_growfs
 $require udev.lst
 $package sys-libs/timezone-data
 $package sys-process/procps
+$require kbd.lst
 
 $require lvm.lst
 $require portage-configs.lst
 $require kernel.lst
+
+$require s3cmd.lst
+$package sys-apps/dmidecode
 
 # boot
 $write /etc/fstab 'overlay\t/\toverlay\tdefaults\t0 0\n'
@@ -163,6 +167,7 @@ $write /etc/sysctl.d/nr_hugepages.conf 'vm.nr_hugepages=128'
 
 # MQTT
 $package dev-python/paho-mqtt
+$require python-zeroconf.lst
 
 # docker
 #$require perl.lst # for shasum command

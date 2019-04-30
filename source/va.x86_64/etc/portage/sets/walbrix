@@ -73,6 +73,7 @@ dev-python/twisted-names
 dev-python/twisted-web
 dev-python/unittest2
 dev-python/xlrd
+dev-python/zeroconf
 dev-ruby/bundler
 dev-ruby/mysql2
 dev-ruby/rmagick

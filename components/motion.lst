@@ -10,7 +10,10 @@ $require git.lst
 
 $require restkit.lst
 
+$require mosquitto.lst
+$require python-zeroconf.lst
 $package dev-python/paho-mqtt
+
 $package sys-apps/usbutils
 /usr/sbin/usbip
 #$require usbip-build.lst

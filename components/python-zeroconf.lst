@@ -1,0 +1,4 @@
+$package dev-python/netifaces
+$package dev-python/enum34
+$package dev-python/six
+$package dev-python/zeroconf
