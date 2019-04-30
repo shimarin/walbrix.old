@@ -23,6 +23,7 @@ echo 1 > /proc/sys/kernel/printk
 
 CMDLINE=$(cat /proc/cmdline)
 
+QUIET='0'
 ROOT_PARTITION=/dev/xvda1
 RO_LAYER=/system
 RW_LAYER=/rw
@@ -97,10 +98,10 @@ for i in $DATADIRS; do
 	mkdir -p /mnt/orig_root${i}
 done
 
-if ! mount -t overlay -o lowerdir=/mnt/system,upperdir=/mnt/orig_root${RW_LAYER},workdir=/mnt/orig_root/work overlay /newroot; then
-	bad_msg "Unable to mount /newroot"
-fi
+good_msg "Mounting /newroot as overlay..."
+mount -t overlay -o lowerdir=/mnt/system,upperdir=/mnt/orig_root${RW_LAYER},workdir=/mnt/orig_root/work overlay /newroot || bad_msg "Unable to mount /newroot"
 
+good_msg "Moving original root under /.overlay..."
 mkdir -p /newroot/.overlay && mount --move /mnt/orig_root /newroot/.overlay
 
 touch /newroot/.overlay/.lock
@@ -109,7 +110,7 @@ if [ -f /newroot/.overlay/system.cur ];then
      mv -f /newroot/.overlay/system.cur /newroot/.overlay/system.old
 fi
 
-if [ `grep '/newroot' /proc/mounts | awk '{print $1}'` = "tmpfs" ]; then
+if [ `grep '/newroot/.overlay' /proc/mounts | awk '{print $1}'` = "tmpfs" ]; then
     # some useful modification for rescue environment
     sed -i 's/tty1 linux/--autologin root tty1 linux/' /newroot/etc/inittab
 fi
