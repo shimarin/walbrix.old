@@ -6,7 +6,7 @@ $package dev-db/mysql-connector-c # for my_print_defaults needed by mysql_instal
 #app-arch/libarchive
 #app-arch/lz4
 $package dev-db/mysql --exclude='/var/run/'
-$sed /etc/mysql/my.cnf 's/^log-bin$/#log-bin/'  # disable binary log
+$sed /etc/mysql/mysql.d/50-distro-server.cnf 's/^log-bin$/#log-bin/'  # disable binary log
 
 /usr/include/mysql/mysql_version.h
 /usr/include/mysql/my_config.h
