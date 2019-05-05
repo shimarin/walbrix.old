@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.0.10-gentoo Kernel Configuration
+# Linux/x86 5.0.12-gentoo Kernel Configuration
 #
 
 #
@@ -6044,7 +6044,6 @@ CONFIG_FWTTY_MAX_CARD_PORTS=32
 # Gasket devices
 #
 # CONFIG_STAGING_GASKET_FRAMEWORK is not set
-# CONFIG_XIL_AXIS_FIFO is not set
 # CONFIG_EROFS_FS is not set
 CONFIG_X86_PLATFORM_DEVICES=y
 CONFIG_ACER_WMI=m

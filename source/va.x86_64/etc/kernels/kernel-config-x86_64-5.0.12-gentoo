@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.0.10-gentoo Kernel Configuration
+# Linux/x86 5.0.12-gentoo Kernel Configuration
 #
 
 #
@@ -3256,7 +3256,6 @@ CONFIG_STAGING=y
 # Gasket devices
 #
 # CONFIG_STAGING_GASKET_FRAMEWORK is not set
-# CONFIG_XIL_AXIS_FIFO is not set
 # CONFIG_EROFS_FS is not set
 # CONFIG_X86_PLATFORM_DEVICES is not set
 CONFIG_PMC_ATOM=y
