@@ -13,6 +13,7 @@ $require restkit.lst
 $require mosquitto.lst
 $require python-zeroconf.lst
 $package dev-python/paho-mqtt
+$package dev-db/sqlite
 
 $package sys-apps/usbutils
 /usr/sbin/usbip
