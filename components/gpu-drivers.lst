@@ -1,4 +1,5 @@
 $exec --overlay "tar cvf - `equery files -f obj,sym,conf,cmd nvidia-drivers libX11 libXext libxcb libXau libXdmcp libXxf86vm jansson amdgpu-pro-opencl | sed 's/ -> .*$//' | egrep -v '^\/usr\/share\/' | egrep -v '^\/usr\/lib32\/' | egrep -v '^\/lib(64)?\/modules\/'` | tar xvf - -C /"
+$exec --overlay "cp /opt/cuda/targets/x86_64-linux/lib/libcudart.so* /usr/lib64/"
 $deltree /var/cache
 $deltree /usr/include
 $deltree /usr/lib64/pkgconfig
