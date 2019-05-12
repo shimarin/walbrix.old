@@ -24,7 +24,7 @@ media-libs/harfbuzz -introspection
 x11-libs/pango -introspection
 gnome-base/librsvg -introspection
 x11-libs/gtk+ -introspection
-x11-libs/gtk+ -introspection
+gnome-base/librsvg -vala
 
 # nmbd
 net-fs/samba -acl -pam -system-mitkrb5

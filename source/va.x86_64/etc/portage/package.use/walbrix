@@ -116,6 +116,7 @@ app-accessibility/at-spi2-core -introspection
 x11-libs/pango X -introspection
 gnome-base/librsvg -introspection
 x11-libs/gtk+ -introspection
+gnome-base/librsvg -vala
 x11-wm/fluxbox -imlib -systray -toolbar
 media-video/motion ffmpeg mysql v4l sqlite webp
 app-misc/mosquitto websockets
