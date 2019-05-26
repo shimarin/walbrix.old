@@ -1,5 +1,5 @@
-=sys-kernel/gentoo-sources-5.1.3
-=sys-kernel/vanilla-sources-3.16.67
+=sys-kernel/gentoo-sources-5.1.4
+=sys-kernel/vanilla-sources-3.16.68
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =dev-java/commons-dbcp-2.1
@@ -57,7 +57,7 @@
 =dev-util/nvidia-cuda-toolkit-10.1.105-r1
 =sys-firmware/nvidia-firmware-340.32
 =x11-drivers/nvidia-drivers-430.14
-=dev-libs/amdgpu-pro-opencl-18.20.684755
+=dev-libs/amdgpu-pro-opencl-19.10.785425
 
 #usb stuffs
 =net-misc/usbip-4.13

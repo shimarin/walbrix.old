@@ -1,0 +1,2 @@
+x11-drivers/nvidia-drivers NVIDIA-r2
+sys-kernel/linux-firmware no-source-code linux-fw-redistributable

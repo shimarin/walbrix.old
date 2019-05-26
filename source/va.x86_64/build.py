@@ -97,9 +97,9 @@ def build_kernel_if_needed(source = "gentoo", genkernel_opts=[]):
 exec_cmd(["emerge","-uDN","system","gentoo-sources","genkernel","lzop"])
 if build_kernel_if_needed("gentoo", ["--no-compress-initramfs","--no-ramdisk-modules","--symlink","all"]):
     try:
-        exec_cmd(["emerge","-1","--keep-going","nvidia-drivers"])
+        exec_cmd(["emerge","--keep-going","@module-rebuild"])
     except subprocess.CalledProcessError:
-        print "Looks like NVIDIA modules are not compatible with this kernel."
+        print "Looks like some modules are not compatible with this kernel."
 
 ## emerge world
 

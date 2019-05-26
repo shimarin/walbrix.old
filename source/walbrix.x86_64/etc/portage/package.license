@@ -1,0 +1,2 @@
+sys-kernel/vanilla-sources linux-firmware
+sys-kernel/linux-firmware no-source-code linux-fw-redistributable
