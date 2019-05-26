@@ -2,7 +2,7 @@ $package net-analyzer/fping
 
 /etc/init.d/zabbix-proxy
 /etc/zabbix/zabbix_proxy.conf
-/usr/lib/systemd/system/zabbix-proxy.service
+/lib/systemd/system/zabbix-proxy.service
 /usr/lib/tmpfiles.d/zabbix-proxy.conf
 /usr/sbin/zabbix_proxy
 
