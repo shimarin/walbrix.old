@@ -4,15 +4,12 @@ fallback_eth0="apipa"
 ## WiFI example (see /etc/wpa_supplicant/wpa_supplicant.conf as well)
 #module_wlan0="wpa_supplicant dhcpcd"
 #config_wlan0="dhcp"
-#wpa_supplicant_wlan0="-Dnl80211,wext"
+#wpa_supplicant_wlan0="-Dwext"
 
-## example for 3G PPP connection to DTI using HUAWEI 3G modem
+## example for LTE PPP connection to mineo-d using EC21-J LTE modem
 #config_ppp0="ppp"
-#link_ppp0="/dev/serial/by-id/usb-HUAWEI_Technology_HUAWEI_Mobile-if00-port0"
-#link_ppp0="/dev/serial/by-id/usb-HUAWEI_Technology_HUAWEI_Mobile_0123456712ABCA17-if02-port0" # ME906J needs qmicli -d /dev/cdc-wdm1 --uim-sim-power-on=1
-#link_ppp0="/dev/serial/by-id/usb-NTT_DOCOMO__INC._docomo_L03D-if02-port0"
-#link_ppp0="/dev/serial/by-id/usb-NTT_DOCOMO__INC._docomo_L03F-if01-port0"
-#pppd_ppp0="call DTI"
+#link_ppp0="/dev/serial/by-id/usb-Android_Android-if03-port0"
+#pppd_ppp0="call mineo-d"
 
 ## example for providing multiple ethernet devices for VMs
 #xenvif_eth0=0
