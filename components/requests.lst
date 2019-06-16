@@ -1,15 +1,11 @@
-$require cffi.lst
 $require urllib3.lst
 $package dev-python/chardet
 $package dev-python/requests
-$package dev-python/enum34
-$package dev-python/pyasn1
 $package dev-python/py
 $package dev-python/ipaddress
-$package dev-python/idna
 $package dev-python/ply
 #$package dev-python/pytest
-$package dev-python/cryptography
+$require cryptography.lst
 $package dev-python/pyopenssl
 $package dev-python/ndg-httpsclient
 

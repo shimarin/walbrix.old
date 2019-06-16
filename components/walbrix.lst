@@ -88,7 +88,7 @@ $require exfat.lst
 $package net-fs/cifs-utils --use="-acl -ads -caps"
 $package sys-fs/xfsdump
 $require ntfs3g.lst
-$package sys-fs/cryptsetup
+$require cryptsetup.lst
 $package sys-block/nbd
 $require sg3_utils.lst
 $package sys-apps/hdparm
