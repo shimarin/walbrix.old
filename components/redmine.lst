@@ -10,7 +10,7 @@ $require passenger.lst
 $require rmagick.lst
 
 $package dev-ruby/mysql2
-$package dev-vcs/mercurial
+$require mercurial.lst
 $package dev-vcs/subversion
 
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1redmine\2/'

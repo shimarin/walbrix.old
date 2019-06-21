@@ -1,0 +1,3 @@
+$package dev-vcs/mercurial
+$package dev-python/zstandard
+
