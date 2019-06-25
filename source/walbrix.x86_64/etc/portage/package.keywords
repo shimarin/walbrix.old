@@ -32,5 +32,6 @@ sys-apps/hwids
 =sys-block/megacli-8.07.14-r1
 =dev-python/pyusb-1.0.2
 =net-misc/usbip-4.13
-=net-libs/libqmi-1.18.0
+=net-libs/libqmi-1.22.2
+=net-libs/libmbim-1.18.0
 =dev-ruby/did_you_mean-1.1.2 # ocl-icd needs ruby to build
