@@ -17,6 +17,7 @@ $sed /opt/icedtea-bin-$(ICEDTEA_VERSION)/jre/lib/security/java.security 's/\/dev
 $package dev-libs/nss # SSL support
 
 #sys-apps/baselayout-java
+#app-crypt/p11-kit
 #gnome-base/gsettings-desktop-schemas  / ignored as it only needed for desktop app
 $package app-eselect/eselect-java
 $exec "java-config -S icedtea-bin-$(JAVA_VERSION)"
