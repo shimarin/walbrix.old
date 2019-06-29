@@ -32,6 +32,7 @@ groups = [
     (106, "snort"),
     (107, "dhcp"),
     (108, "nginx"),
+    (109, "dnsmasq"),
     (125, "crontab"),
     (126, "netdev"),
     (127, "plugdev"),
@@ -48,7 +49,8 @@ users = [
     (105, "zabbix", "zabbix", "zabbix","/var/lib/zabbix/home","/sbin/nologin"),
     (106, "snort", "snort", "snort","/dev/null","/sbin/nologin"),
     (107, "dhcp", "dhcp", "dhcp","/var/lib/dhcp","/sbin/nologin"),
-    (108, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin")
+    (108, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin"),
+    (109, "dnsmasq", "dnsmasq", "dnsmasq", "/dev/null", "/sbin/nologin")
 ]
 
 for group in groups:

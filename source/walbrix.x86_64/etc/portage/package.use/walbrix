@@ -56,6 +56,7 @@ dev-vcs/git -perl -gpg
 # networks
 net-analyzer/net-snmp python
 net-dns/avahi -introspection dbus
+net-dns/dnsmasq dhcp-tools script
 
 # misc
 media-sound/mpg123 alsa

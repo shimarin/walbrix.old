@@ -125,6 +125,7 @@ $package net-misc/wol
 $package sys-apps/ethtool
 $require snort.lst
 $package net-misc/dhcp
+$package net-dns/dnsmasq
 $require ssmtp.lst
 $require smbclient.lst
 $require cu.lst
