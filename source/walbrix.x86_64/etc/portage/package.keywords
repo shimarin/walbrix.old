@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-5.1.15
+=sys-kernel/gentoo-sources-5.2.0
 =app-i18n/fbterm-1.7-r5
 =sys-kernel/vanilla-sources-3.16.69
 =app-crypt/chntpw-140201
@@ -13,7 +13,7 @@
 
 #snort
 =net-analyzer/snort-2.9.7.3
-=net-analyzer/barnyard2-1.9
+=net-analyzer/barnyard2-1.13
 =net-libs/daq-2.0.6-r1
 
 # yum
