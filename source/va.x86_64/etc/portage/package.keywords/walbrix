@@ -1,5 +1,5 @@
 =sys-kernel/gentoo-sources-5.2.0
-=sys-kernel/vanilla-sources-3.16.69
+=sys-kernel/vanilla-sources-3.16.70
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =dev-java/commons-dbcp-2.1
