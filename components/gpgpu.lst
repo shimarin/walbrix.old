@@ -163,7 +163,7 @@ $exec --overlay "eselect opencl set ocl-icd"
 /usr/lib64/libhwloc.so.5
 /usr/share/libdrm/amdgpu.ids
 
-$write /etc/sysctl.d/nr_hugepages.conf 'vm.nr_hugepages=128'
+$write /etc/sysctl.d/nr_hugepages.conf 'vm.nr_hugepages=1280'
 
 # MQTT
 $package dev-python/paho-mqtt
@@ -180,6 +180,9 @@ $package app-emulation/docker --use="overlay -device-mapper"
 $package app-emulation/docker-proxy
 $package app-emulation/runc
 $mkdir /var/lib/docker
+
+# node
+$require ts-node.lst
 
 # openvpn
 $require openvpn.lst

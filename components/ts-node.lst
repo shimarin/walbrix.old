@@ -1,0 +1,2 @@
+$require nodejs.lst
+$exec --overlay "npm install -g ts-node typescript"

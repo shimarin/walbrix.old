@@ -21,6 +21,7 @@ net-analyzer/tcpdump
 net-analyzer/traceroute
 net-fs/samba
 net-libs/libmicrohttpd
+net-libs/nodejs
 net-misc/bridge-utils
 net-misc/dhcp
 net-misc/netkit-telnetd
