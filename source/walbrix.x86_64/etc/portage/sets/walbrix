@@ -57,6 +57,7 @@ net-fs/samba
 net-ftp/ftp
 net-libs/libmicrohttpd
 net-libs/libqmi
+net-libs/nodejs
 net-misc/dhcp
 net-misc/ifenslave
 net-misc/iperf

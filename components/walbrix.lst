@@ -185,6 +185,9 @@ $package dev-python/pyusb
 # Python3 compat
 $package dev-python/future
 
+# node.js
+$require ts-node.lst
+
 # arch specific
 $require walbrix-$(ARCH).lst
 
