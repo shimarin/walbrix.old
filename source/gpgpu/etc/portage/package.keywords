@@ -1,5 +1,5 @@
-=sys-kernel/gentoo-sources-5.2.3
+=sys-kernel/gentoo-sources-5.2.4
 sys-kernel/linux-firmware
 sys-apps/hwids
-=x11-drivers/nvidia-drivers-430.26
+=x11-drivers/nvidia-drivers-430.34
 =sys-power/acpi_call-3.17
