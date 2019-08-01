@@ -1,5 +1,6 @@
 $require python27.lst
 $package dev-python/pycrypto # via dnspython
+$package dev-python/ecdsa # via dnspython
 #$package dev-util/meson
 $package dev-python/dnspython
 $package dev-python/pyxdg
