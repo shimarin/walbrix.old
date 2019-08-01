@@ -1,13 +1,13 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.2.4-gentoo Kernel Configuration
+# Linux/x86 5.2.5-gentoo Kernel Configuration
 #
 
 #
-# Compiler: gcc (Gentoo 8.2.0-r6 p1.7) 8.2.0
+# Compiler: gcc (Gentoo 8.3.0-r1 p1.1) 8.3.0
 #
 CONFIG_CC_IS_GCC=y
-CONFIG_GCC_VERSION=80200
+CONFIG_GCC_VERSION=80300
 CONFIG_CLANG_VERSION=0
 CONFIG_CC_HAS_ASM_GOTO=y
 CONFIG_CC_HAS_WARN_MAYBE_UNINITIALIZED=y
