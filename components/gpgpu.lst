@@ -141,6 +141,8 @@ $package sys-apps/usbutils
 $package sys-apps/lm_sensors
 $package sys-power/cpupower
 $package sys-apps/lshw
+$require intel-neo.lst
+/usr/bin/clinfo
 
 # Python3 compat
 $package dev-python/future

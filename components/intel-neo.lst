@@ -1,0 +1,10 @@
+$package dev-libs/intel-neo
+$package dev-libs/ocl-icd
+#$package dev-util/intel-graphics-compiler
+#$package media-libs/gmmlib
+#$package sys-devel/llvm
+#$package sys-libs/zlib
+#$package sys-libs/ncurses
+#$package dev-libs/opencl-clang
+#$package sys-devel/clang
+

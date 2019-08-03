@@ -3,3 +3,18 @@ sys-kernel/linux-firmware
 sys-apps/hwids
 =x11-drivers/nvidia-drivers-430.34
 =sys-power/acpi_call-3.17
+
+# Intel NEO
+=dev-util/clinfo-2.2.18.04.06
+=sys-libs/libomp-8.0.1
+=dev-util/intel-graphics-compiler-1.0.9
+=dev-util/spirv-llvm-translator-8.0.1.1-r1
+=sys-devel/clang-8.0.1
+=media-libs/gmmlib-19.2.1
+=dev-libs/opencl-clang-8.0.1
+=sys-devel/llvm-8.0.1
+=sys-libs/compiler-rt-sanitizers-8.0.1
+=sys-libs/compiler-rt-8.0.1
+=sys-devel/clang-runtime-8.0.1
+=dev-libs/intel-neo-19.22.13062
+

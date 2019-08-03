@@ -9,11 +9,13 @@ app-emulation/docker
 app-misc/beep
 app-misc/screen
 app-portage/cpuid2cpuflags
+dev-libs/intel-neo
 dev-libs/libuv
 dev-libs/ocl-icd
 dev-python/future
 dev-python/paho-mqtt
 dev-python/zeroconf
+dev-util/clinfo
 dev-util/strace
 dev-vcs/git
 mail-mta/ssmtp
