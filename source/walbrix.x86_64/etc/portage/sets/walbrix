@@ -6,6 +6,7 @@ app-admin/sysstat
 app-admin/testdisk
 app-arch/zip
 app-backup/fsarchiver
+app-benchmarks/stress
 app-cdr/cdrtools
 app-crypt/chntpw
 app-editors/bvi

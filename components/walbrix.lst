@@ -151,6 +151,7 @@ $require vim.lst
 $require sudo.lst
 /usr/bin/ftp
 /usr/bin/strace
+/usr/bin/stress
 /usr/bin/telnet
 $package app-misc/screen
 $package app-editors/bvi
