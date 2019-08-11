@@ -1,7 +1,7 @@
 =sys-kernel/gentoo-sources-5.2.8
 sys-kernel/linux-firmware
 sys-apps/hwids
-=x11-drivers/nvidia-drivers-430.34
+=x11-drivers/nvidia-drivers-430.40
 =sys-power/acpi_call-3.17
 
 # Intel NEO
