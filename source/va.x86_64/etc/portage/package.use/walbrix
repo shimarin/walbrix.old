@@ -69,7 +69,7 @@ x11-libs/libva X vdpau -video_cards_nouveau video_cards_i965 video_cards_nvidia
 dev-lang/php apache2 gd mysql mysqli postgres xslt zip pdo truetype xmlwriter bcmath xmlreader pcntl sysvipc sockets curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap
 app-eselect/eselect-php apache2
 dev-php/pecl-imagick php_targets_php5-6 -php_targets_php7-2
-dev-php/pecl-apcu php_targets_php5-6 -php_targets_php7-1
+dev-php/pecl-apcu php_targets_php5-6 -php_targets_php7-2
 dev-php/pecl-redis -php_targets_php7-2 php_targets_php5-6
 dev-php/pecl-memcached php_targets_php5-6
 
