@@ -10,23 +10,24 @@ def exec_cmd(cmdline):
 
 def groupadd_if_not_exists(gid, name):
     try:
-        return grp.getgrnam(name)
+        if grp.getgrnam(name).gr_gid != gid:
+            raise Exception("gid mismatch: %s" % name)
     except KeyError:
-        pass
-    exec_cmd(["groupadd","-g",str(gid),name])
+        exec_cmd(["groupadd","-g",str(gid),name])
 
 def useradd_if_not_exists(uid, name, group, added_for,homedir, shell):
     try:
-        return pwd.getpwnam(name)
+        pw = pwd.getpwnam(name)
+        if pw.pw_uid != uid:
+            raise Exception("uid mismatch: %s" % name)
     except KeyError:
-        pass
-    exec_cmd(["useradd","-c","added by portage for %s" % added_for, "-d",homedir,"-u",str(uid),"-g",group,"-s",shell,name])
+        exec_cmd(["useradd","-c","added by portage for %s" % added_for, "-d",homedir,"-u",str(uid),"-g",group,"-s",shell,name])
 
 groups = [
     (124, "postmaster"),
-    (101, "openvpn"),
+    (101, "messagebus"),
     (102, "avahi"),
-    (103, "messagebus"),
+    (103, "openvpn"),
     (104, "tcpdump"),
     (105, "zabbix"),
     (106, "snort"),
@@ -42,9 +43,9 @@ groups = [
 users = [
     #(uid, name, group, added_for, homedir, shell)
     (14, "postmaster", "postmaster", "mailbase","/var/spool/mail","/sbin/nologin"),
-    (101, "openvpn", "openvpn", "openvpn","/dev/null","/sbin/nologin"),
+    (103, "openvpn", "openvpn", "openvpn","/dev/null","/sbin/nologin"),
     (102, "avahi", "avahi", "avahi","/dev/null","/sbin/nologin"),
-    (103, "messagebus", "messagebus", "dbus","/dev/null","/sbin/nologin"),
+    (101, "messagebus", "messagebus", "dbus","/dev/null","/sbin/nologin"),
     (104, "tcpdump", "tcpdump", "tcpdump","/dev/null","/sbin/nologin"),
     (105, "zabbix", "zabbix", "zabbix","/var/lib/zabbix/home","/sbin/nologin"),
     (106, "snort", "snort", "snort","/dev/null","/sbin/nologin"),
