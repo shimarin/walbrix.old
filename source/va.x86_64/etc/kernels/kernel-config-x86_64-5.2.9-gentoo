@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.2.8-gentoo Kernel Configuration
+# Linux/x86 5.2.9-gentoo Kernel Configuration
 #
 
 #
@@ -555,7 +555,7 @@ CONFIG_HAVE_GENERIC_GUP=y
 #
 # CONFIG_EDD is not set
 # CONFIG_FIRMWARE_MEMMAP is not set
-# CONFIG_ISCSI_IBFT_FIND is not set
+# CONFIG_ISCSI_IBFT is not set
 # CONFIG_FW_CFG_SYSFS is not set
 # CONFIG_GOOGLE_FIRMWARE is not set
 
