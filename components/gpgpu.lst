@@ -142,6 +142,7 @@ $package sys-apps/lm_sensors
 $package sys-power/cpupower
 $package sys-apps/lshw
 $require intel-neo.lst
+$require gpsd.lst
 /usr/bin/clinfo
 
 # Python3 compat

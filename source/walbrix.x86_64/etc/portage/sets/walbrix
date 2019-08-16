@@ -78,6 +78,7 @@ net-wireless/hostapd
 net-wireless/iw
 net-wireless/wireless-tools
 net-wireless/wpa_supplicant
+sci-geosciences/gpsd
 sys-apps/cciss_vol_status
 sys-apps/dmidecode
 sys-apps/ethtool

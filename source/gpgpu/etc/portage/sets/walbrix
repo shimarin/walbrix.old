@@ -35,6 +35,7 @@ net-wireless/hostapd
 net-wireless/iw
 net-wireless/wireless-tools
 net-wireless/wpa_supplicant
+sci-geosciences/gpsd
 sys-apps/dmidecode
 sys-apps/gptfdisk
 sys-apps/hwloc
