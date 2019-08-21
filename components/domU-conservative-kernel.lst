@@ -1,4 +1,4 @@
 $mkdir /boot/grub
-/boot/kernel-genkernel-$(ARCH)-3.16.72
-$symlink /boot/kernel kernel-genkernel-$(ARCH)-3.16.72
+/boot/kernel-genkernel-$(ARCH)-3.16.73
+$symlink /boot/kernel kernel-genkernel-$(ARCH)-3.16.73
 $require domU-kernel-$(ARCH).lst

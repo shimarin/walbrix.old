@@ -1,5 +1,5 @@
 =sys-kernel/gentoo-sources-5.2.9
-=sys-kernel/vanilla-sources-3.16.72
+=sys-kernel/vanilla-sources-3.16.73
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =dev-java/commons-dbcp-2.1
@@ -9,7 +9,7 @@
 =dev-libs/onigmo-6.1.3
 =media-gfx/wkhtmltopdf-0.12.4-r1
 =www-servers/nginx-1.9.15
-=www-servers/uwsgi-2.0.13.1-r1
+=www-servers/uwsgi-2.0.18
 =sys-block/zram-init-3.8
 =net-fs/nfs-utils-1.3.4
 =net-libs/libtirpc-1.0.1
