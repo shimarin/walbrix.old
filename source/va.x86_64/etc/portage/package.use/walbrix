@@ -16,7 +16,7 @@ net-fs/samba ldap
 net-nds/openldap -tcpd samba
 net-fs/nfs-utils -tcpd
 net-libs/nodejs inspector icu
-www-servers/uwsgi python lua -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool -ruby_targets_ruby23 -php_targets_php7-1
+www-servers/uwsgi python lua -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool -ruby_targets_ruby24 -php_targets_php7-1
 www-apache/mod_wsgi python_single_target_python2_7 -python_single_target_python3_6
 app-editors/emacs -gtk3 -xpm
 mail-mta/postfix sasl
@@ -74,25 +74,25 @@ dev-php/pecl-redis -php_targets_php7-2 php_targets_php5-6
 dev-php/pecl-memcached php_targets_php5-6
 
 # ruby
-virtual/rubygems -ruby_targets_ruby23
-dev-ruby/rubygems -ruby_targets_ruby23
-dev-ruby/bundler -ruby_targets_ruby23
-dev-ruby/rdoc -ruby_targets_ruby23
-dev-ruby/rake -ruby_targets_ruby23
-dev-ruby/racc -ruby_targets_ruby23
-dev-ruby/json -ruby_targets_ruby23
-dev-ruby/mysql2 -ruby_targets_ruby23
-dev-ruby/rmagick -ruby_targets_ruby23
-www-apache/passenger -ruby_targets_ruby23
-dev-ruby/rack -ruby_targets_ruby23
-virtual/ruby-ssl -ruby_targets_ruby23
-dev-ruby/power_assert -ruby_targets_ruby23
-dev-ruby/test-unit -ruby_targets_ruby23
-dev-ruby/minitest -ruby_targets_ruby23
-dev-ruby/net-telnet -ruby_targets_ruby23
-dev-ruby/kpeg -ruby_targets_ruby23
-dev-ruby/xmlrpc -ruby_targets_ruby23
-dev-ruby/did_you_mean -ruby_targets_ruby23
+virtual/rubygems -ruby_targets_ruby24
+dev-ruby/rubygems -ruby_targets_ruby24
+dev-ruby/bundler -ruby_targets_ruby24
+dev-ruby/rdoc -ruby_targets_ruby24
+dev-ruby/rake -ruby_targets_ruby24
+dev-ruby/racc -ruby_targets_ruby24
+dev-ruby/json -ruby_targets_ruby24
+dev-ruby/mysql2 -ruby_targets_ruby24
+dev-ruby/rmagick -ruby_targets_ruby24
+www-apache/passenger -ruby_targets_ruby24
+dev-ruby/rack -ruby_targets_ruby24
+virtual/ruby-ssl -ruby_targets_ruby24
+dev-ruby/power_assert -ruby_targets_ruby24
+dev-ruby/test-unit -ruby_targets_ruby24
+dev-ruby/minitest -ruby_targets_ruby24
+dev-ruby/net-telnet -ruby_targets_ruby24
+dev-ruby/kpeg -ruby_targets_ruby24
+dev-ruby/xmlrpc -ruby_targets_ruby24
+dev-ruby/did_you_mean -ruby_targets_ruby24
 
 # zabbix
 net-analyzer/zabbix agent frontend java mysql openipmi proxy server snmp
