@@ -38,6 +38,7 @@ net-wireless/wpa_supplicant
 sci-geosciences/gpsd
 sys-apps/dmidecode
 sys-apps/gptfdisk
+sys-apps/haveged
 sys-apps/hwloc
 sys-apps/lm_sensors
 sys-apps/lshw

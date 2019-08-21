@@ -84,6 +84,7 @@ sys-apps/dmidecode
 sys-apps/ethtool
 sys-apps/fbset
 sys-apps/gptfdisk
+sys-apps/haveged
 sys-apps/hdparm
 sys-apps/hwloc
 sys-apps/kexec-tools

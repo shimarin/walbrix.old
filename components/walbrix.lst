@@ -91,6 +91,7 @@ $require ntfs3g.lst
 $require cryptsetup.lst
 $package sys-block/nbd
 $require sg3_utils.lst
+$package sys-apps/haveged
 $package sys-apps/hdparm
 $require ddrescue.lst
 $package sys-fs/safecopy

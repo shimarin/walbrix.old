@@ -32,6 +32,7 @@ $package sys-apps/findutils
 $package sys-apps/gawk
 $package sys-apps/gentoo-functions
 $package sys-apps/grep
+$package sys-apps/haveged
 $package sys-apps/hwids
 $package sys-apps/iproute2
 $package sys-apps/less
