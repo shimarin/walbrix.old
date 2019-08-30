@@ -118,6 +118,7 @@ $require wireless-tools.lst
 $require tcpdump.lst
 $require nmap.lst
 $package net-analyzer/netcat
+$package net-firewall/ipset
 $package net-misc/wakeonlan
 $package net-misc/ifenslave
 $package net-misc/vconfig

@@ -52,6 +52,7 @@ net-analyzer/zabbix
 net-dialup/rp-pppoe
 net-dns/bind-tools
 net-dns/dnsmasq
+net-firewall/ipset
 net-fs/cifs-utils
 net-fs/nfs-utils
 net-fs/samba
