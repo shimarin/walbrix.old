@@ -1,0 +1,24 @@
+diff -ru a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
+--- a/drivers/net/wireless/ath/ath10k/core.c	2019-08-31 14:38:48.995744663 +0900
++++ b/drivers/net/wireless/ath/ath10k/core.c	2019-08-31 14:39:23.955927017 +0900
+@@ -3003,6 +3003,8 @@
+ 
+ 	queue_work(ar->workqueue, &ar->register_work);
+ 
++	flush_workqueue(ar->workqueue);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(ath10k_core_register);
+diff -ru a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+--- a/drivers/net/wireless/ath/ath10k/mac.c	2019-08-31 14:38:54.855775241 +0900
++++ b/drivers/net/wireless/ath/ath10k/mac.c	2019-08-31 14:40:29.026266245 +0900
+@@ -3393,6 +3393,8 @@
+ 	const struct ath10k_skb_cb *skb_cb = ATH10K_SKB_CB(skb);
+ 	__le16 fc = hdr->frame_control;
+ 
++	skb_orphan(skb);
++
+ 	if (!vif || vif->type == NL80211_IFTYPE_MONITOR)
+ 		return ATH10K_HW_TXRX_RAW;
+ 
