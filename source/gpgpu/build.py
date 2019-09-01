@@ -41,6 +41,7 @@ users = [
     (101, "messagebus", "messagebus", "dbus","/dev/null","/sbin/nologin"),
     (104, "tcpdump", "tcpdump", "tcpdump","/dev/null","/sbin/nologin"),
     (107, "dhcp", "dhcp", "dhcp","/var/lib/dhcp","/sbin/nologin"),
+    (200, "gpsd", "uucp", "gpsd", "/dev/null", "/sbin/nologin")
 ]
 
 for group in groups:

@@ -51,7 +51,8 @@ users = [
     (106, "snort", "snort", "snort","/dev/null","/sbin/nologin"),
     (107, "dhcp", "dhcp", "dhcp","/var/lib/dhcp","/sbin/nologin"),
     (108, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin"),
-    (109, "dnsmasq", "dnsmasq", "dnsmasq", "/dev/null", "/sbin/nologin")
+    (109, "dnsmasq", "dnsmasq", "dnsmasq", "/dev/null", "/sbin/nologin"),
+    (200, "gpsd", "uucp", "gpsd", "/dev/null", "/sbin/nologin")
 ]
 
 for group in groups:
