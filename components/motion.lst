@@ -40,6 +40,7 @@ $package media-tv/v4l-utils
 $package dev-python/pyusb
 $require requests.lst
 $require matplotlib.lst
+$require pillow.lst
 $require vlgothic.lst
 $require uwsgi.lst
 $package net-misc/wol

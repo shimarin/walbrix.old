@@ -60,6 +60,7 @@ dev-python/markdown
 dev-python/matplotlib
 dev-python/mysql-python
 dev-python/paho-mqtt
+dev-python/pillow
 dev-python/pygobject
 dev-python/pyinotify
 dev-python/python-ldap

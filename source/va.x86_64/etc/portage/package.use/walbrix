@@ -20,7 +20,7 @@ www-servers/uwsgi python lua -uwsgi_plugins_rsyslog -uwsgi_plugins_rrdtool -ruby
 www-apache/mod_wsgi python_single_target_python2_7 -python_single_target_python3_6
 app-editors/emacs -gtk3 -xpm
 mail-mta/postfix sasl
-dev-python/imaging jpeg tiff truetype
+dev-python/pillow jpeg jpeg2k truetype webp
 dev-java/icedtea-bin -X -alsa cjk -gtk cups headless-awt
 app-text/ghostscript-gpl cups
 app-text/groonga mecab
