@@ -25,7 +25,7 @@ $package media-libs/libcanberra
 $package app-i18n/fcitx --use="X dbus gtk gtk3 -qt4"
 $package dev-python/pycairo
 $package gnome-base/dconf
-$package dev-libs/gobject-introspection
+$require gobject-introspection.lst
 $package dev-python/pygobject
 #x11-libs/libnotify
 $package x11-misc/notification-daemon

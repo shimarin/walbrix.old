@@ -1,2 +1,2 @@
-$package dev-libs/gobject-introspection
+$require gobject-introspection.lst
 $package dev-python/pygobject
