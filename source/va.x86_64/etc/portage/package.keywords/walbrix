@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-5.2.11
+=sys-kernel/gentoo-sources-5.2.14
 =sys-kernel/vanilla-sources-3.16.73
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
@@ -71,7 +71,6 @@
 
 # motion
 =media-video/motion-4.1.1-r1
-=media-video/ffmpeg-4.1.1
 =media-libs/opencv-3.4.1-r5
 
 # misc
