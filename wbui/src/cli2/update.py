@@ -55,6 +55,7 @@ def run(specified_version = None): # None == latest stable
     with file_lock(LOCK_FILE):
         with rw_mount(BOOT_PARTITION):
             print "Downloading the system image..."
+            if os.path.isfile(SYSTEM_IMAGE + ".old"): os.remove(SYSTEM_IMAGE + ".old")
             subprocess.check_call(["wget","-O",SYSTEM_IMAGE + ".new", release_info["image_url"]])
             if not os.path.isfile(SYSTEM_IMAGE + ".cur"):
                 shutil.move(SYSTEM_IMAGE, SYSTEM_IMAGE + ".cur") # rename system image currently running
