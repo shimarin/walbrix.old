@@ -171,7 +171,7 @@ $package media-gfx/qrencode
 $require usb_modeswitch.lst
 $package sys-apps/usbutils
 $require bluez.lst
-$package sys-apps/lm_sensors
+$package sys-apps/lm-sensors
 $package sys-block/megacli
 $copy walbrix/arcconf /opt/bin/arcconf
 $package sys-power/cpupower

@@ -40,7 +40,7 @@ sys-apps/dmidecode
 sys-apps/gptfdisk
 sys-apps/haveged
 sys-apps/hwloc
-sys-apps/lm_sensors
+sys-apps/lm-sensors
 sys-apps/lshw
 sys-apps/usbutils
 sys-auth/nss-mdns
@@ -64,8 +64,8 @@ sys-kernel/linux-firmware
 sys-power/acpi_call
 sys-power/acpid
 sys-power/cpupower
+sys-process/cronie
 sys-process/lsof
-sys-process/vixie-cron
 virtual/linux-sources
 x11-drivers/nvidia-drivers
 x11-libs/libdrm

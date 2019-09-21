@@ -139,7 +139,7 @@ $package sys-process/lsof
 /usr/bin/beep
 /usr/bin/cpuid2cpuflags
 $package sys-apps/usbutils
-$package sys-apps/lm_sensors
+$package sys-apps/lm-sensors
 $package sys-power/cpupower
 $package sys-apps/lshw
 $require intel-neo.lst

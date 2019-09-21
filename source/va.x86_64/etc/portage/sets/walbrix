@@ -126,8 +126,8 @@ sys-kernel/vanilla-sources
 sys-kernel/genkernel
 sys-kernel/gentoo-sources
 sys-process/at
+sys-process/cronie
 sys-process/lsof
-sys-process/vixie-cron
 www-apache/mod_authnz_external
 www-apache/mod_extract_forwarded
 www-apache/mod_wsgi

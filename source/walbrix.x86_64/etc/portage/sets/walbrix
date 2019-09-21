@@ -89,7 +89,7 @@ sys-apps/haveged
 sys-apps/hdparm
 sys-apps/hwloc
 sys-apps/kexec-tools
-sys-apps/lm_sensors
+sys-apps/lm-sensors
 sys-apps/lshw
 sys-apps/sg3_utils
 sys-apps/smartmontools
@@ -130,8 +130,8 @@ sys-kernel/vanilla-sources
 sys-power/acpid
 sys-power/cpupower
 sys-power/nut
+sys-process/cronie
 sys-process/lsof
-sys-process/vixie-cron
 virtual/linux-sources
 www-servers/nginx
 x11-libs/libdrm
