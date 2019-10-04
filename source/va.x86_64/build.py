@@ -43,7 +43,7 @@ groups = [
     (129, "docker"),
     (130, "jenkins"),
     (131, "mosquitto"),
-    (132, "minecraft")
+    (490, "minecraft")
 ]
 
 users = [
@@ -60,7 +60,7 @@ users = [
     (114, "jenkins", "jenkins", "jenkins", "/var/lib/jenkins", "/sbin/nologin"),
     (115, "motion", "video", "motion", "/var/lib/motion", "/sbin/nologin"),
     (116, "mosquitto", "mosquitto", "mosquitto", "/dev/null", "/sbin/nologin"),
-    (117, "minecraft", "minecraft", "minecraft", "/dev/null", "/sbin/nologin")
+    (490, "minecraft", "minecraft", "minecraft", "/dev/null", "/sbin/nologin")
 ]
 
 for group in groups:
