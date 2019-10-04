@@ -4,3 +4,4 @@ dev-libs/amdgpu-pro-opencl AMD-GPU-PRO-EULA
 games-server/minecraft-server Mojang
 sys-kernel/vanilla-sources linux-firmware
 x11-drivers/nvidia-drivers NVIDIA-r2
+net-misc/dropbox CC-BY-ND-3.0 dropbox
