@@ -1,6 +1,6 @@
 #>=dev-java/commons-pool-2
->=dev-lang/php-7
->=dev-php/pecl-apcu-5
+>=dev-lang/php-7.3
+#>=dev-php/pecl-apcu-5
 >=media-gfx/imagemagick-7 # rmagick doesn't follow imagemagick7
 #>=sys-libs/ncurses-6.1
 >=x11-misc/xdg-utils-1.1.3

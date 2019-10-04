@@ -6,7 +6,7 @@ $require mysql.lst
 $require postfix.lst
 $require samba.lst
 $require ffmpeg.lst
-$require php56.lst
+$require php72.lst
 $require redis.lst
 $require pecl-imagick.lst
 $package sys-fs/btrfs-progs
@@ -55,10 +55,10 @@ $write /var/spool/cron/crontabs/apache '*/15  *  *  *  * php -f /var/www/localho
 
 # libsmbclient-php
 $exec --overlay "pecl install channel://pecl.php.net/smbclient-0.9.0"
-$write /etc/php/apache2-php5.6/ext/smbclient.ini "extension=smbclient.so"
-$write /etc/php/cli-php5.6/ext/smbclient.ini "extension=smbclient.so"
-$symlink /etc/php/apache2-php5.6/ext-active/smbclient.ini ../ext/smbclient.ini
-$symlink /etc/php/cli-php5.6/ext-active/smbclient.ini ../ext/smbclient.ini
+$write /etc/php/apache2-php7.2/ext/smbclient.ini "extension=smbclient.so"
+$write /etc/php/cli-php7.2/ext/smbclient.ini "extension=smbclient.so"
+$symlink /etc/php/apache2-php7.2/ext-active/smbclient.ini ../ext/smbclient.ini
+$symlink /etc/php/cli-php7.2/ext-active/smbclient.ini ../ext/smbclient.ini
 
 # occ command
 $copy owncloud/occ.c /tmp/occ.c

@@ -1,2 +1,2 @@
 $package dev-php/pecl-apcu
-$write --append /etc/php/cli-php5.6/ext/apcu.ini 'apc.enable_cli=1' # https://github.com/owncloud/core/issues/17329
+$write --append /etc/php/cli-php7.2/ext/apcu.ini 'apc.enable_cli=1' # https://github.com/owncloud/core/issues/17329

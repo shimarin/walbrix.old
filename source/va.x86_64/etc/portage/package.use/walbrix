@@ -68,10 +68,10 @@ x11-libs/libva X vdpau -video_cards_nouveau video_cards_i965 video_cards_nvidia
 # php
 dev-lang/php apache2 gd mysql mysqli postgres xslt zip pdo truetype xmlwriter bcmath xmlreader pcntl sysvipc sockets curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap
 app-eselect/eselect-php apache2
-dev-php/pecl-imagick php_targets_php5-6 -php_targets_php7-2
-dev-php/pecl-apcu php_targets_php5-6 -php_targets_php7-2
-dev-php/pecl-redis -php_targets_php7-2 php_targets_php5-6
-dev-php/pecl-memcached php_targets_php5-6
+dev-php/pecl-imagick php_targets_php7-2
+dev-php/pecl-apcu php_targets_php7-2
+dev-php/pecl-redis php_targets_php7-2
+dev-php/pecl-memcached php_targets_php7-2
 
 # ruby
 virtual/rubygems -ruby_targets_ruby24
@@ -81,7 +81,7 @@ dev-ruby/rdoc -ruby_targets_ruby24
 dev-ruby/rake -ruby_targets_ruby24
 dev-ruby/racc -ruby_targets_ruby24
 dev-ruby/json -ruby_targets_ruby24
-dev-ruby/mysql2 -ruby_targets_ruby24
+dev-ruby/mysql2 -ruby_targets_ruby24 mysql
 dev-ruby/rmagick -ruby_targets_ruby24
 www-apache/passenger -ruby_targets_ruby24
 dev-ruby/rack -ruby_targets_ruby24

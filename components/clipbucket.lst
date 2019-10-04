@@ -2,7 +2,7 @@ $require domU.lst
 $require domU-kernel.lst
 $require cron.lst
 $require ruby21.lst
-$require php56.lst
+$require php72.lst
 $require pecl-imagick.lst
 $require mysql.lst
 $require ffmpeg.lst

@@ -10,7 +10,7 @@ $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1zabbix\2/'
 
 $require openipmi.lst
 $require mysql.lst
-$require php56.lst
+$require php72.lst
 
 # for java monitoring
 $package dev-java/slf4j-api
