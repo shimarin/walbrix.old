@@ -35,7 +35,7 @@ groups = [
     (111, "haproxy"),
     (112, "groonga"),
     (113, "clamav"),
-    (124, "postmaster"),
+    (12, "mail"),
     (125, "crontab"),
     (126, "netdev"),
     #(127, "plugdev"),
@@ -43,7 +43,8 @@ groups = [
     (129, "docker"),
     (130, "jenkins"),
     (131, "mosquitto"),
-    (490, "minecraft")
+    (490, "minecraft"),
+    (494, "unrealircd")
 ]
 
 users = [
@@ -52,7 +53,7 @@ users = [
     (102, "avahi", "avahi", "avahi","/dev/null","/sbin/nologin"),
     (101, "messagebus", "messagebus", "messagebus", "/dev/null", "/sbin/nologin"),
     (105, "zabbix", "zabbix", "zabbix","/var/lib/zabbix/home","/sbin/nologin"),
-    (106, "postmaster", "postmaster", "postmaster", "/var/spool/mail", "/sbin/nologin"),
+    (14, "postmaster", "mail", "postmaster", "/var/spool/mail", "/sbin/nologin"),
     (110, "nginx", "nginx", "nginx", "/var/lib/nginx", "/sbin/nologin"),
     (111, "haproxy", "haproxy", "haproxy", "/dev/null", "/sbin/nologin"),
     (112, "groonga", "groonga", "groonga", "/dev/null", "/sbin/nologin"),
@@ -60,7 +61,8 @@ users = [
     (114, "jenkins", "jenkins", "jenkins", "/var/lib/jenkins", "/sbin/nologin"),
     (115, "motion", "video", "motion", "/var/lib/motion", "/sbin/nologin"),
     (116, "mosquitto", "mosquitto", "mosquitto", "/dev/null", "/sbin/nologin"),
-    (490, "minecraft", "minecraft", "minecraft", "/dev/null", "/sbin/nologin")
+    (490, "minecraft", "minecraft", "minecraft", "/dev/null", "/sbin/nologin"),
+    (494, "unrealircd", "unrealircd", "unrealircd", "/dev/null", "/sbin/nologin")
 ]
 
 for group in groups:

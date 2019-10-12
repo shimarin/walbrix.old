@@ -24,7 +24,7 @@ def useradd_if_not_exists(uid, name, group, added_for,homedir, shell):
         exec_cmd(["useradd","-c","added by portage for %s" % added_for, "-d",homedir,"-u",str(uid),"-g",group,"-s",shell,name])
 
 groups = [
-    (124, "postmaster"),
+    (12, "mail"),
     (101, "messagebus"),
     (102, "avahi"),
     (103, "openvpn"),
@@ -42,7 +42,7 @@ groups = [
 
 users = [
     #(uid, name, group, added_for, homedir, shell)
-    (14, "postmaster", "postmaster", "mailbase","/var/spool/mail","/sbin/nologin"),
+    (14, "postmaster", "mail", "mailbase","/var/spool/mail","/sbin/nologin"),
     (103, "openvpn", "openvpn", "openvpn","/dev/null","/sbin/nologin"),
     (102, "avahi", "avahi", "avahi","/dev/null","/sbin/nologin"),
     (101, "messagebus", "messagebus", "dbus","/dev/null","/sbin/nologin"),
