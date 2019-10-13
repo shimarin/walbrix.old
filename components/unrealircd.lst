@@ -1,5 +1,6 @@
 #net-dns/c-ares
 #dev-libs/tre
+#app-crypt/argon2
 $package net-irc/unrealircd
 $copy unrealircd/unrealircd.conf /etc/unrealircd/unrealircd.conf
 $exec "chown unrealircd /etc/unrealircd/unrealircd.conf && chmod -R g+r /etc/unrealircd"

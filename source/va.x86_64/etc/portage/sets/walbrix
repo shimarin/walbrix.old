@@ -37,6 +37,7 @@ dev-java/oracle-javamail
 dev-java/sbt-bin
 dev-java/slf4j-api
 dev-java/sun-jaf
+dev-lang/coffee-script
 dev-lang/php
 dev-lang/rust
 dev-libs/amdgpu-pro-opencl
@@ -101,8 +102,10 @@ net-dialup/pptpclient
 net-fs/cifs-utils
 net-fs/nfs-utils
 net-fs/samba
+net-irc/unrealircd
 net-libs/nodejs
 net-misc/curl
+net-misc/grive
 net-misc/netkit-telnetd
 net-misc/ntp
 net-misc/wol

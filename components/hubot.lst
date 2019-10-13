@@ -1,12 +1,13 @@
 $require domU.lst
-$require domU-kernel.lst
+$require domU-overlayfs-kernel.lst
 $require cron.lst
 $require vim.lst
 $require git.lst
 $require python27.lst
 $require unrealircd.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1hubot\2/'
-$require nodejs.lst
+$require ts-node.lst
+$require iptables.lst
 $write --append /etc/profile.env "export NODE_PATH=/usr/lib/node_modules"
 
 $package dev-lang/coffee-script

@@ -42,7 +42,7 @@ groups = [
     #(128, "ssmtp"),
     (129, "docker"),
     (130, "jenkins"),
-    (131, "mosquitto"),
+    (482, "mosquitto"),
     (490, "minecraft"),
     (494, "unrealircd")
 ]
@@ -60,7 +60,7 @@ users = [
     (113, "clamav", "clamav", "clamav", "/dev/null", "/sbin/nologin"),
     (114, "jenkins", "jenkins", "jenkins", "/var/lib/jenkins", "/sbin/nologin"),
     (115, "motion", "video", "motion", "/var/lib/motion", "/sbin/nologin"),
-    (116, "mosquitto", "mosquitto", "mosquitto", "/dev/null", "/sbin/nologin"),
+    (482, "mosquitto", "mosquitto", "mosquitto", "/dev/null", "/sbin/nologin"),
     (490, "minecraft", "minecraft", "minecraft", "/dev/null", "/sbin/nologin"),
     (494, "unrealircd", "unrealircd", "unrealircd", "/dev/null", "/sbin/nologin")
 ]
