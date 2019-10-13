@@ -1,6 +1,6 @@
-=sys-kernel/gentoo-sources-5.3.2
+=sys-kernel/gentoo-sources-5.3.6-r1
 =app-i18n/fbterm-1.7-r5
-=sys-kernel/vanilla-sources-3.16.74
+=sys-kernel/vanilla-sources-3.16.75
 =app-crypt/chntpw-140201
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
 =sys-block/zram-init-3.8
@@ -12,7 +12,7 @@
 =app-emulation/xen-pvgrub-4.12.0
 
 #snort
-=net-analyzer/snort-2.9.7.3
+=net-analyzer/snort-2.9.12
 =net-analyzer/barnyard2-1.13
 =net-libs/daq-2.0.6-r1
 

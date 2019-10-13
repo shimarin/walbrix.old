@@ -1,5 +1,5 @@
-=sys-kernel/gentoo-sources-5.3.2
-=sys-kernel/vanilla-sources-3.16.74
+=sys-kernel/gentoo-sources-5.3.6-r1
+=sys-kernel/vanilla-sources-3.16.75
 =sys-fs/aufs-util-3.19_p20150420
 =sys-fs/aufs-headers-3.19_p20150420
 =dev-java/commons-dbcp-2.1
@@ -53,6 +53,9 @@
 =dev-ruby/rmagick-2.16.0
 =www-apache/passenger-5.3.7
 
+#node
+=net-libs/nodejs-10.16.3
+
 #GPU
 =dev-util/nvidia-cuda-toolkit-10.1.105-r1
 =sys-firmware/nvidia-firmware-340.32
@@ -75,4 +78,7 @@
 
 # misc
 =games-server/minecraft-server-1.13.2
+=net-libs/http-parser-2.9.2
+=net-dns/c-ares-1.15.0
+=net-misc/grive-0.5.1_pre20171005
 
