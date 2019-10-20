@@ -3,3 +3,7 @@ $package dev-perl/Net-Daemon
 $package dev-perl/PlRPC
 $package dev-perl/DBI
 $package dev-perl/DBD-mysql
+$package dev-perl/Class-Inspector
+$package dev-perl/File-ShareDir-Install
+$package dev-perl/File-ShareDir
+
