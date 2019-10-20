@@ -1,0 +1,42 @@
+#!/bin/sh
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+if [ "$#" -ne 1 ]; then
+	echo "Usage: $0 nextcloud-X.Y.Z.tar.bz2"
+	exit 1
+fi
+if [ ! -f /var/www/localhost/htdocs/config/config.php ]; then
+	echo "nextCloud is not installed."
+	exit 1
+fi
+ARCHIVE=$1
+if ! tar tf "$ARCHIVE" nextcloud/occ; then
+	echo "$ARCHIVE is not a valid ownCloud archive. (by the way, .zip format is not supported)"
+	exit 1
+fi
+
+echo "Extracting $ARCHIVE ..."
+TEMPDIR=`mktemp -d`
+if [ ! -d "$TEMPDIR" ]; then
+	echo "tempdir creation failed"
+	exit 1
+fi
+tar xf "$ARCHIVE" -C "$TEMPDIR" || exit 1
+if [ ! -d "$TEMPDIR"/nextcloud ]; then
+	echo "Something wrong. directory 'nextcloud' not found in archive."
+	exit 1
+fi
+chown -R apache.apache "$TEMPDIR"/nextcloud
+echo "Stopping apache..."
+/etc/init.d/apache2 stop
+echo "Copying to DocumentRoot..."
+cp -a "$TEMPDIR"/nextcloud/. /var/www/localhost/htdocs/
+rm -rf "$TEMPDIR"
+echo "Executing upgrade script..."
+occ upgrade
+occ config:system:delete trusted_domains
+occ config:system:set trusted_domains 1 --value='*'
+echo "Upgrade done. starting apache..."
+/etc/init.d/apache2 start
