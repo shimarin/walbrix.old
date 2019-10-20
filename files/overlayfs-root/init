@@ -66,19 +66,24 @@ mkdir -p "${NEW_ROOT}"
 CHROOT="${NEW_ROOT}"
 
 mkdir /mnt/orig_root
-mkdir /mnt/system
 
 if ! mount "${ROOT_PARTITION}" /mnt/orig_root; then
     bad_msg "Unable to mount $ROOT_PARTITION"
     exec sh
 fi
 
+rm -rf /mnt/orig_root/work # cleanup overlayfs workdir
+mkdir -p /mnt/orig_root${RW_LAYER} /mnt/orig_root/ro /mnt/orig_root/work
+rm -rf /mnt/orig_root${RW_LAYER}/tmp /mnt/orig_root${RW_LAYER}/var/tmp # cleanup temporary dirs
+rm -f /mnt/orig_root${RW_LAYER}/etc/mtab # mtab should always point /proc/mounts
+rm -f /mnt/orig_root${RW_LAYER}/etc/ld.so.cache
+
 if ! losetup -r /dev/loop0 /mnt/orig_root${RO_LAYER}; then
     bad_msg "Unable to setup loopback (ROOT_PARTITION)${RO_LAYER}"
     exec sh
 fi
 
-if ! mount -o ro /dev/loop0 /mnt/system; then
+if ! mount -o ro /dev/loop0 /mnt/orig_root/ro; then
     bad_msg "Unable to loopback mount (ROOT_PARTITION)${RO_LAYER}"
     exec sh
 fi
@@ -87,19 +92,13 @@ if [ "${SOFTLEVEL}" = "rescue" ]; then
     mount -t tmpfs tmpfs /mnt/orig_root${RW_LAYER} || bad_msg "Unable to mount tmpfs"
 fi
 
-rm -rf /mnt/orig_root/work # cleanup overlayfs workdir
-mkdir -p /mnt/orig_root${RW_LAYER} /mnt/orig_root/work
-rm -rf /mnt/orig_root${RW_LAYER}/tmp /mnt/orig_root${RW_LAYER}/var/tmp # cleanup temporary dirs
-rm -f /mnt/orig_root${RW_LAYER}/etc/mtab # mtab should always point /proc/mounts
-rm -f /mnt/orig_root${RW_LAYER}/etc/ld.so.cache
-
 # create datadirs if not exist (mainly for docker)
 for i in $DATADIRS; do
 	mkdir -p /mnt/orig_root${i}
 done
 
 good_msg "Mounting /newroot as overlay..."
-mount -t overlay -o lowerdir=/mnt/system,upperdir=/mnt/orig_root${RW_LAYER},workdir=/mnt/orig_root/work overlay /newroot || bad_msg "Unable to mount /newroot"
+mount -t overlay -o lowerdir=/mnt/orig_root/ro,upperdir=/mnt/orig_root${RW_LAYER},workdir=/mnt/orig_root/work overlay /newroot || bad_msg "Unable to mount /newroot"
 
 good_msg "Moving original root under /.overlay..."
 mkdir -p /newroot/.overlay && mount --move /mnt/orig_root /newroot/.overlay
