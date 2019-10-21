@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.3.6-gentoo-r1 Kernel Configuration
+# Linux/x86 5.3.7-gentoo Kernel Configuration
 #
 
 #
@@ -4436,7 +4436,6 @@ CONFIG_USB_SERIAL_QT2=m
 # CONFIG_USB_EMI26 is not set
 # CONFIG_USB_ADUTUX is not set
 # CONFIG_USB_SEVSEG is not set
-# CONFIG_USB_RIO500 is not set
 # CONFIG_USB_LEGOTOWER is not set
 # CONFIG_USB_LCD is not set
 # CONFIG_USB_CYPRESS_CY7C63 is not set
@@ -4870,7 +4869,6 @@ CONFIG_VT6656=m
 # CONFIG_LTE_GDM724X is not set
 # CONFIG_GS_FPGABOOT is not set
 # CONFIG_UNISYSSPAR is not set
-# CONFIG_FB_TFT is not set
 # CONFIG_WILC1000_SPI is not set
 # CONFIG_MOST is not set
 # CONFIG_GREYBUS is not set
