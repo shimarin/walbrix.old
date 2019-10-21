@@ -1,2 +1,6 @@
 sys-kernel/vanilla-sources linux-firmware
 sys-kernel/linux-firmware no-source-code linux-fw-redistributable
+net-analyzer/fping fping
+sys-block/megacli LSI
+sys-firmware/bluez-firmware bluez-firmware
+media-gfx/splash-themes-gentoo freedist
