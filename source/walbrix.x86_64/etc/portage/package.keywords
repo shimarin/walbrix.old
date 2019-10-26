@@ -7,9 +7,9 @@
 =sys-boot/grub-2.04_rc1
 
 # Xen
-=app-emulation/xen-4.12.0-r1
-=app-emulation/xen-tools-4.12.0-r3
-=app-emulation/xen-pvgrub-4.12.0
+=app-emulation/xen-4.12.1
+=app-emulation/xen-tools-4.12.1
+=app-emulation/xen-pvgrub-4.12.1
 
 #snort
 =net-analyzer/snort-2.9.12
