@@ -88,12 +88,12 @@ def detect_arch(executable):
     print "Architecture determined from %s: %d-bit" % (executable, arch)
     return arch
 
-def determine_boot_type(vmroot):
+def determine_boot_type(config,vmroot):
     init = os.path.join(vmroot, "sbin/init")
     grub1_cfg = os.path.join(vmroot, "boot/grub/menu.lst")
     grub2_cfg = os.path.join(vmroot, "boot/grub/grub.cfg")
     grub1_bin = "/usr/lib/xen/boot/pv-grub-x86_64.gz"
-    grub2_bin = "/usr/lib/xen/boot/pv-grub2-x86_64.gz" # https://github.com/wbrxcorp/walbrix/issues/61
+    grub2_bin = "/usr/lib/xen/boot/%s-grub2-x86_64.gz" % ("pvh" if any([c == "type='pvh'" for c in config]) else "pv")
 
     # use grub when 64bit
     if not os.path.isfile(init) or detect_arch(init) == 64:
@@ -120,7 +120,7 @@ def run(name, default_memory = 128, console = False, quiet=False):
         if os.path.isfile(configfile):
             with open(configfile) as f:
                 config = f.read().splitlines()
-        config += determine_boot_type(tempdir)
+        config += determine_boot_type(config,tempdir)
 
     config.append("name='%s'" % name)
 
