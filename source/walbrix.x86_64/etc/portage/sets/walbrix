@@ -23,6 +23,7 @@ dev-db/mysql
 dev-libs/jansson
 dev-libs/libisoburn
 dev-libs/ocl-icd
+dev-libs/openssl-compat
 dev-python/chardet
 dev-python/flask
 dev-python/future

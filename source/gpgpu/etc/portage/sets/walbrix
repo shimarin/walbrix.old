@@ -12,6 +12,7 @@ app-portage/cpuid2cpuflags
 dev-libs/intel-neo
 dev-libs/libuv
 dev-libs/ocl-icd
+dev-libs/openssl-compat
 dev-python/future
 dev-python/paho-mqtt
 dev-python/zeroconf

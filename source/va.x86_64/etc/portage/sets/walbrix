@@ -41,6 +41,7 @@ dev-lang/coffee-script
 dev-lang/php
 dev-lang/rust
 dev-libs/amdgpu-pro-opencl
+dev-libs/openssl-compat
 dev-lua/luajson
 dev-lua/luasec
 dev-php/PEAR-PEAR
