@@ -1,14 +1,14 @@
 =sys-kernel/gentoo-sources-5.3.8
 =app-i18n/fbterm-1.7-r5
-=sys-kernel/vanilla-sources-3.16.75
+=sys-kernel/vanilla-sources-3.16.76
 =app-crypt/chntpw-140201
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
 =sys-block/zram-init-3.8
 =sys-boot/grub-2.04-r1
 
 # Xen
-=app-emulation/xen-4.12.1
-=app-emulation/xen-tools-4.12.1
+=app-emulation/xen-4.12.1-r1
+=app-emulation/xen-tools-4.12.1-r1
 =app-emulation/xen-pvgrub-4.12.1
 
 #snort
