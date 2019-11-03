@@ -1,5 +1,5 @@
-/boot/kernel-genkernel-x86_64-3.16.73
-$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.16.73
+/boot/kernel-genkernel-x86_64-3.16.76
+$symlink /boot/kernel.domU kernel-genkernel-x86_64-3.16.76
 
 $require zabbix-agent.lst
 $require zabbix-proxy.lst
