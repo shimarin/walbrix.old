@@ -1,4 +1,5 @@
 config_eth0="dhcp"
+udhcpc_eth0="-t 10"
 fallback_eth0="apipa"
 
 ## WiFI example (see /etc/wpa_supplicant/wpa_supplicant.conf as well)
