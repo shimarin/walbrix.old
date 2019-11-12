@@ -81,7 +81,7 @@ dev-ruby/bundler
 dev-ruby/mysql2
 dev-ruby/rmagick
 dev-util/jenkins-bin
-dev-util/nvidia-cuda-toolkit
+#dev-util/nvidia-cuda-toolkit
 dev-util/strace
 dev-vcs/git-lfs
 dev-vcs/mercurial
