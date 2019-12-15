@@ -1,3 +1,4 @@
 $require python27.lst
 $package dev-python/beautifulsoup-4.5.1 --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
+$package dev-python/soupsieve
 

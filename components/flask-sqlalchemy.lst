@@ -1,3 +1,17 @@
 $require flask.lst
 $package dev-python/sqlalchemy --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
 $package dev-python/flask-sqlalchemy --exclude='^/usr/lib(64)?/(python3.*/|.*\.egg-info(\/|$)|.+\.py(c|o)$)'
+
+#dev-python/alabaster
+#dev-python/sphinx_rtd_theme
+#dev-python/snowballstemmer
+##dev-python/imagesize
+#dev-python/whoosh
+#dev-python/namespace-sphinxcontrib
+#dev-python/typing
+#dev-python/Babel
+#dev-python/sphinxcontrib-websupport
+#dev-python/sphinx
+#dev-python/pallets-sphinx-themes
+#dev-python/sphinx-issues
+
