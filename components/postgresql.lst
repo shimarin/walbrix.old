@@ -1,8 +1,8 @@
-$set PGSQL_VERSION 9.6
+$set PGSQL_VERSION 12
 #app-eselect/eselect-postgresql
-$package dev-db/postgresql-$(PGSQL_VERSION).6 --exclude='^/usr/share/postgresql-.+/man/'
+$package dev-db/postgresql-$(PGSQL_VERSION).1 --exclude='^/usr/share/postgresql-.+/man/'
 
-$exec "ln -sf /usr/lib/postgresql-$(PGSQL_VERSION)/bin/* /usr/bin/"
+$exec "ln -sf /usr/lib64/postgresql-$(PGSQL_VERSION)/bin/* /usr/bin/"
 
 $copy postgresql/operate.sh /operate.sh
 $exec "/operate.sh initdb && rm /operate.sh" # you may need to increase shmmni from 4k to 16k
