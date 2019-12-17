@@ -13,7 +13,8 @@ net-fs/cifs-utils -acl -ads -caps
 sys-apps/usb_modeswitch jimtcl
 app-admin/testdisk ntfs
 app-admin/sudo -sendmail pam
-net-analyzer/zabbix sqlite agent proxy curl snmp
+net-analyzer/zabbix sqlite agent proxy curl snmp -postgres
+net-analyzer/fping suid
 sys-apps/smartmontools minimal
 net-fs/samba -system-mitkrb5 winbind client
 sys-libs/tevent python

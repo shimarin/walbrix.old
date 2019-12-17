@@ -95,8 +95,9 @@ dev-ruby/xmlrpc -ruby_targets_ruby24
 dev-ruby/did_you_mean -ruby_targets_ruby24
 
 # zabbix
-net-analyzer/zabbix agent frontend java mysql openipmi proxy server snmp
+net-analyzer/zabbix agent frontend java mysql openipmi proxy server snmp -postgres
 sys-libs/openipmi snmp
+net-analyzer/fping suid
 
 # chromium
 media-libs/mesa -bindist -classic -dri3 gallium -gbm -llvm -nptl -video_cards_intel -video_cards_radeon video_cards_nouveau -video_cards_radeonsi
