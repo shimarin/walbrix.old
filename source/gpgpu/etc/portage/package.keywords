@@ -1,4 +1,4 @@
-=sys-kernel/gentoo-sources-5.4.3
+=sys-kernel/gentoo-sources-5.4.6
 sys-kernel/linux-firmware
 sys-apps/hwids
 =sys-power/acpi_call-3.17
