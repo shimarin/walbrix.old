@@ -7,6 +7,7 @@ import * as glob from "glob";
 import {Subcommand} from "../subcommand";
 import {Context} from "./context";
 import {file,flush} from "./file";
+import {exec} from "./exec";
 import {get_kernel_version_string} from "../kernelver";
 
 function process_package(context:Context, pkgname:string)
@@ -16,14 +17,19 @@ function process_package(context:Context, pkgname:string)
   const name = category_and_name[0];
 
   const matched = glob.sync(path.join(context.srcdir, `var/db/pkg/${category}/${name}-*/CONTENTS`)).map (_=> {
+
     const category = fs.readFileSync(path.join(path.dirname(_), "CATEGORY")).toString().trim();
     const pf = fs.readFileSync(path.join(path.dirname(_), "PF"), "utf-8").trim();
     return {
       name: `${category}/${pf}`,
+      category: category,
+      pf: pf,
       contents: fs.readFileSync(_, "utf-8").split("\n")
       .filter( _ => _.indexOf("obj ") === 0 || _.indexOf("sym ") === 0 || _.indexOf("dir ") === 0)
       .map(_ => _.split(' ', 2)[1])
     }
+  }).filter(_=> {
+    return _.pf.replace(/-r[0-9]+$/, "").replace(/-[^-]+$/, "") == name
   });
 
   if (matched.length == 0) {
@@ -66,12 +72,17 @@ function process_package(context:Context, pkgname:string)
   });
 }
 
+function set(context:Context, envname:string, value:string)
+{
+  context.env[envname] = value;
+  console.log(`$${envname} set to ${value}`);
+}
+
 function kernel(context:Context, kernelimage:string)
 {
   const kernelver = get_kernel_version_string(path.join(context.srcdir, kernelimage));
-  context.env["KERNEL_VERSION"] = kernelver;
-  context.env["WALBRIX_VERSION"] = kernelver.split('-', 2)[0];
-  console.log(`$KERNEL_VERSION set to ${kernelver}`);
+  set(context, "KERNEL_VERSION", kernelver);
+  set(context, "WALBRIX_VERSION", kernelver.split('-', 2)[0]);
 }
 
 function dir(context:Context, dirname:string)
@@ -96,8 +107,14 @@ function copy(context:Context, srcfile:string, dstfile:string)
     flush(context);
   }
   let dstfile_full = path.join(context.dstdir, dstfile);
-  if (fs.statSync(dstfile_full).isDirectory()) {
-    dstfile_full = path.join(dstfile_full, path.basename(srcfile));
+  try {
+    const stat = fs.statSync(dstfile_full);
+    if (stat.isDirectory()) {
+      dstfile_full = path.join(dstfile_full, path.basename(srcfile));
+    }
+  }
+  catch (e) {
+    // pass through
   }
   fs.mkdirsSync(path.dirname(dstfile_full));
   console.log(`$copy ${srcfile} -> ${dstfile_full}`);
@@ -158,6 +175,9 @@ function process_lstfile(context:Context, lstfile:string)
   program.command("$kernel <kernelimage>").action((kernelimage) => {
     kernel(context, kernelimage);
   });
+  program.command("$set <envname> <value>").action((envname, value) => {
+    set(context, envname, value);
+  });
   program.command("$dir <dirname>").action((dirname) => {
     flush(context);
     dir(context, dirname);
@@ -185,6 +205,11 @@ function process_lstfile(context:Context, lstfile:string)
   program.command("$touch <path>").action((path)=> {
     flush(context);
     touch(context, path);
+  })
+  program.command("$exec <command>").option("-o --overlay", "execute command")
+  .action((command, options:commander.Command)=> {
+    flush(context);
+    exec(context, command, options.overlay? true : false);
   })
   // TODO: raise error for unknown command
 

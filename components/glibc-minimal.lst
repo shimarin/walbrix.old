@@ -4,3 +4,6 @@
 /lib64/libnss_dns.so.2
 /lib64/libnss_files.so.2
 /usr/share/locale/locale.alias
+
+$dir /etc/ld.so.conf.d
+$dir /usr/lib/gcc/x86_64-pc-linux-gnu

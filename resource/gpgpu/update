@@ -1,0 +1,11 @@
+#!/bin/bash
+usage() {
+        echo "Usage: $0" 1>&2
+        exit 1
+}
+
+if [ "$#" -eq 0 ] ; then
+   usage
+fi
+
+echo "TBD"

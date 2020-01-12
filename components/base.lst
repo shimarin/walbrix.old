@@ -1,0 +1,46 @@
+$kernel /boot/kernel
+/boot/kernel
+/boot/initramfs
+$require baselayout.lst
+$package coreutils
+$package sysvinit
+$require netifrc.lst
+$package grep
+$package procps
+$package findutils
+$require udev.lst
+$package timezone-data
+
+$package net-tools
+$require bash-minimal.lst
+$require pam.lst
+$require psmisc.lst
+$require xfsprogs.lst
+$require nvi-minimal.lst
+$package iputils
+$require dhcpcd.lst
+$require openssh.lst
+$require cron.lst
+
+/tmp
+/root
+/sys
+/proc
+/run
+
+$require glibc-minimal.lst
+/etc/ld.so.conf
+
+$dir /dev
+
+$write /etc/conf.d/localmount 'no_umounts="/.overlay/boot|/.overlay/rw"'
+$sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount,ro"/'
+
+/usr/bin/rsync
+
+$write /etc/fstab 'overlay\t/\toverlay\tdefaults\t0 0\n'
+$sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
+$symlink /etc/init.d/net.eth0 net.lo
+$symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
+
+$write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'

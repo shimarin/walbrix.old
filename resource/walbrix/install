@@ -1,0 +1,17 @@
+#!/bin/bash
+usage() {
+        echo "Usage: $0 device" 1>&2
+        exit 1
+}
+
+if [ "$#" -eq 0 ] ; then
+   usage
+fi
+
+SECTOR_SIZE=$(blockdev --getpbsz $1)
+
+if [ -z "$SECTOR_SIZE" ]; then
+	exit 1
+fi
+
+echo "TBD"
