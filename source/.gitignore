@@ -11,3 +11,4 @@
 !*/etc/portage/package.*
 */etc/portage/package.*/*
 !*/etc/portage/package.*/walbrix
+!*/etc/portage/profile

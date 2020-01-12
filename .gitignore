@@ -5,7 +5,6 @@ download_cache/
 node_modules/
 .sconsign.dblite
 /walbrix
-/minimal
 /bootx64.efi
 *.xz
 *.squashfs
