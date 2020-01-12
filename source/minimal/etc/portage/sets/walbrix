@@ -1,3 +1,11 @@
+app-editors/nvi
+net-dialup/ppp
+net-misc/dhcpcd
+net-wireless/wpa_supplicant
+sys-apps/hwids
+sys-apps/pciutils
+sys-block/zram-init
 sys-kernel/gentoo-sources
 sys-kernel/genkernel
 sys-boot/grub
+sys-fs/xfsprogs

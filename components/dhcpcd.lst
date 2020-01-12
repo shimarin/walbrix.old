@@ -1,0 +1,5 @@
+/etc/dhcpcd.conf
+/lib64/dhcpcd/dev/udev.so
+/sbin/dhcpcd
+$dir /lib/dhcpcd
+/var/lib/dhcpcd

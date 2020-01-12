@@ -76,17 +76,29 @@ function kernel(context:Context, kernelimage:string)
 
 function dir(context:Context, dirname:string)
 {
-  while (dirname[dirname.length - 1] == '/') {
-    dirname = dirname.substr(0, dirname.length - 1);
-  }
+  dirname = dirname.replace(/\/+$/, "");
   console.log(`Directory: ${dirname}`);
   child_process.spawnSync("rsync", ["-ax", "--delete", path.join(context.srcdir, dirname), path.join(context.dstdir, path.dirname(dirname))],
     {stdio:[null, "inherit", "inherit"]});
 }
 
+function mkdir(context:Context, dirname:string)
+{
+  dirname = dirname.replace(/\/+$/, "");
+  console.log(`Making directory: ${dirname}`);
+  fs.mkdirpSync(path.join(context.dstdir, dirname));
+}
+
 function copy(context:Context, srcfile:string, dstfile:string)
 {
-  const dstfile_full = path.join(context.dstdir, dstfile);
+  if (dstfile.endsWith('/')) {
+    file(context, dstfile.replace(/\/+$/, ""));
+    flush(context);
+  }
+  let dstfile_full = path.join(context.dstdir, dstfile);
+  if (fs.statSync(dstfile_full).isDirectory()) {
+    dstfile_full = path.join(dstfile_full, path.basename(srcfile));
+  }
   fs.mkdirsSync(path.dirname(dstfile_full));
   console.log(`$copy ${srcfile} -> ${dstfile_full}`);
   if (child_process.spawnSync("cp", ["-a", srcfile, dstfile_full],
@@ -116,6 +128,17 @@ function write(context:Context, filename:string, content:string)
   }
 }
 
+function symlink(context:Context, pathname:string, target:string) {
+  const templink = path.join(context.dstdir, `symlink.${process.pid}`);
+  fs.symlinkSync(target, templink);
+  fs.renameSync(templink, path.join(context.dstdir, pathname));
+}
+
+function touch(context:Context, filename:string)
+{
+  fs.writeFileSync(path.join(context.dstdir, filename), "",  {flag:"a"});
+}
+
 function process_lstfile(context:Context, lstfile:string)
 {
   if (context.lstfiles.has(lstfile)) return;
@@ -139,6 +162,10 @@ function process_lstfile(context:Context, lstfile:string)
     flush(context);
     dir(context, dirname);
   });
+  program.command("$mkdir <dirname>").action((dirname) => {
+    flush(context);
+    mkdir(context, dirname);
+  });
   program.command("$copy <srcfile> <dstfile>").action((srcfile,dstfile) => {
     flush(context);
     copy(context, srcfile, dstfile)
@@ -150,6 +177,14 @@ function process_lstfile(context:Context, lstfile:string)
   program.command("$write <filename> <content>").action((filename, content) => {
     flush(context);
     write(context, filename, content);
+  })
+  program.command("$symlink <path> <target>").action((path, target) => {
+    flush(context);
+    symlink(context, path, target);
+  })
+  program.command("$touch <path>").action((path)=> {
+    flush(context);
+    touch(context, path);
   })
   // TODO: raise error for unknown command
 

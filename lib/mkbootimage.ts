@@ -10,7 +10,7 @@ export const GRUB_MODULES = [
   "loopback","videoinfo","videotest","blocklist","probe"
 ];
 
-const BOOTLOADER_SIZE = 1024 * 1024;
+//const BOOTLOADER_SIZE = 1024 * 1024;
 
 export class MkBootImage implements Subcommand<[string,string,string]> {
   command = "mkbootimage <sourcedir> <cfgfile> <outputfile>";
@@ -27,6 +27,7 @@ export class MkBootImage implements Subcommand<[string,string,string]> {
     fs.copySync(cfgfile, path.join(sourcedir, "tmp/grub.cfg"))
     child_process.spawnSync("chroot", [sourcedir, "grub-mkimage", "-p", "/boot/grub", "-c", "/tmp/grub.cfg", "-o", "/tmp/bootx64.efi", "-O", "x86_64-efi"].concat(GRUB_MODULES), {stdio:"inherit"});
     const bootloader_src = path.join(sourcedir, "tmp/bootx64.efi");
+    /*
     const stat = fs.statSync(bootloader_src);
     if (stat.size > BOOTLOADER_SIZE) {
       console.log(`Bootloader(${stat.size}) is larger than its limit(${BOOTLOADER_SIZE}) `);
@@ -43,6 +44,7 @@ export class MkBootImage implements Subcommand<[string,string,string]> {
     finally {
       fs.closeSync(fd);
     }
-
+    */
+    fs.copySync(bootloader_src, outputfile);
   }
 }

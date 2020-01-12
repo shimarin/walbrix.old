@@ -1,0 +1,21 @@
+#net-dialup/ppp
+/etc/pam.d/ppp
+/etc/ppp/peers
+$dir /usr/lib64/pppd
+/usr/sbin/chat
+/usr/sbin/plog
+/usr/sbin/poff
+/usr/sbin/pon
+/usr/sbin/pppd
+/usr/sbin/pppdump
+/usr/sbin/pppgetpass
+/usr/sbin/pppoe-discovery
+/usr/sbin/pppstats
+
+#net-dialup/ppp-scripts
+/etc/ppp/ip-down
+/etc/ppp/ip-down.d
+/etc/ppp/ip-up
+/etc/ppp/ip-up.d
+/etc/ppp/ipv6-down
+/etc/ppp/ipv6-up

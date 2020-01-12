@@ -1,0 +1,14 @@
+#!/bin/sh
+echo "Enter SSID"
+read SSID
+echo "Enter WPA key"
+read KEY
+cat << EOS > /etc/wpa_supplicant/wpa_supplicant.conf
+network={
+	ssid="$SSID"
+	psk="$KEY"
+	proto=WPA
+	priority=1
+}
+EOS
+/etc/init.d/net.wlan0 restart && rc-update add net.wlan0

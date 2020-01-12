@@ -1,2 +1,3 @@
 sys-boot/grub sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc grub_platforms_xen grub_platforms_xen-pvh
 app-emulation/xen-tools -hvm -ipxe -qemu-traditional -rombios
+dev-libs/libnl -python_targets_python2_7

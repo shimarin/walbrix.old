@@ -45,6 +45,9 @@ if [ -f /mnt/boot/system.cur ];then
 	fi
 fi
 
+echo "Remounting boot partition as R/O..."
+mount -o remount,ro /mnt/boot
+
 echo "Setup RW layer..."
 mkdir /mnt/rw
 if [ -f "/mnt/boot/rw" ]; then
@@ -56,12 +59,32 @@ elif [ -d "/mnt/boot/rw" ]; then
 fi
 if [ "${RW_LAYER_READY}" != "true" ]; then
 	echo "Mounting RAM RW layer..."
-	mount -t tmpfs tmpfs /mnt/rw
+	if mount -t tmpfs tmpfs /mnt/rw; then
+		if [ -f "/mnt/boot/data.img" ]; then
+			echo "Loding saved data..."
+			mkdir /mnt/data
+			if mount -o loop,ro /mnt/boot/data.img /mnt/data; then
+				mkdir -p /mnt/rw/root
+				if cp -a /mnt/data/. /mnt/rw/root/; then
+					echo "Saved data loaded."
+				else
+					echo "Loading saved data failed. Cleaning up..."
+					rm -rf /mnt/rw/root
+				fi
+				umount /mnt/data && rmdir /mnt/data
+			else
+				echo "Loading saved data failed."
+			fi
+		fi
+	else
+		echo "Mounting RAM RW layer failed."
+		exec sh
+	fi
 fi
 
 echo "Mounting system image..."
 mkdir /mnt/system
-mount -o loop,ro /mnt/boot/system /mnt/system || exec sh
+mount -o loop,ro /mnt/boot/system.img /mnt/system || exec sh
 
 echo "Mounting overlay..."
 rm -rf /mnt/rw/work #cleanup

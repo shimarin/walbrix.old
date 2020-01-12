@@ -1,0 +1,13 @@
+#!/bin/sh
+POSSIBLE_IDS="\
+	usb-Android_Android-if03-port0 \
+	usb-NTT_DOCOMO__INC._docomo_L03F-if01-port0 \
+	usb-HUAWEI_Technology_HUAWEI_Mobile_0123456712ABCA17-if02-port0 \
+"
+
+for i in $POSSIBLE_IDS; do
+	if [ -c "/dev/serial/by-id/$i" ]; then
+		echo "/dev/serial/by-id/$i"
+		break
+	fi
+done

@@ -1,0 +1,6 @@
+/bin/bash
+/etc/bash/bash_logout
+/etc/bash/bashrc
+/etc/bash/bashrc.d
+$package ncurses
+/bin/sh

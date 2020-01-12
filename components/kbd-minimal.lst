@@ -1,3 +1,4 @@
+/bin/gzip
 /usr/bin/chvt
 /usr/bin/deallocvt
 /usr/bin/dumpkeys
@@ -21,6 +22,13 @@
 /usr/bin/setmetamode
 /usr/bin/setvtrgb
 /usr/bin/showkey
+/usr/share/keymaps/i386/include/compose.inc
+/usr/share/keymaps/i386/include/euro1.map.gz
+/usr/share/keymaps/i386/include/linux-keys-bare.inc
+/usr/share/keymaps/i386/include/linux-with-alt-and-altgr.inc
+/usr/share/keymaps/i386/include/linux-with-two-alt-keys.inc
+/usr/share/keymaps/i386/include/qwerty-layout.inc
+/usr/share/keymaps/i386/include/windowkeys.map.gz
 /usr/share/keymaps/i386/qwerty/jp106.map.gz
 /usr/share/keymaps/i386/qwerty/us.map.gz
-
+/usr/share/keymaps/include/compose.latin1

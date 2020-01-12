@@ -37,7 +37,7 @@ export class GenKernel implements Subcommand<[string,string,Command]> {
       // ignore SIGINT to ensure unmounting proc
     });
     if (spawnSync("chroot", [sourcedir, "genkernel"].concat(opts), {stdio:"inherit"}).status === 0) {
-      spawnSync("chroot", ["diff", "-u", "/etc/kernels/kernel-config", "/usr/src/linux/.config"].concat(opts), {stdio:"inherit"});
+      spawnSync("chroot", [sourcedir, "diff", "-u", "/etc/kernels/kernel-config", "/usr/src/linux/.config"], {stdio:"inherit"});
     };
 
 //    console.log("Unmounting");

@@ -1,0 +1,3 @@
+/usr/bin/nvi
+$symlink /usr/bin/vi nvi
+

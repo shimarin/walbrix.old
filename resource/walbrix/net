@@ -1,0 +1,6 @@
+config_eth0="dhcp"
+fallback_eth0="apipa"
+config_wlan0="dhcp"
+wpa_supplicant_wlan0="-Dwext"
+link_ppp0=`find-modem`
+pppd_ppp0="call default"
