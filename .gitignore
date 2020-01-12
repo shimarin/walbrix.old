@@ -10,3 +10,4 @@ node_modules/
 *.squashfs
 *.iso
 *.img
+*.js
