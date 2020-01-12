@@ -2,9 +2,10 @@
 *.py[cod]
 build/
 download_cache/
+node_modules/
 .sconsign.dblite
 /walbrix
-/desktop
+/minimal
 *.xz
 *.squashfs
 *.iso

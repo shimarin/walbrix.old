@@ -1,0 +1,38 @@
+$kernel /boot/kernel
+/boot/kernel
+/boot/initramfs
+$require baselayout.lst
+$package coreutils
+$package util-linux
+$package sysvinit
+$package netifrc
+$package grep
+$package kmod
+$package procps
+$package findutils
+
+$package net-tools
+$require kbd-minimal.lst
+
+$require bash.lst
+$require pam.lst
+$require psmisc.lst
+
+/bin/sed
+
+/tmp
+/root
+/sys
+/proc
+/run
+
+$require glibc-minimal.lst
+/etc/ld.so.conf
+
+$dir /dev
+$dir /lib/modules/$KERNEL_VERSION
+$copy resource/walbrix/grub.cfg /boot/grub/grub.cfg
+$sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
+
+$write /etc/fstab 'overlay\t/\toverlay\tdefaults\t0 0\n'
+$sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
