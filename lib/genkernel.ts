@@ -22,7 +22,7 @@ export class GenKernel implements Subcommand<[string,string,Command]> {
     fs.copySync(linuxrc, path.join(sourcedir, "tmp/linuxrc"));
     const opts = [
       "--lvm", "--mdadm", "--symlink", "--no-mountboot", "--no-bootloader", "--no-compress-initramfs",
-//      "--kernel-append-localversion=.walbrix",
+      "--kernel-config=/etc/kernels/kernel-config", "--no-save-config",
       `--makeopts="-j${cpus().length + 1}"`,
       "--linuxrc=/tmp/linuxrc", "--xfsprogs", options.initramfs? "initramfs":"all"
     ]
@@ -36,7 +36,9 @@ export class GenKernel implements Subcommand<[string,string,Command]> {
     process.on('SIGINT', () => {
       // ignore SIGINT to ensure unmounting proc
     });
-    spawnSync("chroot", [sourcedir, "genkernel"].concat(opts), {stdio:"inherit"});
+    if (spawnSync("chroot", [sourcedir, "genkernel"].concat(opts), {stdio:"inherit"}).status === 0) {
+      spawnSync("chroot", ["diff", "-u", "/etc/kernels/kernel-config", "/usr/src/linux/.config"].concat(opts), {stdio:"inherit"});
+    };
 
 //    console.log("Unmounting");
     if (spawnSync("umount", [proc_path]).status !== 0) {
