@@ -2,4 +2,5 @@
 /lib64/dhcpcd/dev/udev.so
 /sbin/dhcpcd
 $dir /lib/dhcpcd
+$dir /usr/share/dhcpcd/hooks
 /var/lib/dhcpcd

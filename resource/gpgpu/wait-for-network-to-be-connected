@@ -1,0 +1,8 @@
+#!/bin/sh
+RETRY_COUNT=0
+RETRY_MAX=${1:-10}
+until [ -n "$(awk '{ if ($2=="00000000") print $1}' /proc/net/route)" ] || [ $RETRY_COUNT -eq $RETRY_MAX ]; do
+	sleep $(( ++RETRY_COUNT ))
+done
+[ $RETRY_COUNT -eq $RETRY_MAX ] && exit 1
+exit 0

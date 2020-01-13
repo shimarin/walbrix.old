@@ -10,7 +10,7 @@ import {file,flush} from "./file";
 import {exec} from "./exec";
 import {get_kernel_version_string} from "../kernelver";
 
-function process_package(context:Context, pkgname:string)
+function process_package(context:Context, pkgname:string, use?:string)
 {
   const category_and_name = pkgname.split('/', 2);
   const category = category_and_name.length > 1? category_and_name.shift() : "*";
@@ -26,7 +26,8 @@ function process_package(context:Context, pkgname:string)
       pf: pf,
       contents: fs.readFileSync(_, "utf-8").split("\n")
       .filter( _ => _.indexOf("obj ") === 0 || _.indexOf("sym ") === 0 || _.indexOf("dir ") === 0)
-      .map(_ => _.split(' ', 2)[1])
+      .map(_ => _.split(' ', 2)[1]),
+      use: fs.readFileSync(path.join(path.dirname(_), "USE"), "utf-8").split(" ")
     }
   }).filter(_=> {
     return _.pf.replace(/-r[0-9]+$/, "").replace(/-[^-]+$/, "") == name
@@ -51,6 +52,11 @@ function process_package(context:Context, pkgname:string)
 
   // else
   console.log(`package ${pkg.name}`);
+  if (use && use.split(" ").some(_ => _.startsWith('-')? pkg.use.includes(_.replace(/^-/,"")) : !pkg.use.includes(_))) {
+    console.log(`Package "${pkg.name}" does not satisfy use flag condition "${use}"`);
+    process.exit(-1);
+  }
+
   context.packages.add(pkg.name);
 
   const excluded_prefixes = [
@@ -169,8 +175,9 @@ function process_lstfile(context:Context, lstfile:string)
   program.command("$require <lstfile>").action((new_lstfile)=> {
     process_lstfile(context, path.join(path.dirname(lstfile), new_lstfile));
   });
-  program.command("$package <pkgname>").action((pkgname)=>{
-    process_package(context, pkgname);
+  program.command("$package <pkgname>").option("-u --use <use>", "mandatory use flag")
+  .action((pkgname, options:commander.Command)=>{
+    process_package(context, pkgname, options.use);
   });
   program.command("$kernel <kernelimage>").action((kernelimage) => {
     kernel(context, kernelimage);

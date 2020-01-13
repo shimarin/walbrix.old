@@ -9,6 +9,7 @@ app-emulation/docker
 app-misc/beep
 app-misc/screen
 app-portage/cpuid2cpuflags
+dev-libs/amdgpu-pro-opencl
 dev-libs/intel-neo
 dev-libs/libuv
 dev-libs/ocl-icd
@@ -26,7 +27,7 @@ net-fs/samba
 net-libs/libmicrohttpd
 net-libs/nodejs
 net-misc/bridge-utils
-net-misc/dhcp
+net-misc/dhcpcd
 net-misc/netkit-telnetd
 net-misc/ntp
 net-misc/s3cmd
@@ -48,6 +49,7 @@ sys-auth/nss-mdns
 sys-auth/nss-myhostname
 sys-block/parted
 sys-block/zram-init
+sys-boot/grub
 sys-fs/btrfs-progs
 sys-fs/ddrescue
 sys-fs/dosfstools

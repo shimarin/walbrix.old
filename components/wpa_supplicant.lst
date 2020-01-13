@@ -1,3 +1,4 @@
 #$package dev-libs/libnl
+/etc/wpa_supplicant/wpa_cli.sh
 /usr/sbin/wpa_supplicant
 $copy resource/walbrix/wpa_supplicant.conf /etc/wpa_supplicant/

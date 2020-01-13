@@ -15,8 +15,16 @@ do
 		boot_partition_uuid=*)
 			BOOT_PARTITION_UUID=${x#*=}
 		;;
+		dolvm)
+			USE_LVM_NORMAL=1
+		;;
 	esac
 done
+
+if [ "${USE_LVM_NORMAL}" = '1' ]; then
+	vgchange -ay --sysinit
+	vgmknodes --ignorelockingfailure
+fi
 
 echo "Determining boot partition(supposed to contain system image)..."
 if [ -n "${BOOT_PARTITION_UUID}" ]; then

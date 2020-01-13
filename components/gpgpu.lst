@@ -1,108 +1,68 @@
-$require rootfs.lst
-/usr/bin/ldd
-$package sys-apps/baselayout
-$package sys-apps/pciutils # lspci
-$require dev.lst
-$require bash.lst
-$require glibc.lst
-$package app-arch/bzip2
-$package app-arch/cpio
-$package app-arch/gzip
-$package app-arch/tar
-$package app-arch/unzip
-$package app-arch/xz-utils
-$package app-arch/zip
-$require nano.lst
+$require base.lst
+
+$dir /lib/firmware
+$package kmod
+$require kbd-minimal.lst
+$require zram-init.lst
+$require acpi.lst
+
+#install script
+$package dosfstools
+$package parted
+$require grub-i386-pc.lst
+$copy resource/walbrix/install /usr/sbin/
+
+/bin/ip
+/usr/bin/awk
+$copy resource/walbrix/adhoc-sshd /usr/sbin/
+
+$dir /lib/modules/$KERNEL_VERSION
+$mkdir /boot/grub
+$copy resource/gpgpu/grub.cfg /boot/grub/grub.cfg
+
+#hwids
+/bin/sed
+/usr/sbin/lspci
+/usr/share/misc/pci.ids.gz
+/usr/share/misc/usb.ids.gz
+
+$copy resource/walbrix/save /sbin/save
+
+$sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
+$copy resource/gpgpu/net /etc/conf.d/
+
+$require wpa_supplicant.lst
+$symlink /etc/init.d/net.wlan0 net.lo
+$copy resource/walbrix/setup-wifi /usr/sbin/
+
 $package app-misc/ca-certificates
 $package app-misc/mime-types
 $package app-misc/pax-utils
-$require python27.lst
 $require openssl.lst
-$package net-misc/iputils
-$package net-misc/openssh
-$package net-misc/rsync
 $package net-misc/wget
-$package sys-apps/acl
-$package sys-apps/attr
-$package sys-apps/busybox
-$package sys-apps/coreutils
-$package sys-apps/diffutils
-$package sys-apps/file
-$package sys-apps/findutils
-$package sys-apps/gawk
-$package sys-apps/gentoo-functions
-$package sys-apps/grep
 $package sys-apps/haveged
-$package sys-apps/hwids
-$package sys-apps/iproute2
-$package sys-apps/less
-$package sys-apps/net-tools
-$require openrc.lst
-$package sys-apps/sed
-$package sys-apps/which
-$package sys-devel/make
-$package sys-devel/patch
-$package sys-fs/e2fsprogs
-$package sys-fs/xfsprogs # mkfs.xfs, xfs_growfs
-$require udev.lst
-$package sys-libs/timezone-data
-$package sys-process/procps
-$require kbd.lst
 
-$require lvm.lst
-$require portage-configs.lst
-$require kernel.lst
-
-$require s3cmd.lst
+#$require s3cmd.lst
 $package sys-apps/dmidecode
 
-# boot
-$write /etc/fstab 'overlay\t/\toverlay\tdefaults\t0 0\n'
-$write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
-$sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
-$sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBFREE01"/' # set default hostname
+$sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="gpgpu"/' # set default hostname
 
-$symlink /etc/init.d/net.eth0 net.lo
-$symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
+# extend capacity
+$write /etc/sysctl.d/nf_conntrack_max.conf 'net.nf_conntrack_max = 65536'
+$write /etc/sysctl.d/nr_hugepages.conf 'vm.nr_hugepages=1280'
 
-# extend nf_conntrack capacity
-$write --append /etc/sysctl.conf 'net.nf_conntrack_max = 65536'
-
-# modify initramfs
-$mkdir /tmp/initramfs/etc
-$copy gpgpu/init /tmp/initramfs/init.walbrix
-$exec 'cd /tmp/initramfs && cat /boot/initramfs | cpio -idm && mv /tmp/initramfs/init /tmp/initramfs/init.gentoo && mv /tmp/initramfs/init.walbrix /tmp/initramfs/init && (find .|cpio -o -H newc) > /boot/initramfs'
-$deltree /tmp/initramfs
-
-# bootloader config
-$mkdir /boot/grub
-$copy gpgpu/grub.cfg /boot/grub/grub.cfg
-
-# system services
-$require cron.lst
 $require acpi.lst
-
-# prevent to get profile layer unmounted
-$write /etc/conf.d/localmount 'no_umounts="/.overlay/boot|/.overlay/profile"'
-# to get profile layer properly ro-remounted
-$sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount,ro"/'
-
-# storage and filesystems
-$require exfat.lst
-$require ntfs3g.lst
 $package sys-apps/gptfdisk
 /usr/bin/lsscsi
 
 # networks
-$require openssh.lst
 $require nss-mdns.lst
 $require nss-myhostname.lst
 $package net-analyzer/traceroute
 $require wireless-tools.lst
 $require tcpdump.lst
-$package net-misc/dhcp
 $require ssmtp.lst
-$require cu.lst
+#$require cu.lst
 $require ntp.lst
 /usr/bin/curl
 /sbin/brctl
@@ -113,9 +73,6 @@ $mkdir /var/log/samba
 $mkdir /var/cache/samba
 $mkdir /var/lib/samba/private
 $exec "chmod 700 /var/lib/samba/private"
-#/usr/lib/samba/charset/CP437.so
-#/usr/lib/samba/charset/CP850.so
-#/etc/samba/lmhosts
 $mkdir /etc/samba
 $write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15'
 /etc/conf.d/samba
@@ -125,41 +82,29 @@ $symlink /etc/conf.d/samba.nmbd samba
 $symlink /etc/runlevels/default/samba.nmbd /etc/init.d/samba.nmbd
 
 # tools
-$require binutils.lst
-$require nvi.lst
 /usr/bin/strace
 /usr/bin/telnet
-$package app-misc/screen
-$package app-editors/bvi
-$package app-admin/sysstat
-$package sys-process/lsof
+$package screen
 
 # hardware
 /etc/udev/hwdb.bin
 /usr/bin/beep
 /usr/bin/cpuid2cpuflags
-$package sys-apps/usbutils
-$package sys-apps/lm-sensors
-$package sys-power/cpupower
-$package sys-apps/lshw
+$package usbutils
+$package lm-sensors
+$package cpupower
+$package lshw
 $require intel-neo.lst
 $require gpsd.lst
 /usr/bin/clinfo
 
-# Python3 compat
-$package dev-python/future
-
-# non-free
-$exec "if [ -d /lib/modules/$(KERNEL_VERSION)/video ]; then cd /lib/modules/$(KERNEL_VERSION)/video && zip -P 'I agree to the end user license agreement' -m -0 nvidia.zip *.ko; fi"
-#makeself --nocomp --target /lib/modules/$(KERNEL_VERSION)/video --nox11 --ssl-encrypt /lib/modules/$(KERNEL_VERSION)/video /lib/modules/$(KERNEL_VERSION)/video/nvidia.run nvidia /sbin/depmod
-$exec --overlay --store=LIBNVIDIA_GTK2SO 'cd /usr/lib64 && ls libnvidia-gtk2.so.*'
-/usr/bin/nvidia-settings
-/usr/lib64/$(LIBNVIDIA_GTK2SO)
-$exec 'rm -f /usr/bin/nvidia-settings /usr/lib64/libnvidia-gtk2.so*'
+# drivers
+$package nvidia-drivers
+$package amdgpu-pro-opencl
 
 # misc
-$package dev-libs/ocl-icd
-$exec --overlay "eselect opencl set ocl-icd"
+$package ocl-icd
+#$exec --overlay "eselect opencl set ocl-icd"
 /usr/lib64/libuv.so.1
 /usr/lib64/libdrm.so.2
 /usr/lib64/libdrm_amdgpu.so.1
@@ -167,36 +112,16 @@ $exec --overlay "eselect opencl set ocl-icd"
 /usr/lib64/libhwloc.so.5
 /usr/share/libdrm/amdgpu.ids
 
-$write /etc/sysctl.d/nr_hugepages.conf 'vm.nr_hugepages=1280'
-
-# MQTT
-$package dev-python/paho-mqtt
-$require python-zeroconf.lst
-
-# docker
-#$require perl.lst # for shasum command
-$package dev-db/sqlite
-$package sys-process/tini
-$package app-emulation/containerd
-$require iptables.lst
-$require git.lst
-$package app-emulation/docker --use="overlay -device-mapper"
-$package app-emulation/docker-proxy
-$package app-emulation/runc
-$mkdir /var/lib/docker
-
 # node
-$require ts-node.lst
-
-# openvpn
-$require openvpn.lst
-$copy walbrix/ca.crt /etc/openvpn/ca.crt
-$copy walbrix/openvpn.conf /etc/openvpn/openvpn.conf
-
-# X11
-/usr/bin/xauth
+#$require ts-node.lst
 
 $require timezone-jp.lst
 
-$exec --overlay "env-update"
-$deltree /var/lib/portage
+#$exec --overlay "env-update"
+#$deltree /var/lib/portage
+
+$copy resource/gpgpu/update /usr/sbin/
+$copy resource/walbrix/setup-data-partition /usr/sbin/
+$copy resource/gpgpu/wait-for-network-to-be-connected /usr/bin/
+
+$exec ldconfig

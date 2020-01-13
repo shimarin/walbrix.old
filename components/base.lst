@@ -23,12 +23,15 @@ $require openssh.lst
 $require cron.lst
 $package file
 
+/bin/tar
+
 /tmp
 /var/tmp
 /root
 /sys
 /proc
 /run
+/mnt
 
 $require glibc-minimal.lst
 /etc/ld.so.conf

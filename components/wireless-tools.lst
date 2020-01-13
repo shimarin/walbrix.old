@@ -1,4 +1,4 @@
-$package net-wireless/wireless-tools-30_pre9
+$package net-wireless/wireless-tools
 
 #dev-libs/libnl
 $package net-wireless/wireless-regdb
