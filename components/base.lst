@@ -21,6 +21,7 @@ $package iputils
 $require dhcpcd.lst
 $require openssh.lst
 $require cron.lst
+$package file
 
 /tmp
 /root

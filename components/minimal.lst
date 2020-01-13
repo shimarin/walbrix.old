@@ -3,9 +3,14 @@ $require base.lst
 $dir /lib/firmware
 $package kmod
 $require kbd-minimal.lst
-$require grub-i386-pc.lst
 $require zram-init.lst
 $require acpi.lst
+
+#install script
+$package dosfstools
+$package parted
+$require grub-i386-pc.lst
+$copy resource/walbrix/install /usr/sbin/
 
 /bin/ip
 /usr/bin/awk
