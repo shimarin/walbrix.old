@@ -2,10 +2,12 @@
 SELF=$(findmnt -ln -o SOURCE /.overlay/boot)
 [ -b "$SELF" ] || SELF=$(findmnt -ln -o SOURCE /)
 if [ -b "$SELF" ]; then
+  SELF_MAJOR=$((16#$(stat -c %t $SELF)))
+  SELF_MINOR=$((16#$(stat -c %T $SELF)))
   SELF_PARENT=/dev/$(lsblk -n -o PKNAME $SELF)
   if [ -b "$SELF_PARENT" ]; then
-    SELF_MAJOR=$((16#$(stat -c %t $SELF_PARENT)))
-    SELF_MINOR=$((16#$(stat -c %T $SELF_PARENT)))
+    SELF_PARENT_MAJOR=$((16#$(stat -c %t $SELF_PARENT)))
+    SELF_PARENT_MINOR=$((16#$(stat -c %T $SELF_PARENT)))
   fi
 fi
 
@@ -27,7 +29,12 @@ if [ -z "$SECTOR_SIZE" -o -z "$NUM_512B_SECTORS" -o -z "$DEVICE_MAJOR" -o -z "$D
 	exit 1
 fi
 
-if [ $SELF_MAJOR -eq $DEVICE_MAJOR -a $SELF_MINOR -eq $DEVICE_MINOR ]; then
+if [ "$SELF_MAJOR" -eq "$DEVICE_MAJOR" -a "$SELF_MINOR" -eq "$DEVICE_MINOR" ]; then
+  echo "You can't install system on currently running device".
+  exit 1
+fi
+
+if [ "$SELF_PARENT_MAJOR" -eq "$DEVICE_MAJOR" -a "$SELF_PARENT_MINOR" -eq "$DEVICE_MINOR" ]; then
   echo "You can't install system on currently running device".
   exit 1
 fi
@@ -43,9 +50,12 @@ if [ $NUM_512B_SECTORS -lt 15000000 ]; then
   PARTITION_SIZE=-1
 fi
 
-parted --script "$DEVICE" mklabel "$PARTITION_TABLE_TYPE"
-parted --script "$DEVICE" mkpart primary 1MiB "$PARTITION_SIZE"
-parted --script "$DEVICE" set 1 boot on
+parted --script "$DEVICE" "mklabel $PARTITION_TABLE_TYPE"
+parted --script "$DEVICE" "mkpart primary 1MiB $PARTITION_SIZE"
+if [ "$PARTITION_SIZE" != "-1" ]; then
+    parted --script "$DEVICE" "mkpart primary $PARTITION_SIZE -1"
+fi
+parted --script "$DEVICE" "set 1 boot on"
 if [ "$PARTITION_TABLE_TYPE" == "msdos" ]; then
   parted --script "$DEVICE" set 1 esp on
 fi
@@ -118,7 +128,7 @@ echo "Installing System image..."
 
 cp $SYSTEM_IMAGE $TMPDIR/system.img
 
-echo "Syncinc..."
+echo "Syncing..."
 
 umount $TMPDIR
 rmdir $TMPDIR

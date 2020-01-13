@@ -1,11 +1,38 @@
 #!/bin/bash
-usage() {
-        echo "Usage: $0" 1>&2
-        exit 1
-}
+BOOTDIR=/.overlay/boot
 
-if [ "$#" -eq 0 ] ; then
-   usage
+# TODO: lock system
+
+mount -o remount,rw $BOOTDIR || exit
+
+rm -f $BOOTDIR/system.new $BOOTDIR/system.old
+
+AVAIL=$(df --output=avail $BOOTDIR | tail -1)
+IMGSIZE=$(stat -c %s $BOOTDIR/system.img)
+
+if [ -z "$AVAIL" -o -z "$IMGSIZE" ]; then
+  echo "Failed to get boot partition info."
+  exit 1
 fi
 
-echo "TBD"
+if [ $(($IMGSIZE / 1024)) -gt $(($AVAIL - 1024)) ]; then
+  echo "Insufficient available space on boot partition."
+  exit 1
+fi
+
+if wget -O $BOOTDIR/system.new http://dist.walbrix.net/gpgpu.img; then
+  if [ ! -f $BOOTDIR/system.cur ]; then
+    mv $BOOTDIR/system.img $BOOTDIR/system.cur
+  fi
+  mv $BOOTDIR/system.new $BOOTDIR/system.img
+else
+  echo "Download failed."
+fi
+
+if [ ! -f $BOOTDIR/system.img -a -f $BOOTDIR/system.cur ]; then
+  echo "Restoring system.img..."
+  mv $BOOTDIR/system.cur $BOOTDIR/system.img
+fi
+
+mount -o remount,ro $BOOTDIR
+echo "Done. Reboot system to take effects."

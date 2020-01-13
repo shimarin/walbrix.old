@@ -20,14 +20,21 @@ done
 
 echo "Determining boot partition(supposed to contain system image)..."
 if [ -n "${BOOT_PARTITION_UUID}" ]; then
-  BOOT_PARTITION=`blkid -U "${BOOT_PARTITION_UUID}"`
+	RETRY_COUNT=1
+	until BOOT_PARTITION=$(blkid -U "${BOOT_PARTITION_UUID}") || [ $RETRY_COUNT -eq 8 ]; do
+	   echo "Retrying..."
+	   sleep $(( RETRY_COUNT++ ))
+	done
 fi
 
-if [ -n "${BOOT_PARTITION}" ]; then
+if [ -b "${BOOT_PARTITION}" ]; then
 	echo "Boot partition is ${BOOT_PARTITION}"
 else
-	echo "Boot partition could not be determined automatically. Attempting /dev/sda1."
 	BOOT_PARTITION=/dev/sda1
+	if [ ! -b $BOOT_PARTITION ]; then
+		BOOT_PARTITION=/dev/sda
+	fi
+	echo "Boot partition could not be determined automatically. Attempting $BOOT_PARTITION ."
 fi
 
 echo "Determining boot partition filesystem type..."
@@ -50,13 +57,18 @@ mount -o remount,ro /mnt/boot
 
 echo "Setup RW layer..."
 mkdir /mnt/rw
-if [ -f "/mnt/boot/rw" ]; then
-	echo "Mounting loopback RW layer..."
-	mount -o loop,rw /mnt/boot/rw /mnt/rw && RW_LAYER_READY=true
-elif [ -d "/mnt/boot/rw" ]; then
-	echo "Mounting RW layer directory..."
-	mount -o bind /mnt/boot/rw /mnt/rw && RW_LAYER_READY=true
+
+DATA_PARTITION=$(blkid -L d-$BOOT_PARTITION_UUID)
+
+if [ -b "$DATA_PARTITION" ]; then
+	echo "Mounting data partition..."
+	if mount -o rw $DATA_PARTITION /mnt/rw; then
+		RW_LAYER_READY=true
+	else
+		echo "Data partition mount failed."
+	fi
 fi
+
 if [ "${RW_LAYER_READY}" != "true" ]; then
 	echo "Mounting RAM RW layer..."
 	if mount -t tmpfs tmpfs /mnt/rw; then

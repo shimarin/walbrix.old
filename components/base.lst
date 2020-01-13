@@ -24,6 +24,7 @@ $require cron.lst
 $package file
 
 /tmp
+/var/tmp
 /root
 /sys
 /proc

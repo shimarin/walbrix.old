@@ -1,0 +1,48 @@
+#!/bin/bash
+BOOT_PARTITION=$(findmnt -ln -o SOURCE /.overlay/boot)
+if [ ! -b "$BOOT_PARTITION" ]; then
+  echo "Could not determine boot partition."
+  exit 1
+fi
+
+BOOT_PARTITION_UUID=$(blkid -o value -s UUID $BOOT_PARTITION)
+if [ -z "$BOOT_PARTITION_UUID" ]; then
+  echo "Could not identify boot partition UUID."
+  exit 1
+fi
+
+DEVICE=/dev/$(lsblk -n -o PKNAME $BOOT_PARTITION)
+
+if [ ! -b "$DEVICE" ]; then
+  echo "Could not determine boot device."
+  exit 1
+fi
+
+PARTITION_TABLE_TYPE=$(blkid -o value -s PTTYPE $DEVICE) # "dos" or "gpt"
+
+DEVICE_MAJOR=$((16#$(stat -c %t $DEVICE)))
+DEVICE_MINOR=$((16#$(stat -c %T $DEVICE)))
+
+for i in /sys/dev/block/$DEVICE_MAJOR:$DEVICE_MINOR/*/partition; do
+  if [ `cat $i` -eq 2 ]; then
+    DATA_PARTITION=$(readlink -e /dev/block/$(cat $(dirname $i)/dev))
+  fi
+done
+
+if [ -b "$DATA_PARTITION" ]; then
+  echo "Using $DATA_PARTITION as a data partition."
+else
+  echo "$DEVICE does not have second partition."
+  exit 1
+fi
+
+eval $(lsblk -nP -o FSTYPE $DATA_PARTITION)
+
+if [ -n "$FSTYPE" ]; then
+  echo "Partition $DATA_PARTITION has already been formatted as $FSTYPE ."
+  exit 1
+fi
+
+mkfs.xfs -f -L "d-$BOOT_PARTITION_UUID" "$DATA_PARTITION"
+
+echo "Done."
