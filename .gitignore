@@ -1,7 +1,9 @@
 *~
 *.py[cod]
 build/
+gentoo/
 download_cache/
+cache/
 node_modules/
 .sconsign.dblite
 /walbrix

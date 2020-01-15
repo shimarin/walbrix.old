@@ -1,0 +1,22 @@
+sys-kernel/gentoo-sources
+sys-kernel/linux-firmware
+sys-apps/hwids
+=sys-power/acpi_call-3.17
+=sys-boot/grub-2.04-r1
+
+=dev-libs/amdgpu-pro-opencl-19.30.838629
+
+# Intel NEO
+=dev-util/clinfo-2.2.18.04.06
+=sys-libs/libomp-8.0.1
+=dev-util/intel-graphics-compiler-1.0.2990
+=dev-util/spirv-llvm-translator-8.0.1.2-r1
+=sys-devel/clang-8.0.1
+=media-libs/gmmlib-19.3.4
+=dev-libs/opencl-clang-8.0.1_p20191001-r1
+=sys-devel/llvm-8.0.1
+=sys-libs/compiler-rt-sanitizers-8.0.1
+=sys-libs/compiler-rt-8.0.1
+=sys-devel/clang-runtime-8.0.1
+=dev-libs/intel-neo-19.48.14977
+

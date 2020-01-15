@@ -62,15 +62,15 @@ function is_executable(filename:string):boolean
   }
 }
 
-function get_elf_deps(srcdir:string,filename:string):string[]
+function get_elf_deps(context:Context,filename:string, no_cache:boolean):string[]
 {
-  const md5hash = crypto.createHash("md5").update(fs.readFileSync(path.join(srcdir, filename))).digest("hex");
+  const md5hash = crypto.createHash("md5").update(fs.readFileSync(path.join(context.srcdir, filename))).digest("hex");
 
-  var deps = get_cache(md5hash);
+  var deps = no_cache? null : get_cache(md5hash);
 
   if (!deps) {
     try {
-      deps = child_process.execSync(`chroot ${srcdir} ldd ${filename}`,{encoding:"utf-8"}).split("\n")
+      deps = child_process.execSync(`chroot ${context.srcdir} ldd ${filename}`,{encoding:"utf-8"}).split("\n")
       .map(_ => {
         return _.trim().replace(/\s\(0x[0-9a-f]+\)$/, "").replace(/^.+?\s=>\s/,"");
       }).filter(_ => {
@@ -80,13 +80,13 @@ function get_elf_deps(srcdir:string,filename:string):string[]
     catch (somethingwrong) {
       deps = [];
     }
-    save_cache(md5hash, deps);
+    if (!no_cache) save_cache(md5hash, deps);
   }
 
   return deps;
 }
 
-export function file(context:Context, filename:string)
+export function file(context:Context, filename:string, no_elf_cache = false)
 {
   if (context.files.has(filename)) return;
 
@@ -98,13 +98,14 @@ export function file(context:Context, filename:string)
 
   if (stat.isFile()) {
     if (is_executable(src) && is_elf(src)) {
-      get_elf_deps(context.srcdir, filename).forEach(_=>file(context, _));
+      get_elf_deps(context, filename, no_elf_cache).forEach(_=>file(context, _, no_elf_cache));
     }
     console.log(`F ${src} -> ${dst}`);
   } else if (stat.isSymbolicLink()) {
     const link = fs.readlinkSync(src);
     file(context,
-      link.indexOf('/') === 0? filename : path.join(path.dirname(filename), link));
+      link.indexOf('/') === 0? filename : path.join(path.dirname(filename), link),
+    no_elf_cache);
 
     console.log(`L ${src} -> ${dst}(${fs.readlinkSync(src)})`);
     //fs.removeSync(dst);

@@ -1,0 +1,6 @@
+sys-boot/grub sys-boot/grub device-mapper grub_platforms_pc grub_platforms_efi-64
+sys-kernel/gentoo-sources symlink
+dev-libs/libnl -python_targets_python2_7
+dev-libs/openssl bindist
+net-wireless/wpa_supplicant bindist
+net-misc/openssh bindist

@@ -1,3 +1,4 @@
+import * as path from "path";
 import * as fs from "fs-extra";
 import * as child_process from "child_process";
 import {quote} from "shell-quote";
@@ -15,7 +16,7 @@ function execSyncQuote(...cmdline:string[]):boolean
   }
 }
 
-export function chroot(dir:string, command:string)
+export function chroot(dir:string, command:string, profile?:string)
 {
   const mount_chain:[()=>boolean,()=>boolean][] = [];
   mount_chain.push(
@@ -60,17 +61,26 @@ export function chroot(dir:string, command:string)
       return execSyncQuote("umount", `${dir}/dev/pts`);
     }]
   );
-  try {
-    fs.statSync(`${dir}/usr/portage/metadata/timestamp`);
-  }
-  catch (noexist) {
+  mount_chain.push(
+    [()=>{
+      fs.ensureDirSync(`${dir}/var/db/repos/gentoo`);
+      console.log("Mounting /var/db/repos/gentoo");
+      return execSyncQuote("mount", "-o", "bind", "/var/db/repos/gentoo", `${dir}/var/db/repos/gentoo`);
+    },()=>{
+      console.log("Unmounting /var/db/repos/gentoo");
+      return execSyncQuote("umount", `${dir}/var/db/repos/gentoo`);
+    }]
+  );
+
+  if (profile) {
     mount_chain.push(
       [()=>{
-        fs.ensureDirSync(`${dir}/usr/portage`);
-        console.log("Mounting /usr/portage");
-        return execSyncQuote("mount", "-o", "bind", "/usr/portage", `${dir}/usr/portage`);
+        fs.ensureDirSync(`cache/profile/${profile}`);
+        console.log("Mounting /var/cache");
+        return execSyncQuote("mount", "-o", "bind", `cache/profile/${profile}`, `${dir}/var/cache`);
       },()=>{
-        return execSyncQuote("umount", `${dir}/usr/portage`);
+        console.log("Unmounting /var/cache");
+        return execSyncQuote("umount", `${dir}/var/cache`);
       }]
     );
   }
@@ -91,6 +101,7 @@ export function chroot(dir:string, command:string)
       process.on('SIGINT', () => {
         // ignore SIGINT to ensure unmounting stuffs
       });
+      fs.copyFileSync("/etc/resolv.conf", path.join(dir, "etc/resolv.conf"));
       child_process.spawnSync("chroot", [dir, "/bin/sh", "-c", command], {stdio:"inherit"});
     }
   }
@@ -107,7 +118,9 @@ export function chroot(dir:string, command:string)
 export class Chroot implements Subcommand<[string,string,Command]> {
   command = "chroot <dir> [command]";
   description = "perform chroot";
-  options = [];
+  options = [
+    ["-p --profile <profile>", "profile name to apply"] as [string,string]
+  ];
 
   public run(dir:string,command:string = "/bin/bash",options:Command) {
     if (process.getuid() !== 0) {
@@ -115,6 +128,6 @@ export class Chroot implements Subcommand<[string,string,Command]> {
       process.exit(-1);
     }
     //else
-    chroot(dir, command);
+    chroot(dir, command, options.profile);
   }
 }

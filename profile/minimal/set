@@ -1,0 +1,15 @@
+app-editors/nvi
+net-dialup/ppp
+net-misc/dhcpcd
+net-wireless/wpa_supplicant
+sys-apps/hwids
+sys-apps/pciutils
+sys-block/parted
+sys-block/zram-init
+sys-fs/dosfstools
+sys-kernel/gentoo-sources
+sys-kernel/genkernel
+sys-boot/grub
+sys-fs/xfsprogs
+sys-process/cronie
+sys-power/acpid

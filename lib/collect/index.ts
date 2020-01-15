@@ -10,7 +10,7 @@ import {file,flush} from "./file";
 import {exec} from "./exec";
 import {get_kernel_version_string} from "../kernelver";
 
-function process_package(context:Context, pkgname:string, use?:string)
+function process_package(context:Context, pkgname:string, options?:{use?:string, no_elf_cache?:boolean})
 {
   const category_and_name = pkgname.split('/', 2);
   const category = category_and_name.length > 1? category_and_name.shift() : "*";
@@ -52,8 +52,8 @@ function process_package(context:Context, pkgname:string, use?:string)
 
   // else
   console.log(`package ${pkg.name}`);
-  if (use && use.split(" ").some(_ => _.startsWith('-')? pkg.use.includes(_.replace(/^-/,"")) : !pkg.use.includes(_))) {
-    console.log(`Package "${pkg.name}" does not satisfy use flag condition "${use}"`);
+  if (options?.use && options.use.split(" ").some(_ => _.startsWith('-')? pkg.use.includes(_.replace(/^-/,"")) : !pkg.use.includes(_))) {
+    console.log(`Package "${pkg.name}" does not satisfy use flag condition "${options.use}"`);
     process.exit(-1);
   }
 
@@ -73,7 +73,7 @@ function process_package(context:Context, pkgname:string, use?:string)
   pkg.contents.forEach(filename => {
     if (!excluded_prefixes.some(_ =>  _ === filename || filename.startsWith(_ + '/') )
       && (!filename.startsWith("/usr/share/locale/") || included_locales.some( _ => filename.startsWith("/usr/share/locale/" + _ + '/')))) {
-      file(context, filename);
+      file(context, filename, options?.no_elf_cache);
     }
   });
 }
@@ -169,15 +169,16 @@ function process_lstfile(context:Context, lstfile:string)
   context.lstfiles.add(lstfile);
   console.log(`Processing ${lstfile}...`);
   const program = new commander.Command();
-  program.command("$file <filename>").action((filename)=>{
-    file(context, filename);
+  program.command("$file <filename>").option("-n --no-elf-cache", "don't use elf dependency cache")
+  .action((filename, options:commander.Command)=>{
+    file(context, filename, !options.elfCache);
   });
   program.command("$require <lstfile>").action((new_lstfile)=> {
     process_lstfile(context, path.join(path.dirname(lstfile), new_lstfile));
   });
-  program.command("$package <pkgname>").option("-u --use <use>", "mandatory use flag")
+  program.command("$package <pkgname>").option("-u --use <use>", "mandatory use flag").option("-n --no-elf-cache", "don't use elf dependency cache")
   .action((pkgname, options:commander.Command)=>{
-    process_package(context, pkgname, options.use);
+    process_package(context, pkgname, {use:options.use, no_elf_cache:!options.elfCache});
   });
   program.command("$kernel <kernelimage>").action((kernelimage) => {
     kernel(context, kernelimage);

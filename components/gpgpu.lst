@@ -68,7 +68,7 @@ $require ntp.lst
 /sbin/brctl
 
 # nmbd
-/usr/sbin/nmbd
+/usr/sbin/nmbd --no-elf-cache
 $mkdir /var/log/samba
 $mkdir /var/cache/samba
 $mkdir /var/lib/samba/private
@@ -99,7 +99,7 @@ $require gpsd.lst
 /usr/bin/clinfo
 
 # drivers
-$package nvidia-drivers
+$package nvidia-drivers --no-elf-cache
 $package amdgpu-pro-opencl
 
 # misc
