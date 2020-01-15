@@ -18,7 +18,7 @@ $SUDO ./do.ts download "$STAGE3_URL" || exit
 GENTOO_DIR=gentoo/$PROFILE
 
 $SUDO rm -rf "$GENTOO_DIR"
-$SUDO mkdir $GENTOO_DIR
+$SUDO mkdir -p $GENTOO_DIR
 $SUDO tar xvpf $STAGE3_FILE -C $GENTOO_DIR
 $SUDO mkdir -p $GENTOO_DIR/etc/kernels
 $SUDO ln profile/$PROFILE/package.keywords $GENTOO_DIR/etc/portage/package.keywords

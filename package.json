@@ -1,8 +1,13 @@
 {
   "dependencies": {
+    "@types/commander": "^2.12.2",
+    "@types/events": "^3.0.0",
+    "@types/fs-extra": "^8.0.1",
+    "@types/glob": "^7.1.1",
+    "@types/node": "^13.1.7",
     "commander": "^4.0.1",
-    "glob": "^7.1.6",
     "fs-extra": "^8.1.0",
+    "glob": "^7.1.6",
     "shell-quote": "^1.7.2"
   }
 }
