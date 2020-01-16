@@ -41,16 +41,9 @@ if [ -f profile/$PROFILE/set-pre ]; then
 fi
 
 $SUDO ln profile/$PROFILE/kernel-config $GENTOO_DIR/etc/kernels/kernel-config
-$SUDO ln resource/walbrix/linuxrc $GENTOO_DIR/tmp/linuxrc
-
-$SUDO cp -a profile/common/*.sh $GENTOO_DIR/
+$SUDO ln resource/walbrix/linuxrc $GENTOO_DIR/linuxrc
+$SUDO ln profile/$PROFILE/rdepends $GENTOO_DIR/rdepends
+$SUDO ln profile/common/*.sh $GENTOO_DIR/
 
 $SUDO ./do.ts chroot --profile=$PROFILE "$GENTOO_DIR" "/build.sh" || exit
 
-rm -f profile/$PROFILE/rdepends
-for i in $GENTOO_DIR/var/db/pkg/*/*/RDEPEND; do
-	CATEGORY=$(cat `dirname $i`/CATEGORY)
-	PF=$(cat `dirname $i`/PF | sed 's/-r[0-9]\+$//' | sed 's/-[^-]\+$//')
-	RDEPEND=$(cat $i)
-	echo -e "$CATEGORY/$PF\t$RDEPEND" >> profile/$PROFILE/rdepends
-done
