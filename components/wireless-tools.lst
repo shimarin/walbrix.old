@@ -2,8 +2,8 @@ $package net-wireless/wireless-tools
 
 #dev-libs/libnl
 $package net-wireless/wireless-regdb
-$require m2crypto.lst
-$package net-wireless/crda
+#$require m2crypto.lst
+#$package net-wireless/crda
 $package net-wireless/iw
 $package net-wireless/wpa_supplicant
 $package net-wireless/hostapd
