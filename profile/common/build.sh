@@ -2,7 +2,7 @@
 emerge -uDN -bk --binpkg-respect-use=y system
 
 if [ -f /etc/portage/sets/kernel ]; then
-	emerge -uDN -bk --binpkg-respect-use=y @kernel genkernel || exit 1
+	emerge -uDN -bk --binpkg-respect-use=y @kernel genkernel eclean-kernel || exit 1
 	./genkernel.sh || exit 1
 fi
 
@@ -15,6 +15,9 @@ if [ -f modules_need_to_be_rebuilt ]; then
 	emerge -b @module-rebuild || exit 1
 	rm -f modules_need_to_be_rebuilt
 fi
+
+emerge --depclean
+eclean-kernel -n 1
 
 etc-update --automode -5
 
