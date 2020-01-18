@@ -4,6 +4,9 @@ case "${CATEGORY}/${PN}" in
 	sys-process/cronie)
 		getent group crontab || groupadd -g 125 crontab
 		;;
+	app-emulation/docker)
+		getent group docker || groupadd -g 102 docker
+		;;
 	net-vpn/openvpn)
 		getent group openvpn || groupadd -g 103 openvpn
 		getent passwd openvpn || useradd -c "" -d /dev/null -M -u 103 -g openvpn -s /sbin/nologin openvpn
@@ -15,6 +18,12 @@ case "${CATEGORY}/${PN}" in
 	net-analyzer/zabbix)
 		getent group zabbix || groupadd -g 105 zabbix
 		getent passwd zabbix || useradd -c "" -d /var/lib/zabbix/home -M -u 105 -g zabbix -s /sbin/nologin zabbix
+		;;
+	sci-geosciences/gpsd)
+		getent passwd gpsd || useradd -c "" -d /dev/null -M -u 106 -g uucp -s /sbin/nologin gpsd
+		;;
+	mail-mta/ssmtp)
+		getent group ssmtp || groupadd -g 207 ssmtp # exclusive with postfix
 		;;
 	*) : ;;
 esac

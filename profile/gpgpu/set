@@ -9,7 +9,7 @@ app-emulation/docker
 app-misc/beep
 app-misc/screen
 app-portage/cpuid2cpuflags
-dev-libs/amdgpu-pro-opencl
+#dev-libs/amdgpu-pro-opencl
 dev-libs/intel-neo
 dev-libs/libuv
 dev-libs/ocl-icd
@@ -73,3 +73,5 @@ virtual/linux-sources
 x11-drivers/nvidia-drivers
 x11-libs/libdrm
 
+# AMD rocm
+dev-libs/rocm-opencl-runtime

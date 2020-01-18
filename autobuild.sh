@@ -27,6 +27,7 @@ if [ "$DONE" != "$STAGE3_HASH" ]; then
   echo "Extracting stage3..."
   $SUDO tar xpf $STAGE3_FILE -C $GENTOO_DIR || exit 1
   $SUDO mkdir -p $GENTOO_DIR/var/db/repos/gentoo || exit 1
+  $SUDO sh -c "echo 'GENTOO_MIRRORS=\"http://ftp.iij.ad.jp/pub/linux/gentoo/\"' >> $GENTOO_DIR/etc/portage/make.conf"
 fi
 
 $SUDO cp /etc/resolv.conf $GENTOO_DIR/resolv.conf
