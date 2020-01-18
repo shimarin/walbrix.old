@@ -1,0 +1,46 @@
+#!/bin/bash
+BOOTDIR=/.overlay/rw
+SYSTEM_IMAGE=$1
+DOWNLOAD_URL=http://dist.walbrix.net/nextcloud.img
+
+# TODO: lock system
+
+rm -f $BOOTDIR/system.new $BOOTDIR/system.old
+
+AVAIL=$(df --output=avail $BOOTDIR | tail -1)
+IMGSIZE=$(stat -c %s $BOOTDIR/system)
+
+if [ -z "$AVAIL" -o -z "$IMGSIZE" ]; then
+  echo "Failed to get boot partition info."
+  exit 1
+fi
+
+if [ $(($IMGSIZE / 1024)) -gt $(($AVAIL - 1024)) ]; then
+  echo "Insufficient available space on boot partition."
+  exit 1
+fi
+
+if [ -n "$SYSTEM_IMAGE" ]; then
+  cp $SYSTEM_IMAGE $BOOTDIR/system.new
+  EXIT_CODE=$?
+  [ $EXIT_CODE -ne 0 ] && echo "Copying system image file failed."
+else
+  wget -O $BOOTDIR/system.new $DOWNLOAD_URL
+  EXIT_CODE=$?
+  [ $EXIT_CODE -ne 0 ] && echo "Download failed."
+fi
+
+if [ $EXIT_CODE -eq 0 ]; then
+  if [ ! -f $BOOTDIR/system.cur ]; then
+    mv $BOOTDIR/system $BOOTDIR/system.cur
+  fi
+  mv $BOOTDIR/system.new $BOOTDIR/system
+  EXIT_CODE=$?
+fi
+
+if [ ! -f $BOOTDIR/system -a -f $BOOTDIR/system.cur ]; then
+  echo "Restoring system..."
+  mv $BOOTDIR/system.cur $BOOTDIR/system
+fi
+
+[ $EXIT_CODE -eq 0 ] && echo "Done. Reboot system to take effects."

@@ -3,85 +3,25 @@ import * as path from "path";
 import * as child_process from "child_process";
 import * as commander from "commander";
 import {parse as shellparse} from "shell-quote";
+import * as rimraf from "rimraf";
 import * as glob from "glob";
 import {Subcommand} from "../subcommand";
 import {Context} from "./context";
 import {file,flush} from "./file";
+import {process_package} from "./package";
 import {exec} from "./exec";
 import {get_kernel_version_string} from "../kernelver";
+import {download as download_cacheable} from "../download";
 
-function process_package(context:Context, pkgname:string, options?:{use?:string, no_elf_cache?:boolean})
-{
-  const category_and_name = pkgname.split('/', 2);
-  const category = category_and_name.length > 1? category_and_name.shift() : "*";
-  const name = category_and_name[0];
-
-  const matched = glob.sync(path.join(context.srcdir, `var/db/pkg/${category}/${name}-*/CONTENTS`)).map (_=> {
-
-    const category = fs.readFileSync(path.join(path.dirname(_), "CATEGORY")).toString().trim();
-    const pf = fs.readFileSync(path.join(path.dirname(_), "PF"), "utf-8").trim();
-    return {
-      name: `${category}/${pf}`,
-      category: category,
-      pf: pf,
-      contents: fs.readFileSync(_, "utf-8").split("\n")
-      .filter( _ => _.indexOf("obj ") === 0 || _.indexOf("sym ") === 0 || _.indexOf("dir ") === 0)
-      .map(_ => _.split(' ', 2)[1]),
-      use: fs.readFileSync(path.join(path.dirname(_), "USE"), "utf-8").split(" ")
-    }
-  }).filter(_=> {
-    return _.pf.replace(/-r[0-9]+$/, "").replace(/-[^-]+$/, "") == name
-  });
-
-  if (matched.length == 0) {
-    console.log(`No packages such as "${pkgname}" found.`);
-    process.exit(-1);
-  }
-
-  if (matched.length > 1) {
-    console.log(`Package specification "${pkgname}" is ambigious. Candidates:`);
-    matched.forEach(_ => {
-      console.log(`${_.name}`);
-    });
-    process.exit(-1);
-  }
-
-  const pkg = matched[0];
-
-  if (context.packages.has(pkg.name)) return; // already collected
-
-  // else
-  console.log(`package ${pkg.name}`);
-  if (options?.use && options.use.split(" ").some(_ => _.startsWith('-')? pkg.use.includes(_.replace(/^-/,"")) : !pkg.use.includes(_))) {
-    console.log(`Package "${pkg.name}" does not satisfy use flag condition "${options.use}"`);
-    process.exit(-1);
-  }
-
-  context.packages.add(pkg.name);
-
-  const excluded_prefixes = [
-    "/usr/share/man",
-    "/usr/share/doc",
-    "/usr/share/info",
-    "/usr/include"
-  ];
-
-  const included_locales = [
-    "ja"
-  ]
-
-  pkg.contents.forEach(filename => {
-    if (!excluded_prefixes.some(_ =>  _ === filename || filename.startsWith(_ + '/') )
-      && (!filename.startsWith("/usr/share/locale/") || included_locales.some( _ => filename.startsWith("/usr/share/locale/" + _ + '/')))) {
-      file(context, filename, options?.no_elf_cache);
-    }
-  });
+class Glob {
+  public pattern:string
+  constructor(pattern:string) { this.pattern = pattern; }
 }
 
-function set(context:Context, envname:string, value:string)
+function set(context:Context, envname:string, value:string|Glob)
 {
-  context.env[envname] = value;
-  console.log(`$${envname} set to ${value}`);
+  context.env[envname] = value instanceof Glob? glob.sync(value.pattern, {cwd:context.dstdir,root:context.dstdir,nomount:true}).join(" ") : value;
+  console.log(`$${envname} set to ${context.env[envname]}`);
 }
 
 function kernel(context:Context, kernelimage:string)
@@ -95,24 +35,38 @@ function dir(context:Context, dirname:string)
 {
   dirname = dirname.replace(/\/+$/, "");
   console.log(`Directory: ${dirname}`);
-  child_process.spawnSync("rsync", ["-ax", "--delete", path.join(context.srcdir, dirname), path.join(context.dstdir, path.dirname(dirname))],
-    {stdio:[null, "inherit", "inherit"]});
+  if (child_process.spawnSync("rsync", ["-ax", "--delete", path.join(context.srcdir, dirname), path.join(context.dstdir, path.dirname(dirname))],
+    {stdio:[null, "inherit", "inherit"]}).status !== 0) throw new Error("rsync failed.");
 }
 
-function mkdir(context:Context, dirname:string)
+function mkdir(context:Context, dirname:string, options?:{owner?:string,mode?:string})
 {
   dirname = dirname.replace(/\/+$/, "");
   console.log(`Making directory: ${dirname}`);
   fs.mkdirpSync(path.join(context.dstdir, dirname));
+  if (options?.owner) {
+    child_process.spawnSync("chroot", [context.srcdir, "chown", options.owner, dirname]);
+  }
+  if (options?.mode) {
+    child_process.spawnSync("chroot", [context.srcdir, "chmod", options.mode, dirname]);
+  }
 }
 
 function copy(context:Context, srcfile:string, dstfile:string)
 {
-  if (dstfile.endsWith('/')) {
-    file(context, dstfile.replace(/\/+$/, ""));
-    flush(context);
-  }
   let dstfile_full = path.join(context.dstdir, dstfile);
+  if (dstfile.endsWith('/')) {
+    try {
+      if (!fs.statSync(dstfile_full).isDirectory()) {
+        console.log("Warning: destination is not a directory");
+      }
+    }
+    catch (e) {
+      // no dst dir found
+      file(context, dstfile.replace(/\/+$/, ""));
+      flush(context);
+    }
+  }
   try {
     const stat = fs.statSync(dstfile_full);
     if (stat.isDirectory()) {
@@ -130,25 +84,40 @@ function copy(context:Context, srcfile:string, dstfile:string)
   }
 }
 
-function sed(context:Context, targetfile:string, expr:string)
+function sed(context:Context, targetfile:string|Glob, expr:string, allow_no_op:boolean)
 {
-  const targetfile_full = path.join(context.dstdir, targetfile);
-  child_process.spawnSync("sed", ["-i", expr, targetfile_full], {stdio:[null, "inherit", "inherit"]});
-  console.log(`sed -i ${expr} ${targetfile_full}`);
+  const files = targetfile instanceof Glob? glob.sync(path.join(context.dstdir, targetfile.pattern)) : [ path.join(context.dstdir, targetfile) ];
+  if (files.length == 0) throw Error(`sed: no files such as ${targetfile}`);
+
+  let count = 0;
+  files.forEach (_=> {
+    if (child_process.spawnSync("sed", ["-i", expr, _], {stdio:[null, "inherit", "inherit"]}).status === 0) {
+      count++;
+    }
+    console.log(`sed -i ${expr} ${_}`);
+  });
+  if (!allow_no_op && count == 0) throw new Error(`File ${targetfile} not found.`);
 }
 
-function write(context:Context, filename:string, content:string)
+function write(context:Context, targetfile:string|Glob, content:string, append:boolean = false)
 {
-  const filename_full = path.join(context.dstdir, filename);
-  console.log(`$write to ${filename_full}`);
+  const files = targetfile instanceof Glob? glob.sync(path.join(context.dstdir, targetfile.pattern)) : [ path.join(context.dstdir, targetfile) ];
+  if (files.length == 0) throw Error(`write: no files such as ${targetfile}`);
 
-  const fd = fs.openSync(filename_full, "w");
-  try {
-    child_process.spawnSync("echo", ["-e", content], {stdio:[null, fd, "inherit"]});
-  }
-  finally {
-    fs.close(fd);
-  }
+  let count = 0;
+  files.forEach (_=> {
+    const fd = fs.openSync(_, append? "a":"w");
+    try {
+      if (child_process.spawnSync("echo", ["-e", content], {stdio:[null, fd, "inherit"]}).status === 0) {
+        count ++;
+      }
+    }
+    finally {
+      fs.close(fd);
+    }
+    console.log(`$write to ${_}`);
+  });
+  if (count == 0) throw new Error("No files were modified.");
 }
 
 function symlink(context:Context, pathname:string, target:string) {
@@ -160,6 +129,44 @@ function symlink(context:Context, pathname:string, target:string) {
 function touch(context:Context, filename:string)
 {
   fs.writeFileSync(path.join(context.dstdir, filename), "",  {flag:"a"});
+}
+
+function deltree(context:Context, dir:string, force:boolean = false) {
+  const full_dirname = path.join(context.dstdir, dir);
+  try {
+    if (!fs.statSync(full_dirname).isDirectory() && !force) {
+      throw new Error(`${dir} is not a directory`);
+    }
+    rimraf.sync(full_dirname);
+  }
+  catch (e) {
+    if (!force) throw e;
+  }
+}
+
+function cleanup(context:Context, dir:string) {
+  const full_dirname = path.join(context.dstdir, dir);
+  if (!fs.statSync(full_dirname).isDirectory()) {
+    throw new Error(`${dir} is not a directory`);
+  }
+  rimraf.sync(path.join(full_dirname, '*'));
+}
+
+function download(context:Context, url:string, saveto?:string) {
+  if (!saveto) saveto = "";
+  let full_saveto = path.join(context.dstdir, saveto? saveto : "");
+  try {
+    if (fs.statSync(full_saveto).isDirectory()) {
+      full_saveto = path.join(full_saveto, url.replace(/.+\//, ""));
+    }
+  }
+  catch (e) {
+    if (full_saveto.endsWith("/")) throw e;
+  }
+
+  const download_cache = download_cacheable(url);
+  // else
+  fs.copyFileSync(download_cache, full_saveto);
 }
 
 function process_lstfile(context:Context, lstfile:string)
@@ -176,9 +183,12 @@ function process_lstfile(context:Context, lstfile:string)
   program.command("$require <lstfile>").action((new_lstfile)=> {
     process_lstfile(context, path.join(path.dirname(lstfile), new_lstfile));
   });
-  program.command("$package <pkgname>").option("-u --use <use>", "mandatory use flag").option("-n --no-elf-cache", "don't use elf dependency cache")
+  program.command("$package <pkgname>")
+  .option("-u --use <use>", "mandatory use flag")
+  .option("-n --no-elf-cache", "don't use elf dependency cache")
+  .option("-x --exclude <pattern>", "pattern to exclude files")
   .action((pkgname, options:commander.Command)=>{
-    process_package(context, pkgname, {use:options.use, no_elf_cache:!options.elfCache});
+    process_package(context, pkgname, {use:options.use, no_elf_cache:!options.elfCache, exclude:options.exclude});
   });
   program.command("$kernel <kernelimage>").action((kernelimage) => {
     kernel(context, kernelimage);
@@ -190,41 +200,60 @@ function process_lstfile(context:Context, lstfile:string)
     flush(context);
     dir(context, dirname);
   });
-  program.command("$mkdir <dirname>").action((dirname) => {
+  program.command("$mkdir <dirname>").option("-o --owner <owner>").option("-m --mode <mode>")
+  .action((dirname, options:commander.Command) => {
     flush(context);
-    mkdir(context, dirname);
+    mkdir(context, dirname, {owner:options.owner, mode:options.mode});
   });
   program.command("$copy <srcfile> <dstfile>").action((srcfile,dstfile) => {
     flush(context);
     copy(context, srcfile, dstfile)
   });
-  program.command("$sed <targetfile> <expr>").action((targetfile,expr) => {
+  program.command("$sed <targetfile|glob> <expr>").option("-n --allow-no-op", "allow not to modify any files")
+    .action((targetfile,expr, options:commander.Command) => {
     flush(context);
-    sed(context, targetfile, expr);
-  })
-  program.command("$write <filename> <content>").action((filename, content) => {
+    sed(context, targetfile, expr, options.allowNoOp);
+  });
+  program.command("$write <filename|glob> <content>").option("-a --append", "append mode").action((filename, content, options:commander.Command) => {
     flush(context);
-    write(context, filename, content);
-  })
+    write(context, filename, content, options.append);
+  });
   program.command("$symlink <path> <target>").action((path, target) => {
     flush(context);
     symlink(context, path, target);
-  })
+  });
   program.command("$touch <path>").action((path)=> {
     flush(context);
     touch(context, path);
-  })
-  program.command("$exec <command>").option("-o --overlay", "execute command")
+  });
+  program.command("$exec <command>").option("-o --overlay", "setup overlay before execution")
+  .option("-l --ldconfig", "do ldconfig before execution")
   .action((command, options:commander.Command)=> {
     flush(context);
-    exec(context, command, options.overlay? true : false);
+    exec(context, command, {overlay:options.overlay, ldconfig:options.ldconfig});
+  });
+  program.command("$deltree <dir>").option("-f --force", "ignore errors").action((dir, options:commander.Command) => {
+    flush(context);
+    deltree(context, dir, options.force);
+  });
+  program.command("$cleanup <dir>").action((dir) => {
+    flush(context);
+    cleanup(context, dir);
+  });
+  program.command("$download <url> [saveto]").action((url, saveto?)=> {
+    flush(context);
+    download(context, url, saveto);
+  })
+  program.command("*").action((options:commander.Command) => {
+    throw new Error("Unknown command.");
   })
   // TODO: raise error for unknown command
 
   fs.readFileSync(lstfile, "utf-8").split("\n").filter(Boolean).forEach((line)=> {
-    const argv:string[] = shellparse(line.indexOf('$') === 0? "\\" + line : line, context.env)
-    .filter(_ => typeof _ == "string")
-    .map(_ => _.toString());
+    const argv:any[] = shellparse(line.indexOf('$') === 0? "\\" + line : line, context.env)
+    .map((_:any) => _.op === 'glob'? new Glob(_.pattern) : _)
+    .filter(_ => _ instanceof Glob || typeof _ == "string");
+//    .map(_ => _.toString());
     if (argv.length > 0) {
       if (argv[0].indexOf('$') !== 0) argv.unshift("$file");
       argv.unshift("ts-node");

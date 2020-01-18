@@ -1,7 +1,6 @@
 $require base.lst
 
 $dir /lib/firmware
-$package kmod
 $require kbd-minimal.lst
 $require zram-init.lst
 $require acpi.lst
@@ -16,7 +15,6 @@ $copy resource/walbrix/install /usr/sbin/
 /usr/bin/awk
 $copy resource/walbrix/adhoc-sshd /usr/sbin/
 
-$dir /lib/modules/$KERNEL_VERSION
 $mkdir /boot/grub
 $copy resource/gpgpu/grub.cfg /boot/grub/grub.cfg
 
@@ -66,20 +64,6 @@ $require ssmtp.lst
 $require ntp.lst
 /usr/bin/curl
 /sbin/brctl
-
-# nmbd
-/usr/sbin/nmbd --no-elf-cache
-$mkdir /var/log/samba
-$mkdir /var/cache/samba
-$mkdir /var/lib/samba/private
-$exec "chmod 700 /var/lib/samba/private"
-$mkdir /etc/samba
-$write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15'
-/etc/conf.d/samba
-/etc/init.d/samba
-$symlink /etc/init.d/samba.nmbd samba
-$symlink /etc/conf.d/samba.nmbd samba
-$symlink /etc/runlevels/default/samba.nmbd /etc/init.d/samba.nmbd
 
 # tools
 /usr/bin/strace

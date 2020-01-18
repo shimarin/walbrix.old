@@ -1,0 +1,50 @@
+#!/bin/sh
+if [ $# -lt 1 ]; then
+    echo "$0 <command>"
+    exit 1
+fi
+
+PIDFILE=/tmp/mysql.pid
+SOCKET=/var/run/mysqld/mysqld.sock
+DATADIR=/var/lib/mysql
+
+if [ -S "$SOCKET" ]; then
+  echo "MySQL is already running!"
+  exit 1
+fi
+
+if [ ! -d $DATADIR/mysql ]; then
+	/usr/sbin/mysqld --initialize-insecure --user=mysql --datadir=$DATADIR || exit 1
+fi
+
+echo -n "Starting MySQL.."
+/usr/sbin/mysqld --skip-networking --user=mysql --log_error_verbosity=1 --basedir=/usr\
+ --datadir=$DATADIR --max_allowed_packet=8M --net_buffer_length=16K\
+ --default-storage-engine=MyISAM --socket=$SOCKET --pid-file=$PIDFILE &
+maxtry=15
+while ! [[ -S "$SOCKET" || "${maxtry}" -lt 1 ]] ; do
+	maxtry=$((${maxtry}-1))
+	echo -n "."
+	sleep 1
+done
+if ! [[ -S "$SOCKET" ]]; then
+	echo "Failed"
+	exit 1
+fi
+
+echo "started."
+
+echo $@
+sh -c "$@"
+RETVAL=$?
+
+echo "Stopping MySQL.."
+kill `cat $PIDFILE`
+rm -f $PIDFILE
+wait
+while [[ -S "$SOCKET" ]] ; do
+	echo -n "."
+	sleep 1
+done
+echo "stopped."
+exit $RETVAL

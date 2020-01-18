@@ -1,0 +1,30 @@
+sys-kernel/gentoo-sources symlink
+sys-kernel/genkernel -firmware
+net-dns/avahi -introspection dbus
+
+# zabbix
+net-analyzer/zabbix agent frontend -java mysql openipmi proxy server snmp -postgres
+net-analyzer/fping suid
+media-libs/gd png
+
+# php
+dev-lang/php apache2 gd mysql mysqli postgres xslt zip pdo truetype xmlwriter bcmath xmlreader pcntl sysvipc sockets curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap
+app-eselect/eselect-php apache2
+dev-php/pecl-redis -php_targets_php7-2 php_targets_php7-3
+dev-php/pecl-imagick -php_targets_php7-2 php_targets_php7-3
+media-gfx/imagemagick -openmp # pecl-imagick hates openmp
+dev-php/pecl-apcu -php_targets_php7-2 php_targets_php7-3
+
+# apache
+www-servers/apache apache2_modules_proxy_connect apache2_modules_proxy apache2_modules_proxy_http apache2_modules_proxy_ajp
+
+# postfix
+mail-mta/postfix sasl
+
+# samba
+net-nds/openldap -tcpd samba
+net-fs/samba ldap
+
+# ffmpeg
+media-video/ffmpeg mp3 xvid x264 x265 vpx cpudetection mmx mmxext theora threads truetype v4l vorbis webp vaapi vdpau cpu_flags_x86_3dnow cpu_flags_x86_3dnowext cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_sse3 cpu_flags_x86_mmx cpu_flags_x86_mmxext cpu_flags_x86_ssse3 cpu_flags_x86_aes cpu_flags_x86_avx cpu_flags_x86_avx2 cpu_flags_x86_fma3 cpu_flags_x86_fma4 cpu_flags_x86_sse4_1 cpu_flags_x86_sse4_2 cpu_flags_x86_xop
+x11-libs/libva X

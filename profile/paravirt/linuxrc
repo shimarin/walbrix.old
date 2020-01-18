@@ -1,0 +1,86 @@
+#!/bin/sh
+[ ! -e /dev/console ]  && mknod /dev/console c 5 1
+exec >/dev/console </dev/console 2>&1
+
+mount -t proc -o noexec,nosuid,nodev proc /proc
+mount -t devtmpfs -o "exec,nosuid,mode=0755,size=10M" udev /dev
+mount -t sysfs sysfs /sys -o noexec,nosuid,nodev
+
+busybox --install -s
+
+CMDLINE=$(cat /proc/cmdline)
+for x in ${CMDLINE}
+do
+	case "${x}" in
+		boot_partition_uuid=*)
+			BOOT_PARTITION_UUID=${x#*=}
+		;;
+	esac
+done
+
+echo "Determining boot partition(supposed to contain system image)..."
+if [ -n "${BOOT_PARTITION_UUID}" ]; then
+	BOOT_PARTITION=$(blkid -U "${BOOT_PARTITION_UUID}")
+fi
+
+if [ -b "${BOOT_PARTITION}" ]; then
+	echo "Boot partition is ${BOOT_PARTITION}"
+else
+	BOOT_PARTITION=/dev/xvda1
+	if [ ! -b $BOOT_PARTITION ]; then
+		BOOT_PARTITION=/dev/xvda
+	fi
+	echo "Boot partition could not be determined automatically. Attempting $BOOT_PARTITION ."
+fi
+
+echo "Determining boot partition filesystem type..."
+BOOT_PARTITION_FSTYPE=`blkid ${BOOT_PARTITION} | sed 's/.*TYPE="\([^"]\+\).*/\1/'`
+echo "The filesystem type is ${BOOT_PARTITION_FSTYPE}."
+
+echo "Mounting boot partition..."
+mkdir /mnt/rw
+mount "${BOOT_PARTITION}" /mnt/rw || exec sh
+
+echo "Checking previously running system image..."
+if [ -f /mnt/rw/system.cur ];then
+  if mv -f /mnt/rw/system.cur /mnt/rw/system.old; then
+	  echo "Previous system image preserved."
+	fi
+fi
+
+echo "Mounting system image..."
+mkdir /mnt/system
+mount -o loop,ro /mnt/rw/system /mnt/system || exec sh
+
+echo "Mounting overlay..."
+OVERLAY_ROOT=/mnt/rw/root
+[ -d /mnt/rw/rw ] && OVERLAY_ROOT=/mnt/rw/rw
+rm -rf /mnt/rw/work #cleanup
+mkdir -p $OVERLAY_ROOT /mnt/rw/work
+rm -rf $OVERLAY_ROOT/tmp $OVERLAY_ROOT/var/tmp # cleanup temporary dirs
+rm -f $OVERLAY_ROOT/etc/mtab # mtab should always point /proc/mounts
+rm -f $OVERLAY_ROOT/etc/ld.so.cache # https://github.com/wbrxcorp/walbrix/issues/16
+mkdir /newroot
+mount -t overlay -o lowerdir=/mnt/system,upperdir=$OVERLAY_ROOT,workdir=/mnt/rw/work overlay /newroot || exec sh
+
+if [ -f /mnt/rw/earlydebug ]; then
+	exec sh
+fi
+
+echo "Moving mountponts under newroot..."
+mkdir -p /newroot/.overlay/ro && mount --move /mnt/system /newroot/.overlay/ro || exec sh
+mkdir -p /newroot/.overlay/rw && mount --move /mnt/rw /newroot/.overlay/rw || exec sh
+mount --move /dev /newroot/dev || exec sh
+mount --move /sys /newroot/sys || exec sh
+mount --move /proc /newroot/proc || exec sh
+
+touch /newroot/.overlay/.lock # lockfile for update process
+
+if [ -f /newroot/.overlay/boot/debug ]; then
+	echo "'exec switch_root /newroot /sbin/init' to switch root"
+	exec sh
+fi
+
+#else
+echo "Switching to newroot..."
+exec /sbin/switch_root /newroot /sbin/init

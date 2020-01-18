@@ -4,11 +4,13 @@ import * as child_process from "child_process";
 import {Context} from "./context";
 import {chroot} from "../chroot";
 
-export function exec(context:Context, command:string, overlay:boolean)
+export function exec(context:Context, command:string, options?:{overlay?:boolean, ldconfig?:boolean})
 {
-  if (overlay) {
-    throw new Error("$exec --overlay is not implemented yet.");
+  if (options?.ldconfig) {
+    console.log("ldconfig")
+    child_process.spawnSync("chroot", [context.dstdir, "ldconfig"], {stdio:"inherit"});
   }
-  // else
-  chroot(context.dstdir, command);
+  if (chroot(context.dstdir, command, {lower_layer:options?.overlay? context.srcdir : undefined}) !== 0) {
+    throw new Error(`Execution failed: '${command}'`);
+  }
 }

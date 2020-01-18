@@ -3,6 +3,7 @@ sys-kernel/linux-firmware
 sys-apps/hwids
 =sys-power/acpi_call-3.17
 =sys-boot/grub-2.04-r1
+=net-dns/avahi-0.7-r5
 
 =dev-libs/amdgpu-pro-opencl-19.30.838629
 

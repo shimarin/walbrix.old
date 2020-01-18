@@ -1,6 +1,9 @@
 $kernel /boot/kernel
 /boot/kernel
 /boot/initramfs
+/lib/modules
+$dir /lib/modules/$KERNEL_VERSION
+$package kmod
 $require baselayout.lst
 $package coreutils
 $package sysvinit
@@ -22,8 +25,15 @@ $require dhcpcd.lst
 $require openssh.lst
 $require cron.lst
 $package file
+$package sysklogd
 
 /bin/tar
+
+$write /etc/resolv.conf "nameserver 8.8.8.8\nnameserver 8.8.4.4"
+$require avahi.lst
+$require nmbd.lst
+$package dev-libs/openssl
+$package app-misc/ca-certificates
 
 /tmp
 /var/tmp
@@ -31,6 +41,7 @@ $package file
 /sys
 /proc
 /run
+/var/run
 /mnt
 
 $require glibc-minimal.lst

@@ -1,11 +1,11 @@
-$require perl.lst # for mysql_install_db
+/bin/sed
 $package dev-db/mysql-connector-c # for my_print_defaults needed by mysql_install_db
 
 #dev-libs/libaio
 #dev-libs/protobuf
 #app-arch/libarchive
 #app-arch/lz4
-$package dev-db/mysql --exclude='/var/run/'
+$package dev-db/mysql
 $sed /etc/mysql/mysql.d/50-distro-server.cnf 's/^log-bin$/#log-bin/'  # disable binary log
 
 /usr/include/mysql/mysql_version.h
@@ -14,7 +14,10 @@ $sed /etc/mysql/mysql.d/50-distro-server.cnf 's/^log-bin$/#log-bin/'  # disable 
 $package dev-db/mysql-init-scripts
 $symlink /etc/runlevels/default/mysql /etc/init.d/mysql
 
-$mkdir /var/log/mysql
-$exec "chown -R mysql.mysql /var/log/mysql"
-$copy mysql/operate.sh /operate.sh
-$exec "/operate.sh initdb && rm /operate.sh"
+/run/mysqld
+/var/log/mysql
+
+$mkdir /var/lib/mysql --owner=mysql.mysql --mode=0750
+$copy resource/mysql/with-mysqld /usr/sbin/
+
+$exec --ldconfig "with-mysqld '/usr/bin/mysql_tzinfo_to_sql /usr/share/zoneinfo | /usr/bin/mysql -uroot mysql'"

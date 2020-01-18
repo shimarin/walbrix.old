@@ -1,62 +1,63 @@
-$require domU.lst
-$require domU-overlayfs-kernel.lst
-$require cron.lst
-$require apache.lst
+$require paravirt.lst
+$require php73.lst
 $require mysql.lst
 $require postfix.lst
 $require samba.lst
 $require ffmpeg.lst
-$require php72.lst
 $require redis.lst
 $require pecl-imagick.lst
 $package sys-fs/btrfs-progs
-#require components/libreoffice.lst
-#$package dev-php/xcache # replaced by opcache in PHP5.5
 $package dev-php/pecl-redis
 $require pecl-apcu.lst
-#$require pecl-memcached.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1nextcloud\2/'
 
-$set TARBALL nextcloud-17.0.0.tar.bz2
-$download https://download.nextcloud.com/server/releases/$(TARBALL)
-$exec "tar xvf /tmp/download/$(TARBALL) -C /var/www/localhost"
+/bin/bzip2
+#$set TARBALL nextcloud-18.0.0.tar.bz2
+$download https://download.nextcloud.com/server/releases/nextcloud-18.0.0.tar.bz2 /tmp/
+$exec "tar xvf /tmp/*.tar.bz2 -C /var/www/localhost"
 $exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/nextcloud /var/www/localhost/htdocs"
 
 # create database
-$mkdir /tmp/mysql
-$copy mysql/operate.sh /tmp/mysql/operate.sh
-$exec "/tmp/mysql/operate.sh createdb nextcloud"
+$write /tmp/create-db.sh "mysql -u root -e 'create database `nextcloud`; create user `nextcloud`@localhost; grant all privileges on `nextcloud`.* to `nextcloud`@localhost'"
+$exec "with-mysqld 'sh /tmp/create-db.sh'"
 
 $write /etc/conf.d/app-init 'rc_after="mysql redis"\nrc_before="apache2"'
-$copy nextcloud/app-init /etc/init.d/app-init
+$copy resource/nextcloud/app-init /etc/init.d/app-init
 $symlink /etc/runlevels/default/app-init /etc/init.d/app-init
 
-$copy nextcloud/config.php /var/www/localhost/htdocs/config/config.php
+$copy resource/nextcloud/config.php /var/www/localhost/htdocs/config/config.php
 
 $mkdir /var/lib/nextcloud
 $exec "chown -R apache.apache /var/www/localhost /var/lib/nextcloud"
 
-$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^upload_max_filesize.\+$/upload_max_filesize = 512M/'
-$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^post_max_size.\+$/post_max_size = 768M/'
-$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^memory_limit.\+$/memory_limit=512M/'
-$sed /etc/php/cli-php$(PHP_VERSION)/php.ini 's/^memory_limit.\+$/memory_limit=512M/'
-$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;mbstring.func_overload.\+$/mbstring.func_overload=0/'
-$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;always_populate_raw_post_data.\+$/always_populate_raw_post_data=-1/'
-$sed /etc/php/apache2-php$(PHP_VERSION)/php.ini 's/^;default_charset.\+$/default_charset="UTF-8"/'
+$sed /etc/php/apache2-php*/php.ini 's/^upload_max_filesize.\+$/upload_max_filesize = 512M/'
+$sed /etc/php/apache2-php*/php.ini 's/^post_max_size.\+$/post_max_size = 768M/'
+$sed /etc/php/apache2-php*/php.ini 's/^memory_limit.\+$/memory_limit=512M/'
+$sed /etc/php/cli-php*/php.ini 's/^memory_limit.\+$/memory_limit=512M/'
+$sed /etc/php/apache2-php*/php.ini 's/^;mbstring.func_overload.\+$/mbstring.func_overload=0/'
+$sed /etc/php/apache2-php*/php.ini 's/^;always_populate_raw_post_data.\+$/always_populate_raw_post_data=-1/'
+$sed /etc/php/apache2-php*/php.ini 's/^;default_charset.\+$/default_charset="UTF-8"/'
 $write /var/spool/cron/crontabs/apache '*/15  *  *  *  * php -f /var/www/localhost/htdocs/cron.php'
 
 # libsmbclient-php
 $exec --overlay "pecl install channel://pecl.php.net/smbclient-1.0.0"
-$write /etc/php/apache2-php7.2/ext/smbclient.ini "extension=smbclient.so"
-$write /etc/php/cli-php7.2/ext/smbclient.ini "extension=smbclient.so"
-$symlink /etc/php/apache2-php7.2/ext-active/smbclient.ini ../ext/smbclient.ini
-$symlink /etc/php/cli-php7.2/ext-active/smbclient.ini ../ext/smbclient.ini
+$set PHP_APACHE2_ETC /etc/php/apache2-php*
+$set PHP_CLI_ETC /etc/php/cli-php*
+$write $PHP_APACHE2_ETC/ext/smbclient.ini "extension=smbclient.so"
+$write $PHP_CLI_ETC/ext/smbclient.ini "extension=smbclient.so"
+$symlink $PHP_APACHE2_ETC/ext-active/smbclient.ini ../ext/smbclient.ini
+$symlink $PHP_CLI_ETC/ext-active/smbclient.ini ../ext/smbclient.ini
 
 # occ command
-$copy owncloud/occ.c /tmp/occ.c # use owncloud's one as they are same
+$copy resource/nextcloud/occ.c /tmp/occ.c
 $exec --overlay "gcc -o /usr/sbin/occ /tmp/occ.c"
 
 # upgrade script
-$copy nextcloud/upgrade-nextcloud /usr/sbin/upgrade-nextcloud
+$copy resource/nextcloud/update /usr/sbin/
 
-#$vadesc
+/usr/bin/wget
+$copy resource/nextcloud/upgrade-nextcloud /usr/sbin/
+
+$cleanup /tmp
+$cleanup /var/tmp
+$cleanup /run

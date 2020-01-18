@@ -18,11 +18,10 @@ $require testtools.lst
 $package net-fs/cifs-utils
 #sys-libs/tevent
 $package net-nds/openldap --use="-tcpd samba"
-$package net-fs/samba --use="ldap" --exclude='^/usr/lib(64)?/python.*/site-packages/samba/.*$'
-$mkdir /run/lock/samba
-$symlink /var/lock /run/lock
-$mkdir /var/lib/samba/private
-$exec "chmod 700 /var/lib/samba/private"
+$package net-fs/samba --no-elf-cache --use="ldap" --exclude='^/usr/lib(64)?/python.*/site-packages/samba/.*$'
+#$mkdir /run/lock/samba
+#$symlink /var/lock /run/lock
+/var/lib/samba/private
 
 $symlink /etc/init.d/samba.nmbd samba
 $symlink /etc/init.d/samba.smbd samba

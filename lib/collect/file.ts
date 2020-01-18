@@ -117,7 +117,7 @@ export function file(context:Context, filename:string, no_elf_cache = false)
 
 export function flush(context:Context)
 {
-  child_process.spawnSync("rsync", ["-a", "--files-from=-", context.srcdir + "/", context.dstdir],
+  child_process.spawnSync("rsync", ["-a", "--keep-dirlinks", "--files-from=-", context.srcdir + "/", context.dstdir],
     {input:context.files_queued.join('\n'), stdio:[null, "inherit", "inherit"]});
   context.files_queued = [];
 }

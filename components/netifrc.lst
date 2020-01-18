@@ -1,3 +1,4 @@
+/bin/sed
 $package openrc
 $package netifrc
 $package gentoo-functions

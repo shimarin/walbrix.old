@@ -1,0 +1,23 @@
+$require base.lst
+$sed /etc/inittab 's/ tty1 linux/ --noclear hvc0 linux/'
+$sed /etc/inittab 's/^c\([2-6]\):/#c\1:/'
+$sed /etc/rc.conf 's/^#rc_sys.\+$/rc_sys="xenU"/'
+$require zabbix-agent.lst
+$require openvpn.lst
+
+$write /etc/conf.d/net 'config_eth0="noop\ndhcp"'
+
+# tools
+/usr/bin/strace
+/usr/bin/telnet
+$package screen
+
+$require timezone-jp.lst
+$exec --overlay "eselect locale set ja_JP.utf8"
+
+# zram swap
+$require zram-init.lst
+
+/boot
+$mkdir /boot/grub
+$copy profile/paravirt/grub.cfg /boot/grub/

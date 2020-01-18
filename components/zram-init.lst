@@ -1,4 +1,5 @@
 $package app-shells/push
+/bin/awk
 $package sys-block/zram-init
 $sed /etc/conf.d/zram-init 's/^num_devices=.*$/num_devices=1/'
 $sed /etc/conf.d/zram-init 's/^size0=.*$/size0=`grep MemTotal: \/proc\/meminfo | awk '\''{printf("%d", $2\/1024)}'\''`/'
