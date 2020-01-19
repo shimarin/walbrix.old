@@ -38,3 +38,5 @@ dev-php/pecl-imagick
 media-fonts/urw-fonts
 dev-php/pecl-apcu
 dev-php/PEAR-PEAR
+net-libs/libmicrohttpd
+

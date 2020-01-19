@@ -1,52 +1,58 @@
-$require domU.lst
-$require domU-overlayfs-kernel.lst
-$require kernel-modules.lst
+$require paravirt.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1motion\2/'
 
-$require cron.lst
-$require nginx.lst
-$require mysql-python.lst
-$require git.lst
+#$require nginx.lst
+$require mysql.lst
+#$require mysql-python.lst
+#$require git.lst
 
-$require restkit.lst
+#$require restkit.lst
 
-$require mosquitto.lst
-$require python-zeroconf.lst
-$package dev-python/paho-mqtt
-$package dev-db/sqlite
+#$require mosquitto.lst
+#$require python-zeroconf.lst
+#$package dev-python/paho-mqtt
+#$package dev-db/sqlite
 
-$package sys-apps/usbutils
-/usr/sbin/usbip
+#$package sys-apps/usbutils
+#/usr/sbin/usbip
 #$require usbip-build.lst
-$copy usbip/usbip.init /etc/init.d/usbip
-$copy usbip/usbip.conf /etc/conf.d/usbip
-/usr/share/misc/usb.ids
-
-#$exec --overlay "cd /tmp && git clone --depth 1 https://github.com/kasbert/epsolar-tracer.git && cd epsolar-tracer/xr_usb_serial_common-1a && KERNELDIR=/lib/modules/$(KERNEL_VERSION)/build make && mv /tmp/epsolar-tracer/xr_usb_serial_common-1a/xr_usb_serial_common.ko /lib/modules/$(KERNEL_VERSION)/ && depmod $(KERNEL_VERSION)"
-$require exar-usb-uart-rs485.lst
+#$copy usbip/usbip.init /etc/init.d/usbip
+#$copy usbip/usbip.conf /etc/conf.d/usbip
+#/usr/share/misc/usb.ids
 
 # create database
-$mkdir /tmp/mysql
-$copy mysql/operate.sh /tmp/mysql/operate.sh
-$exec "/tmp/mysql/operate.sh createdb motion"
+$write /tmp/create-db.sh "mysql -u root -e 'create database `motion`; create user `motion`@localhost; grant all privileges on `motion`.* to `motion`@localhost'"
+$exec "with-mysqld 'sh /tmp/create-db.sh'"
 
-$require s3cmd.lst
-$package media-video/motion
-$package media-libs/opencv
-$copy motion/motion.conf /etc/motion/motion.conf
+#$require s3cmd.lst
+
+$download https://github.com/Motion-Project/motion/archive/Release-4.3.0.tar.gz /tmp/
+$exec 'cd /tmp && tar xvf Release-*.tar.gz'
+$exec --overlay "cd /tmp/motion-Release-* && autoreconf -fiv && ./configure --prefix=/usr --with-ffmpeg --with-mysql --without-pgsql --without-mariadb --without-sqlite3 && make && make install"
+$deltree /usr/share/doc
+$deltree /usr/share/man
+$exec "getent passwd motion || useradd -c '' -d /var/lib/motion -M -u 115 -g video -s /sbin/nologin motion"
+$mkdir --owner=motion.video --mode=0755 /var/lib/motion
+$mkdir --owner=motion.video --mode=0755 /etc/motion
+$mkdir --owner=motion.video --mode=0755 /etc/motion/conf.d
+$copy resource/motion/motion.conf /etc/motion/motion.conf
+$copy resource/motion/conf-motion /etc/conf.d/motion
+$copy resource/motion/init-motion /etc/init.d/motion
 $symlink /etc/runlevels/default/motion /etc/init.d/motion
-/usr/bin/ffmpeg
-$package media-tv/v4l-utils
-$package dev-python/pyusb
-$require requests.lst
-$require matplotlib.lst
-$require pillow.lst
-$require vlgothic.lst
-$require uwsgi.lst
-$package net-misc/wol
-$package sys-process/at
 
-$require flask.lst
-$package www-servers/spawn-fcgi
-$package www-misc/fcgiwrap
-$require iptables.lst
+#$package media-libs/opencv
+#/usr/bin/ffmpeg
+#$package media-tv/v4l-utils
+#$package dev-python/pyusb
+#$require requests.lst
+#$require matplotlib.lst
+#$require pillow.lst
+#$require vlgothic.lst
+#$require uwsgi.lst
+#$package net-misc/wol
+#$package sys-process/at
+
+#$require flask.lst
+#$package www-servers/spawn-fcgi
+#$package www-misc/fcgiwrap
+#$require iptables.lst

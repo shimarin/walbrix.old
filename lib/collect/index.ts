@@ -45,10 +45,14 @@ function mkdir(context:Context, dirname:string, options?:{owner?:string,mode?:st
   console.log(`Making directory: ${dirname}`);
   fs.mkdirpSync(path.join(context.dstdir, dirname));
   if (options?.owner) {
-    child_process.spawnSync("chroot", [context.srcdir, "chown", options.owner, dirname]);
+    if (child_process.spawnSync("chroot", [context.dstdir, "chown", options.owner, dirname], {stdio:"inherit"}).status !== 0) {
+      throw Error(`'chown ${options.owner} ${dirname}' failed`);
+    };
   }
   if (options?.mode) {
-    child_process.spawnSync("chroot", [context.srcdir, "chmod", options.mode, dirname]);
+    if (child_process.spawnSync("chroot", [context.dstdir, "chmod", options.mode, dirname], {stdio:"inherit"}).status !== 0) {
+      throw Error(`'chmod ${options.mode} ${dirname}' failed`);
+    }
   }
 }
 

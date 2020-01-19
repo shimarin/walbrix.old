@@ -28,6 +28,7 @@ $package file
 $package sysklogd
 
 /bin/tar
+/bin/gzip
 
 $write /etc/resolv.conf "nameserver 8.8.8.8\nnameserver 8.8.4.4"
 $require avahi.lst
