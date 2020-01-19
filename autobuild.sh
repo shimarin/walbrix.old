@@ -10,11 +10,23 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 PROFILE=$1
-STAGE3_URL=`./do.ts determine-latest-stage3`
-STAGE3_HASH=`./do.ts download --hash $STAGE3_URL`
-STAGE3_FILE=cache/download/$STAGE3_HASH
+STAGE3_URL=$(sh profile/$PROFILE/stage3-url.sh)
+if [ -z "$STAGE3_URL" ]; then
+	echo "Stage3 URL could not be determined."
+	exit 1
+fi
 echo "Stage3 tarball is $STAGE3_URL ."
-$SUDO ./do.ts download "$STAGE3_URL" || exit 1
+STAGE3_HASH=$(echo -n "$STAGE3_URL"|md5sum|cut -f 1 -d " ")
+STAGE3_FILE=cache/download/$STAGE3_HASH
+
+if [ ! -f "$STAGE3_FILE" ]; then
+	TEMPFILE=cache/download/download-$$.tmp
+	if wget -O $TEMPFILE $STAGE3_URL; then
+		mv $TEMPFILE $STAGE3_FILE
+	else
+		exit 1
+	fi
+fi
 
 GENTOO_DIR=gentoo/$PROFILE
 
