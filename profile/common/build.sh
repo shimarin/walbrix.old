@@ -17,7 +17,7 @@ if [ -f modules_need_to_be_rebuilt ]; then
 fi
 
 emerge --depclean
-eclean-kernel -n 1
+[ -x /usr/bin/eclean-kernel ] && eclean-kernel -n 1
 
 etc-update --automode -5
 

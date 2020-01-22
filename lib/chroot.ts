@@ -88,15 +88,17 @@ export function chroot(orig_dir:string, command:string, options?:{profile?:strin
   catch {}
 
   if (options?.profile) {
+    const cache_dir = path.join("cache/profile", options.profile);
+    fs.mkdirpSync(cache_dir)
     mount_chain.push(
       [()=>{
         // sync
         console.log("Syncing /var/cache");
-        return child_process.spawnSync("rsync", ["-a", `cache/profile/${options.profile}/`, `${real_dir}/var/cache`], {stdio:"inherit"}).status === 0;
+        return child_process.spawnSync("rsync", ["-a", `${cache_dir}/`, `${real_dir}/var/cache`], {stdio:"inherit"}).status === 0;
       },()=>{
         // sync back
         console.log("Syncing back /var/cache");
-        return child_process.spawnSync("rsync", ["-a", "--delete", `${real_dir}/var/cache/`, `cache/profile/${options.profile}`], {stdio:"inherit"}).status === 0;
+        return child_process.spawnSync("rsync", ["-a", "--delete", `${real_dir}/var/cache/`, cache_dir], {stdio:"inherit"}).status === 0;
       }]
     );
   }

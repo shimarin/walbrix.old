@@ -43,13 +43,16 @@ if [ "$DONE" != "$STAGE3_HASH" ]; then
 fi
 
 $SUDO cp /etc/resolv.conf $GENTOO_DIR/resolv.conf
-$SUDO mkdir -p $GENTOO_DIR/etc/kernels
-$SUDO ln -f profile/$PROFILE/package.keywords $GENTOO_DIR/etc/portage/package.keywords
-$SUDO ln -f profile/$PROFILE/package.license $GENTOO_DIR/etc/portage/package.license
-$SUDO ln -f profile/$PROFILE/package.use $GENTOO_DIR/etc/portage/package.use/$PROFILE
-if [ -f profile/$PROFILE/package.mask ]; then
-	$SUDO ln -f profile/$PROFILE/package.mask $GENTOO_DIR/etc/portage/package.mask
+
+if [ -f profile/$PROFILE/kernel-config ]; then
+	$SUDO mkdir -p $GENTOO_DIR/etc/kernels
+	$SUDO ln -f profile/$PROFILE/kernel-config $GENTOO_DIR/etc/kernels/kernel-config
 fi
+
+[ -f profile/$PROFILE/package.keywords ] && $SUDO ln -f profile/$PROFILE/package.keywords $GENTOO_DIR/etc/portage/package.keywords
+[ -f profile/$PROFILE/package.license ] && $SUDO ln -f profile/$PROFILE/package.license $GENTOO_DIR/etc/portage/package.license
+[ -f profile/$PROFILE/package.use ] && $SUDO ln -f profile/$PROFILE/package.use $GENTOO_DIR/etc/portage/package.use/$PROFILE
+[ -f profile/$PROFILE/package.mask ] && $SUDO ln -f profile/$PROFILE/package.mask $GENTOO_DIR/etc/portage/package.mask
 
 if [ -f profile/$PROFILE/package.provided ]; then
 	$SUDO mkdir -p $GENTOO_DIR/etc/portage/profile
@@ -58,21 +61,13 @@ fi
 
 $SUDO mkdir -p $GENTOO_DIR/etc/portage/sets
 $SUDO ln -f profile/$PROFILE/set $GENTOO_DIR/etc/portage/sets/all
-
-if [ -f profile/$PROFILE/set-pre ]; then
-	$SUDO ln -f profile/$PROFILE/set-pre $GENTOO_DIR/etc/portage/sets/all-pre
-fi
-
-if [ -f profile/$PROFILE/set-kernel ]; then
-  $SUDO ln -f profile/$PROFILE/set-kernel $GENTOO_DIR/etc/portage/sets/kernel
-fi
+[ -f profile/$PROFILE/set-pre ] && $SUDO ln -f profile/$PROFILE/set-pre $GENTOO_DIR/etc/portage/sets/all-pre
+[ -f profile/$PROFILE/set-kernel ] && $SUDO ln -f profile/$PROFILE/set-kernel $GENTOO_DIR/etc/portage/sets/kernel
 
 $SUDO ln -f profile/common/portage-bashrc $GENTOO_DIR/etc/portage/bashrc
 
-$SUDO ln -f profile/$PROFILE/kernel-config $GENTOO_DIR/etc/kernels/kernel-config
-if [ -f profile/$PROFILE/linuxrc ]; then
-  $SUDO ln -f profile/$PROFILE/linuxrc $GENTOO_DIR/linuxrc
-fi
+[ -f profile/$PROFILE/linuxrc ] && $SUDO ln -f profile/$PROFILE/linuxrc $GENTOO_DIR/linuxrc
+
 touch profile/$PROFILE/rdepends
 $SUDO ln -f profile/$PROFILE/rdepends $GENTOO_DIR/rdepends
 $SUDO ln -f profile/common/*.sh $GENTOO_DIR/
