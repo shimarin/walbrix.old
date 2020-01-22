@@ -173,19 +173,15 @@ function download(context:Context, url:string, saveto?:string) {
   fs.copyFileSync(download_cache, full_saveto);
 }
 
-function process_lstfile(context:Context, lstfile:string)
+function create_command_parser(context:Context, current_dir:string)
 {
-  if (context.lstfiles.has(lstfile)) return;
-  //else
-  context.lstfiles.add(lstfile);
-  console.log(`Processing ${lstfile}...`);
   const program = new commander.Command();
   program.command("$file <filename>").option("-n --no-elf-cache", "don't use elf dependency cache")
   .action((filename, options:commander.Command)=>{
     file(context, filename, !options.elfCache);
   });
   program.command("$require <lstfile>").action((new_lstfile)=> {
-    process_lstfile(context, path.join(path.dirname(lstfile), new_lstfile));
+    process_lstfile(context, path.join(current_dir, new_lstfile));
   });
   program.command("$package <pkgname>")
   .option("-u --use <use>", "mandatory use flag")
@@ -232,9 +228,13 @@ function process_lstfile(context:Context, lstfile:string)
   });
   program.command("$exec <command>").option("-o --overlay", "setup overlay before execution")
   .option("-l --ldconfig", "do ldconfig before execution")
+  .option("-c --cache <cachename>", "sync specified cache to /var/cache")
+  .option("--no-shm", "disable mounting /dev/shm")
+  .option("--no-pts", "disable mounting /dev/pts")
+  .option("--no-proc", "disable mounting /proc")
   .action((command, options:commander.Command)=> {
     flush(context);
-    exec(context, command, {overlay:options.overlay, ldconfig:options.ldconfig});
+    exec(context, command, {overlay:options.overlay, ldconfig:options.ldconfig, cache:options.cache, no_proc:!options.proc, no_shm:!options.shm, no_pts:!options.pts});
   });
   program.command("$deltree <dir>").option("-f --force", "ignore errors").action((dir, options:commander.Command) => {
     flush(context);
@@ -253,6 +253,16 @@ function process_lstfile(context:Context, lstfile:string)
   })
   // TODO: raise error for unknown command
 
+  return program;
+}
+
+function process_lstfile(context:Context, lstfile:string)
+{
+  if (context.lstfiles.has(lstfile)) return;
+  //else
+  context.lstfiles.add(lstfile);
+  console.log(`Processing ${lstfile}...`);
+
   fs.readFileSync(lstfile, "utf-8").split("\n").filter(Boolean).forEach((line)=> {
     const argv:any[] = shellparse(line.indexOf('$') === 0? "\\" + line : line, context.env)
     .map((_:any) => _.op === 'glob'? new Glob(_.pattern) : _)
@@ -262,7 +272,7 @@ function process_lstfile(context:Context, lstfile:string)
       if (argv[0].indexOf('$') !== 0) argv.unshift("$file");
       argv.unshift("ts-node");
       argv.unshift("collect");
-      program.parse(argv);
+      create_command_parser(context, path.dirname(lstfile)).parse(argv);
     }
   });
 

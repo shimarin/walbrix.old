@@ -17,7 +17,8 @@ function execSyncQuote(...cmdline:string[]):boolean
   }
 }
 
-export function chroot(orig_dir:string, command:string, options?:{profile?:string,lower_layer?:string})
+export function chroot(orig_dir:string, command:string,
+  options?:{profile?:string,lower_layer?:string,no_proc?:boolean,no_shm?:boolean,no_pts?:boolean})
 {
   const mount_chain:[()=>boolean,()=>boolean][] = [];
 
@@ -42,36 +43,42 @@ export function chroot(orig_dir:string, command:string, options?:{profile?:strin
     );
 
   }
-  mount_chain.push(
-    [()=>{
-      fs.ensureDirSync(`${real_dir}/proc`);
-      console.log("Mounting /proc");
-      return execSyncQuote("mount", "-t", "proc", "proc", `${real_dir}/proc`);
-    }, ()=>{
-      console.log("Unmounting /proc");
-      return execSyncQuote("umount", `${real_dir}/proc`);
-    }]
-  );
-  mount_chain.push(
-    [()=>{
-      fs.ensureDirSync(`${real_dir}/dev/shm`);
-      console.log("Mounting /dev/shm");
-      return execSyncQuote("mount", "-t", "tmpfs", "tmpfs", `${real_dir}/dev/shm`);
-    }, ()=>{
-      console.log("Unmounting /dev/shm");
-      return execSyncQuote("umount", `${real_dir}/dev/shm`);
-    }]
-  );
-  mount_chain.push(
-    [()=>{
-      fs.ensureDirSync(`${real_dir}/dev/pts`);
-      console.log("Mounting /dev/pts");
-      return execSyncQuote("mount", "-o", "bind", "/dev/pts",  `${real_dir}/dev/pts`);
-    },()=>{
-      console.log("Unmounting /dev/pts");
-      return execSyncQuote("umount", `${real_dir}/dev/pts`);
-    }]
-  );
+  if (!(options?.no_proc)) {
+    mount_chain.push(
+      [()=>{
+        fs.ensureDirSync(`${real_dir}/proc`);
+        console.log("Mounting /proc");
+        return execSyncQuote("mount", "-t", "proc", "proc", `${real_dir}/proc`);
+      }, ()=>{
+        console.log("Unmounting /proc");
+        return execSyncQuote("umount", `${real_dir}/proc`);
+      }]
+    );
+  }
+  if (!(options?.no_shm)) {
+    mount_chain.push(
+      [()=>{
+        fs.ensureDirSync(`${real_dir}/dev/shm`);
+        console.log("Mounting /dev/shm");
+        return execSyncQuote("mount", "-t", "tmpfs", "tmpfs", `${real_dir}/dev/shm`);
+      }, ()=>{
+        console.log("Unmounting /dev/shm");
+        return execSyncQuote("umount", `${real_dir}/dev/shm`);
+      }]
+    );
+  }
+  if (!(options?.no_pts)) {
+    mount_chain.push(
+      [()=>{
+        fs.ensureDirSync(`${real_dir}/dev/pts`);
+        console.log("Mounting /dev/pts");
+        return execSyncQuote("mount", "-o", "bind", "/dev/pts",  `${real_dir}/dev/pts`);
+      },()=>{
+        console.log("Unmounting /dev/pts");
+        return execSyncQuote("umount", `${real_dir}/dev/pts`);
+      }]
+    );
+  }
   try {
     if (fs.statSync(path.join(real_dir, "/var/db/repos/gentoo")).isDirectory()) {
       mount_chain.push(
@@ -119,7 +126,7 @@ export function chroot(orig_dir:string, command:string, options?:{profile?:strin
       process.on('SIGINT', () => {
         // ignore SIGINT to ensure unmounting stuffs
       });
-      fs.copyFileSync("/etc/resolv.conf", path.join(real_dir, "etc/resolv.conf"));
+      //fs.copyFileSync("/etc/resolv.conf", path.join(real_dir, "etc/resolv.conf"));
       return child_process.spawnSync("chroot", [real_dir, "/bin/sh", "-c", command], {stdio:"inherit"}).status;
     }
   }

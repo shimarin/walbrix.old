@@ -31,6 +31,10 @@ if [ -f rdepends ]; then
 	done
 fi
 
+if [ -x after-emerge.sh ]; then
+	./after-emerge.sh || exit 1
+fi
+
 [ -x /usr/bin/eclean-dist ] && eclean-dist
 [ -x /usr/bin/eclean-pkg ] && eclean-pkg
 

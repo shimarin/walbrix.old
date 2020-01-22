@@ -1,0 +1,107 @@
+$kernel /boot/kernel
+/boot/kernel
+/boot/initramfs
+/lib/modules
+$dir /lib/modules/$KERNEL_VERSION
+
+/tmp
+/var/tmp
+/var/run
+/root
+/sys
+/proc
+/mnt
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/nss-3.14.3-18.el5.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/rpm-4.4.2.3-34.el5.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/krb5-libs-1.6.1-70.el5_9.2.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/openssl-0.9.8e-26.el5_9.1.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/keyutils-libs-1.2-1.el5.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/glib2-2.12.3-4.el5_3.1.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/python-2.4.3-56.el5.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/python-libs-2.4.3-56.el5.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/python-elementtree-1.2.6-5.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/python-iniparse-0.2.3-6.el5.noarch.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/python-sqlite-1.1.7-1.2.1.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/python-urlgrabber-3.1.0-6.el5.noarch.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/pyOpenSSL-0.6-2.el5.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/expat-1.95.8-11.el5_8.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/centos-release-5-10.el5.centos.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/yum-3.2.22-40.el5.centos.noarch.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/yum-fastestmirror-1.1.16-21.el5.centos.noarch.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/yum-metadata-parser-1.1.2-4.el5.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/rpm-python-4.4.2.3-34.el5.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/rpm-libs-4.4.2.3-34.el5.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/libselinux-1.33.4-5.7.el5.x86_64.rpm /tmp/
+$download http://vault.centos.org/5.10/os/x86_64/CentOS/libsepol-1.15.2-3.el5.x86_64.rpm /tmp/
+
+$exec --overlay "rpm -ivh --nodeps /tmp/*.rpm"
+$write /etc/rpm/platform "x86_64-centos-linux"
+$exec --overlay "rm -f /var/lib/rpm/* && rpm --rebuilddb"
+
+$sed /etc/yum.repos.d/CentOS-Base.repo 's/^#baseurl=http:\/\/mirror\.centos\.org\/centos\//baseurl=http:\/\/vault.centos.org\//'
+$sed /etc/yum.repos.d/CentOS-Base.repo 's/^mirrorlist=/#mirrorlist=/'
+$sed /etc/yum.repos.d/CentOS-Base.repo 's/\$releasever/5.10/'
+$sed /etc/yum.conf 's/^keepcache=0/keepcache=1/'
+
+#$deltree /etc/init.d
+$exec --overlay --cache=centos5 "yum --nogpgcheck install -y yum passwd && rm -f /etc/yum.repos.d/CentOS-Base.repo.rpmnew && find / -name '*.rpmnew' -exec rename .rpmnew '' '{}' \;"
+$exec --overlay --ldconfig --cache=centos5 "yum --nogpgcheck install -y vim-minimal less initscripts tar which net-tools dhclient avahi openssh-server postfix sysklogd && find / -name '*.rpmnew' -exec rename .rpmnew '' '{}' \;"
+
+$write --append /etc/yum.conf 'exclude=kernel,kernel-firmware,kernel-debug'
+$write /etc/sysconfig/network-scripts/ifcfg-eth0 'DEVICE="eth0"\nBOOTPROTO=dhcp\nONBOOT=yes\nTYPE="Ethernet"'
+
+$write --append /etc/securetty "hvc0"
+
+$sed /etc/inittab 's/tty1$/hvc0/'
+$sed /etc/inittab 's/^\(.\+ tty[2-6]\)$/#\1/'
+
+#$exec "rm /etc/init/serial.conf"
+$write /etc/sysconfig/network "NETWORKING=yes\nHOSTNAME=centos"
+#$sed /etc/shadow 's/^\(root:\)[^:]*\(:.*\)$/\1\2/'
+$exec --ldconfig "pwconv && passwd -d root"
+$write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
+$mkdir /etc/selinux
+$write /etc/selinux/config "SELINUX=disabled"
+$copy resource/centos/fstab /etc/fstab
+$exec "mkdir /root/.ssh && chmod 700 /root/.ssh && touch /root/.ssh/authorized_keys"
+#$exec "chkconfig iptables off"
+#$exec "yum install -y samba4 avahi ntp lzo dhclient openssh-server openssh-clients rsyslog telnet"
+#$sed /etc/avahi/avahi-daemon.conf 's/^#disallow-other-stacks=no$/disallow-other-stacks=yes/'
+#$exec "chkconfig nmb on"
+#$exec "chkconfig ntpd on"
+
+# LAMP stack
+#$exec "yum install -y php-mysql mysql-server httpd vsftpd php php-mbstring php-mcrypt php-gd wget xz postfix"
+#$exec "chkconfig smb on"
+#$exec "chkconfig httpd on"
+#$exec "chkconfig mysqld on"
+#$exec "chkconfig vsftpd on"
+#$copy centos/index.html /var/www/html/index.html
+#$download https://files.phpmyadmin.net/phpMyAdmin/4.1.14.8/phpMyAdmin-4.1.14.8-all-languages.tar.xz
+#$exec "tar Jxvf /tmp/download/phpMyAdmin-*.xz -C /var/www/html && mv /var/www/html/phpMyAdmin-* /var/www/html/phpmyadmin"
+#$copy phpmyadmin/config.inc.php /var/www/html/phpmyadmin/config.inc.php
+#$exec "chown -R apache.apache /var/www /var/log/httpd"
+#$patch /etc/my.cnf centos/my.cnf.patch
+#$copy centos/smb.conf /etc/samba/smb.conf
+
+# update and cleanup
+#$exec "yum update -y && yum clean -y all"
+
+# zram swap patch
+#$patch /etc/rc.d/rc.sysinit centos/rc.sysinit.zramswap.patch
+
+#$require centos-$(ARCH).lst
+#$require centos-$(REGION).lst
+
+#$sed /etc/httpd/conf.d/mod_extract_forwarded.conf 's/^# MEFaccept .*/MEFaccept all/'
+
+#$exec "chkconfig openvpn on"
+
+#$vadesc
+$mkdir /boot/grub
+$write /boot/grub/grub.cfg "set default=0\nset timeout=1\n\nmenuentry 'Linux' {\n\techo 'Loading kernel ...'\n\tlinux /boot/kernel root=/dev/xvda1 ro\n}"
+
+$cleanup /tmp
+$cleanup /var/cache
+
+$exec ldconfig
