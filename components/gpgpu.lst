@@ -90,6 +90,7 @@ $package nvidia-drivers --no-elf-cache
 $package dev-libs/rocm-opencl-runtime
 $package dev-libs/rocm-device-libs
 $package dev-libs/rocm-comgr
+$package dev-libs/roct-thunk-interface
 #dev-libs/rocr-runtime
 
 # misc

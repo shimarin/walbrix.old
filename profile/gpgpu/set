@@ -76,3 +76,5 @@ x11-libs/libdrm
 
 # AMD rocm
 dev-libs/rocm-opencl-runtime
+dev-libs/roct-thunk-interface
+
