@@ -86,12 +86,14 @@ $require gpsd.lst
 
 # drivers
 $package nvidia-drivers --no-elf-cache
-#$package amdgpu-pro-opencl
-$package dev-libs/rocm-opencl-runtime
-$package dev-libs/rocm-device-libs
-$package dev-libs/rocm-comgr
-$package dev-libs/roct-thunk-interface
-#dev-libs/rocr-runtime
+$package amdgpu-pro-opencl
+#$package dev-libs/rocm-opencl-runtime
+#$package dev-libs/rocm-device-libs
+#$package dev-libs/rocm-comgr
+#$package dev-libs/roct-thunk-interface
+#$package dev-libs/rocr-runtime
+#$package sys-devel/llvm-roc
+#$package sci-libs/lapack
 
 # misc
 $package ocl-icd
