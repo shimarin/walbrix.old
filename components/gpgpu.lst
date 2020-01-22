@@ -49,6 +49,8 @@ $sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="gpgpu"/' # set default ho
 $write /etc/sysctl.d/nf_conntrack_max.conf 'net.nf_conntrack_max = 65536'
 $write /etc/sysctl.d/nr_hugepages.conf 'vm.nr_hugepages=1280'
 
+$write --append /etc/profile.env "export GPU_MAX_HEAP_SIZE=100\nexport GPU_USE_SYNC_OBJECTS=1\nexport GPU_MAX_ALLOC_PERCENT=100\nexport GPU_SINGLE_ALLOC_PERCENT=100"
+
 $require acpi.lst
 $package sys-apps/gptfdisk
 /usr/bin/lsscsi
@@ -99,17 +101,22 @@ $package ocl-icd
 /usr/lib64/libmicrohttpd.so.12
 /usr/lib64/libhwloc.so.5
 /usr/share/libdrm/amdgpu.ids
+/usr/sbin/wrmsr
 
 # node
 #$require ts-node.lst
 
 $require timezone-jp.lst
 
-#$exec --overlay "env-update"
-#$deltree /var/lib/portage
+$mkdir /root/xmr
+$mkdir /root/eth
+
+$copy resource/gpgpu/xmr-start.sh /root/xmr/start.sh
+$copy resource/gpgpu/eth-start.sh /root/eth/start.sh
 
 $copy resource/gpgpu/update /usr/sbin/
 $copy resource/walbrix/setup-data-partition /usr/sbin/
 $copy resource/gpgpu/wait-for-network-to-be-connected /usr/bin/
+
 
 $exec ldconfig

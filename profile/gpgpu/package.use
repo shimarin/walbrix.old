@@ -12,7 +12,7 @@ sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc
 # gpgpu
 x11-base/xorg-drivers video_cards_dummy -video_cards_amdgpu -video_cards_fbdev -video_cards_intel -video_cards_nouveau -video_cards_radeon -video_cards_radeonsi -video_cards_vesa
 media-libs/mesa -opencl -llvm -gallium -video_cards_amdgpu -video_cards_intel -video_cards_nouveau -video_cards_radeon -video_cards_radeonsi
-x11-drivers/nvidia-drivers -X acpi driver -gtk3 kms uvm -multilib -tools -abi_x86_32
+x11-drivers/nvidia-drivers X acpi driver -gtk3 kms uvm -multilib -tools -abi_x86_32
 x11-libs/gdk-pixbuf X
 x11-libs/pango X
 x11-libs/cairo X

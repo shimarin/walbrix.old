@@ -45,6 +45,7 @@ sys-apps/hwloc
 sys-apps/lm-sensors
 sys-apps/lshw
 sys-apps/usbutils
+sys-apps/msr-tools
 sys-auth/nss-mdns
 sys-auth/nss-myhostname
 sys-block/parted
