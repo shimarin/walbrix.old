@@ -45,7 +45,7 @@ $sed /etc/yum.conf 's/^keepcache=0/keepcache=1/'
 
 #$deltree /etc/init.d
 $exec --overlay --cache=centos5 "yum --nogpgcheck install -y yum passwd && rm -f /etc/yum.repos.d/CentOS-Base.repo.rpmnew && find / -name '*.rpmnew' -exec rename .rpmnew '' '{}' \;"
-$exec --overlay --ldconfig --cache=centos5 "yum --nogpgcheck install -y vim-minimal less initscripts tar which net-tools dhclient avahi openssh-server postfix sysklogd && find / -name '*.rpmnew' -exec rename .rpmnew '' '{}' \;"
+$exec --overlay --ldconfig --cache=centos5 "yum --nogpgcheck install -y vim-minimal less initscripts tar which net-tools dhclient avahi openssh-server openssh-client postfix sysklogd && find / -name '*.rpmnew' -exec rename .rpmnew '' '{}' \;"
 
 $write --append /etc/yum.conf 'exclude=kernel,kernel-firmware,kernel-debug'
 $write /etc/sysconfig/network-scripts/ifcfg-eth0 'DEVICE="eth0"\nBOOTPROTO=dhcp\nONBOOT=yes\nTYPE="Ethernet"'
