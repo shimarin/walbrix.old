@@ -24,25 +24,30 @@ function is_elf(filename:string):boolean
 
 const cache_dir_name = "./build/cache/ldd";
 
-function cache_file_name(md5hash:string):string
+function cache_file_name(context:Context, md5hash:string):string
 {
-  return `${cache_dir_name}/${md5hash}`;
+  if (!context.ld_so_cache_hash) {
+    context.ld_so_cache_hash = crypto.createHash("md5").update(
+      fs.readFileSync(path.join(context.srcdir, "etc/ld.so.cache"))
+    ).digest("hex");
+  }
+  return `${cache_dir_name}/${context.ld_so_cache_hash}-${md5hash}`;
 }
 
-function get_cache(md5hash:string):string[] | null
+function get_cache(context:Context, md5hash:string):string[] | null
 {
   try {
-    return fs.readFileSync(cache_file_name(md5hash), "utf-8").split("\n").filter(Boolean);
+    return fs.readFileSync(cache_file_name(context, md5hash), "utf-8").split("\n").filter(Boolean);
   }
   catch (failed) {
     return null;
   }
 }
 
-function save_cache(md5hash:string, deps:string[]):void
+function save_cache(context:Context, md5hash:string, deps:string[]):void
 {
   fs.ensureDirSync(cache_dir_name);
-  const fd = fs.openSync(cache_file_name(md5hash), "w");
+  const fd = fs.openSync(cache_file_name(context, md5hash), "w");
   try {
     deps.forEach(_ => fs.writeSync(fd, _ + "\n"));
   }
@@ -66,7 +71,7 @@ function get_elf_deps(context:Context,filename:string, no_cache:boolean):string[
 {
   const md5hash = crypto.createHash("md5").update(fs.readFileSync(path.join(context.srcdir, filename))).digest("hex");
 
-  var deps = no_cache? null : get_cache(md5hash);
+  var deps = no_cache? null : get_cache(context, md5hash);
 
   if (!deps) {
     try {
@@ -80,7 +85,7 @@ function get_elf_deps(context:Context,filename:string, no_cache:boolean):string[
     catch (somethingwrong) {
       deps = [];
     }
-    if (!no_cache) save_cache(md5hash, deps);
+    if (!no_cache) save_cache(context, md5hash, deps);
   }
 
   return deps;

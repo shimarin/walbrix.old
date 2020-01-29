@@ -1,3 +1,4 @@
+app-admin/sudo
 app-admin/sysklogd
 app-admin/sysstat
 app-arch/lz4
@@ -10,16 +11,12 @@ app-misc/beep
 app-misc/screen
 app-portage/cpuid2cpuflags
 dev-libs/intel-neo
-dev-libs/libuv
 dev-libs/ocl-icd
 dev-libs/openssl-compat
-dev-python/future
-dev-python/paho-mqtt
-dev-python/zeroconf
 dev-util/clinfo
 dev-util/strace
 dev-vcs/git
-mail-mta/ssmtp
+media-fonts/ricty
 net-analyzer/tcpdump
 net-analyzer/traceroute
 net-fs/samba
@@ -36,9 +33,7 @@ net-wireless/hostapd
 net-wireless/iw
 net-wireless/wireless-tools
 net-wireless/wpa_supplicant
-sci-geosciences/gpsd
 sys-apps/dmidecode
-sys-apps/gptfdisk
 sys-apps/haveged
 sys-apps/hwloc
 sys-apps/lm-sensors
@@ -46,7 +41,6 @@ sys-apps/lshw
 sys-apps/usbutils
 sys-apps/msr-tools
 sys-auth/nss-mdns
-sys-auth/nss-myhostname
 sys-block/parted
 sys-block/zram-init
 sys-boot/grub
@@ -59,22 +53,15 @@ sys-fs/lsscsi
 sys-fs/lvm2
 sys-fs/ntfs3g
 sys-fs/squashfs-tools
-#sys-fs/xfsdump # 3.1.8 build fails
 sys-fs/xfsprogs
-sys-kernel/genkernel
-sys-kernel/gentoo-sources
-sys-kernel/linux-firmware
-sys-power/acpi_call
 sys-power/acpid
-sys-power/cpupower
 sys-process/cronie
 sys-process/lsof
-virtual/linux-sources
 x11-drivers/nvidia-drivers
 x11-libs/libdrm
+
 
 # AMD Drivers
 #dev-libs/rocm-opencl-runtime
 #dev-libs/roct-thunk-interface
-
 dev-libs/amdgpu-pro-opencl

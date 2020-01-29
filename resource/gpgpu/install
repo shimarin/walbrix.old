@@ -1,0 +1,160 @@
+#!/bin/bash
+BOOTDIR=/run/initramfs/boot
+SELF=$(findmnt -ln -o SOURCE $BOOTDIR)
+[ -b "$SELF" ] || SELF=$(findmnt -ln -o SOURCE /)
+if [ -b "$SELF" ]; then
+  SELF_MAJOR=$((16#$(stat -c %t $SELF)))
+  SELF_MINOR=$((16#$(stat -c %T $SELF)))
+  SELF_PARENT=$(lsblk -n -o PKNAME $SELF)
+  [ -n "$SELF_PARENT" ] && SELF_PARENT=/dev/$SELF_PARENT
+  if [ -b "$SELF_PARENT" ]; then
+    SELF_PARENT_MAJOR=$((16#$(stat -c %t $SELF_PARENT)))
+    SELF_PARENT_MINOR=$((16#$(stat -c %T $SELF_PARENT)))
+  fi
+fi
+
+if [ "$#" -eq 0 ] ; then
+  echo "Usage: $0 device [imagefile]" 1>&2
+  exit 1
+fi
+
+DEVICE=$1
+SYSTEM_IMAGE=${2:-$BOOTDIR/system.img}
+SECTOR_SIZE=$(blockdev --getpbsz $DEVICE)
+NUM_512B_SECTORS=$(blockdev --getsz $DEVICE)
+DEVICE_MAJOR=$((16#$(stat -c %t $DEVICE)))
+DEVICE_MINOR=$((16#$(stat -c %T $DEVICE)))
+MAX_BIOS_FRIENDLY_DISK_SIZE=4294967296
+
+if [ -z "$SECTOR_SIZE" -o -z "$NUM_512B_SECTORS" -o -z "$DEVICE_MAJOR" -o -z "$DEVICE_MINOR" ]; then
+  echo "Invalid device."
+	exit 1
+fi
+
+if [ "$SELF_MAJOR" -eq "$DEVICE_MAJOR" -a "$SELF_MINOR" -eq "$DEVICE_MINOR" ]; then
+  echo "You can't install system on currently running device".
+  exit 1
+fi
+
+if [ -n "$SELF_PARENT" ]; then
+  if [ "$SELF_PARENT_MAJOR" -eq "$DEVICE_MAJOR" -a "$SELF_PARENT_MINOR" -eq "$DEVICE_MINOR" ]; then
+    echo "You can't install system on currently running device".
+    exit 1
+  fi
+fi
+
+if [ "$NUM_512B_SECTORS" -lt 7600000 ]; then
+  echo "Insufficient disk capacity. (At least 4GB)".
+  exit 1
+fi
+
+PARTITION_TABLE_TYPE=msdos
+if [ $SECTOR_SIZE -ne 512 -o $NUM_512B_SECTORS -gt $MAX_BIOS_FRIENDLY_DISK_SIZE ]; then
+  PARTITION_TABLE_TYPE=gpt
+fi
+
+PARTITION_SIZE=8GiB
+if [ $NUM_512B_SECTORS -lt 30000000 ]; then
+  # less than 16GB
+  PARTITION_SIZE=-1
+fi
+
+parted --script "$DEVICE" "mklabel $PARTITION_TABLE_TYPE"
+parted --script "$DEVICE" "mkpart primary 1MiB $PARTITION_SIZE"
+if [ "$PARTITION_SIZE" != "-1" ]; then
+    parted --script "$DEVICE" "mkpart primary $PARTITION_SIZE -1"
+fi
+parted --script "$DEVICE" "set 1 boot on"
+if [ "$PARTITION_TABLE_TYPE" == "msdos" ]; then
+  parted --script "$DEVICE" set 1 esp on
+fi
+
+udevadm settle
+
+for i in /sys/dev/block/$DEVICE_MAJOR:$DEVICE_MINOR/*/partition; do
+  if [ `cat $i` -eq 1 ]; then
+    BOOT_PARTITION=$(readlink -e /dev/block/$(cat $(dirname $i)/dev))
+  fi
+done
+
+if [ -z "$BOOT_PARTITION" ]; then
+  echo "Something is wrong. Partition not found."
+  exit 1
+fi
+
+if mkfs.vfat -F 32 $BOOT_PARTITION; then
+  echo "Boot partition formatted."
+else
+  echo "Unable to format EFI boot partition on $BOOT_PARTITION ."
+  exit 1
+fi
+
+BOOT_PARTITION_UUID=$(blkid -o value -s UUID $BOOT_PARTITION)
+
+TMPDIR=/tmp/install-$$
+mkdir $TMPDIR
+mount -t vfat -o rw,fmask=177,dmask=077 $BOOT_PARTITION $TMPDIR
+
+echo "Installing bootloader..."
+
+BOOTLOADER=$BOOTDIR/EFI/BOOT/bootx64.efi
+mkdir -p $TMPDIR/EFI/BOOT
+if [ -f "$BOOTLOADER" ]; then
+  cp "$BOOTLOADER" $TMPDIR/EFI/BOOT/bootx64.efi
+else
+  GRUBCFG=$(mktemp)
+  cat << 'EOS' > $GRUBCFG
+source /system.cfg
+set BOOT_PARTITION=$root
+loopback loop /system.img
+set root=loop
+set prefix=($root)/boot/grub
+EOS
+  grub-mkimage -p /boot/grub -c $GRUBCFG -o $TMPDIR/EFI/BOOT/bootx64.efi -O x86_64-efi \
+    xfs fat part_gpt part_msdos normal linux echo all_video \
+    test multiboot multiboot2 search sleep iso9660 gzio lvm chain \
+    configfile cpuid minicmd gfxterm font terminal squash4 \
+    loopback videoinfo videotest blocklist probe
+  rm $GRUBCFG
+fi
+
+if [ "$PARTITION_TABLE_TYPE" == "msdos" ]; then
+  mkdir -p $TMPDIR/boot/grub
+  grub-install --target=i386-pc --recheck --boot-directory=$TMPDIR/boot \
+      --modules="xfs fat part_msdos normal linux echo all_video test multiboot2 search sleep gzio lvm chain configfile cpuid minicmd gfxterm font terminal squash4 loopback videoinfo videotest blocklist probe" \
+      $DEVICE
+  echo -e 'insmod echo\ninsmod linux\nsource /system.cfg\nset BOOT_PARTITION=$root\nloopback loop /system.img\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $TMPDIR/boot/grub/grub.cfg
+fi
+
+echo "Installing System image..."
+
+cp $SYSTEM_IMAGE $TMPDIR/system.img
+
+echo "Creating swap file..."
+truncate -s 1G $TMPDIR/system.swp
+mkswap $TMPDIR/system.swp
+
+echo "Creating data file..."
+truncate -s 1G $TMPDIR/system.dat
+mkfs.xfs -f $TMPDIR/system.dat
+
+if [ -d $BOOTDIR/install/initial ]; then
+  TMPDIR2=/tmp/install-2-$$
+  mkdir $TMPDIR2
+  echo "Copying initial files..."
+  if mount -o loop $TMPDIR/system.dat $TMPDIR2; then
+    mkdir $TMPDIR2/root
+    cp -av $BOOTDIR/install/initial/. $TMPDIR2/root/
+    umount $TMPDIR2
+    rmdir $TMPDIR2
+  else
+    echo "data file couldn't be mounted."
+  fi
+fi
+
+echo "Syncing..."
+
+umount $TMPDIR
+rmdir $TMPDIR
+
+echo "Done."

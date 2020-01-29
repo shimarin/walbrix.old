@@ -1,0 +1,38 @@
+$require base.lst
+$package sys-apps/systemd
+$package sys-apps/gentoo-systemd-integration
+$package sys-apps/util-linux
+$package sys-apps/dbus
+#sys-libs/libcap
+$package sys-apps/acl
+#dev-libs/libgcrypt
+$package sys-apps/kmod
+$package app-arch/lz4
+$package sys-libs/pam
+#dev-libs/libpcre2
+#sys-libs/libseccomp
+$package sys-apps/kmod
+
+$package net-misc/openssh
+$sed /etc/ssh/sshd_config 's/^#PermitRootLogin prohibit-password$/PermitRootLogin yes/'
+$mkdir /root/.ssh --mode=700
+$touch /root/.ssh/authorized_keys
+$exec "systemctl enable sshd"
+
+# nmb.lst
+/usr/sbin/nmbd
+/lib/systemd/system/nmbd.service
+$mkdir /var/log/samba
+$mkdir /var/lock/samba
+$mkdir /var/cache/samba
+$mkdir /var/lib/samba/private --mode=700
+$mkdir /etc/samba
+$write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15'
+$exec "systemctl enable nmbd"
+
+$write /etc/systemd/network/50-eth0-dhcp.network "[Match]\nName=eth0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes"
+$exec "systemctl enable systemd-networkd"
+
+$write /etc/systemd/system/rc-local.service "[Unit]\nDescription=/etc/rc.local Compatibility\nConditionPathExists=/etc/rc.local\n\n[Service]\nType=forking\nExecStart=/etc/rc.local start\nTimeoutSec=0\nStandardOutput=tty\nRemainAfterExit=yes\nSysVStartPriority=99\n\n[Install]\nWantedBy=multi-user.target"
+$write /etc/rc.local "#!/bin/sh\nexit 0"
+$exec "chmod +x /etc/rc.local"

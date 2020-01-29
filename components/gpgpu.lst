@@ -1,15 +1,13 @@
-$require base.lst
+$require base-systemd.lst
 
 $dir /lib/firmware
 $require kbd-minimal.lst
-$require zram-init.lst
-$require acpi.lst
 
-#install script
+# install script
 $package dosfstools
 $package parted
 $require grub-i386-pc.lst
-$copy resource/walbrix/install /usr/sbin/
+$copy resource/gpgpu/install /usr/sbin/
 
 /bin/ip
 /usr/bin/awk
@@ -18,7 +16,7 @@ $copy resource/walbrix/adhoc-sshd /usr/sbin/
 $mkdir /boot/grub
 $copy resource/gpgpu/grub.cfg /boot/grub/grub.cfg
 
-#hwids
+# hwids
 /bin/sed
 /usr/sbin/lspci
 /usr/share/misc/pci.ids.gz
@@ -27,11 +25,12 @@ $copy resource/gpgpu/grub.cfg /boot/grub/grub.cfg
 $copy resource/walbrix/save /sbin/save
 
 $sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
-$copy resource/gpgpu/net /etc/conf.d/
 
-$require wpa_supplicant.lst
-$symlink /etc/init.d/net.wlan0 net.lo
-$copy resource/walbrix/setup-wifi /usr/sbin/
+$package net-wireless/wpa_supplicant
+$sed /lib/systemd/system/wpa_supplicant@.service 's/-i%I$/-i%I -Dnl80211,wext/'
+$write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nssid="YOUR-SSID"\npsk="YOUR-KEY"\npriority=1\n}'
+$copy resource/gpgpu/enable-wifi /usr/sbin/
+$copy resource/gpgpu/setup-wifi /usr/sbin/
 
 $package app-misc/ca-certificates
 $package app-misc/mime-types
@@ -40,10 +39,9 @@ $require openssl.lst
 $package net-misc/wget
 $package sys-apps/haveged
 
-#$require s3cmd.lst
 $package sys-apps/dmidecode
 
-$sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="gpgpu"/' # set default hostname
+$write /etc/hostname gpgpu
 
 # extend capacity
 $write /etc/sysctl.d/nf_conntrack_max.conf 'net.nf_conntrack_max = 65536'
@@ -51,23 +49,20 @@ $write /etc/sysctl.d/nr_hugepages.conf 'vm.nr_hugepages=1280'
 
 $write --append /etc/profile.env "export GPU_MAX_HEAP_SIZE=100\nexport GPU_USE_SYNC_OBJECTS=1\nexport GPU_MAX_ALLOC_PERCENT=100\nexport GPU_SINGLE_ALLOC_PERCENT=100"
 
-$require acpi.lst
-$package sys-apps/gptfdisk
 /usr/bin/lsscsi
 
 # networks
-$require nss-mdns.lst
-$require nss-myhostname.lst
 $package net-analyzer/traceroute
 $require wireless-tools.lst
 $require tcpdump.lst
-$require ssmtp.lst
-#$require cu.lst
-$require ntp.lst
+/usr/bin/cu
+$package net-misc/ntp
+$exec "systemctl enable ntpd"
 /usr/bin/curl
 /sbin/brctl
 
 # tools
+$package sys-fs/btrfs-progs
 /usr/bin/strace
 /usr/bin/telnet
 $package screen
@@ -78,14 +73,12 @@ $package screen
 /usr/bin/cpuid2cpuflags
 $package usbutils
 $package lm-sensors
-$package cpupower
 $package lshw
 $require intel-neo.lst
-$require gpsd.lst
 /usr/bin/clinfo
 
 # drivers
-$package nvidia-drivers --no-elf-cache
+$package nvidia-drivers
 $package amdgpu-pro-opencl
 #$package dev-libs/rocm-opencl-runtime
 #$package dev-libs/rocm-device-libs
@@ -97,7 +90,6 @@ $package amdgpu-pro-opencl
 
 # misc
 $package ocl-icd
-#$exec --overlay "eselect opencl set ocl-icd"
 /usr/lib64/libuv.so.1
 /usr/lib64/libdrm.so.2
 /usr/lib64/libdrm_amdgpu.so.1
@@ -105,9 +97,7 @@ $package ocl-icd
 /usr/lib64/libhwloc.so.5
 /usr/share/libdrm/amdgpu.ids
 /usr/sbin/wrmsr
-
-# node
-#$require ts-node.lst
+$require ts-node.lst
 
 $require timezone-jp.lst
 
@@ -118,8 +108,9 @@ $copy resource/gpgpu/xmr-start.sh /root/xmr/start.sh
 $copy resource/gpgpu/eth-start.sh /root/eth/start.sh
 
 $copy resource/gpgpu/update /usr/sbin/
-$copy resource/walbrix/setup-data-partition /usr/sbin/
+$copy resource/gpgpu/setup-data-files /usr/sbin/
 $copy resource/gpgpu/wait-for-network-to-be-connected /usr/bin/
 
+$sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
 
 $exec ldconfig

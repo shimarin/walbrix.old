@@ -1,0 +1,13 @@
+diff --git a/src/network/networkd-wifi.c b/src/network/networkd-wifi.c
+index 14a8687458..12cf4eda23 100644
+--- a/src/network/networkd-wifi.c
++++ b/src/network/networkd-wifi.c
+@@ -35,7 +35,7 @@ int wifi_get_info(Link *link) {
+         _cleanup_free_ char *ssid = NULL;
+         r = wifi_get_interface(link->manager->genl, link->ifindex, &link->wlan_iftype, &ssid);
+         if (r < 0)
+-                return r;
++                return 0;
+         if (r > 0 && streq_ptr(link->ssid, ssid))
+                 r = 0;
+         free_and_replace(link->ssid, ssid);

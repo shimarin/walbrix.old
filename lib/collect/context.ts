@@ -7,6 +7,7 @@ export class Context {
   public env:any = {};
 
   public files_queued:string[] = [];
+  public ld_so_cache_hash?: string;
 
   constructor(srcdir:string,dstdir:string) {
     this.srcdir = srcdir;

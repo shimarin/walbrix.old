@@ -1,5 +1,5 @@
 #!/bin/bash
-BOOT_PARTITION=$(findmnt -ln -o SOURCE /.overlay/boot)
+BOOT_PARTITION=$(findmnt -ln -o SOURCE /run/initramfs/boot)
 if [ ! -b "$BOOT_PARTITION" ]; then
   echo "Could not determine boot partition."
   exit 1

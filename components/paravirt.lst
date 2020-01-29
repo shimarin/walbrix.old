@@ -1,4 +1,4 @@
-$require base.lst
+$require base-openrc.lst
 $sed /etc/inittab 's/ tty1 linux/ --noclear hvc0 linux/'
 $sed /etc/inittab 's/^c\([2-6]\):/#c\1:/'
 $sed /etc/rc.conf 's/^#rc_sys.\+$/rc_sys="xenU"/'

@@ -1,11 +1,9 @@
 #!/bin/bash
-BOOTDIR=/.overlay/boot
+BOOTDIR=/run/initramfs/boot
 SYSTEM_IMAGE=$1
 DOWNLOAD_URL=http://dist.walbrix.net/gpgpu.img
 
 # TODO: lock system
-
-mount -o remount,rw $BOOTDIR || exit
 
 rm -f $BOOTDIR/system.new $BOOTDIR/system.old
 
@@ -23,12 +21,16 @@ if [ $(($IMGSIZE / 1024)) -gt $(($AVAIL - 1024)) ]; then
 fi
 
 if [ -n "$SYSTEM_IMAGE" ]; then
+  mount -o remount,async $BOOTDIR
   cp $SYSTEM_IMAGE $BOOTDIR/system.new
+  mount -o remount,sync $BOOTDIR
   EXIT_CODE=$?
   [ $EXIT_CODE -ne 0 ] && echo "Copying system image file failed."
 else
+  mount -o remount,async $BOOTDIR
   wget -O $BOOTDIR/system.new $DOWNLOAD_URL
   EXIT_CODE=$?
+  mount -o remount,sync $BOOTDIR
   [ $EXIT_CODE -ne 0 ] && echo "Download failed."
 fi
 
@@ -45,5 +47,4 @@ if [ ! -f $BOOTDIR/system.img -a -f $BOOTDIR/system.cur ]; then
   mv $BOOTDIR/system.cur $BOOTDIR/system.img
 fi
 
-mount -o remount,ro $BOOTDIR
 [ $EXIT_CODE -eq 0 ] && echo "Done. Reboot system to take effects."

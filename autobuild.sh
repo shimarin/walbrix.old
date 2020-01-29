@@ -42,17 +42,25 @@ if [ "$DONE" != "$STAGE3_HASH" ]; then
   $SUDO sh -c "echo 'GENTOO_MIRRORS=\"http://ftp.iij.ad.jp/pub/linux/gentoo/\"' >> $GENTOO_DIR/etc/portage/make.conf"
 fi
 
-$SUDO cp /etc/resolv.conf $GENTOO_DIR/resolv.conf
+$SUDO cp /etc/resolv.conf $GENTOO_DIR/etc/resolv.conf
+#$SUDO sh -c "echo -e 'nameserver 8.8.8.8\nnameserver 8.8.4.4' > $GENTOO_DIR/etc/resolv.conf"
 
 if [ -f profile/$PROFILE/kernel-config ]; then
 	$SUDO mkdir -p $GENTOO_DIR/etc/kernels
 	$SUDO ln -f profile/$PROFILE/kernel-config $GENTOO_DIR/etc/kernels/kernel-config
 fi
 
+if [ -f profile/$PROFILE/genkernel-options ]; then
+  $SUDO ln -f profile/$PROFILE/genkernel-options $GENTOO_DIR/
+fi
+
 [ -f profile/$PROFILE/package.keywords ] && $SUDO ln -f profile/$PROFILE/package.keywords $GENTOO_DIR/etc/portage/package.keywords
 [ -f profile/$PROFILE/package.license ] && $SUDO ln -f profile/$PROFILE/package.license $GENTOO_DIR/etc/portage/package.license
 [ -f profile/$PROFILE/package.use ] && $SUDO ln -f profile/$PROFILE/package.use $GENTOO_DIR/etc/portage/package.use/$PROFILE
 [ -f profile/$PROFILE/package.mask ] && $SUDO ln -f profile/$PROFILE/package.mask $GENTOO_DIR/etc/portage/package.mask
+
+$SUDO mkdir -p $GENTOO_DIR/etc/portage/patches
+[ -d profile/$PROFILE/patches ] && $SUDO cp -a profile/$PROFILE/patches/. $GENTOO_DIR/etc/portage/patches/
 
 if [ -f profile/$PROFILE/package.provided ]; then
 	$SUDO mkdir -p $GENTOO_DIR/etc/portage/profile

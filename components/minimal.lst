@@ -1,4 +1,4 @@
-$require base.lst
+$require base-openrc.lst
 
 $dir /lib/firmware
 $package kmod

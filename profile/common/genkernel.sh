@@ -1,13 +1,12 @@
 #!/bin/sh
-egrep -q "^sys-fs/lvm2" /etc/portage/sets/* && GENKERNEL_OPTS="$GENKERNEL_OPTS --lvm"
-egrep -q "^sys-fs/mdadm" /etc/portage/sets/* && GENKERNEL_OPTS="$GENKERNEL_OPTS --mdadm"
+[ -f genkernel-options ] && GENKERNEL_OPTS=$(cat genkernel-options)
 
 rm -f /usr/src/linux/.config
 [ -f /linuxrc ] && GENKERNEL_OPTS="$GENKERNEL_OPTS --linuxrc=/linuxrc"
 [ -f /menuconfig ] && GENKERNEL_OPTS="$GENKERNEL_OPTS --menuconfig" && rm -f /menuconfig /var/cache/genkernel/kerncache.tar.gz
 genkernel $GENKERNEL_OPTS --symlink --no-mountboot --no-bootloader --no-compress-initramfs \
   --kernel-config=/etc/kernels/kernel-config --makeopts="-j$((`nproc` + 1))" \
-  --kernel-localversion=UNSET --no-save-config \
+  --kernel-localversion=UNSET --no-save-config --no-module-rebuild \
   --kerncache=/var/cache/genkernel/kerncache.tar.gz all || exit 1
 if [ -f /usr/src/linux/.config ]; then
   truncate -s 0 -c /etc/kernels/kernel-config && cat /usr/src/linux/.config >> /etc/kernels/kernel-config

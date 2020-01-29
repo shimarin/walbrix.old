@@ -20,6 +20,12 @@ function execSyncQuote(...cmdline:string[]):boolean
 export function chroot(orig_dir:string, command:string,
   options?:{profile?:string,lower_layer?:string,no_proc?:boolean,no_shm?:boolean,no_pts?:boolean})
 {
+  let systemd = false;
+  try {
+    systemd = fs.statSync("/usr/bin/systemd-nspawn").isFile()
+  }
+  catch (e) {}
+
   const mount_chain:[()=>boolean,()=>boolean][] = [];
 
   const overlay_dir = `overlay-${process.pid}`;
@@ -43,7 +49,7 @@ export function chroot(orig_dir:string, command:string,
     );
 
   }
-  if (!(options?.no_proc)) {
+  if (!(options?.no_proc || systemd)) {
     mount_chain.push(
       [()=>{
         fs.ensureDirSync(`${real_dir}/proc`);
@@ -55,7 +61,7 @@ export function chroot(orig_dir:string, command:string,
       }]
     );
   }
-  if (!(options?.no_shm)) {
+  if (!(options?.no_shm || systemd)) {
     mount_chain.push(
       [()=>{
         fs.ensureDirSync(`${real_dir}/dev/shm`);
@@ -67,7 +73,7 @@ export function chroot(orig_dir:string, command:string,
       }]
     );
   }
-  if (!(options?.no_pts)) {
+  if (!(options?.no_pts || systemd)) {
     mount_chain.push(
       [()=>{
         fs.ensureDirSync(`${real_dir}/dev/pts`);
@@ -127,7 +133,8 @@ export function chroot(orig_dir:string, command:string,
         // ignore SIGINT to ensure unmounting stuffs
       });
       //fs.copyFileSync("/etc/resolv.conf", path.join(real_dir, "etc/resolv.conf"));
-      return child_process.spawnSync("chroot", [real_dir, "/bin/sh", "-c", command], {stdio:"inherit"}).status;
+      if (systemd) return child_process.spawnSync("systemd-nspawn", ["-D", real_dir, "/bin/sh", "-c", command], {stdio:"inherit"}).status;
+      else child_process.spawnSync("chroot", [real_dir, "/bin/sh", "-c", command], {stdio:"inherit"}).status;
     }
   }
   finally {

@@ -37,7 +37,7 @@ if [ -d /sys/module/amdgpu ]; then
                         "113-D00034-S07" ) CLK="s 1 1130 850\nm 1 2150 850" ;;
                         "xxx-xxx-xxx" ) CLK="s 1 1130 850\nm 1 2150 850" ;;
                         "113-349PRO4-U45" ) CLK="s 1 1000 850\nm 1 1900 850" ;;
-												"113-4E353BU-O4E" ) CLK="s 1 1160 850\nm 1 2100 850" ;;
+			"113-4E353BU-O4E" ) CLK="s 1 1150 850\nm 1 2050 850" ;;
                         * ) CLK="s 1 1000 800\nm 1 1900 800" ;;
                 esac
                 echo -e $CLK > $i/pp_od_clk_voltage

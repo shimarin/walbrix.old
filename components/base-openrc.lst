@@ -1,0 +1,14 @@
+$require base.lst
+$package sysvinit
+$require netifrc.lst
+$require udev.lst
+$require openssh.lst
+$require cron.lst
+$require avahi.lst
+$require nmbd.lst
+
+$write /etc/conf.d/localmount 'no_umounts="/.overlay/boot|/.overlay/rw"'
+$sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount,ro"/'
+
+$symlink /etc/init.d/net.eth0 net.lo
+$symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
