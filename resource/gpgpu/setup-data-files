@@ -1,6 +1,4 @@
 #!/bin/sh
-mount -o remount,async /run/initramfs/boot
-
 if [ ! -f /run/initramfs/boot/system.swp ]; then
   echo "Creating swap file..."
   truncate -s 1G system.swp && mkswap system.swp
@@ -13,6 +11,5 @@ if [ ! -f /run/initramfs/boot/system.dat ]; then
   mv system.dat /run/initramfs/boot/
 fi
 
-mount -o remount,sync /run/initramfs/boot
-
+sync
 echo "Done. Reboot system to take effects."

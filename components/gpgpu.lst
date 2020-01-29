@@ -8,6 +8,7 @@ $package dosfstools
 $package parted
 $require grub-i386-pc.lst
 $copy resource/gpgpu/install /usr/sbin/
+$copy resource/gpgpu/setup-bios-boot /usr/sbin/
 
 /bin/ip
 /usr/bin/awk

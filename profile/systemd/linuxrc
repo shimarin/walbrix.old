@@ -51,7 +51,7 @@ echo "The filesystem type is ${BOOT_PARTITION_FSTYPE}."
 
 echo "Mounting boot partition..."
 mkdir /mnt/boot
-mount -o async,fmask=177,dmask=077 "${BOOT_PARTITION}" /mnt/boot || exec sh
+mount -o fmask=177,dmask=077 "${BOOT_PARTITION}" /mnt/boot || exec sh
 
 echo "Checking previously running system image..."
 if [ -f /mnt/boot/system.cur ];then
@@ -85,10 +85,6 @@ if [ "${RW_LAYER_READY}" != "true" ]; then
 		exec sh
 	fi
 fi
-
-echo "Remounting boot partition as sync..."
-sync
-mount -o remount,sync /mnt/boot
 
 echo "Mounting system image..."
 mkdir /mnt/system

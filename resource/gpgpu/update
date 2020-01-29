@@ -21,16 +21,12 @@ if [ $(($IMGSIZE / 1024)) -gt $(($AVAIL - 1024)) ]; then
 fi
 
 if [ -n "$SYSTEM_IMAGE" ]; then
-  mount -o remount,async $BOOTDIR
   cp $SYSTEM_IMAGE $BOOTDIR/system.new
-  mount -o remount,sync $BOOTDIR
   EXIT_CODE=$?
   [ $EXIT_CODE -ne 0 ] && echo "Copying system image file failed."
 else
-  mount -o remount,async $BOOTDIR
   wget -O $BOOTDIR/system.new $DOWNLOAD_URL
   EXIT_CODE=$?
-  mount -o remount,sync $BOOTDIR
   [ $EXIT_CODE -ne 0 ] && echo "Download failed."
 fi
 

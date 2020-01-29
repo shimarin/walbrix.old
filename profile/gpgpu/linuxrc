@@ -15,6 +15,9 @@ do
 		boot_partition_uuid=*)
 			BOOT_PARTITION_UUID=${x#*=}
 		;;
+		transient_rw_layer)
+		  TRANSIENT_RW_LAYER=1
+		;;
 		dolvm)
 			USE_LVM_NORMAL=1
 		;;
@@ -51,7 +54,7 @@ echo "The filesystem type is ${BOOT_PARTITION_FSTYPE}."
 
 echo "Mounting boot partition..."
 mkdir /mnt/boot
-mount -o async,fmask=177,dmask=077 "${BOOT_PARTITION}" /mnt/boot || exec sh
+mount -o fmask=177,dmask=077 "${BOOT_PARTITION}" /mnt/boot || exec sh
 
 echo "Checking previously running system image..."
 if [ -f /mnt/boot/system.cur ];then
@@ -69,7 +72,7 @@ fi
 echo "Setup RW layer..."
 mkdir /mnt/rw
 
-if [ -f /mnt/boot/system.dat ]; then
+if [ -f /mnt/boot/system.dat -a "$TRANSIENT_RW_LAYER" != "1" ]; then
 	echo "Mounting data file(system.dat)..."
 	if mount -o rw,loop /mnt/boot/system.dat /mnt/rw; then
 		RW_LAYER_READY=true
@@ -85,10 +88,6 @@ if [ "${RW_LAYER_READY}" != "true" ]; then
 		exec sh
 	fi
 fi
-
-echo "Remounting boot partition as sync..."
-sync
-mount -o remount,sync /mnt/boot
 
 echo "Mounting system image..."
 mkdir /mnt/system
