@@ -7,7 +7,7 @@ cache/
 node_modules/
 .sconsign.dblite
 /walbrix
-/bootx64.efi
+/*.efi
 *.xz
 *.squashfs
 *.iso
