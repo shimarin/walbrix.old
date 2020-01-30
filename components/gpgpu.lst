@@ -54,11 +54,8 @@ $write --append /etc/profile.env "export GPU_MAX_HEAP_SIZE=100\nexport GPU_USE_S
 
 # networks
 $package net-analyzer/traceroute
-$require wireless-tools.lst
 $require tcpdump.lst
 /usr/bin/cu
-$package net-misc/ntp
-$exec "systemctl enable ntpd"
 /usr/bin/curl
 /sbin/brctl
 
@@ -115,3 +112,4 @@ $copy resource/gpgpu/wait-for-network-to-be-connected /usr/bin/
 $sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
 
 $exec ldconfig
+$touch /done

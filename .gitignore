@@ -8,9 +8,11 @@ node_modules/
 .sconsign.dblite
 /walbrix
 /*.efi
+/*.dep
 *.xz
 *.tgz
 *.squashfs
 *.iso
 *.img
 *.js
+

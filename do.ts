@@ -10,6 +10,7 @@ import {MkSquashFS} from "./lib/mksquashfs";
 import {GenKernel} from "./lib/genkernel";
 import {GrubInstall} from "./lib/grub-install";
 import {Download} from "./lib/download";
+import {Artifact2Dep} from "./lib/artifact2dep";
 
 program.name(path.basename(__filename));
 program.version("0.0.1");
@@ -23,7 +24,8 @@ program.version("0.0.1");
   MkSquashFS,
   GenKernel,
   GrubInstall,
-  Download
+  Download,
+  Artifact2Dep
 ].forEach(_ => {
   const subcommand = new _();
   const command = program.command(subcommand.command)

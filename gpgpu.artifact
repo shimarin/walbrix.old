@@ -1,0 +1,4 @@
+{
+	"profile":"gpgpu",
+	"main_lstfile":"components/gpgpu.lst"
+}

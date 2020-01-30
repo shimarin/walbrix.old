@@ -22,7 +22,7 @@ function is_elf(filename:string):boolean
   return false;
 }
 
-const cache_dir_name = "./build/cache/ldd";
+const cache_dir_name = "./cache/ldd";
 
 function cache_file_name(context:Context, md5hash:string):string
 {
