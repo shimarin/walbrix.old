@@ -88,6 +88,7 @@ touch profile/$PROFILE/rdepends
 $SUDO ln -f profile/$PROFILE/rdepends $GENTOO_DIR/rdepends
 $SUDO ln -f profile/common/*.sh $GENTOO_DIR/
 
+[ -f profile/$PROFILE/before-emerge.sh ] && $SUDO ln -f profile/$PROFILE/before-emerge.sh $GENTOO_DIR/
 [ -f profile/$PROFILE/after-emerge.sh ] && $SUDO ln -f profile/$PROFILE/after-emerge.sh $GENTOO_DIR/
 
 $SUDO ./do.ts chroot --profile=$PROFILE "$GENTOO_DIR" "/build.sh" || exit 1

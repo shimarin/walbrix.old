@@ -19,7 +19,6 @@ if [ "$#" -eq 0 ] ; then
 fi
 
 DEVICE=$1
-SYSTEM_IMAGE=${2:-$BOOTDIR/system.img}
 SECTOR_SIZE=$(blockdev --getpbsz $DEVICE)
 NUM_512B_SECTORS=$(blockdev --getsz $DEVICE)
 DEVICE_MAJOR=$((16#$(stat -c %t $DEVICE)))
@@ -97,26 +96,8 @@ mount -t vfat -o rw,fmask=177,dmask=077 $BOOT_PARTITION $TMPDIR
 
 echo "Installing bootloader..."
 
-BOOTLOADER=$BOOTDIR/EFI/BOOT/bootx64.efi
 mkdir -p $TMPDIR/EFI/BOOT
-if [ -f "$BOOTLOADER" ]; then
-  cp "$BOOTLOADER" $TMPDIR/EFI/BOOT/bootx64.efi
-else
-  GRUBCFG=$(mktemp)
-  cat << 'EOS' > $GRUBCFG
-source /system.cfg
-set BOOT_PARTITION=$root
-loopback loop /system.img
-set root=loop
-set prefix=($root)/boot/grub
-EOS
-  grub-mkimage -p /boot/grub -c $GRUBCFG -o $TMPDIR/EFI/BOOT/bootx64.efi -O x86_64-efi \
-    xfs fat part_gpt part_msdos normal linux echo all_video \
-    test multiboot multiboot2 search sleep iso9660 gzio lvm chain \
-    configfile cpuid minicmd gfxterm font terminal squash4 \
-    loopback videoinfo videotest blocklist probe
-  rm $GRUBCFG
-fi
+cp $BOOTDIR/EFI/BOOT/bootx64.efi $TMPDIR/EFI/BOOT/
 
 if [ "$PARTITION_TABLE_TYPE" == "msdos" ]; then
   mkdir -p $TMPDIR/boot/grub
@@ -125,18 +106,6 @@ if [ "$PARTITION_TABLE_TYPE" == "msdos" ]; then
       $DEVICE
   echo -e 'insmod echo\ninsmod linux\nsource /system.cfg\nset BOOT_PARTITION=$root\nloopback loop /system.img\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $TMPDIR/boot/grub/grub.cfg
 fi
-
-echo "Installing System image..."
-
-cp $SYSTEM_IMAGE $TMPDIR/system.img
-
-echo "Creating swap file..."
-truncate -s 1G $TMPDIR/system.swp
-mkswap $TMPDIR/system.swp
-
-echo "Creating data file..."
-truncate -s 1G $TMPDIR/system.dat
-mkfs.xfs -f $TMPDIR/system.dat
 
 if [ -d $BOOTDIR/supplements ]; then
   echo "Copying supplements..."

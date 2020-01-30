@@ -18,7 +18,10 @@ $require psmisc.lst
 $require xfsprogs.lst
 $require nvi-minimal.lst
 $package iputils
-$package file
+
+# sys-apps/file
+/usr/bin/file
+/usr/share/misc/magic.mgc
 
 /bin/busybox
 /bin/tar

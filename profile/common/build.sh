@@ -1,4 +1,8 @@
 #!/bin/sh
+if [ -x before-emerge.sh ]; then
+	./before-emerge.sh || exit 1
+fi
+
 if [ -d /var/db/repos/localrepo ]; then
 		emerge -uDN -bk --binpkg-respect-use=y repoman
 		pushd /var/db/repos/localrepo && repoman manifest
