@@ -1,1 +1,15 @@
 sys-boot/grub
+sys-fs/xfsprogs
+app-editors/nvi
+sys-fs/dosfstools
+sys-block/parted
+sys-fs/lsscsi
+net-wireless/wpa_supplicant
+sys-fs/btrfs-progs
+dev-util/strace
+net-misc/netkit-telnetd
+app-misc/screen
+app-misc/beep
+sys-apps/lshw
+sys-apps/usbutils
+

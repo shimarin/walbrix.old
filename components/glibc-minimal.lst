@@ -6,7 +6,8 @@
 /usr/share/locale/locale.alias
 
 $dir /etc/ld.so.conf.d
-$dir /usr/lib/gcc/x86_64-pc-linux-gnu
+
+$exec --overlay "find /usr/lib/gcc -name 'lib*.so*' -exec touch {} \;"
 
 /usr/bin/locale
 /usr/bin/localedef

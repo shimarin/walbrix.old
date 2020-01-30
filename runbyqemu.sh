@@ -1,9 +1,4 @@
 #!/bin/sh
-if [ "$#" -lt 1 ] ; then
-  echo "Usage: $0 system_image" 1>&2
-  exit 1
-fi
-
 SUDO=
 if [ "$EUID" -ne 0 ]; then
   SUDO=sudo
@@ -55,10 +50,10 @@ if sudo mount ${LOOP}p1 $TMPDIR; then
 		echo -e "(hd0) $LOOP\n" > $DEVICEMAP
 		$SUDO cp $DEVICEMAP $TMPDIR/boot/grub/device.map
 		rm -f $DEVICEMAP
-		if $SUDO grub-install --target=i386-pc --boot-directory=${TMPDIR}/boot --modules="normal echo linux probe sleep test" $LOOP; then
+		if $SUDO grub-install --target=i386-pc --boot-directory=${TMPDIR}/boot --modules="normal echo linux probe sleep test ls cat configfile" $LOOP; then
 			$SUDO rm -f $TMPDIR/boot/grub/device.map
 			GRUBCFG=runbyqemu-grubcfg-$$
-			echo -e 'insmod echo\ninsmod linux\nsource /system.cfg\nset BOOT_PARTITION=$root\nloopback loop /system.img\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $GRUBCFG
+			echo -e 'insmod echo\ninsmod linux\nset BOOT_PARTITION=$root\nloopback --offset1m loop /efi/boot/bootx64.efi\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $GRUBCFG
 			$SUDO cp $GRUBCFG ${TMPDIR}/boot/grub/grub.cfg
 			rm -f $GRUBCFG
 			echo "done."
@@ -67,9 +62,22 @@ if sudo mount ${LOOP}p1 $TMPDIR; then
 		fi
 	fi
 
-	echo -n "Copying system image..."
-	$SUDO cp "$SYSTEM_IMAGE" ${TMPDIR}/system.img
+	echo -n "Copying EFI bootloader..."
+	$SUDO mkdir -p ${TMPDIR}/efi/boot
+	$SUDO cp bootx64.efi ${TMPDIR}/efi/boot/
 	echo "done."
+
+	if [ -n "$SYSTEM_IMAGE" ]; then
+		echo -n "Copying system image..."
+		$SUDO cp "$SYSTEM_IMAGE" ${TMPDIR}/system.img
+		echo "done."
+	fi
+
+	if [ -f firmware.tgz ]; then
+		echo -n "Copying firmware archive..."
+		$SUDO cp firmware.tgz ${TMPDIR}/
+		echo "done."
+	fi
 
 	echo -n "Unmounting boot partition..."
 	$SUDO umount $TMPDIR
@@ -83,4 +91,4 @@ fi
 losetup -d $LOOP
 [ "$STATUS" -ne 0 ] && exit $STATUS
 
-qemu-system-x86_64 -enable-kvm -drive file=$DISK_IMAGE,format=raw,index=0,media=disk -drive file=$SECONDARY_DISK_IMAGE,format=raw,index=1,media=disk -rtc base=utc,clock=rt -m 4096 -vga cirrus
+qemu-system-x86_64 -enable-kvm -drive file=$DISK_IMAGE,format=raw,index=0,media=disk -drive file=$SECONDARY_DISK_IMAGE,format=raw,index=1,media=disk -rtc base=utc,clock=rt -m 4096 -vga cirrus -no-shutdown

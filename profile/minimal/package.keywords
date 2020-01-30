@@ -1,7 +1,0 @@
-sys-kernel/gentoo-sources
-sys-apps/hwids
-sys-kernel/linux-firmware
-=app-emulation/xen-tools-4.12.1-r1
-=sys-boot/grub-2.04-r1
-=dev-python/typing-3.6.4-r1
-=net-dns/avahi-0.7-r5

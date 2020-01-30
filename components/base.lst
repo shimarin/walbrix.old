@@ -18,9 +18,7 @@ $require psmisc.lst
 $require xfsprogs.lst
 $require nvi-minimal.lst
 $package iputils
-$require dhcpcd.lst
 $package file
-$package sysklogd
 
 /bin/busybox
 /bin/tar

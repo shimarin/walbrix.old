@@ -19,17 +19,6 @@ $mkdir /root/.ssh --mode=700
 $touch /root/.ssh/authorized_keys
 $exec "systemctl enable sshd"
 
-# nmb.lst
-/usr/sbin/nmbd
-/lib/systemd/system/nmbd.service
-$mkdir /var/log/samba
-$mkdir /var/lock/samba
-$mkdir /var/cache/samba
-$mkdir /var/lib/samba/private --mode=700
-$mkdir /etc/samba
-$write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15'
-$exec "systemctl enable nmbd"
-
 $write /etc/systemd/network/50-eth0-dhcp.network "[Match]\nName=eth0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes"
 $exec "systemctl enable systemd-networkd"
 

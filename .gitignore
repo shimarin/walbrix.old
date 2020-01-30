@@ -9,6 +9,7 @@ node_modules/
 /walbrix
 /*.efi
 *.xz
+*.tgz
 *.squashfs
 *.iso
 *.img

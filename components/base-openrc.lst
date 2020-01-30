@@ -1,6 +1,8 @@
 $require base.lst
 $package sysvinit
 $require netifrc.lst
+$require dhcpcd.lst
+$package sysklogd
 $require udev.lst
 $require openssh.lst
 $require cron.lst
