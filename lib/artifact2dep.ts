@@ -1,6 +1,9 @@
 import * as path from "path";
 import * as fs from "fs-extra";
+import * as glob from "glob";
+
 import {Subcommand} from "./subcommand";
+import {Context} from "./collect/context";
 
 export class Artifact2Dep implements Subcommand<[string[]]> {
   command = "artifact2dep [artifact_files...]";
@@ -9,15 +12,24 @@ export class Artifact2Dep implements Subcommand<[string[]]> {
   ];
 
   public run(artifact_files:string[]) {
-    //fs.copyFileSync(artifact_file, dep_file);
+    const profiles = new Set<string>();
+
     artifact_files.forEach( artifact_file => {
       const artifact = path.basename(artifact_file).replace(/\..+?$/, "");
       const settings = JSON.parse(fs.readFileSync(artifact_file, 'utf8'));
       const profile = settings["profile"]; //"gpgpu";
       const main_lstfile = settings["main_lstfile"]; //"components/gpgpu.lst";
-      process.stdout.write(`build/${artifact}/done: ${main_lstfile} gentoo/${profile}/done\n`);
-      process.stdout.write(`\t$(SUDO) rm -rf $(patsubst build/%/done,build/%,$@)\n`);
-      process.stdout.write(`\t$(SUDO) ./do.ts collect gentoo/${profile} $(patsubst build/%/done,build/%,$@) ${main_lstfile}\n`);
+      const all_lstfiles = glob.sync(`${path.dirname(main_lstfile)}/**/*.lst`);
+      process.stdout.write(`build/${artifact}/done: ${all_lstfiles.join(' ')} gentoo/${profile}/done\n`);
+      process.stdout.write(`\t$(SUDO) rm -rf build/${artifact}\n`);
+      process.stdout.write(`\t$(SUDO) ./do.ts collect gentoo/${profile} build/${artifact} ${main_lstfile}\n`);
+      profiles.add(profile);
+    });
+
+    profiles.forEach(profile => {
+      const profile_depfiles = glob.sync(`profile/${profile}/**`);
+      process.stdout.write(`gentoo/${profile}/done: ${profile_depfiles.join(' ')}\n`);
+      process.stdout.write(`\t./autobuild.sh ${profile}\n`);
     });
   }
 }

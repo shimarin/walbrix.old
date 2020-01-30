@@ -11,9 +11,6 @@ include artifacts.dep
 artifacts.dep: *.artifact
 	./do.ts artifact2dep $? > $@
 
-gentoo/%/done: profile/%/* profile/%/*/* profile/%/*/*/* profile/%/*/*/*/*
-	./autobuild.sh $(patsubst gentoo/%/done,%,$@)
-
 %.squashfs: build/%/done
 	$(SUDO) mksquashfs $(patsubst build/%/done,build/%,$<) $@ -noappend -comp xz -no-exports -e done
 	$(SUDO) chown $(USERID) $@
