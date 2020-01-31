@@ -1,2 +1,2 @@
-$package app-shells/bash
+$require terminfo.lst
 $symlink /bin/sh bash

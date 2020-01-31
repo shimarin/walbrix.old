@@ -2,5 +2,5 @@
 /etc/bash/bash_logout
 /etc/bash/bashrc
 /etc/bash/bashrc.d
-$package ncurses
+$require terminfo.lst
 /bin/sh
