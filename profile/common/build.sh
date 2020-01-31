@@ -15,7 +15,7 @@ if [ -d /var/db/repos/localrepo ]; then
 		echo -e "masters = gentoo\nauto-sync = false" > /var/db/repos/localrepo/metadata/layout.conf
 fi
 
-emerge -uDN -bk --binpkg-respect-use=y system
+emerge -uDN -bk --binpkg-respect-use=y system gentoolkit
 
 if [ -f /etc/portage/sets/kernel ]; then
 	emerge -uDN -bk --binpkg-respect-use=y @kernel genkernel eclean-kernel || exit 1
@@ -51,7 +51,7 @@ if [ -x after-emerge.sh ]; then
 	./after-emerge.sh || exit 1
 fi
 
-[ -x /usr/bin/eclean-dist ] && eclean-dist
-[ -x /usr/bin/eclean-pkg ] && eclean-pkg
+eclean-dist -d
+eclean-pkg -d
 
 exit 0
