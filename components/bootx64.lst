@@ -36,7 +36,6 @@ $copy resource/gpgpu/setup-wifi /usr/sbin/
 
 $package sys-fs/btrfs-progs
 /usr/bin/strace
-/usr/bin/telnet
 $package screen
 /usr/bin/beep
 $package lshw
@@ -45,6 +44,27 @@ $require timezone-jp.lst
 $sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
 
 $copy resource/bootx64/install /usr/sbin/
+
+# reduce /usr/bin
+$del /usr/bin/gawk /usr/bin/awk
+$symlink /usr/bin/awk /bin/busybox
+$del /usr/bin/find
+$symlink /usr/bin/find /bin/busybox
+$del /usr/bin/install
+$del /usr/bin/top
+$symlink /usr/bin/top ../busybox
+$symlink /usr/bin/telnet /bin/busybox
+$del /usr/bin/tic
+$del /usr/bin/stat
+$symlink /usr/bin/stat /bin/busybox
+$del /usr/bin/eject
+$symlink /usr/bin/eject /bin/busybox
+$del /usr/bin/pr
+$del /usr/bin/factor
+$symlink /usr/bin/factor /bin/busybox
+
+# reduce /bin
+# TBD
 
 $exec ldconfig
 

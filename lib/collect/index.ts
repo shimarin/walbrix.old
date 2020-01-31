@@ -135,6 +135,17 @@ function touch(context:Context, filename:string)
   fs.writeFileSync(path.join(context.dstdir, filename), "",  {flag:"a"});
 }
 
+function del(context:Context, files:string[], force:boolean = false) {
+  files.forEach( file => {
+    try {
+      fs.unlinkSync(path.join(context.dstdir, file));
+    }
+    catch (e) {
+      if (!force) throw e;
+    }
+  });
+}
+
 function deltree(context:Context, dir:string, force:boolean = false) {
   const full_dirname = path.join(context.dstdir, dir);
   try {
@@ -235,6 +246,10 @@ function create_command_parser(context:Context, current_dir:string)
   .action((command, options:commander.Command)=> {
     flush(context);
     exec(context, command, {overlay:options.overlay, ldconfig:options.ldconfig, cache:options.cache, no_proc:!options.proc, no_shm:!options.shm, no_pts:!options.pts});
+  });
+  program.command("$del [files...]").option("-f --force", "ignore errors").action((files, options:commander.Command) => {
+    flush(context);
+    del(context, files, options.force);
   });
   program.command("$deltree <dir>").option("-f --force", "ignore errors").action((dir, options:commander.Command) => {
     flush(context);
