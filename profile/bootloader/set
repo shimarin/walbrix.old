@@ -12,4 +12,5 @@ app-misc/screen
 app-misc/beep
 sys-apps/lshw
 sys-apps/usbutils
-
+net-vpn/wireguard-tools
+net-vpn/wireguard-modules

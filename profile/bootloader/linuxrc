@@ -43,7 +43,7 @@ echo "The filesystem type is ${BOOT_PARTITION_FSTYPE}."
 
 echo "Mounting boot partition..."
 mkdir /mnt/boot
-mount -o fmask=177,dmask=077,ro "${BOOT_PARTITION}" /mnt/boot || exec sh
+mount -t vfat -o fmask=177,dmask=077,ro "${BOOT_PARTITION}" /mnt/boot || exec sh
 
 echo "Setup RW layer..."
 mkdir /mnt/rw
@@ -59,6 +59,11 @@ LOOP_DEVICE=$(losetup -f)
 losetup -o $((1024*1024)) -r "$LOOP_DEVICE" /mnt/boot/efi/boot/bootx64.efi
 mount -o ro "$LOOP_DEVICE" /mnt/system || exec sh
 
+if [ -d /mnt/boot/firmware ]; then
+	echo "Firmware directory /firmware found. Will be mounted."
+	ADDITIONAL_LOWERDIR=$ADDITIONAL_LOWERDIR:/mnt/boot/firmware
+fi
+
 echo "Mounting overlay..."
 rm -rf /mnt/rw/work #cleanup
 mkdir -p /mnt/rw/root /mnt/rw/work
@@ -66,18 +71,17 @@ rm -rf /mnt/rw/root/tmp /mnt/rw/root/var/tmp # cleanup temporary dirs
 rm -f /mnt/rw/root/etc/mtab # mtab should always point /proc/mounts
 rm -f /mnt/rw/root/etc/ld.so.cache # https://github.com/wbrxcorp/walbrix/issues/16
 mkdir -p /newroot
-mount -t overlay -o lowerdir=/mnt/system,upperdir=/mnt/rw/root,workdir=/mnt/rw/work overlay /newroot || exec sh
+mount -t overlay -o lowerdir=/mnt/system$ADDITIONAL_LOWERDIR,upperdir=/mnt/rw/root,workdir=/mnt/rw/work overlay /newroot || exec sh
 mount -t tmpfs -o mode=755,nodev,nosuid,strictatime tmpfs /newroot/run
 
-if [ -f /mnt/boot/firmware.tgz ]; then
+if [ -f /mnt/boot/efi/boot/firmware.tgz ]; then
 	echo "Extracting firmware..."
 	mkdir -p /newroot/lib/firmware
 	tar xf /mnt/boot/firmware.tgz --strip-components=1 -C /newroot/lib/firmware
 fi
 
-if [ -f /mnt/boot/earlydebug ]; then
-	exec sh
-fi
+# set randhom hostname
+echo host-$(tr -dc 'a-f0-9' < /dev/urandom | head -c4) > newroot/etc/hostname
 
 # https://github.com/systemd/systemd/blob/master/docs/INITRD_INTERFACE.md
 echo "Moving mountponts under newroot..."

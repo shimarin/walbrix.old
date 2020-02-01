@@ -8,8 +8,6 @@ $package dosfstools
 $package parted
 $require grub-i386-pc.lst
 
-$write /etc/hostname rescue
-
 /bin/ip
 /usr/bin/awk
 $dir /lib/modules/$KERNEL_VERSION
@@ -20,7 +18,6 @@ $write --append /boot/grub/grub.cfg 'echo "Booting rescue environment with Linux
 $write --append /boot/grub/grub.cfg 'linux /boot/kernel boot_partition_uuid=$BOOT_PARTITION_UUID net.ifnames=0 edd=off intel_iommu=off amd_iommu=off'
 $write --append /boot/grub/grub.cfg 'initrd /boot/initramfs\nboot'
 
-/bin/sed
 /usr/sbin/lspci
 /usr/share/misc/pci.ids.gz
 /usr/share/misc/usb.ids.gz
@@ -40,6 +37,7 @@ $package screen
 /usr/bin/beep
 $package lshw
 $package usbutils
+$package wireguard-tools
 $require timezone-jp.lst
 $sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
 
@@ -56,11 +54,15 @@ $del /usr/bin/localedef
 $exec 'cd /usr/bin/ && for i in find top stat eject factor xargs ipcs cal shred sha512sum split shuf sha256sum hexdump [ who script sha1sum printf test uniq md5sum realpath last timeout nl id sum tac comm expand tee unexpand base64 truncate arch nohup nproc paste cksum nice nsenter users link printenv unlink whoami flock chrt pmap fallocate ipcrm scriptreplay ionice unshare pgrep pkill watch w free setarch pidof getopt rev setsid pwdx renice uptime clear; do rm $i && ln -s /bin/busybox $i; done'
 
 # reduce /bin
+$symlink /bin/sed busybox
 $del /bin/ln
 $symlink /bin/ln busybox
 $del /bin/rm
 $symlink /bin/rm busybox
-$exec 'cd /bin && for i in tar grep sed netstat ps ls mv cp sort du date df touch gzip dmesg stty dd ifconfig tail passwd chown route chgrp chmod ping login mkdir seq tr su mount ec mktemp expr head readlink rmdir chroot cut cat env mknod more fuser pwd uname mkfifo umount sync basename dirname echo sleep tty yes false true kill arping mountpoint hostname groups egrep fgrep; do rm $i && ln -s busybox $i; done'
+$exec 'cd /bin && for i in tar grep netstat ps ls mv cp sort du date df touch gzip dmesg stty dd ifconfig tail passwd chown route chgrp chmod ping login mkdir seq tr su ec mktemp expr head readlink rmdir chroot cut cat env mknod more fuser pwd uname mkfifo sync basename dirname echo sleep tty yes false true kill arping mountpoint hostname groups egrep fgrep; do rm $i && ln -s busybox $i; done'
+
+$sed /etc/bash/bashrc 's/alias .\?grep=.\+$//'   #need to remove aliases which is not appropriate fot busybox's greps
+
 
 # reduce /usr/sbin
 $exec 'cd /usr/sbin/ && for i in chpasswd sysctl partprobe; do rm $i && ln -s /bin/busybox $i; done'

@@ -75,7 +75,7 @@ if sudo mount ${LOOP}p1 $TMPDIR; then
 
 	if [ -f firmware.tgz ]; then
 		echo -n "Copying firmware archive..."
-		$SUDO cp firmware.tgz ${TMPDIR}/
+		$SUDO cp firmware.tgz ${TMPDIR}/efi/boot/
 		echo "done."
 	fi
 

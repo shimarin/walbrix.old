@@ -12,7 +12,7 @@ artifacts.dep: *.artifact
 	./do.ts artifact2dep $? > $@
 
 %.squashfs: build/%/done
-	$(SUDO) mksquashfs $(patsubst build/%/done,build/%,$<) $@ -noappend -comp xz -no-exports -e done
+	$(SUDO) mksquashfs $(patsubst build/%/done,build/%,$<) $@ -noappend -comp xz -no-exports -b 1M -Xbcj x86 -e done
 	$(SUDO) chown $(USERID) $@
 
 %.tar.xz: build/%/done
@@ -21,9 +21,7 @@ artifacts.dep: *.artifact
 
 bootx64.efi: bootx64.squashfs build/bootx64/done
 	cp build/bootx64/done $@
-	ORIGSIZE=$$(wc -c < $@); PADSIZE=$$((1024*1024 - $$ORIGSIZE)); \
-	dd if=/dev/zero of=$@ seek=$$ORIGSIZE bs=1 count=$$PADSIZE
-	cat $< >> $@
+	dd if=$< of=$@ seek=1 bs=1M
 
 clean:
 	rm -f *.squashfs bootx64.efi artifacts.dep
