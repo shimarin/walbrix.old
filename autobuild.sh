@@ -10,6 +10,12 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 PROFILE=$1
+
+if [ ! -x profile/$PROFILE/stage3-url.sh ]; then
+  echo "Need profile/$PROFILE/stage3-url.sh which shows stage3 url to build gentoo corresponds to the profile."
+  exit 1
+fi
+
 STAGE3_URL=$(sh profile/$PROFILE/stage3-url.sh)
 if [ -z "$STAGE3_URL" ]; then
 	echo "Stage3 URL could not be determined."
@@ -76,7 +82,7 @@ if [ -f profile/$PROFILE/package.provided ]; then
 fi
 
 $SUDO mkdir -p $GENTOO_DIR/etc/portage/sets
-$SUDO ln -f profile/$PROFILE/set $GENTOO_DIR/etc/portage/sets/all
+[ -f profile/$PROFILE/set ] && $SUDO ln -f profile/$PROFILE/set $GENTOO_DIR/etc/portage/sets/all
 [ -f profile/$PROFILE/set-pre ] && $SUDO ln -f profile/$PROFILE/set-pre $GENTOO_DIR/etc/portage/sets/all-pre
 [ -f profile/$PROFILE/set-kernel ] && $SUDO ln -f profile/$PROFILE/set-kernel $GENTOO_DIR/etc/portage/sets/kernel
 

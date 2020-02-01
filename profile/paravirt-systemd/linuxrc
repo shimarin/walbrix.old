@@ -20,19 +20,15 @@ done
 
 echo "Determining boot partition(supposed to contain system image)..."
 if [ -n "${BOOT_PARTITION_UUID}" ]; then
-	RETRY_COUNT=1
-	until BOOT_PARTITION=$(blkid -U "${BOOT_PARTITION_UUID}") || [ $RETRY_COUNT -eq 8 ]; do
-	   echo "Retrying..."
-	   sleep $(( RETRY_COUNT++ ))
-	done
+	BOOT_PARTITION=$(blkid -U "${BOOT_PARTITION_UUID}")
 fi
 
 if [ -b "${BOOT_PARTITION}" ]; then
 	echo "Boot partition is ${BOOT_PARTITION}"
 else
-	BOOT_PARTITION=/dev/sda1
+	BOOT_PARTITION=/dev/xvda1
 	if [ ! -b $BOOT_PARTITION ]; then
-		BOOT_PARTITION=/dev/sda
+		BOOT_PARTITION=/dev/xvda
 	fi
 	echo "Boot partition could not be determined automatically. Attempting $BOOT_PARTITION ."
 fi
@@ -42,53 +38,43 @@ BOOT_PARTITION_FSTYPE=`blkid ${BOOT_PARTITION} | sed 's/.*TYPE="\([^"]\+\).*/\1/
 echo "The filesystem type is ${BOOT_PARTITION_FSTYPE}."
 
 echo "Mounting boot partition..."
-mkdir /mnt/boot
-mount -t vfat -o fmask=177,dmask=077,ro "${BOOT_PARTITION}" /mnt/boot || exec sh
-
-echo "Setup RW layer..."
 mkdir /mnt/rw
+mount "${BOOT_PARTITION}" /mnt/rw || exec sh
 
-if ! mount -t tmpfs tmpfs /mnt/rw; then
-	echo "Mounting RAM RW layer failed."
-	exec sh
+echo "Checking previously running system image..."
+if [ -f /mnt/rw/system.cur ];then
+  if mv -f /mnt/rw/system.cur /mnt/rw/system.old; then
+	  echo "Previous system image preserved."
+	fi
 fi
 
 echo "Mounting system image..."
 mkdir /mnt/system
-LOOP_DEVICE=$(losetup -f)
-losetup -o $((1024*1024)) -r "$LOOP_DEVICE" /mnt/boot/efi/boot/bootx64.efi
-mount -o ro "$LOOP_DEVICE" /mnt/system || exec sh
+mount -o loop,ro /mnt/rw/system /mnt/system || exec sh
 
 echo "Mounting overlay..."
+OVERLAY_ROOT=/mnt/rw/root
+[ -d /mnt/rw/rw ] && OVERLAY_ROOT=/mnt/rw/rw
 rm -rf /mnt/rw/work #cleanup
-mkdir -p /mnt/rw/root /mnt/rw/work
-rm -rf /mnt/rw/root/tmp /mnt/rw/root/var/tmp # cleanup temporary dirs
-rm -f /mnt/rw/root/etc/mtab # mtab should always point /proc/mounts
-rm -f /mnt/rw/root/etc/ld.so.cache # https://github.com/wbrxcorp/walbrix/issues/16
-mkdir -p /newroot
-mount -t overlay -o lowerdir=/mnt/system$ADDITIONAL_LOWERDIR,upperdir=/mnt/rw/root,workdir=/mnt/rw/work overlay /newroot || exec sh
+mkdir -p $OVERLAY_ROOT /mnt/rw/work
+rm -rf $OVERLAY_ROOT/tmp $OVERLAY_ROOT/var/tmp # cleanup temporary dirs
+rm -f $OVERLAY_ROOT/etc/mtab # mtab should always point /proc/mounts
+rm -f $OVERLAY_ROOT/etc/ld.so.cache # https://github.com/wbrxcorp/walbrix/issues/16
+mkdir /newroot
+mount -t overlay -o lowerdir=/mnt/system,upperdir=$OVERLAY_ROOT,workdir=/mnt/rw/work overlay /newroot || exec sh
 mount -t tmpfs -o mode=755,nodev,nosuid,strictatime tmpfs /newroot/run
 
-if [ -f /mnt/boot/efi/boot/firmware.tgz ]; then
-	echo "Extracting firmware..."
-	mkdir -p /newroot/lib/firmware
-	tar xf /mnt/boot/firmware.tgz --strip-components=1 -C /newroot/lib/firmware
-fi
-
-# set randhom hostname
-echo host-$(tr -dc 'a-f0-9' < /dev/urandom | head -c4) > newroot/etc/hostname
-
-# https://github.com/systemd/systemd/blob/master/docs/INITRD_INTERFACE.md
 echo "Moving mountponts under newroot..."
-mkdir -p /newroot/run/initramfs/boot && mount --move /mnt/boot /newroot/run/initramfs/boot || exec sh
 mkdir -p /newroot/run/initramfs/ro && mount --move /mnt/system /newroot/run/initramfs/ro || exec sh
 mkdir -p /newroot/run/initramfs/rw && mount --move /mnt/rw /newroot/run/initramfs/rw || exec sh
-mount --move /dev /newroot/dev || exec sh
-mount --move /sys /newroot/sys || exec sh
-mount --move /proc /newroot/proc || exec sh
+#mount --move /dev /newroot/dev || exec sh
+#mount --move /sys /newroot/sys || exec sh
+#mount --move /proc /newroot/proc || exec sh
+umount /dev /sys /proc
 
 touch /newroot/run/initramfs/.lock # lockfile for update process
 
+# prepare shutdown environment for systemd
 mkdir -p /newroot/run/initramfs/bin
 cp -a /bin/busybox /newroot/run/initramfs/bin/busybox
 ln -s busybox /newroot/run/initramfs/bin/sh
@@ -101,7 +87,7 @@ mount --move /oldroot/run /mnt
 for i in $(egrep '^.+\s/oldroot(\/|\s)' /proc/mounts | awk '{print $2}' | sort -r); do
 	umount $i
 done
-for i in rw ro boot; do
+for i in ro rw; do
 	umount /mnt/initramfs/$i
 done
 
@@ -109,12 +95,11 @@ $ACTION -f
 EOS
 chmod +x /newroot/run/initramfs/shutdown
 
-if [ -f /newroot/run/initramfs/boot/debug ]; then
+if [ -f /newroot/.overlay/boot/debug ]; then
 	echo "'exec switch_root /newroot /sbin/init' to switch root"
 	exec sh
 fi
-#else
 
+#else
 echo "Switching to newroot..."
-rm -rf /lib /usr/sbin
 exec /sbin/switch_root /newroot /sbin/init

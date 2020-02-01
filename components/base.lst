@@ -23,7 +23,6 @@ $package iputils
 /usr/bin/file
 /usr/share/misc/magic.mgc
 
-/bin/busybox
 /bin/tar
 /bin/gzip
 
@@ -32,6 +31,7 @@ $write /etc/resolv.conf "nameserver 8.8.8.8\nnameserver 8.8.4.4"
 $package dev-libs/openssl
 $package app-misc/ca-certificates
 
+/home
 /tmp
 /var/tmp
 /root

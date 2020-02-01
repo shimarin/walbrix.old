@@ -25,7 +25,10 @@ fi
 if [ -f /etc/portage/sets/all-pre ]; then
 	emerge -uDN -bk --binpkg-respect-use=y @all-pre || exit 1
 fi
-emerge -uDN -bk --binpkg-respect-use=y @all || exit 1
+
+if [ -f /etc/portage/sets/all ]; then
+	emerge -uDN -bk --binpkg-respect-use=y @all || exit 1
+fi
 
 if [ -f modules_need_to_be_rebuilt ]; then
 	emerge -b @module-rebuild || exit 1

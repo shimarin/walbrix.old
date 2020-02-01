@@ -124,10 +124,16 @@ function write(context:Context, targetfile:string|Glob, content:string, append:b
   if (count == 0) throw new Error("No files were modified.");
 }
 
-function symlink(context:Context, pathname:string, target:string) {
+function symlink(context:Context, pathname:string, target:string, options?:{owner?:string}) {
   const templink = path.join(context.dstdir, `symlink.${process.pid}`);
   fs.symlinkSync(target, templink);
   fs.renameSync(templink, path.join(context.dstdir, pathname));
+
+  if (options?.owner) {
+    if (child_process.spawnSync("chroot", [context.dstdir, "chown", options.owner, pathname], {stdio:"inherit"}).status !== 0) {
+      throw Error(`'chown ${options.owner} ${pathname}' failed`);
+    };
+  }
 }
 
 function touch(context:Context, filename:string)
@@ -229,9 +235,9 @@ function create_command_parser(context:Context, current_dir:string)
     flush(context);
     write(context, filename, content, options.append);
   });
-  program.command("$symlink <path> <target>").action((path, target) => {
+  program.command("$symlink <path> <target>").option("-o --owner <owner>").action((path, target, options:commander.Command) => {
     flush(context);
-    symlink(context, path, target);
+    symlink(context, path, target, {owner:options.owner});
   });
   program.command("$touch <path>").action((path)=> {
     flush(context);

@@ -1,3 +1,5 @@
+# set sys-fs/xfsprogs app-editors/nvi
+
 $require base.lst
 $package sys-apps/systemd
 $package sys-apps/gentoo-systemd-integration

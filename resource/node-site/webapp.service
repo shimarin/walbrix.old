@@ -1,0 +1,15 @@
+[Unit]
+Description=Web Application
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/npm start
+WorkingDirectory=/home/webapp/%I
+KillMode=process
+Restart=always
+User=webapp
+Group=webapp
+
+[Install]
+WantedBy=multi-user.target

@@ -11,8 +11,12 @@ include artifacts.dep
 artifacts.dep: *.artifact
 	./do.ts artifact2dep $? > $@
 
-%.squashfs: build/%/done
+bootx64.squashfs: build/bootx64/done
 	$(SUDO) mksquashfs $(patsubst build/%/done,build/%,$<) $@ -noappend -comp xz -no-exports -b 1M -Xbcj x86 -e done
+	$(SUDO) chown $(USERID) $@
+
+%.squashfs: build/%/done
+	$(SUDO) mksquashfs $(patsubst build/%/done,build/%,$<) $@ -noappend -comp gzip -no-exports -b 1M -e done
 	$(SUDO) chown $(USERID) $@
 
 %.tar.xz: build/%/done

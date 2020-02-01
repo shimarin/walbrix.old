@@ -1,0 +1,7 @@
+sys-fs/xfsprogs
+app-editors/nvi
+www-servers/nginx
+net-libs/nodejs
+dev-vcs/git
+dev-util/strace
+app-admin/sudo

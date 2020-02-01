@@ -1,0 +1,4 @@
+sys-kernel/gentoo-sources symlink
+sys-kernel/genkernel -firmware
+dev-vcs/git -perl
+app-admin/sudo -sendmail

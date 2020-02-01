@@ -1,0 +1,34 @@
+$require base-systemd.lst
+
+$require busybox.lst
+
+/usr/bin/strace
+$write /etc/hostname "node-site"
+
+$package app-admin/sudo
+$package dev-vcs/git
+$package net-libs/nodejs
+
+$package www-servers/nginx
+$copy resource/node-site/nginx.conf /etc/nginx/
+$mkdir /etc/nginx/conf.d
+$copy resource/node-site/vhost.conf.example /etc/nginx/conf.d/
+$mkdir /var/www/localhost/htdocs
+$write /var/www/localhost/htdocs/nginx-error-503.html "<h1>503 Service Temporarily Unavailable</h1>"
+$exec --overlay "systemctl enable nginx"
+
+/usr/sbin/useradd
+$exec "useradd -m webapp"
+$mkdir --owner=webapp /home/webapp/example/public_html
+$symlink --owner=webapp /home/webapp/default example
+
+$copy resource/node-site/index.js /home/webapp/example/
+$write /home/webapp/example/package.json '{"scripts": {"start": "node index.js"}}'
+
+$copy resource/node-site/webapp.service /lib/systemd/system/webapp@.service
+$exec "systemctl enable webapp@default"
+
+$write /etc/sudoers.d/webapp "webapp ALL=(ALL) NOPASSWD: /bin/systemctl * webapp@*"
+
+$mkdir /boot/grub
+$write /boot/grub/grub.cfg 'if [ -n "$BOOT_PARTITION" ]; then probe -u $BOOT_PARTITION --set=BOOT_PARTITION_UUID; fi\necho "Loading kernel..."\nlinux /boot/kernel boot_partition_uuid=$BOOT_PARTITION_UUID quiet $KERNEL_PARAMS\ninitrd /boot/initramfs\necho "Booting kernel..."\nboot'

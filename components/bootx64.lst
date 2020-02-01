@@ -42,30 +42,12 @@ $require timezone-jp.lst
 $sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
 
 $copy resource/bootx64/install /usr/sbin/
+$del -f /usr/bin/install
 
-# reduce /usr/bin
-$del /usr/bin/gawk /usr/bin/awk
-$symlink /usr/bin/awk /bin/busybox
-$del /usr/bin/pr
-$symlink /usr/bin/telnet /bin/busybox
-$del /usr/bin/install
-$del /usr/bin/pinky
-$del /usr/bin/localedef
-$exec 'cd /usr/bin/ && for i in find top stat eject factor xargs ipcs cal shred sha512sum split shuf sha256sum hexdump [ who script sha1sum printf test uniq md5sum realpath last timeout nl id sum tac comm expand tee unexpand base64 truncate arch nohup nproc paste cksum nice nsenter users link printenv unlink whoami flock chrt pmap fallocate ipcrm scriptreplay ionice unshare pgrep pkill watch w free setarch pidof getopt rev setsid pwdx renice uptime clear; do rm $i && ln -s /bin/busybox $i; done'
+$require busybox.lst
 
-# reduce /bin
-$symlink /bin/sed busybox
-$del /bin/ln
-$symlink /bin/ln busybox
-$del /bin/rm
-$symlink /bin/rm busybox
-$exec 'cd /bin && for i in tar grep netstat ps ls mv cp sort du date df touch gzip dmesg stty dd ifconfig tail passwd chown route chgrp chmod ping login mkdir seq tr su ec mktemp expr head readlink rmdir chroot cut cat env mknod more fuser pwd uname mkfifo sync basename dirname echo sleep tty yes false true kill arping mountpoint hostname groups egrep fgrep; do rm $i && ln -s busybox $i; done'
-
+$exec 'cd /bin && for i in grep egrep fgrep; do rm -f $i && ln -s busybox $i; done'
 $sed /etc/bash/bashrc 's/alias .\?grep=.\+$//'   #need to remove aliases which is not appropriate fot busybox's greps
-
-
-# reduce /usr/sbin
-$exec 'cd /usr/sbin/ && for i in chpasswd sysctl partprobe; do rm $i && ln -s /bin/busybox $i; done'
 
 $exec ldconfig
 
