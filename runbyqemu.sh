@@ -79,6 +79,12 @@ if sudo mount ${LOOP}p1 $TMPDIR; then
 		echo "done."
 	fi
 
+  if [ -f bootx64.ini ]; then
+    echo -n "Copying bootx64.ini..."
+    $SUDO cp bootx64.ini ${TMPDIR}/efi/boot/
+    echo "done."
+  fi
+
 	echo -n "Unmounting boot partition..."
 	$SUDO umount $TMPDIR
 	rmdir $TMPDIR

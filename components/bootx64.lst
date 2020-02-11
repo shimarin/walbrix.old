@@ -15,7 +15,9 @@ $mkdir /boot/grub
 $write /boot/grub/grub.cfg 'if [ -f ($BOOT_PARTITION)/system.img ]; then source ($BOOT_PARTITION)/system.cfg; loopback loop2 ($BOOT_PARTITION)/system.img; set root=loop2; set prefix=($root)/boot/grub; normal; set root=loop; set prefix=($root)/boot/grub; else'
 $write --append /boot/grub/grub.cfg 'echo "SYSTEM.IMG not found."; fi'
 $write --append /boot/grub/grub.cfg 'echo "Booting rescue environment with Linux __VERSION__..."'
-$write --append /boot/grub/grub.cfg 'linux /boot/kernel boot_partition_uuid=$BOOT_PARTITION_UUID net.ifnames=0 edd=off intel_iommu=off amd_iommu=off'
+$write --append /boot/grub/grub.cfg 'probe -u $BOOT_PARTITION --set=BOOT_PARTITION_UUID'
+$write --append /boot/grub/grub.cfg 'echo "/boot/kernel boot_partition_uuid=$BOOT_PARTITION_UUID system_image=/efi/boot/bootx64.efi system_image_offset=1048576 net.ifnames=0 edd=off intel_iommu=off amd_iommu=off"'
+$write --append /boot/grub/grub.cfg 'linux /boot/kernel boot_partition_uuid=$BOOT_PARTITION_UUID system_image=/efi/boot/bootx64.efi system_image_offset=1048576 net.ifnames=0 edd=off intel_iommu=off amd_iommu=off'
 $write --append /boot/grub/grub.cfg 'initrd /boot/initramfs\nboot'
 
 /usr/sbin/lspci

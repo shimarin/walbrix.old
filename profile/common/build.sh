@@ -18,8 +18,20 @@ fi
 emerge -uDN -bk --binpkg-respect-use=y system gentoolkit
 
 if [ -f /etc/portage/sets/kernel ]; then
-	emerge -uDN -bk --binpkg-respect-use=y @kernel genkernel eclean-kernel || exit 1
+	USE="symlink" emerge -uDN -bk --binpkg-respect-use=y @kernel genkernel eclean-kernel squashfs-tools || exit 1
 	./genkernel.sh || exit 1
+fi
+
+if [ -f /init.c ]; then
+	if grep -q '#define INIFILE' /init.c; then
+		gcc -lblkid -lmount -liniparser init.c -o /init || exit 1
+	else
+		gcc -lblkid -lmount init.c -o /init || exit 1
+	fi
+fi
+
+if [ -f /initramfs.lst ]; then
+	cat /initramfs.lst | cpio -D / -H newc -L -o | xz -c --check=crc32 > /boot/initramfs || exit 1
 fi
 
 if [ -f /etc/portage/sets/all-pre ]; then

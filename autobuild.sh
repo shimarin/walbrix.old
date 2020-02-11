@@ -88,7 +88,10 @@ $SUDO mkdir -p $GENTOO_DIR/etc/portage/sets
 
 $SUDO ln -f profile/common/portage-bashrc $GENTOO_DIR/etc/portage/bashrc
 
-[ -f profile/$PROFILE/linuxrc ] && $SUDO ln -f profile/$PROFILE/linuxrc $GENTOO_DIR/linuxrc
+#[ -f profile/$PROFILE/linuxrc ] && $SUDO ln -f profile/$PROFILE/linuxrc $GENTOO_DIR/linuxrc
+$SUDO ln -f profile/common/init.h $GENTOO_DIR/init.h
+[ -f profile/$PROFILE/init.c ] && $SUDO ln -f profile/$PROFILE/init.c $GENTOO_DIR/init.c
+[ -f profile/$PROFILE/initramfs.lst ] && $SUDO ln -f profile/$PROFILE/initramfs.lst $GENTOO_DIR/initramfs.lst
 
 touch profile/$PROFILE/rdepends
 $SUDO ln -f profile/$PROFILE/rdepends $GENTOO_DIR/rdepends

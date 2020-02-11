@@ -8,6 +8,7 @@ node_modules/
 .sconsign.dblite
 /walbrix
 /*.efi
+/*.ini
 /*.dep
 *.xz
 *.tgz
@@ -16,4 +17,3 @@ node_modules/
 *.img
 /*.js
 /lib/*.js
-

@@ -29,7 +29,9 @@ export class Artifact2Dep implements Subcommand<[string[]]> {
     profiles.forEach(profile => {
       const profile_depfiles = glob.sync(`profile/${profile}/**`);
       process.stdout.write(`gentoo/${profile}/done: $(shell find profile/${profile})\n`);
-      process.stdout.write(`\t./autobuild.sh ${profile}\n`);
+      process.stdout.write(`\t./autobuild.sh ${profile}\n\n`);
+      process.stdout.write(`${profile}.sources.iso: gentoo/${profile}/done\n`);
+      process.stdout.write(`\tmkisofs -J -r -graft-points -o $@ portage=profile/${profile} distfiles=gentoo/${profile}/var/cache/distfiles`);
     });
   }
 }
