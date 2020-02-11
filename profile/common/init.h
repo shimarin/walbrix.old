@@ -39,6 +39,7 @@ struct partition_struct {
 #define MKSWAP "/sbin/mkswap"
 #define UMOUNT "/bin/umount"
 #define MKFS_XFS "/sbin/mkfs.xfs"
+#define CHPASSWD "/usr/sbin/chpasswd"
 
 void halt()
 {
@@ -329,6 +330,44 @@ int fork_exec_wait(const char *cmd, ...)
   return WIFEXITED(rst)? WEXITSTATUS(rst) : -1;
 }
 
+int fork_exec_write_wait(const char *data, const char *cmd, ...)
+{
+  va_list list;
+  int i = 0, pid, rst;
+  char *argv[32];
+  int fd[2];
+
+  argv[i++] = (char*)cmd; // first arg to be cmd. removing const qualifier is unavoidable...
+
+  va_start(list, cmd);
+  while ((argv[i] = va_arg(list, char *)) != NULL && i < 31) {
+    i++;
+  }
+  argv[i] = NULL;
+  va_end(list);
+
+  pipe(fd);
+  pid = fork();
+  switch (pid) {
+    case 0:
+      close(fd[1]);
+      if (dup2(fd[0], STDIN_FILENO) < 0) _exit(-1);
+      close(fd[0]);
+      if (execv(cmd, argv) < 0) _exit(-1);
+      break; // never reach here
+    case -1:
+      return -1;
+    default:
+      close(fd[0]);
+      write(fd[1], data, strlen(data));
+      close(fd[1]);
+      waitpid(pid, &rst, 0);
+      break;
+  }
+  return WIFEXITED(rst)? WEXITSTATUS(rst) : -1;
+}
+
+
 int cp_a(const char *src, const char *dst)
 {
   return fork_exec_wait(CP, "-a", src, dst, NULL);
@@ -370,7 +409,9 @@ void setup_initramfs_shutdown(const char *newroot)
 }
 
 #ifdef INIFILE
-int process_inifile(const char *inifile, void (callback)(void*))
+typedef dictionary *inifile_t;
+
+int process_inifile(const char *inifile, void (callback)(inifile_t))
 {
   dictionary *ini = NULL;
   if (is_file(inifile)) {
@@ -386,22 +427,22 @@ int process_inifile(const char *inifile, void (callback)(void*))
   return 0;
 }
 
-const char *ini_string(void *d, const char *key, char *def)
+const char *ini_string(inifile_t d, const char *key, char *def)
 {
   return iniparser_getstring((dictionary *)d, key, def);
 }
 
-int ini_int(void *d, const char *key, int notfound)
+int ini_int(inifile_t d, const char *key, int notfound)
 {
   return iniparser_getint((dictionary *)d, key, notfound);
 }
 
-int ini_bool(void *d, const char *key, int notfound)
+int ini_bool(inifile_t d, const char *key, int notfound)
 {
   return iniparser_getboolean((dictionary *)d,key, notfound);
 }
 
-int ini_exists(void *d, char *entry)
+int ini_exists(inifile_t d, char *entry)
 {
   return iniparser_find_entry((dictionary *)d, entry);
 }
@@ -505,6 +546,105 @@ int activate_swap(const char *swapfile)
       fork_exec_wait(SWAPON, swapfile, NULL);
     }
   }
+}
+
+int generate_default_hostname(char* hostname)
+{
+  FILE *f;
+  uint16_t randomnumber;
+  f = fopen("/dev/urandom", "r");
+  if (!f) return -1;
+  //else
+  fread(&randomnumber, sizeof(randomnumber), 1, f);
+  fclose(f);
+  sprintf(hostname, "host-%04x", randomnumber);
+  return 0;
+}
+
+int set_hostname(const char *rootdir, const char *hostname)
+{
+  FILE *f;
+  char buf[PATH_MAX];
+  sprintf(buf, "%s/etc/hostname", rootdir);
+  f = fopen(buf, "w");
+  if (!f) return -1;
+  //else
+  fprintf(f, "%s", hostname);
+  return fclose(f);
+}
+
+int set_root_password(const char *rootdir, const char *password/* NULL to remove password*/)
+{
+  char buf[128 + 5];
+  if (strlen(password) > 127) return -1;
+  //else
+  strcpy(buf, "root:");
+  if (password && password[0] != '\0') {
+    strcat(buf, password);
+  }
+  return fork_exec_write_wait(buf, CHPASSWD, "-R", rootdir, NULL);
+}
+
+int set_timezone(const char *rootdir, const char *timezone)
+{
+  FILE *f;
+  char buf1[PATH_MAX], buf2[PATH_MAX];
+  sprintf(buf1, "../usr/share/zoneinfo/%s", timezone);
+  sprintf(buf2, "%s/etc/localtime", rootdir);
+  unlink(buf2);
+  return symlink(buf1, buf2);
+}
+
+int set_keymap(const char *rootdir, const char *keymap)
+{
+  FILE *f;
+  char buf[PATH_MAX];
+  sprintf(buf, "%s/etc/vconsole.conf", rootdir);
+  f = fopen(buf, "w");
+  if (!f) return -1;
+  //else
+  fprintf(f, "KEYMAP=%s\n", keymap);
+  return fclose(f);
+}
+
+int enable_autologin(const char *rootdir)
+{
+  FILE *f;
+  char buf[PATH_MAX];
+  sprintf(buf, "%s/etc/systemd/system/getty@tty1.service.d", rootdir);
+  mkdir_p(buf);
+  sprintf(buf, "%s/etc/systemd/system/getty@tty1.service.d/autologin.conf", rootdir);
+  f = fopen(buf, "w");
+  if (!f) return -1;
+  //else
+  fputs("[Service]\nExecStart=\nExecStart=-/sbin/agetty -o '-p -- \\\\u' --autologin root --noclear %I $TERM", f);
+  return fclose(f);
+}
+
+int setup_wifi(const char *rootdir, const char *ssid, const char *key)
+{
+  FILE *f;
+  char buf[PATH_MAX];
+  sprintf(buf, "%s/etc/wpa_supplicant/wpa_supplicant-wlan0.conf", rootdir);
+  f = fopen(buf, "w");
+  if (!f) return -1;
+  // else
+  fprintf(f, "network={\n");
+  fprintf(f, "\tssid=\"%s\"\n", ssid);
+  fprintf(f, "\tpsk=\"%s\"\n", key);
+  fprintf(f, "\tproto=WPA\n");
+  fprintf(f, "}\n");
+  if (fclose(f) != 0) return -1;
+  //else
+  sprintf(buf, "%s/etc/systemd/network/51-wlan0-dhcp.network", rootdir);
+  f = fopen(buf, "w");
+  if (!f) return -1;
+  //else
+  fprintf(f, "[Match]\nName=wlan0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes\n");
+  if (fclose(f) != 0) return -1;
+  // else
+  sprintf(buf, "%s/etc/systemd/system/multi-user.target.wants/wpa_supplicant@wlan0.service", rootdir);
+  return symlink("/lib/systemd/system/wpa_supplicant@.service", buf);
 }
 
 void init();

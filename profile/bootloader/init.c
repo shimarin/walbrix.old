@@ -4,37 +4,81 @@
 #define PROBE_BOOT_PARTITION_MAX_RETRY 8
 #define FIRMWARE_ARCHIVE "/newroot/run/initramfs/boot/efi/boot/firmware.tgz"
 
-void setup(void* ini)
+void setup(inifile_t ini)
 {
-  int fd;
   const char *hostname;
   const char *password = ini_string(ini, ":password", NULL);
+  const char *timezone = ini_string(ini, ":timezone", "Asia/Tokyo");
+  const char *keymap = ini_string(ini, ":keymap", "jp106");
   const char *wifi_ssid = ini_string(ini, ":wifi_ssid", NULL);
   const char *wifi_key = ini_string(ini, ":wifi_key", "");
+  const int debug = ini_bool(ini, ":debug", 0);
   const char *wg_endpoint = ini_string(ini, "wireguard:endpoint", NULL);
   const char *wg_privkey = ini_string(ini, "wireguard:private_key", "");
   const char *wg_pubkey = ini_string(ini, "wireguard:public_key", "");
 
   char default_hostname[10];
-  uint16_t randomnumber;
 
-  fd = open("/dev/urandom", 0);
-  if (fd >= 0) {
-    read(fd, &randomnumber, sizeof(randomnumber));
-    close(fd);
-  } else {
+  if (debug) {
+    puts(">>>>setup");
+    sleep(3);
+  }
+
+  if (generate_default_hostname(default_hostname) < 0) {
     strcpy(default_hostname, "localhost");
   }
 
-  sprintf(default_hostname, "host-%04x", randomnumber);
   hostname = ini_string(ini, ":hostname", default_hostname);
 
-  puts(hostname);
+  if (set_hostname("/newroot", hostname) == 0) {
+    printf("hostname: %s\n", hostname);
+  } else {
+    printf("Hostname setup failed.\n");
+    if (debug) sleep(3);
+  }
+
+  if (set_root_password("/newroot", password) == 0) {
+    printf("Root password configured.\n");
+  } else {
+    printf("Failed to set root password.\n");
+  }
+
+  if (!password || password[0] == '\0') {
+    if (enable_autologin("/newroot") == 0) {
+      printf("Autologin enabled.\n");
+    } else {
+      printf("Autologin could not be enabled.\n");
+      if (debug) sleep(3);
+    }
+  }
+
+  if (set_timezone("/newroot", timezone) == 0) {
+    printf("Timezone set to %s.\n", timezone);
+  } else {
+    printf("Timezone could not be configured.\n");
+    if (debug) sleep(3);
+  }
+
+  if (set_keymap("/newroot", keymap) == 0) {
+    printf("Keymap set to %s.\n", keymap);
+  } else {
+    printf("Keymap configuration failed.\n");
+    if (debug) sleep(3);
+  }
 
   if (wifi_ssid) {
-    printf("SSID=%s, KEY=%s\n", wifi_ssid, wifi_key);
+    if (setup_wifi("/newroot", wifi_ssid, wifi_key) == 0) {
+      printf("WiFi SSID: %s\n", wifi_ssid);
+    } else {
+      printf("WiFi setup failed.\n");
+      if (debug) sleep(3);
+    }
   }
-  //sleep(3);
+
+  if (debug) {
+    puts("<<<<setup");
+    sleep(3);
+  }
 }
 
 void init()

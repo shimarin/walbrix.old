@@ -18,6 +18,7 @@ app-crypt/gpgme	>=app-crypt/gnupg-2 >=dev-libs/libassuan-2.5.3:0/0= >=dev-libs/l
 app-crypt/libb2	|| ( >=sys-devel/gcc-4.2:*[openmp] sys-devel/clang-runtime:*[openmp] )
 app-crypt/pinentry	app-eselect/eselect-pinentry >=dev-libs/libassuan-2.1 >=dev-libs/libgcrypt-1.6.3 >=dev-libs/libgpg-error-1.17 sys-libs/ncurses:0/6=
 app-crypt/rhash	dev-libs/openssl:0/1.1=[abi_x86_64(-)]
+app-editors/nano	>=sys-libs/ncurses-5.9-r1:0/6=[unicode] sys-libs/ncurses:0/6=
 app-editors/nvi	>=sys-libs/db-4.2.52_p5:5.3/5.3= >=sys-libs/ncurses-5.6-r2:0/6= app-eselect/eselect-vi
 app-eselect/eselect-lib-bin-symlink	app-admin/eselect
 app-eselect/eselect-pinentry	>=app-eselect/eselect-lib-bin-symlink-0.1.1

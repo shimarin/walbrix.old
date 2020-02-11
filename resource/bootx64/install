@@ -14,7 +14,7 @@ if [ -b "$SELF" ]; then
 fi
 
 if [ "$#" -eq 0 ] ; then
-  echo "Usage: $0 device [imagefile]" 1>&2
+  echo "Usage: $0 device" 1>&2
   exit 1
 fi
 
@@ -72,7 +72,7 @@ udevadm settle
 
 for i in /sys/dev/block/$DEVICE_MAJOR:$DEVICE_MINOR/*/partition; do
   if [ `cat $i` -eq 1 ]; then
-    BOOT_PARTITION=$(readlink -e /dev/block/$(cat $(dirname $i)/dev))
+    BOOT_PARTITION=$(readlink -f /dev/block/$(cat $(dirname $i)/dev))
   fi
 done
 
@@ -104,7 +104,17 @@ if [ "$PARTITION_TABLE_TYPE" == "msdos" ]; then
   grub-install --target=i386-pc --recheck --boot-directory=$TMPDIR/boot \
       --modules="xfs fat part_msdos normal linux echo all_video test multiboot2 search sleep gzio lvm chain configfile cpuid minicmd gfxterm font terminal squash4 loopback videoinfo videotest blocklist probe" \
       $DEVICE
-  echo -e 'insmod echo\ninsmod linux\nsource /system.cfg\nset BOOT_PARTITION=$root\nloopback loop /system.img\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $TMPDIR/boot/grub/grub.cfg
+  echo -e 'insmod echo\ninsmod linux\nset BOOT_PARTITION=$root\nloopback --offset1m loop /efi/boot/bootx64.efi\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $TMPDIR/boot/grub/grub.cfg
+fi
+
+if [ -f $BOOTDIR/efi/boot/bootx64.ini ]; then
+  echo "Copying bootx64.ini..."
+  cp -a $BOOTDIR/efi/boot/bootx64.ini $TMPDIR/efi/boot/
+fi
+
+if [ -f $BOOTDIR/efi/boot/firmware.tgz ]; then
+  echo "Copying firmware.tgz..."
+  cp -a $BOOTDIR/efi/boot/firmware.tgz $TMPDIR/efi/boot/
 fi
 
 if [ -d $BOOTDIR/supplements ]; then

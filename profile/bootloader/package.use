@@ -22,3 +22,4 @@ sys-process/psmisc -nls
 sys-process/procps -nls
 sys-apps/util-linux -nls
 sys-fs/e2fsprogs -nls
+app-editors/nano minimal -nls -spell -magic

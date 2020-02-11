@@ -23,6 +23,8 @@ $package iputils
 /usr/bin/file
 /usr/share/misc/magic.mgc
 
+/usr/bin/nano
+
 /bin/tar
 /bin/gzip
 

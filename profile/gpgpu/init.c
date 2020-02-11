@@ -15,6 +15,12 @@ void init()
 
   mount_or_die(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077");
 
+  if (is_file("/mnt/boot/system.cur")) {
+    if (rename("/mnt/boot/system.cur", "/mnt/boot/system.old") == 0) {
+      printf("Previous system image preserved.\n");
+    }
+  }
+
   if (!exists("/mnt/boot/system.dat") && get_free_disk_space("/mnt/boot") >= 1024L*1024*1024*2 ) {
     printf("RW layer does not exist. Creating...");fflush(stdout);
     if (create_xfs_imagefile("/mnt/boot/system.dat", 1024*1024*1024) == 0) {
@@ -53,6 +59,7 @@ void init()
 
   setup_initramfs_shutdown("/newroot");
 
+  printf("Switching to newroot...\n");
   switch_root_or_die("/newroot");
 }
 
