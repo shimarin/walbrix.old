@@ -473,12 +473,12 @@ long get_free_disk_space(const char *mountpoint)
 
 int create_xfs_imagefile(const char *imagefile, off_t length)
 {
-  int rst;
-  rst = creat(imagefile, S_755);
-  if (rst < 0) return rst;
+  int fd, rst;
+  fd = creat(imagefile, S_755);
+  if (fd < 0) return fd;
   //else
-  close(rst);
-  rst = truncate(imagefile, length);
+  rst = ftruncate(fd, length);
+  close(fd);
   if (rst < 0) return rst;
   // else
   return fork_exec_wait(MKFS_XFS, "-f", "-q", imagefile, NULL);
@@ -486,12 +486,12 @@ int create_xfs_imagefile(const char *imagefile, off_t length)
 
 int create_swapfile(const char* swapfile, off_t length)
 {
-  int rst;
-  rst = creat(swapfile, S_IRUSR | S_IWUSR);
-  if (rst < 0) return rst;
+  int fd, rst;
+  fd = creat(swapfile, S_IRUSR | S_IWUSR);
+  if (fd < 0) return fd;
   //else
-  close(rst);
-  rst = truncate(swapfile, length);
+  rst = ftruncate(fd, length);
+  close(fd);
   if (rst < 0) return rst;
   // else
   return fork_exec_wait(MKSWAP, swapfile, NULL);
