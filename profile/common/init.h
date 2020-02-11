@@ -39,6 +39,7 @@ struct partition_struct {
 #define MKSWAP "/sbin/mkswap"
 #define UMOUNT "/bin/umount"
 #define MKFS_XFS "/sbin/mkfs.xfs"
+#define PASSWD "/usr/bin/passwd"
 #define CHPASSWD "/usr/sbin/chpasswd"
 
 void halt()
@@ -330,6 +331,36 @@ int fork_exec_wait(const char *cmd, ...)
   return WIFEXITED(rst)? WEXITSTATUS(rst) : -1;
 }
 
+int fork_chroot_exec_wait(const char *rootdir, const char *cmd, ...)
+{
+  va_list list;
+  int i = 0, pid, rst;
+  char *argv[32];
+
+  argv[i++] = (char*)cmd; // first arg to be cmd. removing const qualifier is unavoidable...
+
+  va_start(list, cmd);
+  while ((argv[i] = va_arg(list, char *)) != NULL && i < 31) {
+    i++;
+  }
+  argv[i] = NULL;
+  va_end(list);
+
+  pid = fork();
+  switch (pid) {
+    case 0:
+      if (chroot(rootdir) < 0) _exit(-1);
+      if (execv(cmd, argv) < 0) _exit(-1);
+      break; // never reach here
+    case -1:
+      return -1;
+    default:
+      waitpid(pid, &rst, 0);
+      break;
+  }
+  return WIFEXITED(rst)? WEXITSTATUS(rst) : -1;
+}
+
 int fork_exec_write_wait(const char *data, const char *cmd, ...)
 {
   va_list list;
@@ -353,6 +384,44 @@ int fork_exec_write_wait(const char *data, const char *cmd, ...)
       close(fd[1]);
       if (dup2(fd[0], STDIN_FILENO) < 0) _exit(-1);
       close(fd[0]);
+      if (execv(cmd, argv) < 0) _exit(-1);
+      break; // never reach here
+    case -1:
+      return -1;
+    default:
+      close(fd[0]);
+      write(fd[1], data, strlen(data));
+      close(fd[1]);
+      waitpid(pid, &rst, 0);
+      break;
+  }
+  return WIFEXITED(rst)? WEXITSTATUS(rst) : -1;
+}
+
+int fork_chroot_exec_write_wait(const char *rootdir, const char *data, const char *cmd, ...)
+{
+  va_list list;
+  int i = 0, pid, rst;
+  char *argv[32];
+  int fd[2];
+
+  argv[i++] = (char*)cmd; // first arg to be cmd. removing const qualifier is unavoidable...
+
+  va_start(list, cmd);
+  while ((argv[i] = va_arg(list, char *)) != NULL && i < 31) {
+    i++;
+  }
+  argv[i] = NULL;
+  va_end(list);
+
+  pipe(fd);
+  pid = fork();
+  switch (pid) {
+    case 0:
+      close(fd[1]);
+      if (dup2(fd[0], STDIN_FILENO) < 0) _exit(-1);
+      close(fd[0]);
+      if (chroot(rootdir) < 0) _exit(-1);
       if (execv(cmd, argv) < 0) _exit(-1);
       break; // never reach here
     case -1:
@@ -450,56 +519,20 @@ int ini_exists(inifile_t d, char *entry)
 
 int extract_archive(const char *archive, const char *path, int strip_components)
 {
-  int pid, rst;
   char buf[32];
   mkdir_p(path);
-  pid = fork();
-  switch (pid) {
-    case 0:
-      sprintf(buf, "--strip-components=%d", strip_components);
-      if (execl(TAR, TAR, "xf", archive, buf, "-C", path, NULL) < 0) _exit(-1);
-    case -1:
-      perror("fork");
-      halt();
-    default:
-      waitpid(pid, &rst, 0);
-      break;
-  }
-  return rst;
+  sprintf(buf, "--strip-components=%d", strip_components);
+  return fork_exec_wait(TAR, "xf", archive, buf, "-C", path, NULL);
 }
 
 int cat(const char *file)
 {
-  int pid, rst;
-  pid = fork();
-  switch (pid) {
-    case 0:
-      if (execl(CAT, CAT, file, NULL) < 0) _exit(-1);
-    case -1:
-      perror("fork");
-      halt();
-    default:
-      waitpid(pid, &rst, 0);
-      break;
-  }
-  return rst;
+  return fork_exec_wait(CAT, file, NULL);
 }
 
 int umount_recursive(const char *path)
 {
-  int pid, rst;
-  pid = fork();
-  switch (pid) {
-    case 0:
-      if (execl(UMOUNT, UMOUNT, "-R", "-n", path, NULL) < 0) _exit(-1);
-    case -1:
-      perror("fork");
-      halt();
-    default:
-      waitpid(pid, &rst, 0);
-      break;
-  }
-  return rst;
+  return fork_exec_wait(UMOUNT, "-R", "-n", path, NULL);
 }
 
 long get_free_disk_space(const char *mountpoint)
@@ -576,13 +609,15 @@ int set_hostname(const char *rootdir, const char *hostname)
 int set_root_password(const char *rootdir, const char *password/* NULL to remove password*/)
 {
   char buf[128 + 5];
-  if (strlen(password) > 127) return -1;
-  //else
-  strcpy(buf, "root:");
-  if (password && password[0] != '\0') {
-    strcat(buf, password);
+
+  if (!password || password[0] == '\0') {
+    return fork_chroot_exec_wait(rootdir, PASSWD, "-d", "root", NULL);
   }
-  return fork_exec_write_wait(buf, CHPASSWD, "-R", rootdir, NULL);
+  // else
+  if (strlen(password) > 127) return -1;
+  strcpy(buf, "root:");
+  strcat(buf, password);
+  return fork_chroot_exec_write_wait(rootdir, buf, CHPASSWD, NULL);
 }
 
 int set_timezone(const char *rootdir, const char *timezone)
