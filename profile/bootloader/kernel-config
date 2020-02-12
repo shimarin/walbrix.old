@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.5.2-gentoo-r1 Kernel Configuration
+# Linux/x86 5.5.3-gentoo Kernel Configuration
 #
 
 #
@@ -3266,7 +3266,7 @@ CONFIG_FB_CFB_IMAGEBLIT=y
 # CONFIG_FB_FOREIGN_ENDIAN is not set
 CONFIG_FB_DEFERRED_IO=y
 CONFIG_FB_MODE_HELPERS=y
-# CONFIG_FB_TILEBLITTING is not set
+CONFIG_FB_TILEBLITTING=y
 
 #
 # Frame buffer hardware drivers
@@ -3277,8 +3277,8 @@ CONFIG_FB_MODE_HELPERS=y
 # CONFIG_FB_ARC is not set
 # CONFIG_FB_ASILIANT is not set
 # CONFIG_FB_IMSTT is not set
-# CONFIG_FB_VGA16 is not set
-CONFIG_FB_UVESA=m
+CONFIG_FB_VGA16=y
+# CONFIG_FB_UVESA is not set
 CONFIG_FB_VESA=y
 CONFIG_FB_EFI=y
 # CONFIG_FB_N411 is not set
@@ -3313,7 +3313,7 @@ CONFIG_FB_EFI=y
 # CONFIG_FB_METRONOME is not set
 # CONFIG_FB_MB862XX is not set
 CONFIG_FB_HYPERV=y
-# CONFIG_FB_SIMPLE is not set
+CONFIG_FB_SIMPLE=y
 # CONFIG_FB_SM712 is not set
 # end of Frame buffer Devices
 
@@ -3337,6 +3337,8 @@ CONFIG_BACKLIGHT_LM3639=m
 # CONFIG_BACKLIGHT_ARCXCNN is not set
 # end of Backlight & LCD device support
 
+CONFIG_VGASTATE=y
+
 #
 # Console display driver support
 #
@@ -3350,7 +3352,7 @@ CONFIG_DUMMY_CONSOLE_ROWS=25
 CONFIG_FRAMEBUFFER_CONSOLE=y
 CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
 # CONFIG_FRAMEBUFFER_CONSOLE_ROTATION is not set
-# CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER is not set
+CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER=y
 # end of Console display driver support
 
 # CONFIG_LOGO is not set
