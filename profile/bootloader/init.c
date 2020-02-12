@@ -2,7 +2,7 @@
 #include "init.h"
 
 #define PROBE_BOOT_PARTITION_MAX_RETRY 8
-#define FIRMWARE_ARCHIVE "/newroot/run/initramfs/boot/efi/boot/firmware.tgz"
+#define FIRMWARE_ARCHIVE "/run/initramfs/boot/efi/boot/firmware.tgz"
 
 void setup(inifile_t ini)
 {
@@ -102,9 +102,9 @@ void init()
   move_mount_or_die("/mnt/system", "/newroot/run/initramfs/ro");
   move_mount_or_die("/mnt/rw", "/newroot/run/initramfs/rw");
 
-  if (is_file(FIRMWARE_ARCHIVE)) {
+  if (is_file("/newroot"FIRMWARE_ARCHIVE)) {
     printf("Extracting firmware...\n");
-    extract_archive(FIRMWARE_ARCHIVE, "/newroot/lib/firmware", 1);
+    extract_archive("/newroot", FIRMWARE_ARCHIVE, "/lib/firmware", 1);
   }
 
   setup_initramfs_shutdown("/newroot");

@@ -517,12 +517,13 @@ int ini_exists(inifile_t d, char *entry)
 }
 #endif
 
-int extract_archive(const char *archive, const char *path, int strip_components)
+int extract_archive(const char *rootdir, const char *archive, const char *path, int strip_components)
 {
-  char buf[32];
-  mkdir_p(path);
+  char buf[PATH_MAX];
+  sprintf(buf, "%s%s", rootdir, path);
+  mkdir_p(buf);
   sprintf(buf, "--strip-components=%d", strip_components);
-  return fork_exec_wait(TAR, "xf", archive, buf, "-C", path, NULL);
+  return fork_chroot_exec_wait(rootdir, TAR, "xf", archive, buf, "-C", path, NULL);
 }
 
 int cat(const char *file)
