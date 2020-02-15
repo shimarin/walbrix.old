@@ -1,0 +1,5 @@
+sys-boot/grub grub_platforms_pc
+
+# to force rebuild systemd
+sys-apps/systemd nat
+

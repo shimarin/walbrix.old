@@ -1,6 +1,9 @@
 sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc
 sys-kernel/genkernel -firmware
 
+# to force rebuild systemd
+sys-apps/systemd -acl
+
 # to reduce footprint
 app-shells/bash -net -nls
 sys-apps/busybox -static

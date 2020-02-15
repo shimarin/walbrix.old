@@ -66,6 +66,11 @@ fi
 [ -f profile/$PROFILE/package.use ] && $SUDO ln -f profile/$PROFILE/package.use $GENTOO_DIR/etc/portage/package.use/$PROFILE
 [ -f profile/$PROFILE/package.mask ] && $SUDO ln -f profile/$PROFILE/package.mask $GENTOO_DIR/etc/portage/package.mask
 
+if [ -d profile/common/patches ]; then
+  $SUDO mkdir -p $GENTOO_DIR/etc/portage/patches
+  $SUDO cp -a profile/common/patches/. $GENTOO_DIR/etc/portage/patches/
+fi
+
 if [ -d profile/$PROFILE/patches ]; then
   $SUDO mkdir -p $GENTOO_DIR/etc/portage/patches
   $SUDO cp -a profile/$PROFILE/patches/. $GENTOO_DIR/etc/portage/patches/

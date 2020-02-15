@@ -62,10 +62,12 @@ if sudo mount ${LOOP}p1 $TMPDIR; then
 		fi
 	fi
 
-	echo -n "Copying EFI bootloader..."
-	$SUDO mkdir -p ${TMPDIR}/efi/boot
-	$SUDO cp bootx64.efi ${TMPDIR}/efi/boot/
-	echo "done."
+  if [ -f bootx64.efi ]; then
+  	echo -n "Copying EFI bootloader..."
+  	$SUDO mkdir -p ${TMPDIR}/efi/boot
+  	$SUDO cp bootx64.efi ${TMPDIR}/efi/boot/
+  	echo "done."
+  fi
 
   if [ -f bootx86.efi ]; then
     echo -n "Copying 32-bit EFI bootloader..."
@@ -89,6 +91,7 @@ if sudo mount ${LOOP}p1 $TMPDIR; then
   if [ -f bootx64.ini ]; then
     echo -n "Copying bootx64.ini..."
     $SUDO cp bootx64.ini ${TMPDIR}/efi/boot/
+    $SUDO cp bootx64.ini ${TMPDIR}/efi/boot/bootx86.ini
     echo "done."
   fi
 
@@ -104,4 +107,8 @@ fi
 losetup -d $LOOP
 [ "$STATUS" -ne 0 ] && exit $STATUS
 
-qemu-system-x86_64 -enable-kvm -drive file=$DISK_IMAGE,format=raw,index=0,media=disk -drive file=$SECONDARY_DISK_IMAGE,format=raw,index=1,media=disk -rtc base=utc,clock=rt -m 4096 -vga cirrus -no-shutdown
+if [ -f bootx64.efi ]; then
+  qemu-system-x86_64 -enable-kvm -drive file=$DISK_IMAGE,format=raw,index=0,media=disk -drive file=$SECONDARY_DISK_IMAGE,format=raw,index=1,media=disk -rtc base=utc,clock=rt -m 4096 -vga cirrus -no-shutdown
+else
+  qemu-system-i386 -enable-kvm -drive file=$DISK_IMAGE,format=raw,index=0,media=disk -drive file=$SECONDARY_DISK_IMAGE,format=raw,index=1,media=disk -rtc base=utc,clock=rt -m 1024 -vga cirrus -no-shutdown
+fi

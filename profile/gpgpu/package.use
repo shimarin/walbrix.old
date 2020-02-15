@@ -35,3 +35,6 @@ sci-geosciences/gpsd ntp python usb gpsd_protocols_fury gpsd_protocols_geostar g
 #sys-libs/ldb -ldap -python
 #sys-libs/talloc -python
 
+# to force rebuild systemd
+sys-apps/systemd -acl
+
