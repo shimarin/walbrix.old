@@ -1,0 +1,4 @@
+{
+	"profile":"bootloader32",
+	"main_lstfile":"components/bootx86.lst"
+}

@@ -1,8 +1,8 @@
 /etc/nsswitch.conf
 /sbin/ldconfig
-/lib64/libnss_db.so.2
-/lib64/libnss_dns.so.2
-/lib64/libnss_files.so.2
+/$LIB/libnss_db.so.2
+/$LIB/libnss_dns.so.2
+/$LIB/libnss_files.so.2
 /usr/share/locale/locale.alias
 
 $dir /etc/ld.so.conf.d
@@ -15,4 +15,3 @@ $exec --overlay "find /usr/lib/gcc -name 'lib*.so*' -exec touch {} \;"
 # generate locale archive
 $write /etc/locale.gen 'en_US.UTF-8 UTF-8\nen_GB.UTF-8 UTF-8\nja_JP.UTF-8 UTF-8'
 $exec --overlay /usr/sbin/locale-gen
-

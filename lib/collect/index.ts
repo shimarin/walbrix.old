@@ -313,7 +313,13 @@ export class Collect implements Subcommand<[string,string,string,commander.Comma
     //else
     fs.ensureDirSync(dstdir);
     const context = new Context(srcdir,dstdir);
-    context.env["ARCH"] = "x86_64";
+    if (child_process.spawnSync("file", ["-L", path.join(context.srcdir, "/bin/sh")]).output[1].includes("80386")) {
+      context.env["ARCH"] = "i686";
+      context.env["LIB"] = "lib";
+    } else {
+      context.env["ARCH"] = "x86_64";
+      context.env["LIB"] = "lib64";
+    }
     process_lstfile(context, lstfile);
     flush(context);
   }

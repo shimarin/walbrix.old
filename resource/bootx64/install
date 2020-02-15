@@ -99,17 +99,26 @@ echo "Installing bootloader..."
 mkdir -p $TMPDIR/EFI/BOOT
 cp $BOOTDIR/EFI/BOOT/bootx64.efi $TMPDIR/EFI/BOOT/
 
+if [ -f $BOOTDIR/EFI/BOOT/bootx86.efi ]; then
+  cp $BOOTDIR/EFI/BOOT/bootx86.efi $TMPDIR/EFI/BOOT/
+fi
+
 if [ "$PARTITION_TABLE_TYPE" == "msdos" ]; then
   mkdir -p $TMPDIR/boot/grub
   grub-install --target=i386-pc --recheck --boot-directory=$TMPDIR/boot \
-      --modules="xfs fat part_msdos normal linux echo all_video test multiboot2 search sleep gzio lvm chain configfile cpuid minicmd gfxterm font terminal squash4 loopback videoinfo videotest blocklist probe" \
+      --modules="xfs fat part_msdos normal linux echo all_video test multiboot2 search sleep gzio lvm chain configfile cpuid minicmd gfxterm font terminal squash4 loopback videoinfo videotest blocklist probe cpuid" \
       $DEVICE
-  echo -e 'insmod echo\ninsmod linux\nset BOOT_PARTITION=$root\nloopback --offset1m loop /efi/boot/bootx64.efi\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $TMPDIR/boot/grub/grub.cfg
+  echo -e 'insmod echo\ninsmod linux\ninsmod cpuid\nset BOOT_PARTITION=$root\nif cpuid -l; then\n\tloopback --offset1m loop /efi/boot/bootx64.efi\nelse\n\tloopback --offset1m loop /efi/boot/bootx86.efi\nfi\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $TMPDIR/boot/grub/grub.cfg
 fi
 
 if [ -f $BOOTDIR/efi/boot/bootx64.ini ]; then
   echo "Copying bootx64.ini..."
   cp -a $BOOTDIR/efi/boot/bootx64.ini $TMPDIR/efi/boot/
+fi
+
+if [ -f $BOOTDIR/efi/boot/bootx86.ini ]; then
+  echo "Copying bootx86.ini..."
+  cp -a $BOOTDIR/efi/boot/bootx86.ini $TMPDIR/efi/boot/
 fi
 
 if [ -f $BOOTDIR/efi/boot/firmware.tgz ]; then

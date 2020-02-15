@@ -100,7 +100,11 @@ $SUDO ln -f profile/common/*.sh $GENTOO_DIR/
 [ -f profile/$PROFILE/before-emerge.sh ] && $SUDO ln -f profile/$PROFILE/before-emerge.sh $GENTOO_DIR/
 [ -f profile/$PROFILE/after-emerge.sh ] && $SUDO ln -f profile/$PROFILE/after-emerge.sh $GENTOO_DIR/
 
-$SUDO ./do.ts chroot --profile=$PROFILE "$GENTOO_DIR" "/build.sh" || exit 1
+if file -L $GENTOO_DIR/bin/sh | grep -q 80386; then
+  $SUDO ./do.ts chroot --profile=$PROFILE "$GENTOO_DIR" "setarch i686 /build.sh" || exit 1
+else
+  $SUDO ./do.ts chroot --profile=$PROFILE "$GENTOO_DIR" "/build.sh" || exit 1
+fi
 
 echo "$STAGE3_HASH" > done-$$.tmp
 $SUDO mv done-$$.tmp $GENTOO_DIR/done # mark as built

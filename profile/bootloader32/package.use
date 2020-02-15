@@ -1,0 +1,25 @@
+sys-boot/grub device-mapper grub_platforms_efi-32 grub_platforms_pc
+sys-kernel/genkernel -firmware
+
+# to reduce footprint
+app-shells/bash -net -nls
+sys-apps/busybox -static
+sys-apps/less -pcre
+net-misc/rsync -acl
+app-arch/xz-utils -nls
+sys-apps/coreutils -acl
+sys-apps/net-tools -nls
+sys-apps/sed -acl
+sys-apps/findutils -nls
+app-arch/tar -nls
+net-misc/wget -nls
+sys-apps/gawk -nls
+sys-apps/grep -nls
+sys-apps/iproute2 minimal
+sys-devel/gcc -fortran
+sys-apps/kbd -nls
+sys-process/psmisc -nls
+sys-process/procps -nls
+sys-apps/util-linux -nls
+sys-fs/e2fsprogs -nls
+app-editors/nano minimal -nls -spell -magic

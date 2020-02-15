@@ -50,10 +50,10 @@ if sudo mount ${LOOP}p1 $TMPDIR; then
 		echo -e "(hd0) $LOOP\n" > $DEVICEMAP
 		$SUDO cp $DEVICEMAP $TMPDIR/boot/grub/device.map
 		rm -f $DEVICEMAP
-		if $SUDO grub-install --target=i386-pc --boot-directory=${TMPDIR}/boot --modules="normal echo linux probe sleep test ls cat configfile" $LOOP; then
+		if $SUDO grub-install --target=i386-pc --boot-directory=${TMPDIR}/boot --modules="normal echo linux probe sleep test ls cat configfile cpuid" $LOOP; then
 			$SUDO rm -f $TMPDIR/boot/grub/device.map
 			GRUBCFG=runbyqemu-grubcfg-$$
-			echo -e 'insmod echo\ninsmod linux\nset BOOT_PARTITION=$root\nloopback --offset1m loop /efi/boot/bootx64.efi\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $GRUBCFG
+			echo -e 'insmod echo\ninsmod linux\ninsmod cpuid\nset BOOT_PARTITION=$root\nif cpuid -l; then\n\tloopback --offset1m loop /efi/boot/bootx64.efi\nelse\n\tloopback --offset1m loop /efi/boot/bootx86.efi\nfi\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $GRUBCFG
 			$SUDO cp $GRUBCFG ${TMPDIR}/boot/grub/grub.cfg
 			rm -f $GRUBCFG
 			echo "done."
@@ -66,6 +66,13 @@ if sudo mount ${LOOP}p1 $TMPDIR; then
 	$SUDO mkdir -p ${TMPDIR}/efi/boot
 	$SUDO cp bootx64.efi ${TMPDIR}/efi/boot/
 	echo "done."
+
+  if [ -f bootx86.efi ]; then
+    echo -n "Copying 32-bit EFI bootloader..."
+  	$SUDO mkdir -p ${TMPDIR}/efi/boot
+  	$SUDO cp bootx86.efi ${TMPDIR}/efi/boot/
+  	echo "done."
+  fi
 
 	if [ -n "$SYSTEM_IMAGE" ]; then
 		echo -n "Copying system image..."

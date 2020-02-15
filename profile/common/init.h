@@ -775,14 +775,14 @@ int umount_recursive(const char *path)
   return fork_exec_wait(UMOUNT, "-R", "-n", path, NULL);
 }
 
-long get_free_disk_space(const char *mountpoint)
+uint64_t get_free_disk_space(const char *mountpoint)
 {
   struct statvfs s;
   int rst;
   rst = statvfs(mountpoint, &s);
   if (rst < 0) return rst;
   //else
-  return s.f_bsize * s.f_bfree;
+  return (uint64_t)s.f_bsize * s.f_bfree;
 }
 
 int create_zero_filled_file(const char *path, off_t length)

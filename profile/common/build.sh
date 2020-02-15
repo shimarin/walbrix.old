@@ -22,18 +22,6 @@ if [ -f /etc/portage/sets/kernel ]; then
 	./genkernel.sh || exit 1
 fi
 
-if [ -f /init.c ]; then
-	if grep -q '#define INIFILE' /init.c; then
-		gcc -lblkid -lmount -liniparser init.c -o /init || exit 1
-	else
-		gcc -lblkid -lmount init.c -o /init || exit 1
-	fi
-fi
-
-if [ -f /initramfs.lst ]; then
-	cat /initramfs.lst | cpio -D / -H newc -L -o | xz -c --check=crc32 > /boot/initramfs || exit 1
-fi
-
 if [ -f /etc/portage/sets/all-pre ]; then
 	emerge -uDN -bk --binpkg-respect-use=y @all-pre || exit 1
 fi
@@ -45,6 +33,20 @@ fi
 if [ -f modules_need_to_be_rebuilt ]; then
 	emerge -b @module-rebuild || exit 1
 	rm -f modules_need_to_be_rebuilt
+fi
+
+if [ -f /init.c ]; then
+	if grep -q '#define INIFILE' /init.c; then
+		gcc -lblkid -lmount -liniparser init.c -o /init || exit 1
+	else
+		gcc -lblkid -lmount init.c -o /init || exit 1
+	fi
+fi
+
+if [ -f /initramfs.lst ]; then
+	cat /initramfs.lst | cpio -D / -H newc -L -o > /tmp/initramfs || exit 1
+	rm -f /boot/initramfs
+	xz -c --check=crc32 /tmp/initramfs > /boot/initramfs || exit 1
 fi
 
 emerge --depclean
