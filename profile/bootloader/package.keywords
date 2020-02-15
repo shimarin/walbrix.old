@@ -2,4 +2,4 @@ sys-kernel/gentoo-sources
 sys-kernel/linux-firmware
 =sys-boot/grub-2.04-r1
 =net-vpn/wireguard-tools-1.0.20200121
-=net-vpn/wireguard-modules-0.0.20200205
+=net-vpn/wireguard-modules-0.0.20200215

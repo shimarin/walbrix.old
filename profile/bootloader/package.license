@@ -1,3 +1,1 @@
-x11-drivers/nvidia-drivers NVIDIA-r2
-dev-libs/amdgpu-pro-opencl AMD-GPU-PRO-EULA
-sys-kernel/linux-firmware no-source-code linux-fw-redistributable
+#

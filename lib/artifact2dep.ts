@@ -31,7 +31,7 @@ export class Artifact2Dep implements Subcommand<[string[]]> {
       process.stdout.write(`gentoo/${profile}/done: $(shell find profile/${profile})\n`);
       process.stdout.write(`\t./autobuild.sh ${profile}\n\n`);
       process.stdout.write(`${profile}.sources.iso: gentoo/${profile}/done\n`);
-      process.stdout.write(`\tmkisofs -J -r -graft-points -o $@ portage=profile/${profile} distfiles=gentoo/${profile}/var/cache/distfiles\n`);
+      process.stdout.write(`\tmkisofs -J -r -graft-points -o $@ portage=gentoo/${profile}/etc/portage distfiles=gentoo/${profile}/var/cache/distfiles\n`);
     });
   }
 }
