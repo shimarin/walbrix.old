@@ -3,6 +3,8 @@ $require base-systemd.lst
 $dir /lib/firmware
 $require kbd-minimal.lst
 
+$require xfsprogs.lst
+
 # install script
 $package dosfstools
 $package parted

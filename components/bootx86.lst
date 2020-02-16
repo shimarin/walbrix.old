@@ -34,6 +34,7 @@ $sed /lib/systemd/system/wpa_supplicant@.service 's/-i%I$/-i%I -Dnl80211,wext/'
 $write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nssid="YOUR-SSID"\npsk="YOUR-KEY"\npriority=1\n}'
 
 $package sys-fs/btrfs-progs
+$require xfsprogs.lst
 /usr/bin/strace
 $package screen
 /usr/bin/beep

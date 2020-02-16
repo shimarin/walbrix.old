@@ -1,5 +1,10 @@
 sys-boot/grub grub_platforms_pc
-
-# to force rebuild systemd
-sys-apps/systemd nat
+sys-apps/systemd nat policykit
+dev-python/python-slip dbus -python_targets_python2_7
+dev-python/decorator -python_targets_python2_7
+dev-python/pygobject -cairo -python_targets_python2_7
+dev-python/six -python_targets_python2_7
+dev-python/dbus-python -python_targets_python2_7
+dev-lang/python sqlite
+dev-lang/spidermonkey minimal
 

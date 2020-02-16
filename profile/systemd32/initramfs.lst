@@ -4,6 +4,7 @@ bin/cat
 bin/cp
 bin/umount
 lib
+lib/libacl.so.1
 lib/libattr.so.1
 lib/libc.so.6
 lib/ld-linux.so.2

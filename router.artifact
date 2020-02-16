@@ -1,0 +1,4 @@
+{
+	"profile":"systemd32",
+	"main_lstfile":"components/router.lst"
+}

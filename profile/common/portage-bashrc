@@ -19,6 +19,10 @@ case "${CATEGORY}/${PN}" in
 	sci-geosciences/gpsd)
 		getent passwd gpsd || useradd -c "" -d /dev/null -M -u 106 -g uucp -s /sbin/nologin gpsd
 		;;
+	net-dns/dnsmasq)
+		getent group dnsmasq || groupadd -g 109 dnsmasq
+		getent passwd dnsmasq || useradd -c "" -d /dev/null -M -u 109 -g dnsmasq -s /sbin/nologin dnsmasq
+		;;
 	www-servers/nginx)
 		getent group nginx || groupadd -g 110 nginx
 		getent passwd nginx || useradd -c "" -d /var/lib/nginx -M -u 110 -g nginx -s /sbin/nologin nginx

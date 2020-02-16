@@ -1,0 +1,68 @@
+$require base-systemd.lst
+
+$dir /lib/firmware
+$require kbd-minimal.lst
+
+# install script
+$package dosfstools
+$package parted
+$require grub-i386-pc.lst
+
+/bin/ip
+/usr/bin/awk
+
+$mkdir /boot/grub
+$copy resource/router/grub.cfg /boot/grub/grub.cfg
+
+# hwids
+/bin/sed
+/usr/sbin/lspci
+/usr/share/misc/pci.ids.gz
+/usr/share/misc/usb.ids.gz
+
+$sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
+
+$package net-wireless/wpa_supplicant
+$sed /lib/systemd/system/wpa_supplicant@.service 's/-i%I$/-i%I -Dnl80211,wext/'
+$write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nssid="YOUR-SSID"\npsk="YOUR-KEY"\npriority=1\n}'
+
+#net-firewall/firewalld
+$require rp-pppoe.lst
+$package net-wireless/hostapd
+$package net-dns/dnsmasq
+
+$package app-misc/ca-certificates
+$package app-misc/mime-types
+$package app-misc/pax-utils
+$package dev-libs/openssl
+$package net-misc/wget
+
+$write /etc/hostname router
+
+$write /etc/sysctl.d/nf_conntrack_max.conf 'net.nf_conntrack_max = 65536'
+
+/usr/bin/lsscsi
+
+# networks
+$package net-analyzer/traceroute
+$require tcpdump.lst
+/usr/bin/curl
+/sbin/brctl
+
+# tools
+$package sys-apps/dmidecode
+$package sys-fs/btrfs-progs
+/usr/bin/strace
+/usr/bin/telnet
+$package screen
+
+# hardware
+/etc/udev/hwdb.bin
+/usr/bin/beep
+$package usbutils
+
+$require timezone-jp.lst
+$sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
+
+#$exec ldconfig
+$touch /done

@@ -15,7 +15,6 @@ $package net-tools
 $require bash-minimal.lst
 $require pam.lst
 $require psmisc.lst
-$require xfsprogs.lst
 $require nvi-minimal.lst
 $package iputils
 

@@ -1,2 +1,3 @@
 sys-kernel/gentoo-sources
 sys-kernel/linux-firmware
+=sys-auth/polkit-0.116-r1

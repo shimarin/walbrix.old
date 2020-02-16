@@ -13,4 +13,12 @@ app-misc/screen
 app-misc/beep
 sys-apps/lshw
 sys-apps/usbutils
-
+sys-apps/pciutils
+#net-firewall/firewalld
+net-dialup/rp-pppoe
+net-wireless/hostapd
+net-dns/dnsmasq
+net-analyzer/traceroute
+sys-apps/dmidecode
+net-analyzer/tcpdump
+net-misc/bridge-utils
