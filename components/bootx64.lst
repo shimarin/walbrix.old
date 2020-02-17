@@ -9,10 +9,15 @@ $package parted
 $require grub-i386-pc.lst
 $require kbd-minimal.lst
 
+#lvm
+$package sys-fs/lvm2
+#$exec "systemctl enable lvm2-lvmetad"
+
 /bin/ip
 /usr/bin/awk
 $dir /lib/modules/$KERNEL_VERSION
 $mkdir /boot/grub
+#$exec "cp -a /usr/lib/grub/i386-pc/. /boot/grub/"
 $write /boot/grub/grub.cfg 'if [ -f ($BOOT_PARTITION)/system.img ]; then source ($BOOT_PARTITION)/system.cfg; loopback loop2 ($BOOT_PARTITION)/system.img; set root=loop2; set prefix=($root)/boot/grub; normal; set root=loop; set prefix=($root)/boot/grub; else'
 $write --append /boot/grub/grub.cfg 'echo "SYSTEM.IMG not found."; fi'
 $write --append /boot/grub/grub.cfg 'echo "Booting rescue environment with Linux __VERSION__..."'

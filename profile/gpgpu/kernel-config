@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.5.2-gentoo-r1 Kernel Configuration
+# Linux/x86 5.5.4-gentoo Kernel Configuration
 #
 
 #
@@ -4613,12 +4613,7 @@ CONFIG_DRM_AMD_DC_DSC_SUPPORT=y
 # end of Display Engine Configuration
 
 CONFIG_HSA_AMD=y
-CONFIG_DRM_NOUVEAU=m
-CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=y
-CONFIG_NOUVEAU_DEBUG=5
-CONFIG_NOUVEAU_DEBUG_DEFAULT=3
-# CONFIG_NOUVEAU_DEBUG_MMU is not set
-CONFIG_DRM_NOUVEAU_BACKLIGHT=y
+# CONFIG_DRM_NOUVEAU is not set
 CONFIG_DRM_I915=m
 # CONFIG_DRM_I915_ALPHA_SUPPORT is not set
 CONFIG_DRM_I915_FORCE_PROBE=""

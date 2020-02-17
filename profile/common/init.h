@@ -947,6 +947,78 @@ int setup_wifi(const char *rootdir, const char *ssid, const char *key)
   return symlink("/lib/systemd/system/wpa_supplicant@.service", buf);
 }
 
+void setup_hostname_according_to_inifile(const char *rootdir, inifile_t ini)
+{
+  const char *hostname = ini_string(ini, ":hostname", NULL);
+  if (hostname) {
+    if (set_hostname(rootdir, hostname) == 0) {
+      printf("hostname: %s\n", hostname);
+    } else {
+      printf("Hostname setup failed.\n");
+    }
+  }
+}
+
+void set_generated_hostname_if_not_set(const char *rootdir)
+{
+  char buf[PATH_MAX];
+  sprintf(buf, "%s/run/initramfs/rw/root/etc/hostname", rootdir);
+  if (!is_file(buf)) {
+    char default_hostname[10];
+    if (generate_default_hostname(default_hostname) < 0) {
+      strcpy(default_hostname, "localhost");
+    }
+    if (set_hostname(rootdir, default_hostname) == 0) {
+      printf("hostname: %s (generated)\n", default_hostname);
+    } else {
+      printf("Hostname setup failed.\n");
+    }
+  }
+}
+
+void setup_timezone_according_to_inifile(const char *rootdir, inifile_t ini)
+{
+  const char *timezone = ini_string(ini, ":timezone", NULL);
+  if (timezone) {
+    if (set_timezone(rootdir, timezone) == 0) {
+      printf("Timezone set to %s.\n", timezone);
+    } else {
+      printf("Timezone could not be configured.\n");
+    }
+  }
+}
+
+void setup_keymap_according_to_inifile(const char *rootdir, inifile_t ini)
+{
+  const char *keymap = ini_string(ini, ":keymap", NULL);
+  if (keymap) {
+    if (set_keymap(rootdir, keymap) == 0) {
+      printf("Keymap set to %s.\n", keymap);
+    } else {
+      printf("Keymap configuration failed.\n");
+    }
+  }
+}
+
+void setup_wifi_according_to_inifile(const char *rootdir, inifile_t ini)
+{
+  const char *wifi_ssid = ini_string(ini, ":wifi_ssid", NULL);
+  const char *wifi_key = ini_string(ini, ":wifi_key", "");
+
+  if (wifi_ssid) {
+    if (setup_wifi(rootdir, wifi_ssid, wifi_key) == 0) {
+      printf("WiFi SSID: %s\n", wifi_ssid);
+    } else {
+      printf("WiFi setup failed.\n");
+    }
+  }
+}
+
+int enable_lvm()
+{
+  return fork_exec_wait("/sbin/vgchange", "-ay", "--sysinit", NULL);
+}
+
 void init();
 void shutdown();
 

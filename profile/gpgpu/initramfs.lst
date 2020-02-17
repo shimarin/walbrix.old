@@ -18,3 +18,6 @@ sbin/mkfs.xfs
 sbin/mkswap
 sbin/swapon
 sbin/switch_root
+usr
+usr/lib64
+usr/lib64/libiniparser.so.0

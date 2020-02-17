@@ -207,6 +207,8 @@ void init()
   mount_or_die(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077");
   mount_ro_loop_or_die("/mnt/boot/efi/boot/bootx64.efi", "/mnt/system", 1048576);
 
+  enable_lvm();
+
   process_inifile("/mnt/boot/efi/boot/bootx64.ini", setup);
 
   setup_initramfs_shutdown("/newroot");

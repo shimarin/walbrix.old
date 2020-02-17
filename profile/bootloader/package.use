@@ -1,5 +1,6 @@
 sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc
 sys-kernel/genkernel -firmware
+sys-kernel/gentoo-sources symlink
 
 # to force rebuild systemd
 sys-apps/systemd -acl
@@ -26,3 +27,4 @@ sys-process/procps -nls
 sys-apps/util-linux -nls
 sys-fs/e2fsprogs -nls
 app-editors/nano minimal -nls -spell -magic
+sys-fs/lvm2 -readline -systemd -thin -udev

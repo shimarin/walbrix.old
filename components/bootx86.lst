@@ -9,6 +9,10 @@ $package parted
 $require grub-i386-pc.lst
 $require kbd-minimal.lst
 
+#lvm
+$package sys-fs/lvm2
+#$exec "systemctl enable lvm2-lvmetad"
+
 /bin/ip
 /usr/bin/awk
 $dir /lib/modules/$KERNEL_VERSION

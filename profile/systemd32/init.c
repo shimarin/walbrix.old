@@ -2,64 +2,16 @@
 #include "init.h"
 
 #define PROBE_BOOT_PARTITION_MAX_RETRY 8
+#define NEWROOT "/newroot"
 
 void setup(inifile_t ini)
 {
-  const char *hostname = ini_string(ini, ":hostname", NULL);
-  const char *timezone = ini_string(ini, ":timezone", NULL);
-  const char *keymap = ini_string(ini, ":keymap", NULL);
-  const char *wifi_ssid = ini_string(ini, ":wifi_ssid", NULL);
-  const char *wifi_key = ini_string(ini, ":wifi_key", "");
   const int debug = ini_bool(ini, ":debug", 0);
-
-  if (hostname) {
-    if (set_hostname("/newroot", hostname) == 0) {
-      printf("hostname: %s\n", hostname);
-    } else {
-      printf("Hostname setup failed.\n");
-      if (debug) sleep(3);
-    }
-  }
-
-  if (!is_file("/newroot/run/initramfs/rw/root/etc/hostname")){
-    char default_hostname[10];
-    if (generate_default_hostname(default_hostname) < 0) {
-      strcpy(default_hostname, "localhost");
-    }
-    if (set_hostname("/newroot", default_hostname) == 0) {
-      printf("hostname: %s (generated)\n", default_hostname);
-    } else {
-      printf("Hostname setup failed.\n");
-      if (debug) sleep(3);
-    }
-  }
-
-  if (timezone) {
-    if (set_timezone("/newroot", timezone) == 0) {
-      printf("Timezone set to %s.\n", timezone);
-    } else {
-      printf("Timezone could not be configured.\n");
-      if (debug) sleep(3);
-    }
-  }
-
-  if (keymap) {
-    if (set_keymap("/newroot", keymap) == 0) {
-      printf("Keymap set to %s.\n", keymap);
-    } else {
-      printf("Keymap configuration failed.\n");
-      if (debug) sleep(3);
-    }
-  }
-
-  if (wifi_ssid) {
-    if (setup_wifi("/newroot", wifi_ssid, wifi_key) == 0) {
-      printf("WiFi SSID: %s\n", wifi_ssid);
-    } else {
-      printf("WiFi setup failed.\n");
-      if (debug) sleep(3);
-    }
-  }
+  setup_hostname_according_to_inifile(NEWROOT, ini);
+  set_generated_hostname_if_not_set(NEWROOT);
+  setup_timezone_according_to_inifile(NEWROOT, ini);
+  setup_keymap_according_to_inifile(NEWROOT, ini);
+  setup_wifi_according_to_inifile(NEWROOT, ini);
 }
 
 void init()
@@ -114,18 +66,18 @@ void init()
     activate_swap(swapfile);
   }
 
-  mount_overlay_or_die("/mnt/system", "/mnt/rw/root", "/mnt/rw/work", "/newroot");
-  mount_or_die("tmpfs", "/newroot/run", "tmpfs", MS_NODEV|MS_NOSUID|MS_STRICTATIME, "mode=755");
+  mount_overlay_or_die("/mnt/system", "/mnt/rw/root", "/mnt/rw/work", NEWROOT);
+  mount_or_die("tmpfs", NEWROOT"/run", "tmpfs", MS_NODEV|MS_NOSUID|MS_STRICTATIME, "mode=755");
 
-  move_mount_or_die("/mnt/boot", "/newroot/run/initramfs/boot");
-  move_mount_or_die("/mnt/system", "/newroot/run/initramfs/ro");
-  move_mount_or_die("/mnt/rw", "/newroot/run/initramfs/rw");
+  move_mount_or_die("/mnt/boot", NEWROOT"/run/initramfs/boot");
+  move_mount_or_die("/mnt/system", NEWROOT"/run/initramfs/ro");
+  move_mount_or_die("/mnt/rw", NEWROOT"/run/initramfs/rw");
 
-  process_inifile("/newroot/run/initramfs/boot/system.ini", setup);
+  process_inifile(NEWROOT"/run/initramfs/boot/system.ini", setup);
 
-  setup_initramfs_shutdown("/newroot");
+  setup_initramfs_shutdown(NEWROOT);
 
-  switch_root_or_die("/newroot");
+  switch_root_or_die(NEWROOT);
 }
 
 void shutdown()
