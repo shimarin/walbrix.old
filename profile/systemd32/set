@@ -22,3 +22,4 @@ net-analyzer/traceroute
 sys-apps/dmidecode
 net-analyzer/tcpdump
 net-misc/bridge-utils
+net-misc/iperf
