@@ -61,7 +61,8 @@ if [ -f profile/$PROFILE/genkernel-options ]; then
   $SUDO ln -f profile/$PROFILE/genkernel-options $GENTOO_DIR/
 fi
 
-[ -f profile/$PROFILE/package.keywords ] && $SUDO ln -f profile/$PROFILE/package.keywords $GENTOO_DIR/etc/portage/package.keywords
+[ -f profile/$PROFILE/package.keywords ] && $SUDO ln -f profile/$PROFILE/package.keywords $GENTOO_DIR/etc/portage/package.accept_keywords
+[ -f profile/$PROFILE/package.accept_keywords ] && $SUDO ln -f profile/$PROFILE/package.accept_keywords $GENTOO_DIR/etc/portage/package.accept_keywords
 [ -f profile/$PROFILE/package.license ] && $SUDO ln -f profile/$PROFILE/package.license $GENTOO_DIR/etc/portage/package.license
 [ -f profile/$PROFILE/package.use ] && $SUDO ln -f profile/$PROFILE/package.use $GENTOO_DIR/etc/portage/package.use/$PROFILE
 [ -f profile/$PROFILE/package.mask ] && $SUDO ln -f profile/$PROFILE/package.mask $GENTOO_DIR/etc/portage/package.mask

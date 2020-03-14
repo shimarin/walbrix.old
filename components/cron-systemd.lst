@@ -1,0 +1,4 @@
+$package sys-process/cronbase
+$package sys-process/cronie
+/bin/run-parts
+$exec "systemctl enable cronie"

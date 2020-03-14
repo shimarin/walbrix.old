@@ -8,7 +8,6 @@ $package sys-apps/dbus
 #sys-libs/libcap
 $package sys-apps/acl
 #dev-libs/libgcrypt
-$package sys-apps/kmod
 $package app-arch/lz4
 $package sys-libs/pam
 #dev-libs/libpcre2

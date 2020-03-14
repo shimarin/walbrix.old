@@ -1,0 +1,168 @@
+$require base-systemd.lst
+
+$dir /lib/firmware
+$require kbd-minimal.lst
+
+$require xfsprogs.lst
+
+$package dosfstools
+$package parted
+$require grub.lst
+
+$mkdir /boot/grub
+$copy resource/walbrix/grub.cfg /boot/grub/grub.cfg
+
+# hwids
+/bin/sed
+/usr/sbin/lspci
+/usr/share/misc/pci.ids.gz
+/usr/share/misc/usb.ids.gz
+
+$sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
+
+$package net-wireless/wpa_supplicant
+$sed /lib/systemd/system/wpa_supplicant@.service 's/-i%I$/-i%I -Dnl80211,wext/'
+$write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nssid="YOUR-SSID"\npsk="YOUR-KEY"\npriority=1\n}'
+
+$package app-misc/ca-certificates
+$package app-misc/mime-types
+$package app-misc/pax-utils
+$require openssl.lst
+#$package sys-apps/haveged
+
+$write /etc/hostname WBFREE01
+
+# tools
+/usr/bin/strace
+$package screen
+$require sudo.lst
+/usr/bin/ftp
+/usr/bin/stress
+$package app-editors/bvi
+$package app-admin/sysstat
+$package app-crypt/chntpw
+$package sys-process/lsof
+#$require ansible.lst
+
+# hardware
+/etc/udev/hwdb.bin
+/usr/bin/beep
+#/usr/bin/cpuid2cpuflags
+$package usbutils
+$package lm-sensors
+$package lshw
+$package sys-apps/dmidecode
+$package sys-apps/smartmontools
+$require usb_modeswitch.lst
+$require bluez.lst
+$package sys-block/megacli
+#$copy walbrix/arcconf /opt/bin/arcconf
+$package sys-power/cpupower
+#$require nut.lst
+#$require omronups.lst
+$require libqmi.lst
+$require gpsd.lst
+#$copy walbrix/99-docomo-l-03f.rules /etc/udev/rules.d/99-docomo-l-03f.rules
+
+# storage/filesystems
+/usr/bin/lsscsi
+$package sys-fs/mdadm
+$exec "systemctl enable mdmonitor"
+/lib/systemd/system/mdmonitor.service
+$require nfs.lst
+$package sys-fs/multipath-tools
+$package sys-fs/btrfs-progs
+#$require exfat.lst
+$package net-fs/cifs-utils --use="-acl -ads -caps"
+#$package sys-fs/xfsdump
+$require ntfs3g.lst
+$require cryptsetup.lst
+$package sys-block/nbd
+$require sg3_utils.lst
+$package sys-apps/hdparm
+$require ddrescue.lst
+$package sys-fs/safecopy
+$package app-admin/testdisk --use="ntfs"
+$package sys-apps/gptfdisk
+$package app-backup/fsarchiver
+#$require s3fs.lst
+$package sys-apps/cciss_vol_status
+$require drbd.lst
+#$patch /etc/xen/scripts/block-drbd xen/block-drbd.patch
+$require open-iscsi.lst
+$package sys-fs/bcache-tools
+
+# networks
+$package net-analyzer/traceroute
+$require tcpdump.lst
+/usr/bin/cu
+/usr/bin/curl
+/sbin/brctl
+/usr/bin/telnet
+$package net-dns/bind-tools
+$package net-analyzer/traceroute
+$require rp-pppoe.lst
+$package net-misc/wget
+$require nmap.lst
+$package net-analyzer/netcat
+$package net-firewall/ipset
+$package net-misc/wakeonlan
+$package net-misc/ifenslave
+$package net-misc/vconfig
+$package net-misc/whois
+$package sys-apps/ethtool
+$package net-analyzer/snort
+$package net-dns/dnsmasq
+$require ssmtp.lst
+$require smbclient.lst
+$package net-analyzer/net-snmp
+/usr/bin/iperf3
+
+# complementary PPP configs
+#$mkdir /etc/chatscripts
+#$copy ppp/chatscript-3g /etc/chatscripts/3g
+#$copy ppp/pap-secrets /etc/ppp/pap-secrets
+#$mkdir /etc/ppp/peers
+#$copy ppp/peer-mineo-d /etc/ppp/peers/mineo-d
+#$copy ppp/peer-mineo-a /etc/ppp/peers/mineo-a
+#$copy ppp/peer-interlink /etc/ppp/peers/interlink
+#$copy ppp/peer-soracom-air /etc/ppp/peers/soracom-air
+#$copy ppp/ip-up.route.sh /etc/ppp/ip-up.d/route.sh
+#$copy ppp/ip-down.route.sh /etc/ppp/ip-down.d/route.sh
+
+# wireless
+$package net-wireless/wpa_supplicant
+$sed /lib/systemd/system/wpa_supplicant@.service 's/-i%I$/-i%I -Dnl80211,wext/'
+$write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nssid="YOUR-SSID"\npsk="YOUR-KEY"\npriority=1\n}'
+
+# extend nf_conntrack capacity
+$write --append /etc/sysctl.conf 'net.nf_conntrack_max = 65536'
+
+$require timezone-jp.lst
+
+$require xen-python3.lst
+
+# openvpn
+#$copy walbrix/ca.crt /etc/openvpn/ca.crt
+#$copy walbrix/openvpn.conf /etc/openvpn/openvpn.conf
+
+# backup cron scripts
+#$mkdir /etc/wb
+#$write /etc/wb/backup "#BACKUP_ROOT=rsync://backup.local/backup"
+#$copy walbrix/backup /etc/cron.daily/backup
+#$symlink /etc/cron.weekly/backup ../cron.daily/backup
+#$symlink /etc/cron.monthly/backup ../cron.daily/backup
+
+# alert cron scripts
+#$write /etc/wb/alert "#ALERT_RECIPIENT=your@email.address"
+#$copy walbrix/megaraid_alert /etc/cron.hourly/megaraid-alert
+
+# system services
+$require cron-systemd.lst
+
+#$require zabbix-agent.lst
+#$require zabbix-proxy.lst
+$package dev-vcs/git
+
+$exec ldconfig
+$touch /done

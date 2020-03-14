@@ -204,8 +204,9 @@ function create_command_parser(context:Context, current_dir:string)
   .option("-u --use <use>", "mandatory use flag")
   .option("-n --no-elf-cache", "don't use elf dependency cache")
   .option("-x --exclude <pattern>", "pattern to exclude files")
+  .option("-p --no-copy", "just make sure that package exists")
   .action((pkgname, options:commander.Command)=>{
-    process_package(context, pkgname, {use:options.use, no_elf_cache:!options.elfCache, exclude:options.exclude});
+    process_package(context, pkgname, {use:options.use, no_elf_cache:!options.elfCache, exclude:options.exclude,no_copy:!options.copy});
   });
   program.command("$kernel <kernelimage>").action((kernelimage) => {
     kernel(context, kernelimage);

@@ -4,7 +4,7 @@ import * as fs from "fs-extra";
 import {Context} from "./context";
 import {file} from "./file";
 
-export function process_package(context:Context, pkgname:string, options?:{use?:string, no_elf_cache?:boolean, exclude?:string})
+export function process_package(context:Context, pkgname:string, options?:{use?:string, no_elf_cache?:boolean, exclude?:string, no_copy?:boolean})
 {
   const category_and_name = pkgname.split('/', 2);
   const category = category_and_name.length > 1? category_and_name.shift() : "*";
@@ -21,7 +21,7 @@ export function process_package(context:Context, pkgname:string, options?:{use?:
       contents: fs.readFileSync(_, "utf-8").split("\n")
       .filter( _ => _.indexOf("obj ") === 0 || _.indexOf("sym ") === 0 || _.indexOf("dir ") === 0)
       .map(_ => _.split(' ', 2)[1]),
-      use: fs.readFileSync(path.join(path.dirname(_), "USE"), "utf-8").split(" ")
+      use: fs.readFileSync(path.join(path.dirname(_), "USE"), "utf-8").replace(/(\r\n|\n|\r)/gm, "").split(" ")
     }
   }).filter(_=> {
     return _.pf.replace(/-r[0-9]+$/, "").replace(/-[^-]+$/, "") == name
@@ -52,6 +52,8 @@ export function process_package(context:Context, pkgname:string, options?:{use?:
   }
 
   context.packages.add(pkg.name);
+
+  if (options?.no_copy) return; // just make sure package is installed
 
   const excluded_prefixes = [
     "/usr/share/man",

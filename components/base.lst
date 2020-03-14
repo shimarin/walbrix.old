@@ -3,7 +3,7 @@ $kernel /boot/kernel
 /boot/initramfs
 /lib/modules
 $dir /lib/modules/$KERNEL_VERSION
-$package kmod
+$package sys-apps/kmod
 $require baselayout.lst
 $package coreutils
 $package grep
@@ -15,7 +15,6 @@ $package net-tools
 $require bash-minimal.lst
 $require pam.lst
 $require psmisc.lst
-$require nvi-minimal.lst
 $package iputils
 
 # sys-apps/file

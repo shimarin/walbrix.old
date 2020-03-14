@@ -3,4 +3,4 @@ $package net-libs/libtirpc
 $package net-nds/rpcbind
 $package net-fs/nfs-utils --use="-tcpd"
 
-$exec "rm -rf /var/lib/nfs && cp -av /usr/lib/nfs /var/lib/"
+#$exec "rm -rf /var/lib/nfs && cp -av /usr/lib/nfs /var/lib/"
