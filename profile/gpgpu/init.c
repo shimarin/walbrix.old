@@ -15,7 +15,7 @@ void setup(inifile_t ini)
 
 void init()
 {
-  const char* datafile = "/mnt/boot/systsm.dat";
+  const char* datafile = "/mnt/boot/system.dat";
   const char* swapfile = "/mnt/boot/system.swp";
   struct partition_struct partition;
   mount_procdevsys_or_die();
