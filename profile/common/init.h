@@ -931,7 +931,6 @@ int setup_wifi(const char *rootdir, const char *ssid, const char *key)
   fprintf(f, "network={\n");
   fprintf(f, "\tssid=\"%s\"\n", ssid);
   fprintf(f, "\tpsk=\"%s\"\n", key);
-  fprintf(f, "\tproto=WPA\n");
   fprintf(f, "}\n");
   if (fclose(f) != 0) return -1;
   //else
