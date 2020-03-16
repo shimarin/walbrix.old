@@ -36,7 +36,7 @@ void init()
 
   if (!exists(datafile) && get_free_disk_space("/mnt/boot") >= 1024L*1024*1024*2 ) {
     printf("RW layer does not exist. Creating...");fflush(stdout);
-    if (create_xfs_imagefile(datafile, 1024*1024*1024) == 0) {
+    if (create_btrfs_imagefile(datafile, 128*1024*1024) == 0) {
       printf("done.\n");
     } else {
       printf("failed.\n");
