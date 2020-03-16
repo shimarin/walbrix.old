@@ -62,6 +62,10 @@ $package screen
 /usr/bin/beep
 $package usbutils
 
+# motion
+$package media-video/motion
+$exec "systemctl enable motion"
+
 $require timezone-jp.lst
 $sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
 

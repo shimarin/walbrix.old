@@ -1,3 +1,10 @@
+sys-kernel/gentoo-sources symlink
+
+# to force rebuild systemd
+sys-apps/systemd -acl
+
+app-editors/vim minimal
+
 sys-boot/grub grub_platforms_pc
 sys-apps/systemd nat policykit
 dev-python/python-slip dbus -python_targets_python2_7
@@ -8,3 +15,4 @@ dev-python/dbus-python -python_targets_python2_7
 dev-lang/python sqlite
 dev-lang/spidermonkey minimal
 
+media-video/motion ffmpeg v4l webp

@@ -77,6 +77,11 @@ if [ -d profile/$PROFILE/patches ]; then
   $SUDO cp -a profile/$PROFILE/patches/. $GENTOO_DIR/etc/portage/patches/
 fi
 
+if [ -d profile/common/repos ]; then
+  $SUDO mkdir -p $GENTOO_DIR/var/db/repos/localrep
+  $SUDO cp -a profile/common/repos/. $GENTOO_DIR/var/db/repos/localrepo/
+fi
+
 if [ -d profile/$PROFILE/repos ]; then
   $SUDO mkdir -p $GENTOO_DIR/var/db/repos/localrepo
   $SUDO cp -a profile/$PROFILE/repos/. $GENTOO_DIR/var/db/repos/localrepo/

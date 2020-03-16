@@ -30,6 +30,12 @@ void init()
   mount_or_die(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077");
   mount_ro_loop_or_die("/mnt/boot/system.img", "/mnt/system", 0);
 
+  if (is_file("/mnt/boot/system.cur")) {
+    if (rename("/mnt/boot/system.cur", "/mnt/boot/system.old") == 0) {
+      printf("Previous system image preserved.\n");
+    }
+  }
+
   if (!exists(datafile)) {
     printf("RW layer does not exist. Creating...");fflush(stdout);
     if (create_btrfs_imagefile(datafile, 109*1024*1024) == 0) {
