@@ -2,6 +2,7 @@ app-emulation/xen
 app-emulation/xen-pvgrub
 sys-boot/grub
 sys-fs/xfsprogs
+app-editors/vim
 app-editors/nano
 sys-fs/dosfstools
 sys-block/parted

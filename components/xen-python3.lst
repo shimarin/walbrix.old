@@ -1,4 +1,4 @@
-#$require python3.lst
+$require python3.lst
 $package dev-python/lxml
 $package app-emulation/xen-tools
 $package app-emulation/xen-pvgrub
@@ -28,4 +28,3 @@ $sed /etc/xen/xl.conf 's/^#vif.default.bridge="xenbr0"$/vif.default.bridge=""/'
 # setup network-bridge
 #$copy walbrix/network-bridge /etc/xen/scripts/network-bridge
 #$copy walbrix/network-multi-bridge /etc/xen/scripts/network-multi-bridge
-

@@ -4,7 +4,11 @@ sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc grub_platfor
 sys-kernel/gentoo-sources symlink
 virtual/linux-sources firmware
 
+# to force rebuild systemd
+sys-apps/systemd -acl
+
 sys-apps/util-linux static-libs
+app-editors/vim minimal
 
 # move net-misc/openvpn net-vpn/openvpn
 net-vpn/openvpn threads

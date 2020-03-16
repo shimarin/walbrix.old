@@ -22,17 +22,19 @@ app-arch/xz-utils	!<app-arch/lzma-4.63 !<app-arch/p7zip-4.57
 app-arch/zstd	app-arch/xz-utils
 app-crypt/chntpw	dev-libs/openssl:0/1.1=
 app-crypt/gnupg	!app-crypt/dirmngr >=dev-libs/libassuan-2.5.0 >=dev-libs/libgcrypt-1.7.3 >=dev-libs/libgpg-error-1.28 >=dev-libs/libksba-1.3.4 >=dev-libs/npth-1.2 >=net-misc/curl-7.10 app-arch/bzip2 sys-libs/readline:0/7= >=net-libs/gnutls-3.0:0/30= sys-libs/zlib app-crypt/pinentry virtual/libintl
-app-crypt/gpgme	>=app-crypt/gnupg-2 >=dev-libs/libassuan-2.5.3:0/0= >=dev-libs/libgpg-error-1.29:0/0= !<kde-apps/gpgmepp-4.14.11_pre20160611:4 !kde-apps/gpgmepp:5 !<kde-apps/kdepimlibs-4.14.10_p20160611:4 !=kde-apps/kdepimlibs-4.14.11_pre20160211*:4
+app-crypt/gpgme	>=app-crypt/gnupg-2 >=dev-libs/libassuan-2.5.3:0/0= >=dev-libs/libgpg-error-1.29:0/0=
 app-crypt/libb2	|| ( >=sys-devel/gcc-4.2:*[openmp] sys-devel/clang-runtime:*[openmp] )
 app-crypt/pinentry	app-eselect/eselect-pinentry >=dev-libs/libassuan-2.1 >=dev-libs/libgcrypt-1.6.3 >=dev-libs/libgpg-error-1.17 sys-libs/ncurses:0/6=
 app-crypt/rhash	dev-libs/openssl:0/1.1=[abi_x86_64(-)]
 app-editors/bvi	sys-libs/ncurses:0/6=
 app-editors/nano	>=sys-libs/ncurses-5.9-r1:0/6=[unicode] sys-libs/ncurses:0/6= sys-apps/file virtual/libintl
+app-editors/vim	>=app-eselect/eselect-vi-1.1 >=sys-libs/ncurses-5.2-r2:0/6= virtual/libintl sys-apps/acl
 app-emulation/xen-pvgrub	dev-lang/python:3.6[xml,threads] >=dev-lang/python-exec-2:2/2=[python_targets_python3_6] >=app-emulation/xen-tools-4.13.0
 app-emulation/xen-tools	sys-apps/pciutils dev-libs/lzo:2 dev-libs/glib:2 dev-libs/yajl dev-libs/libaio dev-libs/libgcrypt:0 sys-libs/zlib dev-lang/python:3.6[ncurses,xml,threads] >=dev-lang/python-exec-2:2/2=[python_targets_python3_6] sys-apps/iproute2[-minimal] net-misc/bridge-utils
 app-eselect/eselect-lib-bin-symlink	app-admin/eselect
 app-eselect/eselect-pinentry	>=app-eselect/eselect-lib-bin-symlink-0.1.1
 app-eselect/eselect-python	>=app-admin/eselect-1.2.3 >=dev-lang/python-exec-2.4.2
+app-eselect/eselect-vi	>=app-admin/eselect-1.0.6
 app-misc/c_rehash	!<dev-libs/openssl-1.0.2d-r1:0
 app-misc/ca-certificates	app-misc/c_rehash sys-apps/debianutils
 app-misc/pax-utils	sys-libs/libseccomp
@@ -99,7 +101,7 @@ dev-perl/XML-Parser	>=dev-libs/expat-1.95.1-r1 dev-lang/perl:0/5.30=[-build(-)]
 dev-perl/libintl-perl	virtual/libintl dev-perl/File-ShareDir virtual/perl-File-Spec >=virtual/perl-version-0.770.0 dev-lang/perl:0/5.30=
 dev-python/bz2file	>=dev-lang/python-2.7.5-r2:2.7 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),-python_single_target_python2_7(-)]
 dev-python/certifi	app-misc/ca-certificates >=dev-lang/python-2.7.5-r2:2.7 dev-lang/python:3.6 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
-dev-python/cython	>=dev-lang/python-2.7.5-r2:2.7[threads(+)] dev-lang/python:3.6[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
+dev-python/cython	>=dev-lang/python-2.7.5-r2:2.7[threads(+)] dev-lang/python:3.6[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-)]
 dev-python/extras	>=dev-lang/python-2.7.5-r2:2.7 dev-lang/python:3.6 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
 dev-python/fixtures	>=dev-python/pbr-0.11[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] dev-python/six[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] >=dev-python/testtools-0.9.22[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] >=dev-lang/python-2.7.5-r2:2.7 dev-lang/python:3.6 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
 dev-python/linecache2	>=dev-lang/python-2.7.5-r2:2.7 dev-lang/python:3.6 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
@@ -125,7 +127,6 @@ dev-util/glib-utils	dev-lang/python:3.6 >=dev-lang/python-exec-2:2/2=[python_tar
 dev-util/gtk-doc-am	>=dev-lang/perl-5.18
 dev-util/intltool	dev-lang/perl dev-perl/XML-Parser sys-devel/gettext
 dev-util/meson	dev-lang/python:3.6 >=dev-lang/python-exec-2:2/2=[python_targets_python3_6(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] dev-python/setuptools[python_targets_python3_6(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
-dev-util/ninja	!<net-irc/ninja-1.5.9_pre14-r1
 dev-util/pkgconf	!dev-util/pkgconfig !dev-util/pkg-config-lite !dev-util/pkgconfig-openbsd[pkg-config]
 dev-util/scons	>=dev-lang/python-2.7.5-r2:2.7[threads(+)] dev-lang/python:3.6[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
 dev-vcs/git	dev-libs/openssl:0/1.1= sys-libs/zlib dev-libs/libpcre2[jit(+)] net-misc/curl dev-libs/expat virtual/libiconv
@@ -201,7 +202,7 @@ sys-apps/rescan-scsi-bus	>=sys-apps/sg3_utils-1.24 <sys-apps/sg3_utils-1.44 app-
 sys-apps/sed	virtual/acl virtual/libintl
 sys-apps/shadow	sys-apps/acl:0/0= >=sys-libs/cracklib-2.7-r3:0/0= virtual/libintl sys-libs/pam:0/0= sys-apps/attr:0/0= >=sys-auth/pambase-20150213 !sys-apps/util-linux[su(-)]
 sys-apps/smartmontools	virtual/mailx sys-apps/systemd
-sys-apps/systemd	>=sys-apps/util-linux-2.30:0/0=[abi_x86_64(-)] sys-libs/libcap:0/0=[abi_x86_64(-)] sys-apps/acl:0/0= >=dev-libs/libgcrypt-1.4.5:0/20=[abi_x86_64(-)] >=sys-apps/kmod-15:0/0= >=app-arch/lz4-0_p131:0/r132=[abi_x86_64(-)] sys-libs/pam:0/0=[abi_x86_64(-)] dev-libs/libpcre2 >=sys-libs/libseccomp-2.3.3:0/0= acct-group/adm acct-group/wheel acct-group/kmem acct-group/tty acct-group/utmp acct-group/audio acct-group/cdrom acct-group/dialout acct-group/disk acct-group/input acct-group/kvm acct-group/render acct-group/tape acct-group/video acct-group/systemd-journal acct-user/systemd-journal-remote acct-user/systemd-coredump acct-user/systemd-network acct-user/systemd-resolve acct-user/systemd-timesync >=sys-apps/baselayout-2.2 !sys-apps/sysvinit !net-dns/openresolv || ( sys-apps/util-linux[kill(-)] sys-process/procps[kill(+)] sys-apps/coreutils[kill(-)] ) !sys-auth/nss-myhostname !sys-fs/eudev !sys-fs/udev
+sys-apps/systemd	>=sys-apps/util-linux-2.30:0/0=[abi_x86_64(-)] sys-libs/libcap:0/0=[abi_x86_64(-)] >=dev-libs/libgcrypt-1.4.5:0/20=[abi_x86_64(-)] >=sys-apps/kmod-15:0/0= >=app-arch/lz4-0_p131:0/r132=[abi_x86_64(-)] sys-libs/pam:0/0=[abi_x86_64(-)] dev-libs/libpcre2 >=sys-libs/libseccomp-2.3.3:0/0= acct-group/adm acct-group/wheel acct-group/kmem acct-group/tty acct-group/utmp acct-group/audio acct-group/cdrom acct-group/dialout acct-group/disk acct-group/input acct-group/kvm acct-group/render acct-group/tape acct-group/video acct-group/systemd-journal acct-user/systemd-journal-remote acct-user/systemd-coredump acct-user/systemd-network acct-user/systemd-resolve acct-user/systemd-timesync >=sys-apps/baselayout-2.2 !sys-apps/sysvinit !net-dns/openresolv || ( sys-apps/util-linux[kill(-)] sys-process/procps[kill(+)] sys-apps/coreutils[kill(-)] ) !sys-auth/nss-myhostname !sys-fs/eudev !sys-fs/udev
 sys-apps/texinfo	!=app-text/tetex-2* >=sys-libs/ncurses-5.2-r2:0/6= dev-lang/perl:0/5.30= dev-perl/libintl-perl dev-perl/Unicode-EastAsianWidth dev-perl/Text-Unidecode virtual/libintl
 sys-apps/usb_modeswitch	virtual/udev virtual/libusb:1 dev-lang/jimtcl
 sys-apps/usbutils	virtual/libusb:1/1= virtual/libudev:0/1= sys-apps/hwids
