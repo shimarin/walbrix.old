@@ -7,8 +7,6 @@ cat << EOS > /etc/wpa_supplicant/wpa_supplicant-wlan0.conf
 network={
 	ssid="$SSID"
 	psk="$KEY"
-	proto=WPA
-	priority=1
 }
 EOS
 enable-wifi

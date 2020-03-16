@@ -53,9 +53,11 @@ if [ -d /sys/module/nvidia ]; then
         nvidia-smi -pm 1
         nvidia-smi -L|while read line; do
                 num=`echo ${line}|sed 's/^GPU \([0-9]\+\): .\+$/\1/'`
-                echo $line | grep "1050" && $NVIDIA_SMI -i $num -pl 52.5
-                echo $line | grep "1060" && $NVIDIA_SMI -i $num -pl 65.0
-                echo $line | grep "1070 Ti" && $NVIDIA_SMI -i $num -pl 98.5
+                echo $line | grep "1050" && nvidia-smi -i $num -pl 52.5
+                echo $line | grep "1060" && nvidia-smi -i $num -pl 65.0
+		echo $line | grep "1650" && nvidia-smi -i $num -pl 40.0
+		echo $line | grep "1660" && nvidia-smi -i $num -pl 70.0
+                echo $line | grep "1070 Ti" && nvidia-smi -i $num -pl 98.5
         done
         PLATFORM=$((PLATFORM + 2))
 fi
