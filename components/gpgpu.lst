@@ -79,14 +79,14 @@ $require intel-neo.lst
 
 # drivers
 $package nvidia-drivers
-$package amdgpu-pro-opencl
-#$package dev-libs/rocm-opencl-runtime
-#$package dev-libs/rocm-device-libs
-#$package dev-libs/rocm-comgr
-#$package dev-libs/roct-thunk-interface
-#$package dev-libs/rocr-runtime
-#$package sys-devel/llvm-roc
-#$package sci-libs/lapack
+#$package amdgpu-pro-opencl
+$package dev-libs/rocm-opencl-runtime
+$package dev-libs/rocm-device-libs
+$package dev-libs/rocm-comgr
+$package dev-libs/roct-thunk-interface
+$package dev-libs/rocr-runtime
+$package sys-devel/llvm-roc
+$package sci-libs/lapack
 
 # misc
 $package ocl-icd
