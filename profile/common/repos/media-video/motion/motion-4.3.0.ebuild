@@ -80,9 +80,6 @@ src_install() {
 		examplesdir=/usr/share/doc/${PF}/examples \
 		install
 
-	newinitd "${FILESDIR}"/${PN}.initd-r3 ${PN}
-	newconfd "${FILESDIR}"/${PN}.confd-r1 ${PN}
-
 	systemd_dounit "${FILESDIR}"/${PN}.service
 	systemd_dotmpfilesd "${FILESDIR}"/${PN}.conf
 

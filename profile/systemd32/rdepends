@@ -7,6 +7,7 @@ acct-user/systemd-journal-remote	acct-group/systemd-journal-remote
 acct-user/systemd-network	acct-group/systemd-network
 acct-user/systemd-resolve	acct-group/systemd-resolve
 acct-user/systemd-timesync	acct-group/systemd-timesync
+app-admin/apache-tools	>=dev-libs/apr-1.5.0:1/1.6= dev-libs/apr-util:1/1= dev-libs/expat dev-libs/libpcre sys-apps/util-linux dev-libs/openssl:0/1.1=
 app-admin/eclean-kernel	dev-python/pymountboot[python_targets_python3_6(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] dev-lang/python:3.6 >=dev-lang/python-exec-2:2/2=[python_targets_python3_6(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
 app-admin/eselect	sys-apps/sed || ( sys-apps/coreutils sys-freebsd/freebsd-bin app-misc/realpath ) sys-apps/file sys-libs/ncurses:0
 app-admin/perl-cleaner	app-shells/bash dev-lang/perl || ( ( sys-apps/portage app-portage/portage-utils ) sys-apps/pkgcore )
@@ -48,12 +49,16 @@ app-text/opensp	net-libs/libnsl:0/2=
 app-text/po4a	app-text/openjade dev-libs/libxslt dev-perl/Locale-gettext dev-perl/SGMLSpm dev-perl/TermReadKey dev-perl/Text-WrapI18N sys-devel/gettext dev-lang/perl:0/5.30=
 app-text/xmlto	>=app-text/docbook-xsl-stylesheets-1.62.0-r1 app-text/docbook-xml-dtd:4.2 app-shells/bash:0 dev-libs/libxslt sys-apps/sed || ( >=sys-apps/coreutils-6.10-r1 sys-freebsd/freebsd-ubin ) || ( sys-apps/util-linux app-misc/getopt ) || ( sys-apps/which sys-freebsd/freebsd-ubin )
 dev-db/sqlite	sys-libs/zlib:0/1=[abi_x86_32(-)] sys-libs/readline:0/7=[abi_x86_32(-)]
+dev-lang/lua	>=sys-libs/readline-6.2_p5-r1:0/7=[abi_x86_32(-)]
 dev-lang/perl	sys-libs/db:5.3/5.3= >=sys-libs/gdbm-1.8.3:0/1.13= app-arch/bzip2 sys-libs/zlib
 dev-lang/python	app-arch/bzip2:0/1= dev-libs/libffi:0/7= >=sys-libs/zlib-1.1.3:0/1= virtual/libcrypt:0/1= virtual/libintl sys-libs/gdbm:0/1.13=[berkdb] >=sys-libs/ncurses-5.2:0/6= >=sys-libs/readline-4.1:0/7= >=dev-db/sqlite-3.3.8:3/3= dev-libs/openssl:0/1.1= >=dev-libs/expat-2.1:0/0= app-misc/mime-types
 dev-lang/python	app-arch/bzip2:0/1= app-arch/xz-utils:0/0= dev-libs/libffi:0/7= >=sys-libs/zlib-1.1.3:0/1= virtual/libcrypt:0/1= virtual/libintl sys-libs/gdbm:0/1.13=[berkdb] >=sys-libs/ncurses-5.2:0/6= >=sys-libs/readline-4.1:0/7= >=dev-db/sqlite-3.3.8:3/3= dev-libs/openssl:0/1.1= >=dev-libs/expat-2.1:0/0= app-misc/mime-types
 dev-lang/python	app-arch/bzip2:0/1= app-arch/xz-utils:0/0= dev-libs/libffi:0/7= sys-apps/util-linux:0/0= >=sys-libs/zlib-1.1.3:0/1= virtual/libcrypt:0/1= virtual/libintl sys-libs/gdbm:0/1.13=[berkdb] >=sys-libs/ncurses-5.2:0/6= >=sys-libs/readline-4.1:0/7= >=dev-db/sqlite-3.3.8:3/3= dev-libs/openssl:0/1.1= >=dev-libs/expat-2.1:0/0= app-misc/mime-types
 dev-lang/spidermonkey	>=dev-libs/nspr-4.13.1 virtual/libffi sys-libs/readline:0/7= >=sys-libs/zlib-1.2.3:0/1= >=dev-libs/icu-59.1:0/65.1=
 dev-lang/swig	dev-libs/libpcre
+dev-lang/yasm	virtual/libintl
+dev-libs/apr	>=sys-apps/util-linux-2.16
+dev-libs/apr-util	dev-libs/expat >=dev-libs/apr-1.6.2:1/1.6= >=sys-libs/db-4:5.3/5.3= sys-libs/gdbm:0/1.13=
 dev-libs/elfutils	>=sys-libs/zlib-1.2.8-r1[abi_x86_32(-)] >=app-arch/bzip2-1.0.6-r4[abi_x86_32(-)] !dev-libs/libelf
 dev-libs/glib	!<dev-util/gdbus-codegen-2.60.7 >=virtual/libiconv-0-r1[abi_x86_32(-)] >=dev-libs/libpcre-8.31:3[abi_x86_32(-)] >=virtual/libffi-3.0.13-r1:0/7=[abi_x86_32(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_32(-)] >=virtual/libintl-0-r2[abi_x86_32(-)] >=sys-apps/util-linux-2.23[abi_x86_32(-)] virtual/libelf:0/1=
 dev-libs/gobject-introspection	>=dev-libs/gobject-introspection-common-1.60.2 >=dev-libs/glib-2.58.0:2 virtual/libffi:0/7= virtual/pkgconfig !<dev-lang/vala-0.20.0 dev-lang/python:3.6[xml] >=dev-lang/python-exec-2:2/2=[python_targets_python3_6]
@@ -73,6 +78,10 @@ dev-libs/mpfr	>=dev-libs/gmp-5.0.0[abi_x86_32(-)]
 dev-libs/nettle	>=dev-libs/gmp-6.0:0/10.4=[abi_x86_32(-)]
 dev-libs/openssl	>=app-misc/c_rehash-1.7-r1 >=sys-libs/zlib-1.2.8-r1[abi_x86_32(-)] !<net-misc/openssh-8.0_p1-r3
 dev-libs/popt	>=virtual/libintl-0-r1[abi_x86_32(-)]
+dev-lua/lpeg	>=dev-lang/lua-5.1:0/0=
+dev-lua/luajson	|| ( >=dev-lang/lua-5.1 dev-lang/luajit:2 ) dev-lua/lpeg
+dev-lua/luasec	>=dev-lang/lua-5.1:0[deprecated] dev-lua/luasocket dev-libs/openssl:0/1.1=
+dev-lua/luasocket	>=dev-lang/lua-5.1.5-r2[deprecated,abi_x86_32(-)]
 dev-perl/Class-Inspector	virtual/perl-File-Spec dev-lang/perl:0/5.30=
 dev-perl/File-ShareDir	virtual/perl-Carp >=dev-perl/Class-Inspector-1.120.0 >=virtual/perl-File-Spec-0.800.0 dev-lang/perl:0/5.30=
 dev-perl/File-ShareDir-Install	virtual/perl-Carp virtual/perl-Exporter virtual/perl-File-Spec virtual/perl-IO dev-lang/perl:0/5.30=
@@ -106,11 +115,15 @@ dev-util/meson	dev-lang/python:3.6 >=dev-lang/python-exec-2:2/2=[python_targets_
 dev-util/ninja	!<net-irc/ninja-1.5.9_pre14-r1
 dev-util/pkgconf	!dev-util/pkgconfig !dev-util/pkg-config-lite !dev-util/pkgconfig-openbsd[pkg-config]
 media-libs/freetype	>=sys-libs/zlib-1.2.8-r1[abi_x86_32(-)] >=app-arch/bzip2-1.0.6-r4[abi_x86_32(-)]
+media-libs/gd	>=virtual/jpeg-0-r2:0/0=[abi_x86_32(-)] >=media-libs/libpng-1.6.10:0/16=[abi_x86_32(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_32(-)]
 media-libs/libjpeg-turbo	!media-libs/jpeg:0 !media-libs/jpeg:62
 media-libs/libpng	>=sys-libs/zlib-1.2.8-r1:0/1=[abi_x86_32(-)]
+media-libs/libtheora	>=media-libs/libogg-1.3.0:0/0=[abi_x86_32(-)] >=media-libs/libvorbis-1.3.3-r1:0/0=[abi_x86_32(-)]
 media-libs/libv4l	virtual/libudev[abi_x86_32(-)] !media-tv/v4l2-ctl !<media-tv/ivtv-utils-1.4.0-r2
+media-libs/libvorbis	>=media-libs/libogg-1.3.0[abi_x86_32(-)]
 media-libs/libwebp	virtual/jpeg:0/0= media-libs/libpng:0/16=
-media-video/ffmpeg	>=app-arch/bzip2-1.0.6-r4[abi_x86_32(-)] >=virtual/libiconv-0-r1[abi_x86_32(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_32(-)] !media-video/qt-faststart !media-libs/libpostproc
+media-sound/lame	>=sys-libs/ncurses-5.7-r7:0/6=
+media-video/ffmpeg	>=app-arch/bzip2-1.0.6-r4[abi_x86_32(-)] >=media-sound/lame-3.99.5-r1[abi_x86_32(-)] >=media-libs/libtheora-1.1.1[encode,abi_x86_32(-)] >=media-libs/libogg-1.3.0[abi_x86_32(-)] >=media-libs/libwebp-0.3.0:0/7=[abi_x86_32(-)] >=media-libs/x264-0.0.20130506:0/157=[abi_x86_32(-)] >=media-libs/x265-1.6:0/160=[abi_x86_32(-)] >=media-libs/xvid-1.3.2-r1[abi_x86_32(-)] >=virtual/libiconv-0-r1[abi_x86_32(-)] >=media-libs/freetype-2.5.0.1:2[abi_x86_32(-)] >=x11-libs/libvdpau-0.7[abi_x86_32(-)] >=media-libs/libvorbis-1.3.3-r1[abi_x86_32(-)] >=media-libs/libogg-1.3.0[abi_x86_32(-)] >=media-libs/libvpx-1.4.0:0/5=[abi_x86_32(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_32(-)] !media-video/qt-faststart !media-libs/libpostproc
 media-video/motion	virtual/jpeg:0/0= media-video/ffmpeg:0/56.58.58= media-libs/libwebp:0/7= net-libs/libmicrohttpd:0/12=
 net-analyzer/tcpdump	sys-libs/libcap-ng net-libs/libpcap >=dev-libs/openssl-0.9.6m:0/1.1=
 net-analyzer/traceroute	!<net-misc/iputils-20121221-r1 !net-misc/iputils[traceroute6]
@@ -193,7 +206,7 @@ sys-libs/gdbm	sys-libs/readline:0/7=[abi_x86_32(-)]
 sys-libs/glibc	sys-apps/gentoo-functions >=net-dns/libidn2-2.0.5
 sys-libs/libcap	>=sys-apps/attr-2.4.47-r1[abi_x86_32(-)] sys-libs/pam[abi_x86_32(-)]
 sys-libs/ncurses	!<=sys-libs/ncurses-5.9-r4:5 !<sys-libs/slang-2.3.2_pre23 !<x11-terms/rxvt-unicode-9.06-r3 !<x11-terms/st-0.6-r1
-sys-libs/pam	virtual/libcrypt:0/1=[abi_x86_32(-)] >=sys-libs/db-4.8.30-r1:5.3/5.3=[abi_x86_32(-)] >=sys-libs/cracklib-2.9.1-r1[abi_x86_32(-)] >=virtual/libintl-0-r1[abi_x86_32(-)]
+sys-libs/pam	virtual/libcrypt:0/1=[abi_x86_32(-)] >=virtual/libintl-0-r1[abi_x86_32(-)] >=sys-libs/db-4.8.30-r1:5.3/5.3=[abi_x86_32(-)] >=sys-libs/cracklib-2.9.1-r1[abi_x86_32(-)]
 sys-libs/readline	>=sys-libs/ncurses-5.9-r3:0/6=[unicode,abi_x86_32(-)]
 sys-libs/timezone-data	virtual/libintl !sys-libs/glibc[vanilla(+)]
 sys-libs/zlib	!<dev-libs/libxml2-2.7.7
@@ -243,4 +256,14 @@ virtual/ssh	|| ( net-misc/openssh net-misc/dropbear )
 virtual/tmpfiles	|| ( sys-apps/opentmpfiles sys-apps/systemd )
 virtual/udev	>=sys-apps/systemd-217:0
 virtual/yacc	|| ( sys-devel/bison dev-util/byacc dev-util/yacc )
+www-servers/apache	>=dev-libs/apr-1.5.1:1/1.6= !www-apache/mod_macro dev-lang/perl =dev-libs/apr-util-1*:1/1=[gdbm] dev-libs/libpcre sys-libs/zlib app-misc/mime-types sys-libs/gdbm:0/1.13= >=dev-libs/openssl-1.0.2:0/1.1= !=www-servers/apache-1* virtual/tmpfiles
+www-servers/nginx	dev-libs/libpcre:3/3= dev-libs/openssl:0/1.1= >=dev-libs/openssl-1.0.1c:0/1.1= dev-libs/openssl:0/1.1= sys-libs/zlib sys-libs/zlib media-libs/gd:2/3=[jpeg,png] dev-libs/libpcre:3/3= dev-lang/luajit:2/2= sys-libs/pam dev-libs/apr:1/1.6= dev-libs/apr-util:1/1= dev-libs/libxml2:2/2= net-misc/curl www-servers/apache !www-servers/nginx:mainline
+x11-base/xcb-proto	dev-lang/python:3.6 >=dev-lang/python-exec-2:2/2=[python_targets_python3_6(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
+x11-base/xorg-proto	!<x11-proto/bigreqsproto-1.1.2-r1 !<x11-proto/compositeproto-0.4.2-r2 !<x11-proto/damageproto-1.2.1-r2 !<x11-proto/dmxproto-2.3.1-r2 !<x11-proto/dri2proto-2.8-r2 !<x11-proto/dri3proto-1.0-r1 !<x11-proto/fixesproto-5.0-r2 !<x11-proto/fontsproto-2.1.3-r1 !<x11-proto/glproto-1.4.17-r2 !<x11-proto/inputproto-2.3.2-r1 !<x11-proto/kbproto-1.0.7-r1 !<x11-proto/presentproto-1.1-r1 !<x11-proto/randrproto-1.5.0-r1 !<x11-proto/recordproto-1.14.2-r2 !<x11-proto/renderproto-0.11.1-r2 !<x11-proto/resourceproto-1.2.0-r1 !<x11-proto/scrnsaverproto-1.2.2-r2 !<x11-proto/trapproto-3.4.3-r1 !<x11-proto/videoproto-2.3.3-r1 !<x11-proto/xcmiscproto-1.2.2-r1 !<x11-proto/xextproto-7.3.0-r1 !<x11-proto/xf86bigfontproto-1.2.0-r2 !<x11-proto/xf86dgaproto-2.1-r3 !<x11-proto/xf86driproto-2.1.1-r2 !<x11-proto/xf86miscproto-0.9.3-r1 !<x11-proto/xf86vidmodeproto-2.3.1-r2 !<x11-proto/xineramaproto-1.2.1-r2 !<x11-proto/xproto-7.0.31-r1 !x11-proto/fontcacheproto !x11-proto/xf86rushproto
+x11-libs/libX11	>=x11-libs/libxcb-1.11.1[abi_x86_32(-)] !<x11-base/xorg-proto-2019.2
+x11-libs/libXau	x11-base/xorg-proto
+x11-libs/libXdmcp	dev-libs/libbsd
+x11-libs/libXext	>=x11-libs/libX11-1.6.2:0/0=[abi_x86_32(-)]
+x11-libs/libvdpau	>=x11-libs/libX11-1.6.2[abi_x86_32(-)] >=x11-libs/libXext-1.3.2[abi_x86_32(-)]
+x11-libs/libxcb	>=dev-libs/libpthread-stubs-0.3-r1[abi_x86_32(-)] >=x11-libs/libXau-1.0.7-r1[abi_x86_32(-)] >=x11-libs/libXdmcp-1.1.1-r1[abi_x86_32(-)]
 x11-misc/shared-mime-info	>=dev-libs/glib-2 dev-libs/libxml2

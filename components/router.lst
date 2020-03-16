@@ -66,6 +66,13 @@ $package usbutils
 $package media-video/motion
 $exec "systemctl enable motion"
 
+# nginx
+$require lua.lst
+$package dev-lang/luajit
+$package www-servers/nginx --use="nginx_modules_http_lua"
+$exec "systemctl enable nginx"
+
+
 $require timezone-jp.lst
 $sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
 

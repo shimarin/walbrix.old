@@ -24,3 +24,6 @@ net-analyzer/tcpdump
 net-misc/bridge-utils
 net-misc/iperf
 media-video/motion
+www-servers/nginx
+dev-lua/luajson
+dev-lua/luasec
