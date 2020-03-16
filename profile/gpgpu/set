@@ -3,7 +3,7 @@ app-admin/sysstat
 app-arch/zip
 app-editors/bvi
 app-editors/nano
-app-editors/nvi
+app-editors/vim
 app-misc/beep
 app-misc/screen
 app-portage/cpuid2cpuflags
@@ -51,6 +51,6 @@ x11-drivers/nvidia-drivers
 x11-libs/libdrm
 
 # AMD Drivers
-#dev-libs/rocm-opencl-runtime
-#dev-libs/roct-thunk-interface
-dev-libs/amdgpu-pro-opencl
+dev-libs/rocm-opencl-runtime
+dev-libs/roct-thunk-interface
+#dev-libs/amdgpu-pro-opencl

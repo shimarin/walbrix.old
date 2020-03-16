@@ -8,13 +8,13 @@ sys-apps/hwids
 =x11-drivers/nvidia-drivers-440.59
 
 # AMD rocm
-=dev-libs/rocm-opencl-runtime-3.0.0
-=dev-libs/rocm-device-libs-3.0.0
-=dev-libs/rocm-comgr-3.0.0
-=dev-libs/rocr-runtime-3.0.0
+=dev-libs/rocm-opencl-runtime-3.1.0
+=dev-libs/rocm-device-libs-3.1.0
+=dev-libs/rocm-comgr-3.1.0
+=dev-libs/rocr-runtime-3.1.0
 =dev-util/rocm-cmake-3.0.0
-=dev-libs/roct-thunk-interface-3.0.0
-=sys-devel/llvm-roc-3.0.0
+=dev-libs/roct-thunk-interface-3.1.0
+=sys-devel/llvm-roc-3.1.0
 
 # Intel NEO
 =dev-util/clinfo-2.2.18.04.06

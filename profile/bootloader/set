@@ -1,7 +1,7 @@
 sys-boot/grub
 sys-fs/xfsprogs
 app-editors/nano
-app-editors/nvi
+app-editors/vim
 sys-fs/dosfstools
 sys-block/parted
 sys-fs/lsscsi
