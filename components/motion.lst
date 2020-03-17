@@ -1,58 +1,121 @@
-$require paravirt.lst
+$require base-systemd.lst
+
+$mkdir /boot/grub
+$write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
+
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1motion\2/'
 
-#$require nginx.lst
-$require mysql.lst
-#$require mysql-python.lst
-#$require git.lst
+$package sys-block/zram-init
+$exec "systemctl enable zram_swap"
+$require cron-systemd.lst
+$require timezone-jp.lst
 
-#$require restkit.lst
+# motion
+$package media-video/motion
+$exec "systemctl enable motion"
 
-#$require mosquitto.lst
-#$require python-zeroconf.lst
-#$package dev-python/paho-mqtt
-#$package dev-db/sqlite
+# nginx
+$require lua.lst
+$package dev-lang/luajit
+$package www-servers/nginx --use="nginx_modules_http_lua"
+$exec "systemctl enable nginx"
 
-#$package sys-apps/usbutils
+# mysql
+$package dev-db/mysql-connector-c # for my_print_defaults needed by mysql_install_db
+#dev-libs/libaio
+#dev-libs/protobuf
+#app-arch/libarchive
+#app-arch/lz4
+$package dev-db/mysql
+$package dev-db/mysql-init-scripts
+$sed /etc/mysql/mysql.d/50-distro-server.cnf 's/^log-bin$/#log-bin/'  # disable binary log
+/usr/include/mysql/mysql_version.h
+#/usr/include/mysql/my_config.h
+/run/mysqld
+/var/log/mysql
+$exec "systemctl enable mysqld"
+$mkdir /var/lib/mysql --owner=mysql.mysql --mode=0750
+$copy resource/mysql/with-mysqld /usr/sbin/
+$exec --ldconfig "with-mysqld '/usr/bin/mysql_tzinfo_to_sql /usr/share/zoneinfo | /usr/bin/mysql -uroot mysql'"
+
+# python and modules
+$require python27.lst
+$package dev-python/mysql-python
+$package dev-python/paho-mqtt
+$package dev-db/sqlite
+$package dev-python/pyparsing
+
+# restkit
+$package dev-python/greenlet
+$package dev-python/webob
+$package dev-python/cython
+$package dev-python/http-parser
+$package net-dns/c-ares
+$package dev-python/gevent
+$package dev-python/socketpool
+$package dev-python/restkit
+
+# python-zeroconf
+$package dev-python/netifaces
+$package dev-python/enum34
+$package dev-python/six
+$package dev-python/zeroconf
+
+# requests
+$require urllib3.lst
+$package dev-python/chardet
+$package dev-python/requests
+$package dev-python/py
+$package dev-python/ipaddress
+$package dev-python/ply
+#$package dev-python/pytest
+$require cryptography.lst
+$package dev-python/pyopenssl
+$package dev-python/ndg-httpsclient
+
+# s3cmd
+$package dev-python/python-magic
+$package dev-python/six
+$package dev-python/python-dateutil
+$package net-misc/s3cmd
+
+$require matplotlib.lst
+$require pillow.lst
+
+$require git.lst
+
+# mosquitto
+$package app-misc/mosquitto --use="websockets"
+#$require avahi.lst
+#$copy mosquitto/mosquitto.service /etc/avahi/services/mosquitto.service
+$exec "systemctl enable mosquitto"
+
+# avahi
+#dev-libs/libdaemon
+$package net-dns/avahi --use="-introspection"
+$exec "systemctl enable avahi-daemon"
+$sed /etc/systemd/network/50-eth0-dhcp.network 's/MulticastDNS=yes/MulticastDNS=no/'
+
+# openvpn
+$package net-vpn/openvpn --use="systemd"
+
+$package sys-apps/usbutils
 #/usr/sbin/usbip
 #$require usbip-build.lst
 #$copy usbip/usbip.init /etc/init.d/usbip
 #$copy usbip/usbip.conf /etc/conf.d/usbip
-#/usr/share/misc/usb.ids
+/usr/share/misc/usb.ids
 
 # create database
 $write /tmp/create-db.sh "mysql -u root -e 'create database `motion`; create user `motion`@localhost; grant all privileges on `motion`.* to `motion`@localhost'"
 $exec "with-mysqld 'sh /tmp/create-db.sh'"
 
-#$require s3cmd.lst
-
-$download https://github.com/Motion-Project/motion/archive/Release-4.3.0.tar.gz /tmp/
-$exec 'cd /tmp && tar xvf Release-*.tar.gz'
-$exec --overlay "cd /tmp/motion-Release-* && autoreconf -fiv && ./configure --prefix=/usr --with-ffmpeg --with-mysql --without-pgsql --without-mariadb --without-sqlite3 && make && make install"
-$deltree /usr/share/doc
-$deltree /usr/share/man
-$exec "getent passwd motion || useradd -c '' -d /var/lib/motion -M -u 115 -g video -s /sbin/nologin motion"
-$mkdir --owner=motion.video --mode=0755 /var/lib/motion
-$mkdir --owner=motion.video --mode=0755 /etc/motion
-$mkdir --owner=motion.video --mode=0755 /etc/motion/conf.d
-$copy resource/motion/motion.conf /etc/motion/motion.conf
-$copy resource/motion/conf-motion /etc/conf.d/motion
-$copy resource/motion/init-motion /etc/init.d/motion
-$symlink /etc/runlevels/default/motion /etc/init.d/motion
-
-#$package media-libs/opencv
-#/usr/bin/ffmpeg
-#$package media-tv/v4l-utils
+$package media-libs/opencv
+/usr/bin/ffmpeg
+$package media-tv/v4l-utils
 #$package dev-python/pyusb
-#$require requests.lst
-#$require matplotlib.lst
-#$require pillow.lst
-#$require vlgothic.lst
-#$require uwsgi.lst
-#$package net-misc/wol
-#$package sys-process/at
 
-#$require flask.lst
-#$package www-servers/spawn-fcgi
-#$package www-misc/fcgiwrap
-#$require iptables.lst
+$require vlgothic.lst
+#$require uwsgi.lst
+$package net-misc/wol
+$package sys-process/at

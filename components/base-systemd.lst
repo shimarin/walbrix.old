@@ -21,7 +21,9 @@ $touch /root/.ssh/authorized_keys
 $exec "systemctl enable sshd"
 
 $write /etc/systemd/network/50-eth0-dhcp.network "[Match]\nName=eth0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes"
+$mkdir /etc/systemd/dnssd
 $exec "systemctl enable systemd-networkd"
+$exec "systemctl enable systemd-resolved"
 
 $write /etc/systemd/system/rc-local.service "[Unit]\nDescription=/etc/rc.local Compatibility\nConditionPathExists=/etc/rc.local\n\n[Service]\nType=forking\nExecStart=/etc/rc.local start\nTimeoutSec=0\nStandardOutput=tty\nRemainAfterExit=yes\nSysVStartPriority=99\n\n[Install]\nWantedBy=multi-user.target"
 $write /etc/rc.local "#!/bin/sh\nexit 0"

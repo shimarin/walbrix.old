@@ -9,6 +9,7 @@ $require cron.lst
 $require avahi.lst
 $require nmbd.lst
 
+$write /etc/resolv.conf "nameserver 8.8.8.8\nnameserver 8.8.4.4"
 $write /etc/conf.d/localmount 'no_umounts="/.overlay/boot|/.overlay/rw"'
 $sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount,ro"/'
 
