@@ -34,6 +34,8 @@ void init()
     }
   }
 
+  mount_ro_loop_or_die("/mnt/boot/system.img", "/mnt/system", 0);
+
   if (!exists(datafile) && get_free_disk_space("/mnt/boot") >= 1024L*1024*1024*2 ) {
     printf("RW layer does not exist. Creating...");fflush(stdout);
     if (create_btrfs_imagefile(datafile, 128*1024*1024) == 0) {
@@ -43,9 +45,16 @@ void init()
     }
   }
 
-  if (!is_file(datafile) || mount_rw_loop(datafile, "/mnt/rw") != 0) {
-    printf("No valid persistent RW layer. Using tmpfs.\n");
-    mount_or_die("tmpfs", "/mnt/rw", "tmpfs", MS_RELATIME, "");
+  btrfs_scan();
+  if (mount_rw_loop_btrfs(datafile, "/mnt/rw", 1/*compress*/) != 0) {
+    printf("Failed to mount RW layer. Attempting repair.\n");
+    repair_btrfs_imagefile(datafile);
+    if (mount_rw_loop_btrfs(datafile, "/mnt/rw", 1/*compress*/) != 0) {
+      if (mount_rw_loop(datafile, "/mnt/rw") != 0) {
+        printf("No valid persistent RW layer. Using tmpfs.\n");
+        mount_or_die("tmpfs", "/mnt/rw", "tmpfs", MS_RELATIME, "");
+      }
+    }
   }
 
   if (!exists(swapfile) && get_free_disk_space("/mnt/boot") >= 1024L*1024*1024*2 ) {
@@ -62,7 +71,6 @@ void init()
     activate_swap(swapfile);
   }
 
-  mount_ro_loop_or_die("/mnt/boot/system.img", "/mnt/system", 0);
   mount_overlay_or_die("/mnt/system", "/mnt/rw/root", "/mnt/rw/work", NEWROOT);
   mount_or_die("tmpfs", NEWROOT"/run", "tmpfs", MS_NODEV|MS_NOSUID|MS_STRICTATIME, "mode=755");
 

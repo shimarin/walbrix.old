@@ -242,305 +242,6 @@ int md5(const char *filename, char hash_in_hex[33], int first_block_only)
   return 0;
 }
 
-
-void halt()
-{
-  reboot(RB_HALT_SYSTEM);
-}
-
-void mkdir_p(const char *dir)
-{
-  const char *psrc = dir;
-  char *buf = (char *)malloc(strlen(dir) + 1);
-  char *pdst = buf;
-  *buf = '\0';
-  while (*psrc) {
-    if (*psrc == '/' && strlen(buf) > 0) {
-      mkdir(buf, S_755);
-    }
-    *pdst++ = *psrc++;
-    *pdst = '\0';
-  }
-  mkdir(buf, S_755);
-  free(buf);
-}
-
-int mount_procdevsys()
-{
-  mkdir("/proc", S_755);
-  if (mount("proc", "/proc", "proc", MS_NOEXEC|MS_NOSUID|MS_NODEV, "") < 0) return -1;
-  mkdir("/dev", S_755);
-  if (mount("udev", "/dev", "devtmpfs", MS_NOSUID, "mode=0755,siz=10M") < 0) return -1;
-  mkdir("/sys", S_755);
-  return mount("sysfs", "/sys", "sysfs", MS_NOEXEC|MS_NOSUID|MS_NODEV, "");
-}
-
-
-void mount_procdevsys_or_die()
-{
-  if (mount_procdevsys() < 0) {
-    perror("mount_procdevsys");
-    halt();
-  }
-}
-
-int search_partition(const char *type, const char *value, struct partition_struct *partition)
-{
-  blkid_dev dev = NULL;
-  blkid_dev_iterate iter;
-  blkid_tag_iterate tag_iter;
-  blkid_cache cache;
-  const char *_type, *_value;
-  blkid_get_cache(&cache, "/dev/null");
-  blkid_probe_all(cache);
-  iter = blkid_dev_iterate_begin(cache);
-  blkid_dev_set_search(iter, type, value);
-  while (blkid_dev_next(iter, &dev) == 0) {
-    dev = blkid_verify(cache, dev);
-    if (dev) break;
-  }
-  blkid_dev_iterate_end(iter);
-
-  if (!dev) {
-    errno = ENOENT;
-    return -1;
-  }
-  strcpy(partition->device, blkid_dev_devname(dev));
-
-  partition->type[0] = '\0';
-  tag_iter = blkid_tag_iterate_begin(dev);
-  while (blkid_tag_next(tag_iter, &_type, &_value) == 0) {
-    if (strcmp(_type,"TYPE") == 0) {
-      strcpy(partition->type, _value);
-      break;
-    }
-  }
-  blkid_tag_iterate_end(tag_iter);
-  blkid_put_cache(cache);
-
-  return 0;
-}
-
-int search_partition_by_uuid(const char *uuid, struct partition_struct *partition)
-{
-  return search_partition("UUID", uuid, partition);
-}
-
-int search_partition_by_fstype(const char *fstype, struct partition_struct *partition)
-{
-  return search_partition("TYPE", fstype, partition);
-}
-
-int search_boot_partition(struct partition_struct *partition, int max_retry)
-{
-  int retry_count;
-  const char *boot_partition_uuid;
-  boot_partition_uuid = getenv("boot_partition_uuid");
-  if (!boot_partition_uuid) {
-    errno = ENOENT;
-    return -1;
-  }
-  // else
-
-  for (retry_count = 0 ; retry_count < max_retry + 1; retry_count++) {
-    if (search_partition_by_uuid(boot_partition_uuid, partition) == 0) break;
-    // else
-    sleep(retry_count);
-  }
-
-  if (retry_count == max_retry + 1) {
-    errno = ENOENT;
-    return -1;
-  }
-  // else
-  return 0;
-}
-
-void search_partition_by_fstype_or_die(const char *fstype, struct partition_struct *partition, int max_retry)
-{
-  int retry_count;
-  for (retry_count = 0 ; retry_count < max_retry + 1; retry_count++) {
-    if (search_partition_by_fstype(fstype, partition) == 0) break;
-    // else
-    sleep(retry_count);
-  }
-
-  if (retry_count == max_retry + 1) {
-    perror("search_partition_by_fstype");
-    halt();
-  }
-}
-
-void mount_or_die(const char *source, const char *target,
-                 const char *filesystemtype, unsigned long mountflags,
-                 const void *data)
-{
-  mkdir_p(target);
-  if (mount(source, target, filesystemtype, mountflags, data) < 0) {
-    char *buf = (char *)malloc(strlen(target) + 7);
-    if (buf) {
-      strcpy(buf, "mount ");
-      strcat(buf, target);
-      perror(buf);
-      free(buf);
-    }
-    halt();
-  }
-  // else
-  printf("%s mounted.\n", target);
-}
-
-int mount_overlay(const char *lowerdir, const char *upperdir, const char *workdir, const char *mountpoint)
-{
-  char buf[PATH_MAX * 5];
-  sprintf(buf, "lowerdir=%s,upperdir=%s,workdir=%s", lowerdir, upperdir, workdir);
-  return mount("overlay", mountpoint, "overlay", MS_RELATIME, buf);
-}
-
-void mount_overlay_or_die(const char *lowerdir, const char *upperdir, const char *workdir, const char *mountpoint)
-{
-  mkdir_p(upperdir);
-  mkdir_p(workdir);
-  mkdir_p(mountpoint);
-  if (mount_overlay(lowerdir, upperdir, workdir, mountpoint) < 0) {
-    perror("mount_overlay");
-    halt();
-  }
-  // else
-  printf("Overlayfs(lowerdir=%s,upperdir=%s,workdir=%s) mounted on %s.\n", lowerdir, upperdir, workdir, mountpoint);
-}
-
-int move_mount(const char *old, const char *new)
-{
-  return mount(old, new, NULL, MS_MOVE, NULL);
-}
-
-void move_mount_or_die(const char *old, const char *new)
-{
-  mkdir_p(new);
-  if (move_mount(old, new) < 0) {
-    perror("move_mount");
-    halt();
-  }
-  // else
-  printf("Mountpoint moved from %s to %s.\n", old, new);
-}
-
-int mount_loop(const char *imgfile, const char *mountpoint, int mflags, int offset)
-{
-  struct libmnt_context *ctx;
-  int rst = -1;
-  char options[32];
-  ctx = mnt_new_context();
-  if (!ctx) {
-    errno = ENOMEM;
-    return -1;
-  }
-  // else
-  mnt_context_set_fstype_pattern(ctx, "auto");
-  mnt_context_set_source(ctx, imgfile);
-  mnt_context_set_target(ctx, mountpoint);
-  mnt_context_set_mflags(ctx, mflags);
-  sprintf(options, "loop,offset=%d", offset);
-  mnt_context_set_options(ctx, options);
-  rst = mnt_context_mount(ctx);
-  mnt_free_context(ctx);
-  return rst;
-}
-
-int mount_ro_loop(const char *imgfile, const char *mountpoint, int offset)
-{
-  mkdir_p(mountpoint);
-  return mount_loop(imgfile, mountpoint, MS_RDONLY, offset);
-}
-
-void mount_ro_loop_or_die(const char *imgfile, const char *mountpoint, int offset)
-{
-  if (mount_ro_loop(imgfile, mountpoint, offset) != 0) {
-    perror("mount_ro_loop");
-    halt();
-  }
-  // else
-  printf("Filesystem image %s mounted on %s.\n", imgfile, mountpoint);
-}
-
-int mount_rw_loop(const char *imgfile, const char *mountpoint)
-{
-  mkdir_p(mountpoint);
-  return mount_loop(imgfile, mountpoint, MS_RELATIME, 0);
-}
-
-int mount_rw_loop_btrfs(const char *imgfile, const char *mountpoint, int compress)
-{
-  struct libmnt_context *ctx;
-  int rst = -1;
-  char options[64];
-
-  mkdir_p(mountpoint);
-  ctx = mnt_new_context();
-  if (!ctx) {
-    errno = ENOMEM;
-    return -1;
-  }
-  // else
-  mnt_context_set_fstype_pattern(ctx, "btrfs");
-  mnt_context_set_source(ctx, imgfile);
-  mnt_context_set_target(ctx, mountpoint);
-  mnt_context_set_mflags(ctx, MS_RELATIME);
-  sprintf(options, "loop%s", (compress? ",compress=zstd":"") );
-  mnt_context_set_options(ctx, options);
-  rst = mnt_context_mount(ctx);
-  mnt_free_context(ctx);
-  return rst;
-}
-
-int switch_root(const char *newroot)
-{
-  return execl(SWITCH_ROOT, SWITCH_ROOT, newroot, "/sbin/init", NULL);
-}
-
-void switch_root_or_die(const char *newroot)
-{
-  if (switch_root(newroot) < 0) {
-    perror("switch_root");
-    halt();
-  }
-}
-
-int exists(const char *path)
-{
-  struct stat st;
-  return (stat(path, &st) == 0);
-}
-
-int is_file(const char *path)
-{
-  struct stat st;
-  if (stat(path, &st) < 0) return 0;
-  return S_ISREG(st.st_mode);
-}
-
-int is_dir(const char *path)
-{
-  struct stat st;
-  if (stat(path, &st) < 0) return 0;
-  return S_ISDIR(st.st_mode);
-}
-
-int is_mounted(const char *path)
-{
-  struct libmnt_table *tb = mnt_new_table_from_file("/proc/self/mountinfo");
-	struct libmnt_cache *cache = mnt_new_cache();
-	struct libmnt_fs *fs;
-  int rst = 0;
-  mnt_table_set_cache(tb, cache);
-	mnt_unref_cache(cache);
-  fs = mnt_table_find_target(tb, path, MNT_ITER_BACKWARD);
-  rst = (fs && mnt_fs_get_target(fs));
-  mnt_unref_table(tb);
-  return rst;
-}
-
 int fork_exec_wait(const char *cmd, ...)
 {
   va_list list;
@@ -675,6 +376,341 @@ int fork_chroot_exec_write_wait(const char *rootdir, const char *data, const cha
   return WIFEXITED(rst)? WEXITSTATUS(rst) : -1;
 }
 
+void halt()
+{
+  reboot(RB_HALT_SYSTEM);
+}
+
+void mkdir_p(const char *dir)
+{
+  const char *psrc = dir;
+  char *buf = (char *)malloc(strlen(dir) + 1);
+  char *pdst = buf;
+  *buf = '\0';
+  while (*psrc) {
+    if (*psrc == '/' && strlen(buf) > 0) {
+      mkdir(buf, S_755);
+    }
+    *pdst++ = *psrc++;
+    *pdst = '\0';
+  }
+  mkdir(buf, S_755);
+  free(buf);
+}
+
+int mount_procdevsys()
+{
+  mkdir("/proc", S_755);
+  if (mount("proc", "/proc", "proc", MS_NOEXEC|MS_NOSUID|MS_NODEV, "") < 0) return -1;
+  mkdir("/dev", S_755);
+  if (mount("udev", "/dev", "devtmpfs", MS_NOSUID, "mode=0755,siz=10M") < 0) return -1;
+  mkdir("/sys", S_755);
+  return mount("sysfs", "/sys", "sysfs", MS_NOEXEC|MS_NOSUID|MS_NODEV, "");
+}
+
+void mount_procdevsys_or_die()
+{
+  if (mount_procdevsys() < 0) {
+    perror("mount_procdevsys");
+    halt();
+  }
+}
+
+int search_partition(const char *type, const char *value, struct partition_struct *partition)
+{
+  blkid_dev dev = NULL;
+  blkid_dev_iterate iter;
+  blkid_tag_iterate tag_iter;
+  blkid_cache cache;
+  const char *_type, *_value;
+  blkid_get_cache(&cache, "/dev/null");
+  blkid_probe_all(cache);
+  iter = blkid_dev_iterate_begin(cache);
+  blkid_dev_set_search(iter, type, value);
+  while (blkid_dev_next(iter, &dev) == 0) {
+    dev = blkid_verify(cache, dev);
+    if (dev) break;
+  }
+  blkid_dev_iterate_end(iter);
+
+  if (!dev) {
+    errno = ENOENT;
+    return -1;
+  }
+  strcpy(partition->device, blkid_dev_devname(dev));
+
+  partition->type[0] = '\0';
+  tag_iter = blkid_tag_iterate_begin(dev);
+  while (blkid_tag_next(tag_iter, &_type, &_value) == 0) {
+    if (strcmp(_type,"TYPE") == 0) {
+      strcpy(partition->type, _value);
+      break;
+    }
+  }
+  blkid_tag_iterate_end(tag_iter);
+  blkid_put_cache(cache);
+
+  return 0;
+}
+
+int search_partition_by_uuid(const char *uuid, struct partition_struct *partition)
+{
+  return search_partition("UUID", uuid, partition);
+}
+
+int search_partition_by_fstype(const char *fstype, struct partition_struct *partition)
+{
+  return search_partition("TYPE", fstype, partition);
+}
+
+int search_boot_partition(struct partition_struct *partition, int max_retry)
+{
+  int retry_count;
+  const char *boot_partition_uuid;
+  boot_partition_uuid = getenv("boot_partition_uuid");
+  if (!boot_partition_uuid) {
+    errno = ENOENT;
+    return -1;
+  }
+  // else
+
+  for (retry_count = 0 ; retry_count < max_retry + 1; retry_count++) {
+    if (search_partition_by_uuid(boot_partition_uuid, partition) == 0) break;
+    // else
+    sleep(retry_count);
+  }
+
+  if (retry_count == max_retry + 1) {
+    errno = ENOENT;
+    return -1;
+  }
+  // else
+  return 0;
+}
+
+void search_partition_by_fstype_or_die(const char *fstype, struct partition_struct *partition, int max_retry)
+{
+  int retry_count;
+  for (retry_count = 0 ; retry_count < max_retry + 1; retry_count++) {
+    if (search_partition_by_fstype(fstype, partition) == 0) break;
+    // else
+    sleep(retry_count);
+  }
+
+  if (retry_count == max_retry + 1) {
+    perror("search_partition_by_fstype");
+    halt();
+  }
+}
+
+void mount_or_die(const char *source, const char *target,
+                 const char *filesystemtype, unsigned long mountflags,
+                 const void *data)
+{
+  mkdir_p(target);
+  if (mount(source, target, filesystemtype, mountflags, data) < 0) {
+    char *buf = (char *)malloc(strlen(target) + 7);
+    if (buf) {
+      strcpy(buf, "mount ");
+      strcat(buf, target);
+      perror(buf);
+      free(buf);
+    }
+    halt();
+  }
+  // else
+  printf("%s mounted.\n", target);
+}
+
+void mount_or_die2(const char *source, const char *target,
+                 const char *filesystemtype, unsigned long mountflags,
+                 const void *data)
+{
+  struct libmnt_context *ctx;
+  int rst = -1;
+  ctx = mnt_new_context();
+  if (!ctx) {
+    printf("mount_or_die2: insufficient memory.\n");
+    halt();
+  }
+  // else
+  mkdir_p(target);
+  mnt_context_set_fstype_pattern(ctx, filesystemtype);
+  mnt_context_set_source(ctx, source);
+  mnt_context_set_target(ctx, target);
+  mnt_context_set_mflags(ctx, mountflags);
+  mnt_context_set_options(ctx, data);
+  rst = mnt_context_mount(ctx);
+  mnt_free_context(ctx);
+
+  if (rst != 0) {
+    printf("%s could not be mounted on %s (%d).\n", source, target, rst);
+    halt();
+  }
+}
+
+int mount_overlay(const char *lowerdir, const char *upperdir, const char *workdir, const char *mountpoint)
+{
+  char buf[PATH_MAX * 5];
+  sprintf(buf, "lowerdir=%s,upperdir=%s,workdir=%s", lowerdir, upperdir, workdir);
+  return mount("overlay", mountpoint, "overlay", MS_RELATIME, buf);
+}
+
+void mount_overlay_or_die(const char *lowerdir, const char *upperdir, const char *workdir, const char *mountpoint)
+{
+  mkdir_p(upperdir);
+  mkdir_p(workdir);
+  mkdir_p(mountpoint);
+  if (mount_overlay(lowerdir, upperdir, workdir, mountpoint) < 0) {
+    perror("mount_overlay");
+    halt();
+  }
+  // else
+  printf("Overlayfs(lowerdir=%s,upperdir=%s,workdir=%s) mounted on %s.\n", lowerdir, upperdir, workdir, mountpoint);
+}
+
+int move_mount(const char *old, const char *new)
+{
+  return mount(old, new, NULL, MS_MOVE, NULL);
+}
+
+void move_mount_or_die(const char *old, const char *new)
+{
+  mkdir_p(new);
+  if (move_mount(old, new) < 0) {
+    perror("move_mount");
+    halt();
+  }
+  // else
+  printf("Mountpoint moved from %s to %s.\n", old, new);
+}
+
+int mount_loop(const char *imgfile, const char *mountpoint, int mflags, int offset)
+{
+  struct libmnt_context *ctx;
+  int rst = -1;
+  char options[32];
+  ctx = mnt_new_context();
+  if (!ctx) {
+    errno = ENOMEM;
+    return -1;
+  }
+  // else
+  mnt_context_set_fstype_pattern(ctx, "auto");
+  mnt_context_set_source(ctx, imgfile);
+  mnt_context_set_target(ctx, mountpoint);
+  mnt_context_set_mflags(ctx, mflags);
+  sprintf(options, "loop,offset=%d", offset);
+  mnt_context_set_options(ctx, options);
+  rst = mnt_context_mount(ctx);
+  mnt_free_context(ctx);
+  return rst;
+}
+
+int mount_ro_loop(const char *imgfile, const char *mountpoint, int offset)
+{
+  mkdir_p(mountpoint);
+  return mount_loop(imgfile, mountpoint, MS_RDONLY, offset);
+}
+
+void mount_ro_loop_or_die(const char *imgfile, const char *mountpoint, int offset)
+{
+  if (mount_ro_loop(imgfile, mountpoint, offset) != 0) {
+    perror("mount_ro_loop");
+    halt();
+  }
+  // else
+  printf("Filesystem image %s mounted on %s.\n", imgfile, mountpoint);
+}
+
+int mount_rw_loop(const char *imgfile, const char *mountpoint)
+{
+  mkdir_p(mountpoint);
+  return mount_loop(imgfile, mountpoint, MS_RELATIME, 0);
+}
+
+int mount_rw_loop_btrfs(const char *imgfile, const char *mountpoint, int compress)
+{
+  struct libmnt_context *ctx;
+  int rst = -1;
+  char options[64];
+
+  mkdir_p(mountpoint);
+  ctx = mnt_new_context();
+  if (!ctx) {
+    errno = ENOMEM;
+    return -1;
+  }
+  // else
+  mnt_context_set_fstype_pattern(ctx, "btrfs");
+  mnt_context_set_source(ctx, imgfile);
+  mnt_context_set_target(ctx, mountpoint);
+  mnt_context_set_mflags(ctx, MS_RELATIME);
+  sprintf(options, "loop%s", (compress? ",compress=zstd":"") );
+  mnt_context_set_options(ctx, options);
+  rst = mnt_context_mount(ctx);
+  mnt_free_context(ctx);
+
+  if (rst == 0) {
+    // extend file system size up to loopbak filesize
+    fork_exec_wait(BTRFS, "filesystem", "resize", "max", mountpoint, NULL);
+  }
+  return rst;
+}
+
+int switch_root(const char *newroot)
+{
+  return execl(SWITCH_ROOT, SWITCH_ROOT, newroot, "/sbin/init", NULL);
+}
+
+void switch_root_or_die(const char *newroot)
+{
+  if (switch_root(newroot) < 0) {
+    perror("switch_root");
+    halt();
+  }
+}
+
+int exists(const char *path)
+{
+  struct stat st;
+  return (stat(path, &st) == 0);
+}
+
+int is_file(const char *path)
+{
+  struct stat st;
+  if (stat(path, &st) < 0) return 0;
+  return S_ISREG(st.st_mode);
+}
+
+int is_dir(const char *path)
+{
+  struct stat st;
+  if (stat(path, &st) < 0) return 0;
+  return S_ISDIR(st.st_mode);
+}
+
+int is_block(const char* path)
+{
+  struct stat st;
+  if (stat(path, &st) < 0) return 0;
+  return S_ISBLK(st.st_mode);
+}
+
+int is_mounted(const char *path)
+{
+  struct libmnt_table *tb = mnt_new_table_from_file("/proc/self/mountinfo");
+	struct libmnt_cache *cache = mnt_new_cache();
+	struct libmnt_fs *fs;
+  int rst = 0;
+  mnt_table_set_cache(tb, cache);
+	mnt_unref_cache(cache);
+  fs = mnt_table_find_target(tb, path, MNT_ITER_BACKWARD);
+  rst = (fs && mnt_fs_get_target(fs));
+  mnt_unref_table(tb);
+  return rst;
+}
 
 int cp_a(const char *src, const char *dst)
 {
@@ -819,12 +855,12 @@ int create_btrfs_imagefile(const char *imagefile, off_t length)
 
 int repair_btrfs_imagefile(const char *imagefile)
 {
-  return fork_exec_wait(BTRFS, "check", "--repair", "--force", imagefile);
+  return fork_exec_wait(BTRFS, "check", "--repair", "--force", imagefile, NULL);
 }
 
 int btrfs_scan()
 {
-  return fork_exec_wait(BTRFS, "device", "scan");
+  return fork_exec_wait(BTRFS, "device", "scan", NULL);
 }
 
 int create_swapfile(const char* swapfile, off_t length)
