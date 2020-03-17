@@ -323,5 +323,6 @@ export class Collect implements Subcommand<[string,string,string,commander.Comma
     }
     process_lstfile(context, lstfile);
     flush(context);
+    rimraf.sync(path.join(context.dstdir, "tmp/*"));
   }
 }

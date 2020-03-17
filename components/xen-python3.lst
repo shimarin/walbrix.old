@@ -18,9 +18,9 @@ $exec "systemctl enable xendomains"
 $exec "systemctl enable xenstored"
 
 # pv(h)-grub2
-#$write /tmp/grub.cfg 'set root=(xen/xvda1)\nnormal (xen/xvda1)/boot/grub/grub.cfg'
-#$exec "grub-mkimage -c /tmp/grub.cfg -p /boot/grub -o /usr/libexec/xen/boot/pv-grub2-x86_64 -O x86_64-xen loopback xfs btrfs linux echo test gzio xzio probe configfile cpuid minicmd squash4 lsxen && gzip /usr/lib/xen/boot/pv-grub2-x86_64"
-#$exec "grub-mkimage -c /tmp/grub.cfg -p /boot/grub -o /usr/libexec/xen/boot/pvh-grub2-x86_64 -O i386-xen_pvh loopback xfs btrfs linux echo test gzio xzio probe configfile cpuid minicmd squash4 && gzip /usr/lib/xen/boot/pvh-grub2-x86_64"
+$write /tmp/grub.cfg 'set root=(xen/xvda1)\nnormal (xen/xvda1)/boot/grub/grub.cfg'
+$exec "grub-mkimage -c /tmp/grub.cfg -p /boot/grub -o /usr/libexec/xen/boot/pv-grub2-x86_64 -O x86_64-xen loopback xfs btrfs linux echo test gzio xzio probe configfile cpuid minicmd squash4 lsxen && gzip /usr/libexec/xen/boot/pv-grub2-x86_64"
+$exec "grub-mkimage -c /tmp/grub.cfg -p /boot/grub -o /usr/libexec/xen/boot/pvh-grub2-x86_64 -O i386-xen_pvh loopback xfs btrfs linux echo test gzio xzio probe configfile cpuid minicmd squash4 && gzip /usr/libexec/xen/boot/pvh-grub2-x86_64"
 
 # use eth0 as the default network bridge
 $sed /etc/xen/xl.conf 's/^#vif.default.bridge="xenbr0"$/vif.default.bridge=""/'

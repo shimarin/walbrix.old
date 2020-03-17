@@ -134,7 +134,7 @@ export function chroot(orig_dir:string, command:string,
       });
       //fs.copyFileSync("/etc/resolv.conf", path.join(real_dir, "etc/resolv.conf"));
       // need to add DeviceAllow=/dev/loop-control rw to /lib/systemd/system/systemd-nspawn\@.service
-      if (systemd) return child_process.spawnSync("systemd-nspawn", ["-D", real_dir, "/bin/sh", "-c", command], {stdio:"inherit"}).status;
+      if (systemd) return child_process.spawnSync("systemd-nspawn", [ "-D", real_dir, "/bin/sh", "-c", command], {stdio:"inherit",env:{SYSTEMD_NSPAWN_TMPFS_TMP:"0"}}).status;
       else return child_process.spawnSync("chroot", [real_dir, "/bin/sh", "-c", command], {stdio:"inherit"}).status;
     }
   }
