@@ -5,6 +5,7 @@ $write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
 
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1motion\2/'
 
+$require xfsprogs.lst
 $package sys-block/zram-init
 $exec "systemctl enable zram_swap"
 $require cron-systemd.lst
