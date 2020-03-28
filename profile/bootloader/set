@@ -5,6 +5,7 @@ app-editors/vim
 sys-fs/dosfstools
 sys-block/parted
 sys-fs/lsscsi
+sys-fs/mtools
 net-wireless/wireless-tools
 net-wireless/wpa_supplicant
 sys-fs/btrfs-progs

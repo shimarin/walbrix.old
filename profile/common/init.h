@@ -416,13 +416,50 @@ void mount_procdevsys_or_die()
   }
 }
 
+int get_partition_info_by_dev(blkid_dev dev, struct partition_struct *partition)
+{
+  blkid_tag_iterate tag_iter;
+  const char *_type, *_value;
+  strcpy(partition->device, blkid_dev_devname(dev));
+  partition->type[0] = '\0';
+  tag_iter = blkid_tag_iterate_begin(dev);
+  while (blkid_tag_next(tag_iter, &_type, &_value) == 0) {
+    if (strcmp(_type,"TYPE") == 0) {
+      strcpy(partition->type, _value);
+      break;
+    }
+  }
+  blkid_tag_iterate_end(tag_iter);
+  return 0;
+}
+
+int get_partition_info_by_devname(const char* devname, struct partition_struct *partition)
+{
+  blkid_dev dev;
+  blkid_cache cache;
+  int rst;
+  blkid_get_cache(&cache, "/dev/null");
+  blkid_probe_all(cache);
+  dev = blkid_get_dev(cache, devname, 0);
+  if (!dev) {
+    errno = ENOENT;
+    rst = -1;
+    goto exit;
+  }
+  //else
+  rst = get_partition_info_by_dev(dev, partition);
+
+exit:;
+  blkid_put_cache(cache);
+  return rst;
+}
+
 int search_partition(const char *type, const char *value, struct partition_struct *partition)
 {
   blkid_dev dev = NULL;
   blkid_dev_iterate iter;
-  blkid_tag_iterate tag_iter;
   blkid_cache cache;
-  const char *_type, *_value;
+  int rst;
   blkid_get_cache(&cache, "/dev/null");
   blkid_probe_all(cache);
   iter = blkid_dev_iterate_begin(cache);
@@ -435,22 +472,15 @@ int search_partition(const char *type, const char *value, struct partition_struc
 
   if (!dev) {
     errno = ENOENT;
-    return -1;
+    rst = -1;
+    goto exit;
   }
-  strcpy(partition->device, blkid_dev_devname(dev));
 
-  partition->type[0] = '\0';
-  tag_iter = blkid_tag_iterate_begin(dev);
-  while (blkid_tag_next(tag_iter, &_type, &_value) == 0) {
-    if (strcmp(_type,"TYPE") == 0) {
-      strcpy(partition->type, _value);
-      break;
-    }
-  }
-  blkid_tag_iterate_end(tag_iter);
+  rst = get_partition_info_by_dev(dev, partition);
+
+exit:;
   blkid_put_cache(cache);
-
-  return 0;
+  return rst;
 }
 
 int search_partition_by_uuid(const char *uuid, struct partition_struct *partition)
@@ -953,6 +983,54 @@ int enable_autologin(const char *rootdir)
   if (!f) return -1;
   //else
   fputs("[Service]\nExecStart=\nExecStart=-/sbin/agetty -o '-p -- \\\\u' --autologin root --noclear %I $TERM", f);
+  return fclose(f);
+}
+
+int set_static_ip_address(const char *interface, const char *ip_address, const char *gateway, const char *dns, const char *fallback_dns,
+  const char *ipv6_address, const char *ipv6_gateway, const char *ipv6_dns, const char *ipv6_fallback_dns)
+{
+  FILE *f;
+  char network_config_file[PATH_MAX];
+  mkdir_p("/newroot/run/initramfs/rw/root/etc/systemd/network");
+  sprintf(network_config_file, "/newroot/run/initramfs/rw/root/etc/systemd/network/50-%s.network", interface);
+  f = fopen(network_config_file, "w");
+  if (!f) return -1;
+  // else
+  fprintf(f, "[Match]\nName=%s\n[Network]\n", interface);
+
+  if (ip_address) {
+    fprintf(f, "Address=%s\n", ip_address);
+    if (gateway) {
+      fprintf(f, "Gateway=%s\n", gateway);
+    }
+    if (dns) {
+      fprintf(f, "DNS=%s\n", dns);
+      if (fallback_dns) {
+        fprintf(f, "FallbackDNS=%s\n", fallback_dns);
+      }
+    } else if (gateway) {
+      fprintf(f, "DNS=8.8.8.8\nFallbackDNS=8.8.4.4\n");
+    }
+  } else {
+    fprintf(f, "DHCP=yes\n");
+  }
+
+  if (ipv6_address) {
+    fprintf(f, "Address=%s\n", ipv6_address);
+    if (ipv6_gateway) {
+      fprintf(f, "Gateway=%s\n", ipv6_gateway);
+    }
+    if (ipv6_dns) {
+      fprintf(f, "DNS=%s\n", ipv6_dns);
+      if (ipv6_fallback_dns) {
+        fprintf(f, "FallbackDNS=%s\n", ipv6_fallback_dns);
+      }
+    } else if (ipv6_gateway){
+      fprintf(f, "DNS=2001:4860:4860::8888\nFallbackDNS=2001:4860:4860::8844\n");
+    }
+  }
+
+  fprintf(f, "MulticastDNS=yes\nLLMNR=yes", f);
   return fclose(f);
 }
 

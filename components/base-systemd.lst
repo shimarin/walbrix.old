@@ -20,7 +20,7 @@ $mkdir /root/.ssh --mode=700
 $touch /root/.ssh/authorized_keys
 $exec "systemctl enable sshd"
 
-$write /etc/systemd/network/50-eth0-dhcp.network "[Match]\nName=eth0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes"
+$write /etc/systemd/network/50-eth0.network "[Match]\nName=eth0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes"
 $mkdir /etc/systemd/dnssd
 $exec "systemctl enable systemd-networkd"
 $exec "systemctl enable systemd-resolved"

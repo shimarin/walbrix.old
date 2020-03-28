@@ -35,5 +35,15 @@ bootx86.efi: bootx86.squashfs build/bootx86/done
 	cp build/bootx86/done $@
 	dd if=$< of=$@ seek=1 bs=1M
 
+build/bootx64.iso/done: bootx64.efi build/boot-iso9660/done
+	$(SUDO) rm -rf build/bootx64.iso && $(SUDO) mkdir -p build/bootx64.iso/efi/boot && $(SUDO) mkdir -p build/bootx64.iso/boot
+	$(SUDO) cp build/boot-iso9660/boot.img build/bootx64.iso/boot/
+	$(SUDO) cp build/boot-iso9660/efiboot.img build/bootx64.iso/boot/
+	$(SUDO) cp bootx64.efi build/bootx64.iso/efi/boot/
+	$(SUDO) touch $@
+
+bootx64.iso: build/bootx64.iso/done
+	xorriso -as mkisofs -f -J -r -no-emul-boot -boot-load-size 4 -boot-info-table -graft-points -eltorito-alt-boot -e boot/efiboot.img -b boot/boot.img -V WBINSTALL -o bootx64.iso build/bootx64.iso
+
 clean:
 	rm -f *.squashfs bootx64.efi artifacts.dep

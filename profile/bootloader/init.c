@@ -4,12 +4,24 @@
 #define PROBE_BOOT_PARTITION_MAX_RETRY 8
 #define FIRMWARE_ARCHIVE "/run/initramfs/boot/efi/boot/firmware.tgz"
 
+static int readonly_boot_partition = 0;
+
 void setup(inifile_t ini)
 {
   const char *hostname = ini_string(ini, ":hostname", NULL);
   const char *password = ini_string(ini, ":password", NULL);
   const char *timezone = ini_string(ini, ":timezone", NULL);
   const char *keymap = ini_string(ini, ":keymap", NULL);
+  const char *ip_address = ini_string(ini, ":ip_address", NULL);
+  const char *gateway = ini_string(ini, ":gateway", NULL);
+  const char *dns = ini_string(ini, ":dns", NULL);
+  const char *fallback_dns = ini_string(ini, ":fallback_dns", NULL);
+
+  const char *ipv6_address = ini_string(ini, ":ipv6_address", NULL);
+  const char *ipv6_gateway = ini_string(ini, ":ipv6_gateway", NULL);
+  const char *ipv6_dns = ini_string(ini, ":ipv6_dns", NULL);
+  const char *ipv6_fallback_dns = ini_string(ini, ":ipv6_fallback_dns", NULL);
+
   const char *wifi_ssid = ini_string(ini, ":wifi_ssid", NULL);
   const char *wifi_key = ini_string(ini, ":wifi_key", "");
   const int persistent = ini_bool(ini, ":persistent", 0);
@@ -26,29 +38,33 @@ void setup(inifile_t ini)
   }
 
   if (persistent) {
-    const char* datafile = "/mnt/boot/efi/boot/bootx64.dat";
-    if (!exists(datafile)) {
-      if (get_free_disk_space("/mnt/boot") >= 1024L*1024*1024*2 ) {
-        printf("RW layer does not exist. Creating...");fflush(stdout);
-        if (create_btrfs_imagefile(datafile, 1024*1024*1024) == 0) {
-          printf("done.\n");
+    if (readonly_boot_partition) {
+      printf("Persistent RW layer is not supported(readonly boot partition)\n");
+    } else {
+      const char* datafile = "/mnt/boot/efi/boot/bootx64.dat";
+      if (!exists(datafile)) {
+        if (get_free_disk_space("/mnt/boot") >= 1024L*1024*1024*2 ) {
+          printf("RW layer does not exist. Creating...");fflush(stdout);
+          if (create_btrfs_imagefile(datafile, 1024*1024*1024) == 0) {
+            printf("done.\n");
+          } else {
+            printf("failed.\n");
+            if (debug) sleep(3);
+          }
         } else {
-          printf("failed.\n");
+          printf("No sufficient disk space to create RW layer.");
           if (debug) sleep(3);
         }
-      } else {
-        printf("No sufficient disk space to create RW layer.");
-        if (debug) sleep(3);
       }
-    }
-    btrfs_scan();
-    if (mount_rw_loop_btrfs(datafile, "/mnt/rw", compress) != 0) {
-      printf("Failed to mount RW layer. Attempting repair.\n");
-      if (debug) sleep(3);
-      repair_btrfs_imagefile(datafile);
+      btrfs_scan();
       if (mount_rw_loop_btrfs(datafile, "/mnt/rw", compress) != 0) {
-        printf("No valid persistent RW layer. Using tmpfs.\n");
+        printf("Failed to mount RW layer. Attempting repair.\n");
         if (debug) sleep(3);
+        repair_btrfs_imagefile(datafile);
+        if (mount_rw_loop_btrfs(datafile, "/mnt/rw", compress) != 0) {
+          printf("No valid persistent RW layer. Using tmpfs.\n");
+          if (debug) sleep(3);
+        }
       }
     }
   }
@@ -155,6 +171,19 @@ void setup(inifile_t ini)
     }
   }
 
+  if (ip_address || ipv6_address) {
+    if (set_static_ip_address("eth0", ip_address, gateway, dns, fallback_dns, ipv6_address, ipv6_gateway, ipv6_dns, ipv6_fallback_dns) == 0) {
+      if (ip_address) {
+        printf("IP address set to %s\n", ip_address);
+      }
+      if (ipv6_address) {
+        printf("IPv6 address set to %s\n", ipv6_address);
+      }
+    } else {
+      printf("Setting static IP address failed.\n");
+    }
+  }
+
   if (wifi_ssid) {
     if (setup_wifi("/newroot", wifi_ssid, wifi_key) == 0) {
       printf("WiFi SSID: %s\n", wifi_ssid);
@@ -165,25 +194,29 @@ void setup(inifile_t ini)
   }
 
   if (swap) {
-    const char* swapfile = "/newroot/run/initramfs/boot/efi/boot/bootx64.swp";
-    if (!exists(swapfile)) {
-      if (get_free_disk_space("/newroot/run/initramfs/boot") >= 1024L*1024*1024*2 ) {
-        printf("Swapfile does not exist. Creating...");fflush(stdout);
-        if (create_swapfile(swapfile, 1024L*1024*1024) == 0) {
-          printf("done.\n");
+    if (readonly_boot_partition) {
+      printf("Swapfile not supported(readonly boot partition)\n");
+    } else {
+      const char* swapfile = "/newroot/run/initramfs/boot/efi/boot/bootx64.swp";
+      if (!exists(swapfile)) {
+        if (get_free_disk_space("/newroot/run/initramfs/boot") >= 1024L*1024*1024*2 ) {
+          printf("Swapfile does not exist. Creating...");fflush(stdout);
+          if (create_swapfile(swapfile, 1024L*1024*1024) == 0) {
+            printf("done.\n");
+          } else {
+            printf("failed.\n");
+            if (debug) sleep(3);
+          }
         } else {
-          printf("failed.\n");
+          printf("No sufficient disk space to create swapfile.");
           if (debug) sleep(3);
         }
-      } else {
-        printf("No sufficient disk space to create swapfile.");
-        if (debug) sleep(3);
       }
-    }
 
-    if (is_file(swapfile)) {
-      printf("Activating swap...\n");
-      activate_swap(swapfile);
+      if (is_file(swapfile)) {
+        printf("Activating swap...\n");
+        activate_swap(swapfile);
+      }
     }
   }
 
@@ -200,11 +233,23 @@ void init()
 
   printf("Determining boot partition...");
   if (search_boot_partition(&partition, PROBE_BOOT_PARTITION_MAX_RETRY) < 0) {
-    search_partition_by_fstype_or_die("vfat", &partition, PROBE_BOOT_PARTITION_MAX_RETRY);
+    if (search_partition_by_fstype("vfat", &partition) < 0) {
+      if (search_partition_by_fstype("iso9660", &partition) < 0) {
+        printf("Boot partition could not be found.");
+        halt();
+      }
+    }
   }
   printf("%s\n", partition.device);
 
-  mount_or_die(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077");
+  if (strcmp(partition.type, "vfat") == 0) {
+    mount_or_die2(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077");
+  } else if (strcmp(partition.type, "iso9660") == 0) {
+    mount_or_die2(partition.device, "/mnt/boot", "iso9660", MS_RDONLY, "");
+    readonly_boot_partition = 1;
+  } else {
+    mount_or_die2(partition.device, "/mnt/boot", "auto", MS_RELATIME, "");
+  }
   mount_ro_loop_or_die("/mnt/boot/efi/boot/bootx64.efi", "/mnt/system", 1048576);
 
   enable_lvm();

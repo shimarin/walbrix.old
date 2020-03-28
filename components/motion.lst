@@ -95,7 +95,7 @@ $exec "systemctl enable mosquitto"
 #dev-libs/libdaemon
 $package net-dns/avahi --use="-introspection"
 $exec "systemctl enable avahi-daemon"
-$sed /etc/systemd/network/50-eth0-dhcp.network 's/MulticastDNS=yes/MulticastDNS=no/'
+$sed /etc/systemd/network/50-dhcp.network 's/MulticastDNS=yes/MulticastDNS=no/'
 
 # openvpn
 $package net-vpn/openvpn --use="systemd"

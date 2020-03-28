@@ -1,0 +1,4 @@
+{
+	"profile":"bootloader",
+	"main_lstfile":"components/boot-iso9660.lst"
+}

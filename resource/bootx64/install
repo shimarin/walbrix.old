@@ -96,11 +96,11 @@ mount -t vfat -o rw,fmask=177,dmask=077 $BOOT_PARTITION $TMPDIR
 
 echo "Installing bootloader..."
 
-mkdir -p $TMPDIR/EFI/BOOT
-cp $BOOTDIR/EFI/BOOT/bootx64.efi $TMPDIR/EFI/BOOT/
+mkdir -p $TMPDIR/efi/boot
+cp $BOOTDIR/efi/boot/bootx64.efi $TMPDIR/efi/boot/
 
-if [ -f $BOOTDIR/EFI/BOOT/bootx86.efi ]; then
-  cp $BOOTDIR/EFI/BOOT/bootx86.efi $TMPDIR/EFI/BOOT/
+if [ -f $BOOTDIR/efi/boot/bootx86.efi ]; then
+  cp $BOOTDIR/efi/boot/bootx86.efi $TMPDIR/efi/boot/
 fi
 
 if [ "$PARTITION_TABLE_TYPE" == "msdos" ]; then
