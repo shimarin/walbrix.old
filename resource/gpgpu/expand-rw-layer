@@ -36,5 +36,5 @@ if [ $? -ne 0 ]; then
   echo "Failed to resize filesystem"
   exit 1
 fi
-
+sync
 echo "RW layer expanded to $TARGET_SIZE."
