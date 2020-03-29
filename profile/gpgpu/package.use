@@ -28,6 +28,7 @@ x11-libs/pango -introspection
 gnome-base/librsvg -introspection
 x11-libs/gtk+ -introspection
 gnome-base/librsvg -vala
+dev-libs/hsa-ext-rocr deprecated
 
 # misc
 sci-geosciences/gpsd ntp python usb gpsd_protocols_fury gpsd_protocols_geostar gpsd_protocols_nmea0183 gpsd_protocols_nmea2000 gpsd_protocols_passthrough

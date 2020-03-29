@@ -1,4 +1,5 @@
 $require base-systemd.lst
+$require python3.lst
 
 $dir /lib/firmware
 $require kbd-minimal.lst
@@ -14,7 +15,6 @@ $copy resource/gpgpu/setup-bios-boot /usr/sbin/
 
 /bin/ip
 /usr/bin/awk
-$copy resource/walbrix/adhoc-sshd /usr/sbin/
 
 $mkdir /boot/grub
 $copy resource/gpgpu/grub.cfg /boot/grub/grub.cfg
@@ -32,8 +32,6 @@ $sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
 $package net-wireless/wpa_supplicant
 $sed /lib/systemd/system/wpa_supplicant@.service 's/-i%I$/-i%I -Dnl80211,wext/'
 $write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nssid="YOUR-SSID"\npsk="YOUR-KEY"\npriority=1\n}'
-$copy resource/gpgpu/enable-wifi /usr/sbin/
-$copy resource/gpgpu/setup-wifi /usr/sbin/
 
 $package app-misc/ca-certificates
 $package app-misc/mime-types
@@ -79,12 +77,14 @@ $require intel-neo.lst
 
 # drivers
 $package nvidia-drivers
-#$package amdgpu-pro-opencl
+$package amdgpu-pro-opencl
 $package dev-libs/rocm-opencl-runtime
 $package dev-libs/rocm-device-libs
 $package dev-libs/rocm-comgr
+$package dev-util/rocminfo
 $package dev-libs/roct-thunk-interface
 $package dev-libs/rocr-runtime
+$package dev-libs/hsa-ext-rocr
 $package sys-devel/llvm-roc
 $package sci-libs/lapack
 
@@ -108,7 +108,7 @@ $copy resource/gpgpu/xmr-start.sh /root/xmr/start.sh
 $copy resource/gpgpu/eth-start.sh /root/eth/start.sh
 
 $copy resource/gpgpu/update /usr/sbin/
-$copy resource/gpgpu/setup-data-files /usr/sbin/
+$copy resource/gpgpu/expand-rw-layer /usr/sbin/
 $copy resource/gpgpu/wait-for-network-to-be-connected /usr/bin/
 
 $sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'

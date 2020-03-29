@@ -6,11 +6,31 @@
 
 void setup(inifile_t ini)
 {
+  const char *driver_for_amdgpu = ini_string(ini, ":driver_for_amdgpu", NULL);
+
   setup_hostname_according_to_inifile(NEWROOT, ini);
   set_generated_hostname_if_not_set(NEWROOT);
   setup_timezone_according_to_inifile(NEWROOT, ini);
   setup_keymap_according_to_inifile(NEWROOT, ini);
   setup_wifi_according_to_inifile(NEWROOT, ini);
+
+  if (driver_for_amdgpu) {
+    const char *whiteout_for_amdgpu_pro = NEWROOT"/run/initramfs/rw/root/etc/OpenCL/vendors/amdgpu-pro-amd64.icd";
+    const char *whiteout_for_rocm = NEWROOT"/run/initramfs/rw/root/etc/OpenCL/vendors/amdocl64.icd";
+
+    mkdir_p(NEWROOT"/run/initramfs/rw/root/etc/OpenCL/vendors");
+
+    unlink(whiteout_for_amdgpu_pro);
+    unlink(whiteout_for_rocm);
+
+    if (strcmp(driver_for_amdgpu, "amdgpu-pro") == 0) {
+      create_whiteout(whiteout_for_rocm);
+    } else if (strcmp(driver_for_amdgpu, "rocm") == 0){
+      create_whiteout(whiteout_for_amdgpu_pro);
+    } else {
+      printf("Unknown amdgpu driver name '%s' is given. ('amdgpu-pro' or 'rocm' expected)\n", driver_for_amdgpu);
+    }
+  }
 }
 
 void init()

@@ -12,9 +12,11 @@ sys-apps/hwids
 =dev-libs/rocm-device-libs-3.1.0
 =dev-libs/rocm-comgr-3.1.0
 =dev-libs/rocr-runtime-3.1.0
+=dev-util/rocminfo-3.1.0
 =dev-util/rocm-cmake-3.0.0
 =dev-libs/roct-thunk-interface-3.1.0
 =sys-devel/llvm-roc-3.1.0
+=dev-libs/hsa-ext-rocr-1.1.30100.0
 
 # Intel NEO
 =dev-util/clinfo-2.2.18.04.06

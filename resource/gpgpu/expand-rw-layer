@@ -1,0 +1,40 @@
+#!/bin/sh
+RW_LAYER=/run/initramfs/boot/system.dat
+CURRENT_SIZE=`stat -c '%s' $RW_LAYER`
+
+if [ $? -ne 0 ]; then
+  echo "Invalid RW Layer"
+  exit 1
+fi
+
+if [ "$CURRENT_SIZE" -lt 1073741824 ]; then
+  TARGET_SIZE=1G
+elif [ "$CURRENT_SIZE" -lt 2147483648 ]; then
+  TARGET_SIZE=2G
+elif [ "$CURRENT_SIZE" -lt 3221225472 ]; then
+  TARGET_SIZE=3G
+elif [ "$CURRENT_SIZE" -lt 4294967294 ]; then
+  TARGET_SIZE=4294967294
+else
+  echo "The RW layer cannot be expanded anymore."
+  exit 1
+fi
+
+echo "Expanding RW layer..."
+truncate -s "$TARGET_SIZE" /run/initramfs/boot/system.dat
+if [ $? -ne 0 ]; then
+  echo "Failed to expand RW Layer"
+  exit 1
+fi
+losetup -c `losetup -O NAME --raw -n -j $RW_LAYER`
+if [ $? -ne 0 ]; then
+  echo "Failed to recognize new size of RW Layer"
+  exit 1
+fi
+btrfs filesystem resize max /run/initramfs/rw
+if [ $? -ne 0 ]; then
+  echo "Failed to resize filesystem"
+  exit 1
+fi
+
+echo "RW layer expanded to $TARGET_SIZE."

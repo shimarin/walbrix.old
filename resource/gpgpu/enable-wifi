@@ -1,5 +1,0 @@
-#!/bin/sh
-echo -e "[Match]\nName=wlan0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes" > /etc/systemd/network/51-wlan0-dhcp.network
-systemctl enable wpa_supplicant@wlan0
-systemctl restart systemd-networkd
-systemctl start wpa_supplicant@wlan0

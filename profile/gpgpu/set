@@ -53,4 +53,6 @@ x11-libs/libdrm
 # AMD Drivers
 dev-libs/rocm-opencl-runtime
 dev-libs/roct-thunk-interface
-#dev-libs/amdgpu-pro-opencl
+dev-libs/hsa-ext-rocr
+dev-util/rocminfo
+dev-libs/amdgpu-pro-opencl

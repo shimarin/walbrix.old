@@ -20,6 +20,7 @@ fi
 
 DEVICE=$1
 SYSTEM_IMAGE=${2:-$BOOTDIR/system.img}
+SYSTEM_INIFILE=$BOOTDIR/system.ini
 SECTOR_SIZE=$(blockdev --getpbsz $DEVICE)
 NUM_512B_SECTORS=$(blockdev --getsz $DEVICE)
 DEVICE_MAJOR=$((16#$(stat -c %t $DEVICE)))
@@ -130,13 +131,18 @@ echo "Installing System image..."
 
 cp $SYSTEM_IMAGE $TMPDIR/system.img
 
+if [ -f $SYSTEM_INIFILE ]; then
+  echo "Copying system ini file..."
+  cp $SYSTEM_INIFILE $TMPDIR/system.ini
+fi
+
 echo "Creating swap file..."
 truncate -s 1G $TMPDIR/system.swp
 mkswap $TMPDIR/system.swp
 
 echo "Creating data file..."
-truncate -s 1G $TMPDIR/system.dat
-mkfs.xfs -f $TMPDIR/system.dat
+truncate -s 128M $TMPDIR/system.dat
+mkfs.btrfs $TMPDIR/system.dat
 
 if [ -d $BOOTDIR/supplements ]; then
   echo "Copying supplements..."

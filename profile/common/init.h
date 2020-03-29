@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/statvfs.h>
+#include <sys/sysmacros.h>
 
 #ifdef INIFILE
 #include <iniparser.h>
@@ -597,6 +598,11 @@ void mount_overlay_or_die(const char *lowerdir, const char *upperdir, const char
   }
   // else
   printf("Overlayfs(lowerdir=%s,upperdir=%s,workdir=%s) mounted on %s.\n", lowerdir, upperdir, workdir, mountpoint);
+}
+
+int create_whiteout(const char* name)
+{
+  return mknod(name, S_IFCHR, makedev(0, 0));
 }
 
 int move_mount(const char *old, const char *new)
