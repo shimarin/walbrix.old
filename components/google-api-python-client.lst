@@ -1,0 +1,16 @@
+$require python3.lst
+$package dev-python/pyasn1
+$package dev-python/httplib2
+$package dev-python/simplejson
+$package dev-python/entrypoints
+$package dev-python/jeepney
+$package dev-python/linecache2
+$package dev-python/uritemplate
+$package dev-python/pyasn1-modules
+$package dev-python/secretstorage
+$package dev-python/traceback2
+$package dev-python/rsa
+$package dev-python/keyring
+$package dev-python/oauth2client
+$package dev-python/google-api-python-client
+

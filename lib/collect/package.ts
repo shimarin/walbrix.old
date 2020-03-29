@@ -31,7 +31,10 @@ export function process_package(context:Context, pkgname:string, options?:{use?:
       pf: pf,
       contents: fs.readFileSync(path.join(_, "CONTENTS"), "utf-8").split("\n")
       .filter( _ => _.indexOf("obj ") === 0 || _.indexOf("sym ") === 0 || _.indexOf("dir ") === 0)
-      .map(_ => _.split(' ', 2)[1]),
+      .map(_ =>
+        _.replace(/^(obj\s.+)\s[0-9a-z]+\s\d+$/, "$1")
+        .replace(/^(sym\s.+)\s->\s.+$/, "$1")
+        .replace(/^.+?\s(.+)$/, "$1")),
       use: fs.readFileSync(path.join(_, "USE"), "utf-8").replace(/(\r\n|\n|\r)/gm, "").split(" ")
     }
   });

@@ -1,0 +1,90 @@
+$require base-systemd.lst
+$require kbd-minimal.lst
+
+$require python3.lst
+
+$package dosfstools
+$package parted
+$require grub-i386-pc.lst
+
+/bin/ip
+/usr/bin/awk
+
+$mkdir /boot/grub
+$copy resource/vpnhub/grub.cfg /boot/grub/grub.cfg
+
+$sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
+
+#net-firewall/firewalld
+$package net-dns/dnsmasq
+
+$package app-misc/ca-certificates
+$package app-misc/mime-types
+$package app-misc/pax-utils
+$package dev-libs/openssl
+$package net-misc/wget
+$package net-vpn/openvpn
+$package app-crypt/easy-rsa
+
+$write /etc/hostname vpnhub
+
+$write /etc/sysctl.d/nf_conntrack_max.conf 'net.nf_conntrack_max = 65536'
+
+# networks
+$package net-analyzer/traceroute
+$require tcpdump.lst
+$package net-dns/bind-tools
+/usr/bin/iperf3
+/usr/bin/curl
+/sbin/brctl
+
+# tools
+$package sys-fs/btrfs-progs
+/usr/bin/strace
+/usr/bin/telnet
+$package screen
+
+# nginx
+$require lua.lst
+$package dev-lang/luajit
+$package www-servers/nginx --use="nginx_modules_http_lua"
+$exec "systemctl enable nginx"
+
+# certbot
+$package dev-python/pytz
+$package dev-python/namespace-zope
+$package dev-python/idna
+$package dev-python/configargparse
+$package dev-python/configobj
+$package dev-python/distro
+$package dev-python/future
+$package dev-python/pbr
+$package dev-python/ply
+$package dev-python/chardet
+$package dev-python/PySocks
+$package dev-python/mock
+$package dev-python/pyrfc3339
+$package dev-python/zope-interface
+$package dev-python/parsedatetime
+$package dev-python/zope-event
+$package dev-python/pycparser
+$package dev-python/zope-component
+$package dev-python/cffi
+$package dev-python/cryptography
+$package dev-python/pyopenssl
+$package dev-python/josepy
+$package dev-python/urllib3
+$package dev-python/requests
+$package dev-python/requests-toolbelt
+$package app-crypt/acme
+$package app-crypt/certbot
+$package dev-python/six
+$package dev-python/certifi
+$package dev-python/setuptools
+$package dev-python/pip
+$require google-api-python-client.lst
+
+$require ts-node.lst
+$require timezone-jp.lst
+
+$touch /done

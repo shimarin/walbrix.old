@@ -5,7 +5,13 @@ GENKERNEL_COMMAND=all
 
 rm -f /usr/src/linux/.config
 [ -f /linuxrc ] && GENKERNEL_OPTS="$GENKERNEL_OPTS --linuxrc=/linuxrc"
-[ -f /menuconfig ] && GENKERNEL_OPTS="$GENKERNEL_OPTS --menuconfig" && rm -f /menuconfig /var/cache/genkernel/kerncache.tar.gz
+if [ -f /menuconfig ]; then
+	GENKERNEL_OPTS="$GENKERNEL_OPTS --menuconfig" 
+	if [ "$TERM" == "dumb" ]; then
+		export TERM=vt100
+	fi
+	rm -f /menuconfig /var/cache/genkernel/kerncache.tar.gz
+fi
 genkernel $GENKERNEL_OPTS --symlink --no-mountboot --no-bootloader \
   --kernel-config=/etc/kernels/kernel-config --makeopts="-j$((`nproc` + 1))" \
   --kernel-localversion=UNSET --no-save-config --no-module-rebuild --no-keymap \

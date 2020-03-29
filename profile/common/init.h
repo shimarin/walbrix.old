@@ -553,7 +553,16 @@ void mount_or_die(const char *source, const char *target,
   printf("%s mounted.\n", target);
 }
 
-void mount_or_die2(const char *source, const char *target,
+// mnt_context_mount() == 0 doesn't mean success
+int mnt_context_mount_and_check_result(struct libmnt_context *ctx)
+{
+  int rst = mnt_context_mount(ctx);
+  if (rst != 0) return rst;
+  //else
+  return mnt_context_get_status(ctx) == 1? 0 : -1;
+}
+
+int mount2(const char *source, const char *target,
                  const char *filesystemtype, unsigned long mountflags,
                  const void *data)
 {
@@ -561,19 +570,29 @@ void mount_or_die2(const char *source, const char *target,
   int rst = -1;
   ctx = mnt_new_context();
   if (!ctx) {
-    printf("mount_or_die2: insufficient memory.\n");
-    halt();
+    errno = ENOMEM;
+    return -1;
   }
   // else
-  mkdir_p(target);
   mnt_context_set_fstype_pattern(ctx, filesystemtype);
   mnt_context_set_source(ctx, source);
   mnt_context_set_target(ctx, target);
   mnt_context_set_mflags(ctx, mountflags);
   mnt_context_set_options(ctx, data);
-  rst = mnt_context_mount(ctx);
+  rst = mnt_context_mount_and_check_result(ctx);
   mnt_free_context(ctx);
 
+  return rst;
+}
+
+void mount_or_die2(const char *source, const char *target,
+                 const char *filesystemtype, unsigned long mountflags,
+                 const void *data)
+{
+  int rst;
+  mkdir_p(target);
+
+  rst = mount2(source, target, filesystemtype, mountflags, data);
   if (rst != 0) {
     printf("%s could not be mounted on %s (%d).\n", source, target, rst);
     halt();
@@ -638,7 +657,7 @@ int mount_loop(const char *imgfile, const char *mountpoint, int mflags, int offs
   mnt_context_set_mflags(ctx, mflags);
   sprintf(options, "loop,offset=%d", offset);
   mnt_context_set_options(ctx, options);
-  rst = mnt_context_mount(ctx);
+  rst = mnt_context_mount_and_check_result(ctx);
   mnt_free_context(ctx);
   return rst;
 }
@@ -684,7 +703,7 @@ int mount_rw_loop_btrfs(const char *imgfile, const char *mountpoint, int compres
   mnt_context_set_mflags(ctx, MS_RELATIME);
   sprintf(options, "loop%s", (compress? ",compress=zstd":"") );
   mnt_context_set_options(ctx, options);
-  rst = mnt_context_mount(ctx);
+  rst = mnt_context_mount_and_check_result(ctx);
   mnt_free_context(ctx);
 
   if (rst == 0) {
@@ -1129,6 +1148,19 @@ void setup_wifi_according_to_inifile(const char *rootdir, inifile_t ini)
       printf("WiFi SSID: %s\n", wifi_ssid);
     } else {
       printf("WiFi setup failed.\n");
+    }
+  }
+}
+
+void setup_password_according_to_inifile(const char *rootdir, inifile_t ini)
+{
+  const char *password = ini_string(ini, ":password", NULL);
+
+  if (password) {
+    if (set_root_password(rootdir, password) == 0) {
+      printf("Root password configured.\n");
+    } else {
+      printf("Failed to set root password.\n");
     }
   }
 }
