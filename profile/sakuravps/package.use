@@ -10,6 +10,9 @@ www-servers/nginx aio luajit http2 nginx_modules_http_auth_pam nginx_modules_htt
 media-libs/gd jpeg png
 net-vpn/openvpn inotify iproute2 lz4
 
+#omit python2.7
+dev-python/pyyaml -python_targets_python2_7
+
 #certbot
 dev-python/pytz -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
 dev-python/namespace-zope -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
@@ -57,3 +60,32 @@ dev-python/httplib2 -python_targets_python2_7 -python_targets_python3_6 python_t
 dev-python/pyasn1 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
 dev-python/backports -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
 dev-python/entrypoints -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+
+#twisted
+dev-python/twisted -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/service_identity -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/bcrypt -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/automat -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/m2r -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/attrs -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/mistune -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/docutils -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/hyperlink -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/pygments -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/pyhamcrest -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/incremental -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/constantly -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/cython -python_targets_python2_7 python_targets_python3_7
+
+#syslog-ng
+app-admin/syslog-ng -python_single_target_python3_6 python_single_target_python3_7 -tcpd python
+
+#zabbix
+net-analyzer/zabbix -postgres
+
+#mysql
+dev-db/mysql -perl cjk
+dev-python/mysqlclient -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+
+dev-python/pyinotify -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+

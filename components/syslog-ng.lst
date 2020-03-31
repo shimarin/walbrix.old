@@ -1,0 +1,4 @@
+#dev-libs/ivykis
+$package app-admin/syslog-ng
+$exec "systemctl enable syslog-ng@default"
+

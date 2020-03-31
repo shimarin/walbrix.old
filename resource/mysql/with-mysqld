@@ -5,12 +5,18 @@ if [ $# -lt 1 ]; then
 fi
 
 PIDFILE=/tmp/mysql.pid
-SOCKET=/var/run/mysqld/mysqld.sock
+SOCKET_DIR=/var/run/mysqld
+SOCKET=$SOCKET_DIR/mysqld.sock
 DATADIR=/var/lib/mysql
 
 if [ -S "$SOCKET" ]; then
   echo "MySQL is already running!"
   exit 1
+fi
+
+if [ ! -d $SOCKET_DIR ];then
+	mkdir -p $SOCKET_DIR
+	chown mysql $SOCKET_DIR
 fi
 
 if [ ! -d $DATADIR/mysql ]; then

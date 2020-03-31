@@ -23,7 +23,6 @@ $package app-misc/mime-types
 $package app-misc/pax-utils
 $package dev-libs/openssl
 $package net-misc/wget
-$package net-vpn/openvpn
 $package app-crypt/easy-rsa
 
 $write /etc/hostname vpnhub
@@ -31,6 +30,8 @@ $write /etc/hostname vpnhub
 $write /etc/sysctl.d/nf_conntrack_max.conf 'net.nf_conntrack_max = 65536'
 
 # networks
+$package net-vpn/wireguard-tools
+$package net-vpn/openvpn
 $package net-analyzer/traceroute
 $require tcpdump.lst
 $package net-dns/bind-tools
@@ -83,6 +84,33 @@ $package dev-python/certifi
 $package dev-python/setuptools
 $package dev-python/pip
 $require google-api-python-client.lst
+
+# twisted
+$package dev-python/constantly
+$package dev-python/incremental
+$package dev-python/pyhamcrest
+$package dev-python/mistune
+$package dev-python/pygments
+$package dev-python/hyperlink
+$package dev-python/docutils
+$package dev-python/attrs
+$package dev-python/m2r
+$package dev-python/automat
+$package dev-python/bcrypt
+$package dev-python/service_identity
+$package dev-python/twisted
+
+$require syslog-ng.lst
+
+# zabbix
+$package net-analyzer/zabbix
+
+# mysql
+$require mysql-systemd.lst
+$package dev-python/mysqlclient
+
+$package dev-python/pyinotify
+$package sys-fs/inotify-tools
 
 $require ts-node.lst
 $require timezone-jp.lst

@@ -8,7 +8,6 @@ $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1motion\2/'
 $require xfsprogs.lst
 $package sys-block/zram-init
 $exec "systemctl enable zram_swap"
-$require cron-systemd.lst
 $require timezone-jp.lst
 
 # motion
@@ -22,22 +21,7 @@ $package www-servers/nginx --use="nginx_modules_http_lua"
 $exec "systemctl enable nginx"
 
 # mysql
-$package dev-db/mysql-connector-c # for my_print_defaults needed by mysql_install_db
-#dev-libs/libaio
-#dev-libs/protobuf
-#app-arch/libarchive
-#app-arch/lz4
-$package dev-db/mysql
-$package dev-db/mysql-init-scripts
-$sed /etc/mysql/mysql.d/50-distro-server.cnf 's/^log-bin$/#log-bin/'  # disable binary log
-/usr/include/mysql/mysql_version.h
-#/usr/include/mysql/my_config.h
-/run/mysqld
-/var/log/mysql
-$exec "systemctl enable mysqld"
-$mkdir /var/lib/mysql --owner=mysql.mysql --mode=0750
-$copy resource/mysql/with-mysqld /usr/sbin/
-$exec --ldconfig "with-mysqld '/usr/bin/mysql_tzinfo_to_sql /usr/share/zoneinfo | /usr/bin/mysql -uroot mysql'"
+$require mysql-systemd.lst
 
 # python and modules
 $require python27.lst

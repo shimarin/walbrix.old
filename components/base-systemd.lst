@@ -14,6 +14,7 @@ $package sys-libs/pam
 #sys-libs/libseccomp
 $package sys-apps/kmod
 
+$require cron-systemd.lst
 $package net-misc/openssh
 $sed /etc/ssh/sshd_config 's/^#PermitRootLogin prohibit-password$/PermitRootLogin yes/'
 $mkdir /root/.ssh --mode=700

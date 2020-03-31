@@ -30,6 +30,7 @@ sys-block/zram-init
 sys-boot/grub
 sys-fs/btrfs-progs
 sys-fs/dosfstools
+sys-fs/inotify-tools
 sys-fs/lvm2
 sys-fs/squashfs-tools
 sys-fs/xfsprogs
@@ -43,4 +44,18 @@ dev-lua/luasec
 app-crypt/certbot
 dev-python/pip
 dev-python/google-api-python-client
+
+dev-python/twisted
+
+app-admin/syslog-ng
+
+net-analyzer/zabbix
+
+dev-db/mysql
+dev-db/mysql-init-scripts
+dev-python/mysqlclient
+
+dev-python/pyinotify
+
+net-vpn/wireguard-tools
 

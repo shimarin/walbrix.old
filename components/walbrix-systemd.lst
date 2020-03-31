@@ -158,8 +158,6 @@ $require xen-python3.lst
 #$copy walbrix/megaraid_alert /etc/cron.hourly/megaraid-alert
 
 # system services
-$require cron-systemd.lst
-
 #$require zabbix-agent.lst
 #$require zabbix-proxy.lst
 $package dev-vcs/git
