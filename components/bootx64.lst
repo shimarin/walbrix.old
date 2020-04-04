@@ -40,6 +40,8 @@ $write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nss
 $copy resource/gpgpu/enable-wifi /usr/sbin/
 $copy resource/gpgpu/setup-wifi /usr/sbin/
 
+/usr/bin/iperf3
+
 $package sys-fs/btrfs-progs
 $require xfsprogs.lst
 /usr/bin/strace

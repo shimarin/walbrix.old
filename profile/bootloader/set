@@ -6,14 +6,15 @@ sys-fs/dosfstools
 sys-block/parted
 sys-fs/lsscsi
 sys-fs/mtools
+sys-process/cronie
 net-wireless/wireless-tools
 net-wireless/wpa_supplicant
 sys-fs/btrfs-progs
 dev-util/strace
 net-misc/netkit-telnetd
+net-misc/iperf
 app-misc/screen
 app-misc/beep
 sys-apps/lshw
 sys-apps/usbutils
 net-vpn/wireguard-tools
-net-vpn/wireguard-modules
