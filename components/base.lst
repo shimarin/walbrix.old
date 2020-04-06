@@ -10,6 +10,7 @@ $package grep
 $package procps
 $package findutils
 $package timezone-data
+$package sys-apps/attr
 
 $package net-tools
 $require bash-minimal.lst
