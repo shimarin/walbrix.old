@@ -16,6 +16,7 @@ $require bash-minimal.lst
 $require pam.lst
 $require psmisc.lst
 $package iputils
+$package sys-apps/less
 
 # sys-apps/file
 /usr/bin/file

@@ -1,0 +1,3 @@
+KERNEL=="sr[0-9]*", ENV{ID_VENDOR_ID}=="1004", ENV{ID_MODEL_ID}=="6367", RUN+="/usr/bin/eject /dev/$kernel"
+ACTION=="add" SUBSYSTEM=="usb", ATTR{idVendor}=="1004", ATTR{idProduct}=="6366", RUN+="/sbin/modprobe usbserial vendor=0x$attr{idVendor} product=0x$attr{idProduct}"
+

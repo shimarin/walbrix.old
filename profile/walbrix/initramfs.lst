@@ -33,3 +33,5 @@ usr
 usr/lib64
 usr/lib64/libiniparser.so.0
 usr/lib64/libzstd.so.1
+usr/sbin
+usr/sbin/fsck.fat

@@ -39,6 +39,7 @@ net-wireless/bluez
 sci-geosciences/gpsd
 net-libs/libqmi
 sys-firmware/bluez-firmware
+net-misc/modemmanager
 
 sys-fs/mdadm
 net-fs/nfs-utils

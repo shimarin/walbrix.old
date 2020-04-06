@@ -771,6 +771,26 @@ int is_mounted(const char *path)
   return rst;
 }
 
+int get_source_device_from_mountpoint(const char *path, char device[PATH_MAX])
+{
+  struct libmnt_table *tb = mnt_new_table_from_file("/proc/self/mountinfo");
+	struct libmnt_cache *cache = mnt_new_cache();
+	struct libmnt_fs *fs;
+  int rst = -1;
+  mnt_table_set_cache(tb, cache);
+	mnt_unref_cache(cache);
+  fs = mnt_table_find_target(tb, path, MNT_ITER_BACKWARD);
+  if (fs) {
+    const char *srcpath = mnt_fs_get_srcpath(fs);
+    if (srcpath) {
+      strcpy(device, srcpath);
+      rst = 0;
+    }
+  }
+  mnt_unref_table(tb);
+  return rst;
+}
+
 int is_nonexist_or_empty(const char *path)
 {
   struct stat st;
@@ -812,6 +832,12 @@ void setup_initramfs_shutdown(const char *newroot)
     sprintf(buf, "%s/run/initramfs/usr/lib64", newroot);
     mkdir_p(buf);
     cp_a("/usr/lib64/.", buf);
+  }
+
+  if (is_dir("/usr/sbin")) {
+    sprintf(buf, "%s/run/initramfs/usr/sbin", newroot);
+    mkdir_p(buf);
+    cp_a("/usr/sbin/.", buf);
   }
 
   sprintf(buf, "%s/run/initramfs/shutdown", newroot);
@@ -927,6 +953,11 @@ int repair_btrfs_imagefile(const char *imagefile)
 int btrfs_scan()
 {
   return fork_exec_wait(BTRFS, "device", "scan", NULL);
+}
+
+int repair_fat(const char *device)
+{
+  return fork_exec_wait("/usr/sbin/fsck.fat", "-a", "-w", device, NULL);
 }
 
 int create_swapfile(const char* swapfile, off_t length)

@@ -61,14 +61,12 @@ $package sys-power/cpupower
 #$require nut.lst
 #$require omronups.lst
 $require libqmi.lst
+$package net-misc/modemmanager
 $require gpsd.lst
-#$copy walbrix/99-docomo-l-03f.rules /etc/udev/rules.d/99-docomo-l-03f.rules
+$copy resource/walbrix/77-mm-docomo-l-03f.rules /lib/udev/rules.d/
 
 # storage/filesystems
 /usr/bin/lsscsi
-$package sys-fs/mdadm
-$exec "systemctl enable mdmonitor"
-/lib/systemd/system/mdmonitor.service
 $require nfs.lst
 $package sys-fs/multipath-tools
 $package sys-fs/btrfs-progs
@@ -91,6 +89,17 @@ $require drbd.lst
 #$patch /etc/xen/scripts/block-drbd xen/block-drbd.patch
 $require open-iscsi.lst
 $package sys-fs/bcache-tools
+
+# MDADM
+$package sys-fs/mdadm
+$exec "systemctl enable mdmonitor"
+
+# LVM
+$package sys-block/thin-provisioning-tools
+$package sys-fs/lvm2
+$sed /etc/lvm/lvm.conf 's/snapshot_autoextend_threshold = 100/snapshot_autoextend_threshold = 80/'
+$sed /etc/lvm/lvm.conf 's/use_lvmetad = 0/use_lvmetad = 1/'
+$exec "systemctl enable lvm2-lvmetad.socket"
 
 # networks
 $package net-analyzer/traceroute
@@ -179,6 +188,7 @@ $exec "systemctl enable kmsconvt@tty1"
 $mkdir /etc/systemd/system/kmsconvt@tty1.service.d
 $write /etc/systemd/system/kmsconvt@tty1.service.d/walbrix.conf '[Service]\nExecStart=\nExecStart=-/usr/bin/kmscon --login "--vt=%I" --seats=seat0 --no-switchvt -- /bin/wblogin'
 
+$copy resource/install-system-image /usr/sbin/
 $copy resource/btrfs/expand-rw-layer /usr/sbin/
 
 $exec ldconfig

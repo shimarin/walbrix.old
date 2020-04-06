@@ -47,7 +47,13 @@ void init()
   }
   printf("%s\n", partition.device);
 
-  mount_or_die(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077");
+  // mount boot partition
+  mkdir_p("/mnt/boot");
+  if (mount(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077") < 0) {
+    printf("Boot partition filesystem corrupted. Attempting repair...\n");
+    repair_fat(partition.device);
+    mount_or_die(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077");
+  }
   mount_ro_loop_or_die("/mnt/boot/system.img", "/mnt/system", 0);
 
   f = fopen("/mnt/boot/"TIME_FILE, "w");
@@ -128,11 +134,22 @@ void shutdown()
 {
   mkdir_p("/mnt");
   if (move_mount("/oldroot/run", "/mnt") == 0) {
+    char boot_partition[PATH_MAX];
+    int repair_boot = 0;
     printf("Unmounting filesystems...\n");
     umount_recursive("/oldroot");
     umount_recursive("/mnt/initramfs/ro");
     umount_recursive("/mnt/initramfs/rw");
     unlink("/mnt/initramfs/boot/"TIME_FILE);
+
+    if (is_file("/mnt/initramfs/repair-boot") && get_source_device_from_mountpoint("/mnt/initramfs/boot", boot_partition) == 0) {
+      repair_boot = 1;
+    }
     umount_recursive("/mnt");
+
+    if (repair_boot) {
+      printf("Repairing boot partition(%s)...\n", boot_partition);
+      repair_fat(boot_partition);
+    }
   }
 }

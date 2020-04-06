@@ -1,0 +1,39 @@
+#!/bin/sh
+if [ "$#" -eq 0 ] ; then
+  echo "Usage: $0 imagefile" 1>&2
+  exit 1
+fi
+
+BOOTDIR=/run/initramfs/boot
+IMAGE_FILE=$1
+
+echo "Checking new system image file..."
+if ! file "$1" | grep -q 'Squashfs filesystem'; then
+	echo "Invalid image file."
+	exit 1
+fi
+
+echo "Copying new system image file..."
+if ! cp "$1" $BOOTDIR/system.new; then
+	echo "Failed."
+  rm -f $BOOTDIR/system.new
+	exit 1
+fi
+
+if [ -f "$BOOTDIR"/system.img -a `losetup -j /run/initramfs/boot/system.img|wc -l` -gt 0 ]; then
+	echo "Preserving original image..."
+	if ! mv $BOOTDIR/system.img $BOOTDIR/system.cur; then
+		echo "Preserving original image failed."
+		exit 1
+	fi
+	#else
+	echo "Original system image preserved."
+fi
+
+if ! mv $BOOTDIR/system.new $BOOTDIR/system.img; then
+	echo "Placing new system image failed. Restoring original image..."
+	mv $BOOTDIR/system.cur $BOOTDIR/system.img
+	exit 1
+fi
+
+echo "New system image installed."

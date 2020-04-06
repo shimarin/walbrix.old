@@ -101,13 +101,15 @@ $require ts-node.lst
 
 $require timezone-jp.lst
 
+
+
 $mkdir /root/xmr
 $mkdir /root/eth
 
 $copy resource/gpgpu/xmr-start.sh /root/xmr/start.sh
 $copy resource/gpgpu/eth-start.sh /root/eth/start.sh
 
-$copy resource/gpgpu/update /usr/sbin/
+$copy resource/install-system-image /usr/sbin/
 $copy resource/btrfs/expand-rw-layer /usr/sbin/
 $copy resource/gpgpu/wait-for-network-to-be-connected /usr/bin/
 
