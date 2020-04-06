@@ -1,0 +1,10 @@
+$package sys-apps/kmscon
+$package media-libs/mesa
+$package x11-misc/xkeyboard-config
+#$package media-fonts/dejavu
+#$package media-fonts/ja-ipafonts
+#$package media-fonts/mplus-fonts
+$package media-fonts/vlgothic
+#$package media-libs/fontconfig
+#/etc/fonts/conf.d/README
+#$copy resource/walbrix/fonts.conf /etc/fonts/local.conf

@@ -50,7 +50,7 @@ if sudo mount ${LOOP}p1 $TMPDIR; then
 		echo -e "(hd0) $LOOP\n" > $DEVICEMAP
 		$SUDO cp $DEVICEMAP $TMPDIR/boot/grub/device.map
 		rm -f $DEVICEMAP
-		if $SUDO grub-install --target=i386-pc --boot-directory=${TMPDIR}/boot --modules="normal echo linux probe sleep test ls cat configfile cpuid" $LOOP; then
+		if $SUDO grub-install --target=i386-pc --boot-directory=${TMPDIR}/boot --modules="normal echo linux probe sleep test ls cat configfile cpuid multiboot multiboot2" $LOOP; then
 			$SUDO rm -f $TMPDIR/boot/grub/device.map
 			GRUBCFG=runbyqemu-grubcfg-$$
 			echo -e 'insmod echo\ninsmod linux\ninsmod cpuid\nset BOOT_PARTITION=$root\nif cpuid -l; then\n\tloopback --offset1m loop /efi/boot/bootx64.efi\nelse\n\tloopback --offset1m loop /efi/boot/bootx86.efi\nfi\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $GRUBCFG

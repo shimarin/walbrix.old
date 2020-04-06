@@ -31,6 +31,7 @@ sys-apps/hwids
 =net-misc/usbip-4.13
 =net-libs/libqmi-1.22.2
 =net-libs/libmbim-1.18.0
+=sci-geosciences/gpsd-3.18.1
 
 # wireguard
 =net-vpn/wireguard-tools-1.0.20200206
@@ -38,3 +39,7 @@ sys-apps/hwids
 
 # Zabbix
 =net-analyzer/zabbix-4.0.18
+
+# kmscon
+=dev-libs/libtsm-4.0.1
+=sys-apps/kmscon-8_p20180906

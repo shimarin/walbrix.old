@@ -118,6 +118,10 @@ $require smbclient.lst
 $package net-analyzer/net-snmp
 /usr/bin/iperf3
 
+$write /etc/systemd/network/49-xenbr0.netdev "[NetDev]\nName=xenbr0\nKind=bridge"
+$write /etc/systemd/network/50-eth0.network "[Match]\nName=eth0\n[Network]\nBridge=xenbr0"
+$write /etc/systemd/network/52-xenbr0.network "[Match]\nName=xenbr0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes"
+
 # complementary PPP configs
 #$mkdir /etc/chatscripts
 #$copy ppp/chatscript-3g /etc/chatscripts/3g
@@ -143,8 +147,12 @@ $require timezone-jp.lst
 $require xen-python3.lst
 
 # openvpn
-#$copy walbrix/ca.crt /etc/openvpn/ca.crt
-#$copy walbrix/openvpn.conf /etc/openvpn/openvpn.conf
+$require openvpn.lst
+$copy resource/walbrix/ca.crt /etc/openvpn/client/ca.crt
+$copy resource/walbrix/openvpn.conf /etc/openvpn/client/openvpn.conf
+
+# node
+$require ts-node.lst
 
 # backup cron scripts
 #$mkdir /etc/wb
@@ -158,9 +166,20 @@ $require xen-python3.lst
 #$copy walbrix/megaraid_alert /etc/cron.hourly/megaraid-alert
 
 # system services
-#$require zabbix-agent.lst
-#$require zabbix-proxy.lst
+$require zabbix-agent.lst
+$require zabbix-proxy.lst
 $package dev-vcs/git
+
+$require kmscon.lst
+$copy resource/walbrix/wblogin.cpp /tmp/
+$copy resource/walbrix/wbmenu.sh /bin/
+$exec --overlay "g++ /tmp/wblogin.cpp -o /bin/wblogin -lpam -lpam_misc"
+$exec "systemctl disable gettyt@tty1"
+$exec "systemctl enable kmsconvt@tty1"
+$mkdir /etc/systemd/system/kmsconvt@tty1.service.d
+$write /etc/systemd/system/kmsconvt@tty1.service.d/walbrix.conf '[Service]\nExecStart=\nExecStart=-/usr/bin/kmscon --login "--vt=%I" --seats=seat0 --no-switchvt -- /bin/wblogin'
+
+$copy resource/btrfs/expand-rw-layer /usr/sbin/
 
 $exec ldconfig
 $touch /done

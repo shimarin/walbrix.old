@@ -26,6 +26,7 @@ app-benchmarks/stress
 app-admin/sudo
 app-benchmarks/stress
 net-ftp/ftp
+sys-process/cronie
 
 sys-apps/dmidecode
 sys-apps/lm-sensors
@@ -79,8 +80,10 @@ net-analyzer/nmap
 net-analyzer/snort
 mail-mta/ssmtp
 net-fs/samba
-sys-process/cronie
-#net-analyzer/zabbix
+net-analyzer/zabbix
+net-vpn/openvpn
 
 dev-vcs/git
-
+net-libs/nodejs
+sys-apps/kmscon
+media-fonts/vlgothic

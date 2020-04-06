@@ -10,8 +10,7 @@ sys-apps/systemd -acl
 sys-apps/util-linux static-libs
 app-editors/vim minimal
 
-# move net-misc/openvpn net-vpn/openvpn
-net-vpn/openvpn threads
+net-vpn/openvpn threads inotify iproute2 lz4
 dev-lang/python sqlite
 net-fs/cifs-utils -acl -ads -caps 
 sys-apps/usb_modeswitch jimtcl
@@ -48,9 +47,9 @@ sys-cluster/drbd-utils xen
 #app-emulation/qemu xen
 
 # wbui
-dev-python/numpy -python_targets_python3_5
-dev-python/pygame -python_targets_python3_5
-dev-python/pyalsaaudio -python_targets_python3_5
+dev-python/numpy -python_targets_python2_7
+dev-python/pygame -python_targets_python2_7
+dev-python/pyalsaaudio -python_targets_python2_7
 media-libs/libsdl alsa fbcon
 media-libs/sdl-image jpeg png webp
 media-libs/sdl-mixer vorbis
@@ -59,15 +58,16 @@ media-libs/sdl-mixer vorbis
 dev-vcs/git -perl -gpg
 
 # networks
-net-analyzer/net-snmp python
+net-analyzer/net-snmp -python
 net-dns/avahi -introspection dbus
 net-dns/dnsmasq dhcp-tools script
 
 # misc
 media-sound/mpg123 alsa
 net-fs/s3fs openssl
-app-arch/rpm python -python_single_target_python3_6 python_single_target_python2_7
+app-arch/rpm python python_single_target_python3_6 -python_single_target_python2_7
 dev-python/netaddr -cli
+dev-python/lxml -python_targets_python2_7
 
 # assume EC algorythms are safe
 dev-libs/openssl -bindist
@@ -77,7 +77,8 @@ net-wireless/wpa_supplicant -bindist
 # hardware
 x11-drivers/nvidia-drivers -X acpi driver -gtk3 kms uvm -multilib -tools -abi_x86_32
 x11-base/xorg-drivers -input_devices_keyboard -input_devices_libinput -input_devices_mouse -video_cards_amdgpu -video_cards_dummy -video_cards_fbdev -video_cards_intel -video_cards_nouveau -video_cards_radeon -video_cards_radeonsi -video_cards_vesa
-sci-geosciences/gpsd bluetooth ntp python usb gpsd_protocols_fury gpsd_protocols_geostar gpsd_protocols_nmea0183 gpsd_protocols_nmea2000 gpsd_protocols_passthrough
+sci-geosciences/gpsd bluetooth ntp python usb gpsd_protocols_fury gpsd_protocols_geostar gpsd_protocols_nmea0183 gpsd_protocols_nmea2000 gpsd_protocols_passthrough -python_targets_python2_7
+dev-python/pyserial -python_targets_python2_7
 
 # omit ruby 2.4
 dev-lang/ruby -rdoc
@@ -91,3 +92,10 @@ dev-ruby/rake -ruby_targets_ruby24
 dev-ruby/did_you_mean -ruby_targets_ruby24
 dev-ruby/xmlrpc -ruby_targets_ruby24
 virtual/rubygems -ruby_targets_ruby24
+
+# kmscon
+media-libs/libglvnd X
+dev-python/mako -python_targets_python2_7
+dev-python/markupsafe -python_targets_python2_7
+
+

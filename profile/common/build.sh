@@ -49,6 +49,7 @@ if [ -f /initramfs.lst ]; then
 	xz -c --check=crc32 /tmp/initramfs > /boot/initramfs || exit 1
 fi
 
+emerge -uDN world
 emerge --depclean
 [ -x /usr/bin/eclean-kernel ] && eclean-kernel -n 1
 

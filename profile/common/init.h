@@ -27,6 +27,7 @@ struct partition_struct {
 };
 
 #define S_755 (S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
+#define S_700 (S_IRUSR | S_IWUSR | S_IXUSR)
 
 #ifndef MS_MOVE
 #define MS_MOVE 8192
@@ -557,7 +558,10 @@ void mount_or_die(const char *source, const char *target,
 int mnt_context_mount_and_check_result(struct libmnt_context *ctx)
 {
   int rst = mnt_context_mount(ctx);
-  if (rst != 0) return rst;
+  if (rst != 0) {
+    if (rst > 1) perror("mnt_context_mount");
+    return rst;
+  }
   //else
   return mnt_context_get_status(ctx) == 1? 0 : -1;
 }
@@ -765,6 +769,13 @@ int is_mounted(const char *path)
   rst = (fs && mnt_fs_get_target(fs));
   mnt_unref_table(tb);
   return rst;
+}
+
+int is_nonexist_or_empty(const char *path)
+{
+  struct stat st;
+  if (stat(path, &st) != 0) return 1;
+  return (st.st_size == 0);
 }
 
 int cp_a(const char *src, const char *dst)

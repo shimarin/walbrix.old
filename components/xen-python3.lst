@@ -1,4 +1,7 @@
-$require python3.lst
+$package dev-lang/python-3.6.10
+$symlink /usr/bin/python pytho3.6
+$package dev-lang/python-exec
+
 $package dev-python/lxml
 $package app-emulation/xen-tools
 $package app-emulation/xen-pvgrub

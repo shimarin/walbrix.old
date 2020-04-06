@@ -16,8 +16,9 @@ case "${CATEGORY}/${PN}" in
 		getent group zabbix || groupadd -g 105 zabbix
 		getent passwd zabbix || useradd -c "" -d /var/lib/zabbix/home -M -u 105 -g zabbix -s /sbin/nologin zabbix
 		;;
-	sci-geosciences/gpsd)
-		getent passwd gpsd || useradd -c "" -d /dev/null -M -u 106 -g uucp -s /sbin/nologin gpsd
+	net-analyzer/snort)
+		getent group snort || groupadd -g 106 snort
+		getent passwd snort || useradd -c "" -d /dev/null -M -u 106 -g snort -s /sbin/nologin snort
 		;;
 	net-dns/dnsmasq)
 		getent group dnsmasq || groupadd -g 109 dnsmasq
@@ -27,12 +28,11 @@ case "${CATEGORY}/${PN}" in
 		getent group nginx || groupadd -g 110 nginx
 		getent passwd nginx || useradd -c "" -d /var/lib/nginx -M -u 110 -g nginx -s /sbin/nologin nginx
 		;;
-	net-analyzer/snort)
-		getent group snort || groupadd -g 111 snort
-		getent passwd snort || useradd -c "" -d /dev/null -M -u 111 -g snort -s /sbin/nologin snort
-		;;
 	media-video/motion)
 		getent passwd motion || useradd -c "" -d /var/lib/motion -M -u 115 -g video -s /sbin/nologin motion
+		;;
+	sci-geosciences/gpsd)
+		getent passwd gpsd || useradd -c "" -d /dev/null -M -u 200 -g uucp -s /sbin/nologin gpsd
 		;;
 	mail-mta/ssmtp)
 		getent group ssmtp || groupadd -g 207 ssmtp # exclusive with postfix

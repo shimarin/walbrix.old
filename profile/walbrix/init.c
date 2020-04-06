@@ -1,11 +1,30 @@
+#include <time.h>
 #define INIFILE
 #include "init.h"
 
 #define PROBE_BOOT_PARTITION_MAX_RETRY 8
 #define NEWROOT "/newroot"
+#define TIME_FILE "boottime.txt"
 
 void setup(inifile_t ini)
 {
+  const char *default_ssh_pubkey = ini_string(ini, ":default_ssh_pubkey", NULL);
+
+  if (default_ssh_pubkey) {
+    const char *authorized_keys = NEWROOT"/root/.ssh/authorized_keys";
+    if (is_nonexist_or_empty(authorized_keys)) {
+      FILE *f;
+      mkdir(NEWROOT"/root/.ssh", S_700);
+      f = fopen(NEWROOT"/root/.ssh/authorized_keys", "w");
+      if (f) {
+        fprintf(f, "%s\n", default_ssh_pubkey);
+        fclose(f);
+      }
+    } else {
+      printf("SSH publickey already exists.\n");
+    }
+  }
+
   setup_hostname_according_to_inifile(NEWROOT, ini);
   set_generated_hostname_if_not_set(NEWROOT);
   setup_timezone_according_to_inifile(NEWROOT, ini);
@@ -15,8 +34,10 @@ void setup(inifile_t ini)
 
 void init()
 {
-  const char* datafile = "/mnt/boot/system.dat";
-  const char* swapfile = "/mnt/boot/system.swp";
+  const char *datafile = "/mnt/boot/system.dat";
+  const char *swapfile = "/mnt/boot/system.swp";
+  FILE *f;
+  int rw_layer_mounted = 0;
   struct partition_struct partition;
   mount_procdevsys_or_die();
 
@@ -27,6 +48,13 @@ void init()
   printf("%s\n", partition.device);
 
   mount_or_die(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077");
+  mount_ro_loop_or_die("/mnt/boot/system.img", "/mnt/system", 0);
+
+  f = fopen("/mnt/boot/"TIME_FILE, "w");
+  if (f) {
+    fprintf(f, "%ld\n", time(NULL));
+    fclose(f);
+  }
 
   if (is_file("/mnt/boot/system.cur")) {
     if (rename("/mnt/boot/system.cur", "/mnt/boot/system.old") == 0) {
@@ -43,7 +71,26 @@ void init()
     }
   }
 
-  if (!is_file(datafile) || mount_rw_loop(datafile, "/mnt/rw") != 0) {
+  btrfs_scan();
+  if (is_file(datafile)) {
+    rw_layer_mounted = (mount_rw_loop_btrfs(datafile, "/mnt/rw", 1/*enable compression*/) == 0);
+    if (!rw_layer_mounted) {
+      printf("Failed to mount RW layer. Attempting repair.\n");
+      repair_btrfs_imagefile(datafile);
+      rw_layer_mounted = (mount_rw_loop_btrfs(datafile, "/mnt/rw", 1/*enable compression*/) == 0);
+    }
+    if (!rw_layer_mounted) {
+      printf("Failed to mount RW layer as BTRFS. Attempting another way.\n");
+      rw_layer_mounted = (mount_rw_loop(datafile, "/mnt/rw") != 0);
+    }
+    if (!rw_layer_mounted) {
+      printf("Mounting RW layer failed.\n");
+    }
+  }
+
+  if (rw_layer_mounted) {
+    printf("RW layer mounted.\n");
+  } else {
     printf("No valid persistent RW layer. Using tmpfs.\n");
     mount_or_die("tmpfs", "/mnt/rw", "tmpfs", MS_RELATIME, "");
   }
@@ -62,7 +109,6 @@ void init()
     activate_swap(swapfile);
   }
 
-  mount_ro_loop_or_die("/mnt/boot/system.img", "/mnt/system", 0);
   mount_overlay_or_die("/mnt/system", "/mnt/rw/root", "/mnt/rw/work", NEWROOT);
   mount_or_die("tmpfs", NEWROOT"/run", "tmpfs", MS_NODEV|MS_NOSUID|MS_STRICTATIME, "mode=755");
 
@@ -86,6 +132,7 @@ void shutdown()
     umount_recursive("/oldroot");
     umount_recursive("/mnt/initramfs/ro");
     umount_recursive("/mnt/initramfs/rw");
+    unlink("/mnt/initramfs/boot/"TIME_FILE);
     umount_recursive("/mnt");
   }
 }
