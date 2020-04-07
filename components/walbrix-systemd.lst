@@ -155,10 +155,11 @@ $require timezone-jp.lst
 
 $require xen-python3.lst
 
-# openvpn
+# VPN
 $require openvpn.lst
 $copy resource/walbrix/ca.crt /etc/openvpn/client/ca.crt
 $copy resource/walbrix/openvpn.conf /etc/openvpn/client/openvpn.conf
+$package net-vpn/wireguard-tools
 
 # node
 $require ts-node.lst
@@ -180,16 +181,18 @@ $require zabbix-proxy.lst
 $package dev-vcs/git
 
 $require kmscon.lst
-$copy resource/walbrix/wblogin.cpp /tmp/
-$copy resource/walbrix/wbmenu.sh /bin/
-$exec --overlay "g++ /tmp/wblogin.cpp -o /bin/wblogin -lpam -lpam_misc"
 $exec "systemctl disable gettyt@tty1"
 $exec "systemctl enable kmsconvt@tty1"
 $mkdir /etc/systemd/system/kmsconvt@tty1.service.d
-$write /etc/systemd/system/kmsconvt@tty1.service.d/walbrix.conf '[Service]\nExecStart=\nExecStart=-/usr/bin/kmscon --login "--vt=%I" --seats=seat0 --no-switchvt -- /bin/wblogin'
+$write /etc/systemd/system/kmsconvt@tty1.service.d/walbrix.conf '[Service]\nExecStart=\nExecStart=-/usr/bin/kmscon --login "--vt=%I" --seats=seat0 --no-switchvt -- /usr/sbin/wb login'
 
 $copy resource/install-system-image /usr/sbin/
 $copy resource/btrfs/expand-rw-layer /usr/sbin/
+
+# wb
+/usr/lib64/libgflags.so
+$copy wb/wb.cpp /tmp/
+$exec --overlay "g++ -o /usr/sbin/wb -lgflags -lxenlight -lxentoollog -lpam -lpam_misc /tmp/wb.cpp"
 
 $exec ldconfig
 $touch /done

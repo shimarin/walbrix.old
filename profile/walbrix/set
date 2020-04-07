@@ -88,3 +88,4 @@ dev-vcs/git
 net-libs/nodejs
 sys-apps/kmscon
 media-fonts/vlgothic
+dev-cpp/gflags
