@@ -13,6 +13,7 @@ $package timezone-data
 $package sys-apps/attr
 
 $package net-tools
+$package sys-apps/iproute2
 $require bash-minimal.lst
 $require pam.lst
 $require psmisc.lst
@@ -28,9 +29,14 @@ $package sys-apps/less
 /usr/bin/vi
 
 /bin/sed
+/bin/awk
 /bin/tar
 /bin/gzip
 /bin/gunzip
+/bin/bzip2
+/bin/bunzip2
+/usr/bin/xz
+/usr/bin/unxz
 
 /usr/bin/wget
 /usr/bin/curl

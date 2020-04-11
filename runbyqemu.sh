@@ -50,7 +50,7 @@ if sudo mount ${LOOP}p1 $TMPDIR; then
 		echo -e "(hd0) $LOOP\n" > $DEVICEMAP
 		$SUDO cp $DEVICEMAP $TMPDIR/boot/grub/device.map
 		rm -f $DEVICEMAP
-		if $SUDO grub-install --target=i386-pc --boot-directory=${TMPDIR}/boot --modules="normal echo linux probe sleep test ls cat configfile cpuid multiboot multiboot2" $LOOP; then
+		if $SUDO grub-install --target=i386-pc --boot-directory=${TMPDIR}/boot --modules="normal echo linux probe sleep test ls cat configfile cpuid minicmd vbe gfxterm_background png multiboot multiboot2 lvm" $LOOP; then
 			$SUDO rm -f $TMPDIR/boot/grub/device.map
 			GRUBCFG=runbyqemu-grubcfg-$$
 			echo -e 'insmod echo\ninsmod linux\ninsmod cpuid\nset BOOT_PARTITION=$root\nif cpuid -l; then\n\tloopback --offset1m loop /efi/boot/bootx64.efi\nelse\n\tloopback --offset1m loop /efi/boot/bootx86.efi\nfi\nset root=loop\nset prefix=($root)/boot/grub\nnormal' > $GRUBCFG
@@ -108,7 +108,7 @@ losetup -d $LOOP
 [ "$STATUS" -ne 0 ] && exit $STATUS
 
 if [ -f bootx64.efi ]; then
-  qemu-system-x86_64 -enable-kvm -drive file=$DISK_IMAGE,format=raw,index=0,media=disk -drive file=$SECONDARY_DISK_IMAGE,format=raw,index=1,media=disk -rtc base=utc,clock=rt -m 4096 -vga cirrus -no-shutdown
+  qemu-system-x86_64 -enable-kvm -drive file=$DISK_IMAGE,format=raw,index=0,media=disk -drive file=$SECONDARY_DISK_IMAGE,format=raw,index=1,media=disk -rtc base=utc,clock=rt -m 4096 -no-shutdown
 else
   qemu-system-i386 -enable-kvm -drive file=$DISK_IMAGE,format=raw,index=0,media=disk -drive file=$SECONDARY_DISK_IMAGE,format=raw,index=1,media=disk -rtc base=utc,clock=rt -m 1024 -vga cirrus -no-shutdown
 fi

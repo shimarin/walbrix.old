@@ -17,3 +17,4 @@ node_modules/
 *.img
 /*.js
 /lib/*.js
+*.gch

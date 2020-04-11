@@ -11,6 +11,7 @@ $require grub.lst
 
 $mkdir /boot/grub
 $copy resource/walbrix/grub.cfg /boot/grub/grub.cfg
+$copy resource/walbrix/background.png /boot/grub/
 
 # hwids
 /bin/sed
@@ -70,6 +71,7 @@ $copy resource/walbrix/77-mm-docomo-l-03f.rules /lib/udev/rules.d/
 $require nfs.lst
 $package sys-fs/multipath-tools
 $package sys-fs/btrfs-progs
+$package sys-fs/squashfs-tools
 #$require exfat.lst
 $package net-fs/cifs-utils --use="-acl -ads -caps"
 #$package sys-fs/xfsdump
@@ -152,6 +154,7 @@ $write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nss
 $write --append /etc/sysctl.conf 'net.nf_conntrack_max = 65536'
 
 $require timezone-jp.lst
+$write /etc/locale.conf "LANG=ja_JP.utf8"
 
 $require xen-python3.lst
 
@@ -181,18 +184,35 @@ $require zabbix-proxy.lst
 $package dev-vcs/git
 
 $require kmscon.lst
-$exec "systemctl disable gettyt@tty1"
+#$exec "rm /lib/systemd/system/autovt\@.service"
+#$symlink /lib/systemd/system/autovt@.service kmsconvt@.service
+$exec "systemctl disable getty@tty1"
 $exec "systemctl enable kmsconvt@tty1"
 $mkdir /etc/systemd/system/kmsconvt@tty1.service.d
-$write /etc/systemd/system/kmsconvt@tty1.service.d/walbrix.conf '[Service]\nExecStart=\nExecStart=-/usr/bin/kmscon --login "--vt=%I" --seats=seat0 --no-switchvt -- /usr/sbin/wb login'
+$write /etc/systemd/system/kmsconvt@tty1.service.d/walbrix.conf '[Service]\nExecStart=\nExecStart=/usr/bin/kmscon --login "--vt=%I" --seats=seat0 --no-switchvt -- /usr/sbin/wb login'
+#$mkdir /etc/systemd/system/getty@tty1.service.d
+#$write /etc/systemd/system/getty@tty1.service.d/walbrix.conf '[Unit]\nConditionPathExists=!/dev/fb0'
 
 $copy resource/install-system-image /usr/sbin/
 $copy resource/btrfs/expand-rw-layer /usr/sbin/
 
 # wb
 /usr/lib64/libgflags.so
-$copy wb/wb.cpp /tmp/
-$exec --overlay "g++ -o /usr/sbin/wb -lgflags -lxenlight -lxentoollog -lpam -lpam_misc /tmp/wb.cpp"
+/usr/lib64/libncurses++w.so
+/usr/lib64/libncursesw.so
+/usr/lib64/libpanelw.so
+/usr/lib64/libtinfow.so
+/usr/lib64/libformw.so
+/usr/lib64/libmenuw.so
+/usr/lib64/libiniparser.so.0
 
+$copy wb/wb.cpp /tmp/
+$exec --overlay "g++ -o /usr/sbin/wb -lgflags -lxenlight -lxentoollog -lpam -lpam_misc -lncursesw -lncurses++w -lmenuw -ltinfow -liniparser /tmp/wb.cpp"
+/usr/bin/make
+
+# self-build
+$mkdir /var/db/repos/gentoo
+
+$exec --overlay "env-update"
 $exec ldconfig
 $touch /done

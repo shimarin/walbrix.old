@@ -43,3 +43,8 @@ sys-apps/hwids
 # kmscon
 =dev-libs/libtsm-4.0.1
 =sys-apps/kmscon-8_p20180906
+
+# ui
+=dev-cpp/picojson-1.3.0
+=dev-cpp/pstreams-1.0.1
+

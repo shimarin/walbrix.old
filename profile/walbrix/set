@@ -89,3 +89,5 @@ net-libs/nodejs
 sys-apps/kmscon
 media-fonts/vlgothic
 dev-cpp/gflags
+dev-cpp/picojson
+dev-cpp/pstreams
