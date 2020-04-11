@@ -27,6 +27,7 @@ STAGE3_FILE=cache/download/$STAGE3_HASH
 
 if [ ! -f "$STAGE3_FILE" ]; then
 	TEMPFILE=cache/download/download-$$.tmp
+	mkdir -p cache/download
 	if wget -O $TEMPFILE $STAGE3_URL; then
 		mv $TEMPFILE $STAGE3_FILE
 	else

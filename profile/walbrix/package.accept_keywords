@@ -34,8 +34,7 @@ sys-apps/hwids
 =sci-geosciences/gpsd-3.18.1
 
 # wireguard
-=net-vpn/wireguard-tools-1.0.20200206
-=net-vpn/wireguard-modules-0.0.20200215
+=net-vpn/wireguard-tools-1.0.20200319
 
 # Zabbix
 =net-analyzer/zabbix-4.0.18
