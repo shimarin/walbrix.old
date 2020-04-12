@@ -3,9 +3,10 @@
 #include <iostream>
 #include <map>
 #include <list>
+#include <set>
 #include <cstring>
 
-#include <sys/wait.h>
+#include <dirent.h>
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
 
@@ -17,46 +18,53 @@
 #include <ncursesw/cursesp.h>
 #include <ncursesw/cursesm.h>
 
-extern "C" {
-#include <libxl.h>
-#include <libxl_utils.h>
+#include "wb.h"
+
+DEFINE_bool(force, false, "Force operation");
+
+int load_vm_config(const char* vmname, VM& vm)
+{
+  VmIniFile ini(vmname);
+
+  vm.name = vmname;
+  vm.mem = ini.getint(":memory", 128);
+  if (vm.mem < 64) vm.mem = 64;
+  vm.ncpu = ini.getint(":cpu", 1);
+  if (vm.ncpu < 1) vm.ncpu = 1;
+  vm.kernel = ini.getstring(":kernel", "/usr/libexec/xen/boot/pv-grub2-x86_64.gz");
+  vm.ramdisk = ini.getstring(":ramdisk");
+  vm.cmdline = ini.getstring(":cmdline");
+  vm.root = ini.getstring(":root");
+  vm.extra = ini.getstring(":extra");
+  return 0;
 }
 
-DEFINE_bool(yesno, false, "なんかyesno");
-
-class XtlLoggerStdio {
-  xentoollog_logger_stdiostream* logger;
-public:
-  XtlLoggerStdio(FILE* f, xentoollog_level min_level, unsigned flags)
-  {
-    logger = xtl_createlogger_stdiostream(f, min_level, flags);
-  }
-  operator xentoollog_logger*() { return (xentoollog_logger*)logger; }
-  operator bool() { return logger != NULL; }
-  ~XtlLoggerStdio()
-  {
-    if (logger) xtl_logger_destroy((xentoollog_logger*)logger);
-  }
-};
-
-class LibXlCtx {
-  libxl_ctx* pctx;
-public:
-  LibXlCtx(int version, unsigned int flags, xentoollog_logger *lg)
-  {
-    int rst = libxl_ctx_alloc(&pctx, LIBXL_VERSION, 0, lg);
-    if (rst != 0) pctx = NULL;
-  }
-  operator libxl_ctx*() { return pctx; }
-  operator bool() { return pctx != NULL; }
-  ~LibXlCtx()
-  {
-    if (pctx) libxl_ctx_free(pctx);
-  }
-};
-
-int list(int argc, char* argv[])
+int list(std::map<std::string,VM>& vms)
 {
+  struct dirent **namelist;
+  int n = scandir("/run/initramfs/boot/vm", &namelist, NULL, alphasort);
+
+  if (n < 0) RUNTIME_ERROR_WITH_ERRNO("scandir");
+  //else
+  vms.clear();
+  for (int i = 0; i < n; i++) {
+    if (namelist[i]->d_type == DT_REG) {
+      std::string name = std::string(namelist[i]->d_name);
+      std::transform(name.begin(), name.end(), name.begin(), tolower);
+      if (name.ends_with(".img") || name.ends_with(".ini")) {
+        name = name.substr(0, name.length() - 4);
+        if (std::any_of(name.begin(), name.end(), [](char c) { return (!isalpha(c) && !isdigit(c) && c != '-'); })) {
+          std::cerr << "Name '" << name << "' contains invalid character. Skipping." << std::endl;
+          continue;
+        }
+        //else
+        load_vm_config(name.c_str(), vms[name]);
+      }
+    }
+    free(namelist[i]);
+  }
+  free(namelist);
+
   XtlLoggerStdio logger(stderr, XTL_ERROR, 0);
   if (!logger) return -1;
   // else
@@ -65,21 +73,33 @@ int list(int argc, char* argv[])
 
   int nb_domain;
   libxl_dominfo* dominfo_list = libxl_list_domain(ctx, &nb_domain);
-  if (dominfo_list) {
-    for (int i = 0; i < nb_domain; i++) {
-      libxl_dominfo& dominfo = dominfo_list[i];
-      uint32_t domid = dominfo.domid;
-      unsigned long mem = (dominfo.current_memkb + dominfo.outstanding_memkb) / 1024;
-      uint32_t ncpu = dominfo.vcpu_online;
-      char* _domname = libxl_domid_to_name(ctx, domid);
-      std::string domname = _domname;
-      free(_domname);
-      std::cout << domid << ":" << domname << ":" << mem << ":" << ncpu << std:: endl;
+  if (!dominfo_list) RUNTIME_ERROR("Error retrieving domain list");
+  //else
+  for (int i = 0; i < nb_domain; i++) {
+    libxl_dominfo& dominfo = dominfo_list[i];
+    uint32_t domid = dominfo.domid;
+    if (domid == 0) continue; // don't show dom0
+    char* _domname = libxl_domid_to_name(ctx, domid);
+    std::string domname = _domname;
+    free(_domname);
+    if (vms.find(domname) != vms.end()) {
+      vms[domname].domid = domid;
+      vms[domname].mem = (dominfo.current_memkb + dominfo.outstanding_memkb) / 1024;
+      vms[domname].ncpu = dominfo.vcpu_online;
     }
-    libxl_dominfo_list_free(dominfo_list, nb_domain);
-  } else {
-    return -1;
   }
+  libxl_dominfo_list_free(dominfo_list, nb_domain);
+  return vms.size();
+}
+
+int list(int argc, char* argv[])
+{
+  std::map<std::string, VM> vms;
+  list(vms);
+  for (const auto& vm : vms) {
+    std::cout << (vm.second.domid? std::to_string(vm.second.domid.value()) : "-") << ":" << vm.first << ":" << vm.second.mem << ":" << vm.second.ncpu << ":" << std:: endl;
+  }
+
   return 0;
 }
 
@@ -157,23 +177,23 @@ int login(int argc, char* argv[])
   return 0;
 }
 
-typedef std::tuple<std::string,std::string,uint64_t,std::string,uint16_t> Disk;
-const char* name(const Disk& disk) { return std::get<0>(disk).c_str(); }
-const char* model(const Disk& disk) { return std::get<1>(disk).c_str(); }
-uint64_t size(const Disk& disk) { return std::get<2>(disk); }
-const char* tran(const Disk& disk) { return std::get<3>(disk).c_str(); }
-uint16_t log_sec(const Disk& disk) { return std::get<4>(disk); }
+typedef std::tuple<std::string,std::string,uint64_t,std::string,uint16_t> PhysDisk;
+const char* name(const PhysDisk& disk) { return std::get<0>(disk).c_str(); }
+const char* model(const PhysDisk& disk) { return std::get<1>(disk).c_str(); }
+uint64_t size(const PhysDisk& disk) { return std::get<2>(disk); }
+const char* tran(const PhysDisk& disk) { return std::get<3>(disk).c_str(); }
+uint16_t log_sec(const PhysDisk& disk) { return std::get<4>(disk); }
 
-void get_install_candidates(std::list<Disk>& disks,uint64_t least_size = 1024L * 1024 * 1024 * 2)
+void get_install_candidates(std::list<PhysDisk>& disks,uint64_t least_size = 1024L * 1024 * 1024 * 2)
 {
   redi::pstream in("lsblk -b -n -l -J -o NAME,MODEL,TYPE,PKNAME,RO,MOUNTPOINT,SIZE,TRAN,LOG-SEC");
-  if (in.fail()) throw std::runtime_error("Failed to execute lsblk");
+  if (in.fail()) RUNTIME_ERROR("Failed to execute lsblk");
   // else
   picojson::value v;
   const std::string err = picojson::parse(v, in);
-  if (!err.empty()) throw std::runtime_error(err);
+  if (!err.empty()) RUNTIME_ERROR(err);
   //else
-  std::map<std::string,Disk > disk_map;
+  std::map<std::string,PhysDisk > disk_map;
   for (auto& _d : v.get<picojson::object>()["blockdevices"].get<picojson::array>()) {
     picojson::object& d = _d.get<picojson::object>();
     if (d["pkname"].is<picojson::null>() && d["type"].get<std::string>() == "disk" && d["ro"].get<bool>() == false && d["mountpoint"].is<picojson::null>()) {
@@ -257,7 +277,7 @@ public:
 
 int install(int argc, char* argv[])
 {
-  std::list<Disk> disks;
+  std::list<PhysDisk> disks;
   try {
     get_install_candidates(disks);
     for (const auto& disk : disks) {
@@ -276,262 +296,63 @@ int install(int argc, char* argv[])
   return 0;
 }
 
-class LibXlDomainConfig {
-  libxl_domain_config d_config;
-public:
-  libxl_domain_create_info& c_info;
-  libxl_domain_build_info& b_info;
-  int& num_disks;
-  libxl_device_disk*& disks;
-  int& num_nics;
-  libxl_device_nic*& nics;
-
-  LibXlDomainConfig() : c_info(d_config.c_info), b_info(d_config.b_info),
-    num_disks(d_config.num_disks), disks(d_config.disks),
-    num_nics(d_config.num_nics), nics(d_config.nics)
-    { libxl_domain_config_init(&d_config); }
-  ~LibXlDomainConfig() { libxl_domain_config_dispose(&d_config); }
-  operator libxl_domain_config*() { return &d_config; }
-  operator const libxl_domain_config&() { return d_config; }
-};
-
-
-class Lock {
-  const char* lockfile = "/run/wb.lock";
-  static int fd_lock;
-public:
-  Lock() {
-    /* lock already acquired */
-    if (fd_lock >= 0) throw std::runtime_error("Lock already acquired");
-
-    struct flock fl;
-    fl.l_type = F_WRLCK;
-    fl.l_whence = SEEK_SET;
-    fl.l_start = 0;
-    fl.l_len = 0;
-    fd_lock = open(lockfile, O_WRONLY|O_CREAT, S_IWUSR);
-    if (fd_lock < 0) {
-      throw std::runtime_error((std::string)"cannot open the lockfile " + lockfile + ": " + strerror(errno));
-    }
-    if (fcntl(fd_lock, F_SETFD, FD_CLOEXEC) < 0) {
-        close(fd_lock);
-        throw std::runtime_error((std::string)"cannot set cloexec to lockfile " + lockfile + ": " + strerror(errno));
-    }
-get_lock:
-    int rc = fcntl(fd_lock, F_SETLKW, &fl);
-    if (rc < 0 && errno == EINTR) goto get_lock;
-    //else
-    if (rc < 0) throw std::runtime_error((std::string)"cannot acquire lock " + lockfile + ": " + strerror(errno));
-  }
-  ~Lock() {
-
-    /* lock not acquired */
-    if (fd_lock < 0) return;
-
-release_lock:
-    struct flock fl;
-    fl.l_type = F_UNLCK;
-    fl.l_whence = SEEK_SET;
-    fl.l_start = 0;
-    fl.l_len = 0;
-
-    int rc = fcntl(fd_lock, F_SETLKW, &fl);
-    if (rc < 0 && errno == EINTR) goto release_lock;
-    //else
-    //if (rc < 0) throw std::runtime_error((std::string)"cannot release lock " + lockfile + ": " + strerror(errno));
-    close(fd_lock);
-    fd_lock = -1;
-  }
-};
-
-int Lock::fd_lock = -1;
-
-int start(int argc, char* argv[])
+int stop(int argc, char* argv[])
 {
-  static int logfile = 2;
-  typedef enum {
-    child_console, child_waitdaemon, child_migration, child_vncviewer,
-    child_max
-  } xlchildnum;
+  if (argc < 3) {
+    std::cout << "Usage: wb stop [--force] vmname" << std::endl;
+    return 1;
+  }
+  const char* vmname = argv[2];
 
-  typedef struct {
-      /* every struct like this must be in XLCHILD_LIST */
-      pid_t pid; /* 0: not in use */
-      int reaped; /* valid iff pid!=0 */
-      int status; /* valid iff reaped */
-      const char *description; /* valid iff pid!=0 */
-  } xlchild;
-
-  const auto INVALID_DOMID = ~0;
-  XtlLoggerStdio logger(stderr, XTL_ERROR, 0);
-  if (!logger) return -1;
-  // else
-  LibXlCtx ctx(LIBXL_VERSION, 0, logger);
-  if (!ctx) return -1;
-
-  LibXlDomainConfig d_config;
-
-  // build domain config
-  d_config.c_info.name = strdup("mydomain");
-  d_config.c_info.type = LIBXL_DOMAIN_TYPE_PV;
-  libxl_uuid_generate(&d_config.c_info.uuid);
-  libxl_domain_build_info_init_type(&d_config.b_info, d_config.c_info.type);
-  int memory = 1024;
-  d_config.b_info.target_memkb = memory * 1024;
-  d_config.b_info.max_memkb = d_config.b_info.target_memkb;
-  int vcpus = 1;
-  if (libxl_cpu_bitmap_alloc(ctx, &d_config.b_info.avail_vcpus, vcpus) != 0) {
-    throw std::runtime_error("Unable to allocate cpumap");
+  std::map<std::string, VM> vms;
+  list(vms);
+  const auto& vm_iter = vms.find(vmname);
+  if (vm_iter == vms.end()) {
+    std::cerr << "No such VM. 'wb list' to show list of available VMs." << std::endl;
+    return 1;
   }
   //else
-  libxl_bitmap_set_none(&d_config.b_info.avail_vcpus);
-  for (int i = vcpus; vcpus > 0; vcpus--) {
-    libxl_bitmap_set((&d_config.b_info.avail_vcpus), i);
-  }
-  d_config.b_info.max_vcpus = vcpus;
-  d_config.b_info.kernel = strdup("/usr/libexec/xen/boot/pv-grub2-x86_64.gz");
-  d_config.num_disks = 1;
-  d_config.disks = (libxl_device_disk*)malloc(sizeof(libxl_device_disk) * d_config.num_disks);
-  for (int i = 0 ; i < d_config.num_disks; i++) {
-    libxl_device_disk& disk = d_config.disks[i];
-    libxl_device_disk_init(&disk);
-    disk.readwrite = 1;
-    disk.format = LIBXL_DISK_FORMAT_RAW;
-    disk.is_cdrom = 0;
-    disk.removable = 0;
-    disk.vdev = strdup("xvda1");
-    //disk.script = strdup("file");
-    disk.pdev_path = strdup("/root/walbrix.squashfs");
-  }
-  d_config.num_nics = 1;
-  d_config.nics = (libxl_device_nic*)malloc(sizeof(libxl_device_nic) * d_config.num_nics);
-  for (int i = 0 ; i < d_config.num_nics; i++) {
-    libxl_device_nic& nic = d_config.nics[i];
-    libxl_device_nic_init(&nic);
-    nic.nictype = LIBXL_NIC_TYPE_VIF;
-    //nic.mac;
-    nic.bridge = strdup("xenbr0");
+  if (!vm_iter->second.domid) {
+    std::cerr << "Not running" << std::endl;
+    return 1;
   }
 
-  uint32_t domid = INVALID_DOMID;
-
-  {
-    Lock lock;
-    /*
-    int notify_pipe[2] = { -1, -1 };
-    if (libxl_pipe(ctx, notify_pipe) != 0) throw std::runtime_error("libxl_pipe failed");
-    //else
-    libxl_asyncprogress_how autoconnect_console_how;
-    autoconnect_console_how.callback = autoconnect_console;
-    autoconnect_console_how.for_callback = &notify_pipe[1];
-    */
-    libxl_domain_create_new(ctx, d_config, &domid, 0, 0/*&autoconnect_console_how*/);
-  }
-
-  /*
-  if (true) {
-    char buf[1];
-    int r;
-    do {
-      r = read(notify_pipe[0], buf, 1);
-    } while (r == -1 && errno == EINTR);
-
-    if (r == -1)
-      fprintf(stderr,
-            "Failed to get notification from xenconsole: %s\n",
-            strerror(errno));
-    else if (r == 0)
-      fprintf(stderr, "Got EOF from xenconsole notification fd\n");
-    else if (r == 1 && buf[0] != 0x00)
-      fprintf(stderr, "Got unexpected response from xenconsole: %#x\n",
-            buf[0]);
-
-    close(notify_pipe[0]);
-    close(notify_pipe[1]);
-    notify_pipe[0] = notify_pipe[1] = -1;
-  }
-  */
-
-  libxl_domain_unpause(ctx, domid, NULL);
-
-  // daemonize
-  static xlchild children[child_max];
-  xlchild* ch = &children[child_waitdaemon];
-  assert(!ch->pid);
-  ch->reaped = 0;
-  ch->description = "domain monitoring daemonizing child";
-  ch->pid = fork();
-  if (ch->pid == -1) {
-    throw std::runtime_error((std::string)"fork failed: " + strerror(errno));
-  }
-  //else
-  if (!ch->pid) {
-    for (int i = 0; i < child_max; i++) children[i].pid = 0;
-  }
-
-  if (ch->pid) {
-    // xl_waitpid
-    int status;
-    xlchild *ch = &children[child_waitdaemon];
-    pid_t got = ch->pid;
-    assert(got);
-    if (ch->reaped) {
-      status = ch->status;
-      ch->pid = 0;
-    } else {
-      for (;;) {
-        got = waitpid(ch->pid, &status, 0);
-        if (got < 0 && errno == EINTR) continue;
-        if (got > 0) {
-          assert(got == ch->pid);
-          ch->pid = 0;
-        }
-        break;
-      }
-    }
-    if (got < 0) {
-      throw std::runtime_error((std::string)"failed to waitpid for " + children[child_waitdaemon].description + ": " + strerror(errno));
-    } else if (status) {
-      libxl_report_child_exitstatus(ctx, XTL_ERROR, children[child_waitdaemon].description, got, status);
-      throw std::runtime_error("child exit status is not 0");
-    }
+  if (FLAGS_force) {
+    execl("/usr/sbin/xl", "/usr/sbin/xl", "destroy", vmname, NULL);
   } else {
-    libxl_postfork_child_noexec(ctx); /* in case we don't exit/exec */
-    char *_fullname;
-    std::string name = (std::string)"xl-" + d_config.c_info.name;
-    int rst = libxl_create_logfile(ctx, name.c_str(), &_fullname);
-    std::string fullname = _fullname;
-    free(_fullname);
-    if (rst != 0) {
-      throw std::runtime_error((std::string)"failed to open logfile " + fullname + ": " + strerror(errno));
-    }
-    //else
-    logfile = open(fullname.c_str(), O_WRONLY|O_CREAT|O_APPEND, 0644);
-    if (logfile < 0) {
-      throw std::runtime_error((std::string)"Fatal error: " + strerror(errno));
-    }
-    // else
-    assert(logfile >= 3);
-    int nullfd = open("/dev/null", O_RDONLY);
-    assert(nullfd >= 3);
-
-    dup2(nullfd, 0);
-    dup2(logfile, 1);
-    dup2(logfile, 2);
-    close(nullfd);
-    if (daemon(0, 1) < 0) {
-      throw std::runtime_error((std::string)"Fatal error: " + strerror(errno));
-    }
+    execl("/usr/sbin/xl", "/usr/sbin/xl", "shutdown", vmname, NULL);
   }
-  if (logfile != 2) close(logfile);
-  //if (xl_child_pid(child_console)) child_report(child_console);
+  return 0;
+}
+
+int console(int argc, char* argv[])
+{
+  const char* vmname = argv[2];
+  execl("/usr/bin/tmux", "/usr/bin/tmux",
+    "set-window-option", "-g", "status-right", " ", ";",
+    "set-window-option", "-g", "window-status-current-format", "終了するには Ctrl+]を押してください", ";",
+    "new", "-s", vmname, "xl", "console", vmname,
+    NULL);
+  return 0;
+}
+
+int setkb(int argc, char* argv[])
+{
+  // /etc/vconsole.conf
+  // localectl set-keymap jp106
+  // systemctl restart kmsconvt\@tty1
+  // ] -> '['   setting is jp actially us
+  // ] -> '\' setting is us actuall jp
   return 0;
 }
 
 struct Command { const char* name; int (*func)(int, char**); } commands [] = {
   {"list", list},
   {"start", start},
+  {"stop", stop},
+  {"console", console},
   {"login", login},
+  {"setkb", setkb},
   {"ui", ui},
   {"install", install},
   {NULL, NULL}
@@ -539,7 +360,7 @@ struct Command { const char* name; int (*func)(int, char**); } commands [] = {
 
 int main(int argc, char* argv[])
 {
-  setlocale( LC_ALL, "ja_JP.utf8");
+  setlocale( LC_ALL, "ja_JP.utf8"); // TODO: read /etc/locale.conf
 
   gflags::SetUsageMessage("Walbrix command line tool");
   gflags::SetVersionString("0.1");

@@ -155,6 +155,9 @@ $write --append /etc/sysctl.conf 'net.nf_conntrack_max = 65536'
 
 $require timezone-jp.lst
 $write /etc/locale.conf "LANG=ja_JP.utf8"
+$write /etc/vconsole.conf "KEYMAP=jp106"
+$mkdir /etc/X11/xorg.conf.d
+$write /etc/X11/xorg.conf.d/00-keyboard.conf 'Section "InputClass"\n\tIdentifier "system-keyboard"\n\tMatchIsKeyboard "on"\n\tOption "XkbLayout" "jp"\n\tOption "XkbModel" "jp106"\n\tOption "XkbOptions" "terminate:ctrl_alt_bksp"\nEndSection'
 
 $require xen-python3.lst
 
@@ -189,7 +192,7 @@ $require kmscon.lst
 $exec "systemctl disable getty@tty1"
 $exec "systemctl enable kmsconvt@tty1"
 $mkdir /etc/systemd/system/kmsconvt@tty1.service.d
-$write /etc/systemd/system/kmsconvt@tty1.service.d/walbrix.conf '[Service]\nExecStart=\nExecStart=/usr/bin/kmscon --login "--vt=%I" --seats=seat0 --no-switchvt -- /usr/sbin/wb login'
+$write /etc/systemd/system/kmsconvt@tty1.service.d/walbrix.conf '[Service]\nExecStart=\nExecStart=/usr/bin/kmscon --login "--vt=%I" --seats=seat0 --no-switchvt -- /usr/sbin/wb login\nRestart=always'
 #$mkdir /etc/systemd/system/getty@tty1.service.d
 #$write /etc/systemd/system/getty@tty1.service.d/walbrix.conf '[Unit]\nConditionPathExists=!/dev/fb0'
 
@@ -207,8 +210,11 @@ $copy resource/btrfs/expand-rw-layer /usr/sbin/
 /usr/lib64/libiniparser.so.0
 
 $copy wb/wb.cpp /tmp/
-$exec --overlay "g++ -o /usr/sbin/wb -lgflags -lxenlight -lxentoollog -lpam -lpam_misc -lncursesw -lncurses++w -lmenuw -ltinfow -liniparser /tmp/wb.cpp"
+$copy wb/start.cpp /tmp/
+$copy wb/wb.h /tmp/
+$exec --overlay "g++ -std=c++2a -o /usr/sbin/wb -lgflags -lxenlight -lxentoollog -lpam -lpam_misc -lncursesw -lncurses++w -lmenuw -ltinfow -liniparser /tmp/*.cpp"
 /usr/bin/make
+$package app-misc/tmux
 
 # self-build
 $mkdir /var/db/repos/gentoo

@@ -40,6 +40,7 @@ app-misc/c_rehash	!<dev-libs/openssl-1.0.2d-r1:0
 app-misc/ca-certificates	app-misc/c_rehash sys-apps/debianutils
 app-misc/pax-utils	sys-libs/libseccomp
 app-misc/screen	>=sys-libs/ncurses-5.2:0/6= sys-libs/pam acct-group/utmp virtual/tmpfiles
+app-misc/tmux	dev-libs/libevent:0/2.1-6= sys-libs/ncurses:0/6=
 app-portage/elt-patches	sys-apps/gentoo-functions
 app-portage/gemato	dev-python/pyblake2[-python_single_target_pypy3(-),python_targets_python2_7(-),-python_single_target_python2_7(-)] dev-python/bz2file[python_targets_python2_7(-),-python_single_target_python2_7(-)] app-crypt/gnupg dev-python/setuptools[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] >=dev-lang/python-2.7.5-r2:2.7[threads(+)] dev-lang/python:3.6[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_6(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
 app-portage/gentoolkit	sys-apps/portage[python_targets_python3_6(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-)] sys-apps/gawk sys-apps/gentoo-functions dev-lang/python:3.6[xml(+),threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_6(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-)]

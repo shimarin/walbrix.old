@@ -91,3 +91,5 @@ media-fonts/vlgothic
 dev-cpp/gflags
 dev-cpp/picojson
 dev-cpp/pstreams
+app-misc/tmux
+
