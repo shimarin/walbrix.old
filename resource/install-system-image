@@ -13,6 +13,11 @@ if ! file "$1" | grep -q 'Squashfs filesystem'; then
 	exit 1
 fi
 
+if [ -f $BOOTDIR/system.old ]; then
+  rm -f $BOOTDIR/system.old
+  echo "Old system image removed."
+fi
+
 echo "Copying new system image file..."
 if ! cp "$1" $BOOTDIR/system.new; then
 	echo "Failed."
