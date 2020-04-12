@@ -13,19 +13,32 @@ void setup(inifile_t ini)
 
 void init()
 {
-  int retry_count;
   char *overlay = "/mnt/rw/root";
   mount_procdevsys_or_die();
-  mount_or_die2(BOOT_PARTITION, "/mnt/rw", "auto", MS_RELATIME, "");
 
-  if (is_file("/mnt/rw/system.cur")) {
-    if (rename("/mnt/rw/system.cur", "/mnt/rw/system.old") == 0) {
-      printf("Previous system image preserved.\n");
+  if (is_block_readonly(BOOT_PARTITION)) { // raw squashfs image
+    mount_or_die2(BOOT_PARTITION, "/mnt/system", "auto", MS_RDONLY, "");
+    if (is_block("/dev/xvda2")) {
+      mount_or_die2("/dev/xvda2", "/mnt/rw", "auto", MS_RELATIME, "");
+    } else {
+      mount_or_die("tmpfs", "/mnt/rw", "tmpfs", MS_RELATIME, "");
     }
-  }
+    if (is_block("/dev/xvda3")) {
+      activate_swap("/dev/xvda3");
+    }
 
-  if (mount_ro_loop("/mnt/rw/system.img", "/mnt/system", 0) < 0) {
-    mount_ro_loop_or_die("/mnt/rw/system", "/mnt/system", 0);
+  } else {
+    mount_or_die2(BOOT_PARTITION, "/mnt/rw", "auto", MS_RELATIME, "");
+
+    if (is_file("/mnt/rw/system.cur")) {
+      if (rename("/mnt/rw/system.cur", "/mnt/rw/system.old") == 0) {
+        printf("Previous system image preserved.\n");
+      }
+    }
+
+    if (mount_ro_loop("/mnt/rw/system.img", "/mnt/system", 0) < 0) {
+      mount_ro_loop_or_die("/mnt/rw/system", "/mnt/system", 0);
+    }
   }
   if (is_dir("/mnt/rw/rw")) {
     overlay = "/mnt/rw/rw"; // for backward compatibility

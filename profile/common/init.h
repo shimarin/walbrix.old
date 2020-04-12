@@ -757,6 +757,30 @@ int is_block(const char* path)
   return S_ISBLK(st.st_mode);
 }
 
+int is_block_readonly(const char* path)
+{
+  int fd, readonly;
+  if (!is_block(path)) {
+    fprintf(stderr, "%s is not a block device.", path);
+    return -1;
+  }
+  //else
+  fd = open(path, O_RDONLY);
+  if (fd < 0) {
+    perror("open");
+    return -1;
+  }
+  //else
+  if (ioctl(fd, BLKROGET, &readonly) < 0) {
+    perror("ioctl");
+    close(fd);
+    return -1;
+  }
+  // else
+  close(fd);
+  return readonly? 1 : 0;
+}
+
 int is_mounted(const char *path)
 {
   struct libmnt_table *tb = mnt_new_table_from_file("/proc/self/mountinfo");
