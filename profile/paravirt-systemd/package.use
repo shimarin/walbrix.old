@@ -22,4 +22,5 @@ dev-python/restkit -cli
 app-misc/mosquitto websockets
 net-dns/avahi -introspection mdnsresponder-compat dbus
 net-vpn/openvpn systemd
+dev-db/mysql -perl cjk
 
