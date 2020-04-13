@@ -1,0 +1,18 @@
+[Unit]
+Description=Start Walbrix autostart domains
+Requires=proc-xen.mount xenstored.service
+After=proc-xen.mount xenstored.service xenconsoled.service xen-init-dom0.service
+After=network-online.target
+After=remote-fs.target
+ConditionPathExists=/proc/xen/capabilities
+Conflicts=libvirtd.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStartPre=/bin/grep -q control_d /proc/xen/capabilities
+ExecStart=-/usr/sbin/wb start @all
+
+[Install]
+WantedBy=multi-user.target
+

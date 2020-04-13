@@ -10,6 +10,8 @@
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
 
+#include <libsmartcols/libsmartcols.h>
+
 #include <pstream.h>
 #define PICOJSON_USE_INT64
 #include <picojson.h>
@@ -18,8 +20,13 @@
 #include <ncursesw/cursesp.h>
 #include <ncursesw/cursesm.h>
 
+extern "C" {
+#include <xenstore.h>
+}
+
 #include "wb.h"
 
+DEFINE_bool(daemon, false, "Daemonize");
 DEFINE_bool(force, false, "Force operation");
 
 int load_vm_config(const char* vmname, VM& vm)
@@ -27,6 +34,7 @@ int load_vm_config(const char* vmname, VM& vm)
   VmIniFile ini(vmname);
 
   vm.name = vmname;
+  vm.autostart = ini.getboolean(":autostart", true);
   vm.mem = ini.getint(":memory", 128);
   if (vm.mem < 64) vm.mem = 64;
   vm.ncpu = ini.getint(":cpu", 1);
@@ -92,13 +100,62 @@ int list(std::map<std::string,VM>& vms)
   return vms.size();
 }
 
+class Table {
+  libscols_table* tb;
+  libscols_line* last_line;
+public:
+  Table() : last_line(NULL) {
+    tb = scols_new_table();
+    if (!tb) RUNTIME_ERROR("Failed to allocate output table");
+  }
+  ~Table() { scols_unref_table(tb); }
+  libscols_column* new_column(const char* colname, double hint, int flags) { return scols_table_new_column(tb, colname, hint, flags); }
+  libscols_line* new_line(libscols_line* parent = NULL) {
+    last_line = scols_table_new_line(tb, parent);
+    if (!last_line) RUNTIME_ERROR("Failed to allocate output line");
+    return last_line;
+  }
+  int print() { return scols_print_table(tb); }
+};
+
+class TableLine {
+  libscols_line* line;
+public:
+  TableLine(libscols_line* _line) : line(_line) {;}
+  int set_data(size_t col, const char* data) {
+    char* buf = (char*)malloc(strlen(data) + 1);
+    strcpy(buf, data);
+    if (!buf) RUNTIME_ERROR_WITH_ERRNO("set_data");
+    //else
+    return scols_line_refer_data(line, col, buf);
+  }
+  int set_data(size_t col, const std::string& data) {
+    return set_data(col, data.c_str());
+  }
+  template <class T> int set_data(size_t col, T data) {
+    return set_data(col, std::to_string(data));
+  }
+};
+
 int list(int argc, char* argv[])
 {
   std::map<std::string, VM> vms;
   list(vms);
+  Table table;
+  table.new_column("ID", 0.1, SCOLS_FL_RIGHT);
+  table.new_column("NAME", 0.1, 0);
+  table.new_column("RAM(MiB)", 0.1, SCOLS_FL_RIGHT);
+  table.new_column("CPUs", 0.1, SCOLS_FL_RIGHT);
+  table.new_column("AUTOSTART", 0.1, SCOLS_FL_RIGHT);
   for (const auto& vm : vms) {
-    std::cout << (vm.second.domid? std::to_string(vm.second.domid.value()) : "-") << ":" << vm.first << ":" << vm.second.mem << ":" << vm.second.ncpu << ":" << std:: endl;
+    TableLine line(table.new_line());
+    line.set_data(0, vm.second.domid? std::to_string(vm.second.domid.value()) : "-");
+    line.set_data(1, vm.first);
+    line.set_data(2, vm.second.mem);
+    line.set_data(3, vm.second.ncpu);
+    line.set_data(4, vm.second.autostart? "yes" : "no");
   }
+  table.print();
 
   return 0;
 }
@@ -346,15 +403,31 @@ int setkb(int argc, char* argv[])
   return 0;
 }
 
+int test_xenstore(int argc, char* argv[])
+{
+  auto xs = xs_open(XS_OPEN_READONLY);
+  if (!xs) RUNTIME_ERROR_WITH_ERRNO("xs_open");
+  xs_transaction_t txn = xs_transaction_start(xs);
+  unsigned int len;
+  char* content = (char*)xs_read(xs, txn, "name", &len);
+  fwrite(content, 1, len, stdout);
+  free(content);
+  xs_transaction_end(xs, txn, true);
+  xs_close(xs);
+  return 0;
+}
+
 struct Command { const char* name; int (*func)(int, char**); } commands [] = {
   {"list", list},
   {"start", start},
+  {"monitor", monitor},
   {"stop", stop},
   {"console", console},
   {"login", login},
   {"setkb", setkb},
   {"ui", ui},
   {"install", install},
+  {"test_xenstore", test_xenstore},
   {NULL, NULL}
 };
 

@@ -54,6 +54,7 @@ void init()
     repair_fat(partition.device);
     mount_or_die(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077");
   }
+  mkdir_p("/mnt/boot/vm");
   mount_ro_loop_or_die("/mnt/boot/system.img", "/mnt/system", 0);
 
   f = fopen("/mnt/boot/"TIME_FILE, "w");

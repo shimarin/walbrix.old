@@ -186,27 +186,20 @@ int load_nic_config(const char* vmname, std::list<NIC>& nics)
   return nics.size();
 }
 
-int start(int argc, char* argv[])
+uint32_t/*domid*/ start(const char* vmname)
 {
-  if (argc < 3) {
-    std::cout << "Usage: wb start vmname" << std::endl;
-    return 1;
-  }
-  //else
-  const char* vmname = argv[2];
-
   std::map<std::string, VM> vms;
   list(vms);
   const auto& vm_iter = vms.find(vmname);
   if (vm_iter == vms.end()) {
     std::cerr << "No such VM. 'wb list' to show list of available VMs." << std::endl;
-    return 1;
+    return 0;
   }
   //else
   const auto& vm_config = vm_iter->second;
   if (vm_config.domid) {
     std::cerr << "Already running" << std::endl;
-    return 1;
+    return 0;
   }
 
   // load disks
@@ -217,26 +210,12 @@ int start(int argc, char* argv[])
   std::list<NIC> nics;
   load_nic_config(vm_config.name.c_str(), nics);
 
-  static int logfile = 2;
-  typedef enum {
-    child_console, child_waitdaemon, child_migration, child_vncviewer,
-    child_max
-  } xlchildnum;
-
-  typedef struct {
-      /* every struct like this must be in XLCHILD_LIST */
-      pid_t pid; /* 0: not in use */
-      int reaped; /* valid iff pid!=0 */
-      int status; /* valid iff reaped */
-      const char *description; /* valid iff pid!=0 */
-  } xlchild;
-
   const auto INVALID_DOMID = ~0;
   XtlLoggerStdio logger(stderr, XTL_ERROR, 0);
-  if (!logger) return -1;
+  if (!logger) RUNTIME_ERROR("Unable to init logger");
   // else
   LibXlCtx ctx(LIBXL_VERSION, 0, logger);
-  if (!ctx) return -1;
+  if (!ctx) RUNTIME_ERROR("Unable to init libxl context");
 
   LibXlDomainConfig d_config;
 
@@ -336,107 +315,38 @@ int start(int argc, char* argv[])
 
   libxl_domain_unpause(ctx, domid, NULL);
 
-  // daemonize
-  static xlchild children[child_max];
-  xlchild* ch = &children[child_waitdaemon];
-  assert(!ch->pid);
-  ch->reaped = 0;
-  ch->description = "domain monitoring daemonizing child";
-  ch->pid = fork();
-  if (ch->pid == -1) RUNTIME_ERROR_WITH_ERRNO((std::string)"fork failed");
-  //else
-  if (!ch->pid) {
-    for (int i = 0; i < child_max; i++) children[i].pid = 0;
-  }
-
-  if (ch->pid) {
-    // xl_waitpid
+  pid_t pid = fork();
+  if (pid < 0) {
+    std::cerr << "Warning: forking monitor process failed" << std::endl;
+  } else if (pid == 0) { // child
+    char domid_str[16];
+    sprintf(domid_str, "%d", domid);
+    execl("/proc/self/exe", "wb", "monitor", "--daemon", domid_str, NULL);
+  } else { // parent
     int status;
-    xlchild *ch = &children[child_waitdaemon];
-    pid_t got = ch->pid;
-    assert(got);
-    if (ch->reaped) {
-      status = ch->status;
-      ch->pid = 0;
-    } else {
-      for (;;) {
-        got = waitpid(ch->pid, &status, 0);
-        if (got < 0 && errno == EINTR) continue;
-        if (got > 0) {
-          assert(got == ch->pid);
-          ch->pid = 0;
-        }
-        break;
-      }
-    }
-    if (got < 0) {
-      RUNTIME_ERROR_WITH_ERRNO((std::string)"failed to waitpid for " + children[child_waitdaemon].description);
-    } else if (status) {
-      libxl_report_child_exitstatus(ctx, XTL_ERROR, children[child_waitdaemon].description, got, status);
-      RUNTIME_ERROR("child exit status is not 0");
-    }
-  } else {
-    libxl_postfork_child_noexec(ctx); /* in case we don't exit/exec */
-    char *_fullname;
-    std::string name = (std::string)"xl-" + d_config.c_info.name;
-    int rst = libxl_create_logfile(ctx, name.c_str(), &_fullname);
-    std::string fullname = _fullname;
-    free(_fullname);
-    if (rst != 0) RUNTIME_ERROR_WITH_ERRNO((std::string)"failed to open logfile " + fullname);
-    //else
-    logfile = open(fullname.c_str(), O_WRONLY|O_CREAT|O_APPEND, 0644);
-    if (logfile < 0) RUNTIME_ERROR_WITH_ERRNO((std::string)"Fatal error");
-    // else
-    assert(logfile >= 3);
-    int nullfd = open("/dev/null", O_RDONLY);
-    assert(nullfd >= 3);
-
-    dup2(nullfd, 0);
-    dup2(logfile, 1);
-    dup2(logfile, 2);
-    close(nullfd);
-    if (daemon(0, 1) < 0) RUNTIME_ERROR_WITH_ERRNO((std::string)"Fatal error");
+    waitpid(pid, &status, 0);
   }
 
-  libxl_evgen_domain_death *deathw = NULL;
-  if (libxl_evenable_domain_death(ctx, domid, 0, &deathw) != 0) goto out;
-  while (true) {
-    libxl_event *event;
-    while (true) {
-      if (libxl_event_wait(ctx, &event, LIBXL_EVENTMASK_ALL, 0,0) != 0) goto out;
-      if (event->domid != domid) {
-          libxl_event_free(ctx, event);
-          continue;
-      }
-      break;
-    }
-    //else
-    /*
-    switch (event->type) {
-    case LIBXL_EVENT_TYPE_DOMAIN_SHUTDOWN:
-      switch (handle_domain_death(&domid, event, &d_config)) {
-      case DOMAIN_RESTART_SOFT_RESET:
-      case DOMAIN_RESTART_RENAME:
-      case DOMAIN_RESTART_NORMAL:
-      case DOMAIN_RESTART_NONE:
-      default:
-        abort();
-      }
-    case LIBXL_EVENT_TYPE_DOMAIN_DEATH:
-      libxl_event_free(ctx, event);
-      goto out;
-    case LIBXL_EVENT_TYPE_DISK_EJECT:
-      break;
-    default:
-      break;
-    }
-    */
-    libxl_event_free(ctx, event);
+  return domid;
+}
+
+int start(int argc, char* argv[])
+{
+  if (argc < 3) {
+    std::cout << "Usage: wb start vmname|@all" << std::endl;
+    return 1;
   }
-
-out:;
-  if (logfile != 2) close(logfile);
-
-  //if (xl_child_pid(child_console)) child_report(child_console);
-  return 0;
+  //else
+  const char* vmname = argv[2];
+  if (strcmp(vmname, "@all") == 0) {
+    std::map<std::string, VM> vms;
+    list(vms);
+    for (const auto& vm : vms) {
+      if (vm.second.autostart) start(vm.first.c_str());
+    }
+    return 0;
+  }
+  //else
+  uint32_t domid = start(vmname);
+  return domid > 0? 0 : 1;
 }

@@ -4,6 +4,8 @@
 #include <fcntl.h>
 
 #include <list>
+#include <map>
+#include <optional>
 
 extern "C" {
 #include <iniparser.h>
@@ -86,6 +88,7 @@ public:
 
 typedef struct {
   std::string name;
+  bool autostart;
   std::optional<uint32_t> domid = std::nullopt;
   unsigned long mem = 0;
   uint32_t ncpu = 0;
@@ -139,3 +142,4 @@ public:
 
 int list(std::map<std::string,VM>& vms);
 int start(int argc, char* argv[]);
+int monitor(int argc, char* argv[]);
