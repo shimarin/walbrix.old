@@ -1,14 +1,37 @@
-#define INIFILE
+#include <xenstore.h>
+
 #include "init.h"
 
 #define BOOT_PARTITION "/dev/xvda1"
 #define NEWROOT "/newroot"
 
-void setup(inifile_t ini)
+int set_hostname_as_domname()
 {
-  setup_hostname_according_to_inifile(NEWROOT, ini);
-  set_generated_hostname_if_not_set(NEWROOT);
-  setup_timezone_according_to_inifile(NEWROOT, ini);
+  struct xs_handle *xs;
+  xs_transaction_t txn;
+  unsigned int len;
+  char* domname;
+  int rst = 1;
+  xs = xs_open(XS_OPEN_READONLY);
+  if (!xs) return 1;
+  txn = xs_transaction_start(xs);
+  if (txn) {
+    domname = (char*)xs_read(xs, txn, "name", &len);
+    if (domname) {
+      char *buf = (char *)malloc(len + 1);
+      if (buf) {
+        memcpy(buf, domname, len);
+        buf[len] = '\0';
+        set_hostname(NEWROOT, buf);
+        free(buf);
+        rst = 0;
+      }
+      free(domname);
+    }
+    xs_transaction_end(xs, txn, true);
+  }
+  xs_close(xs);
+  return rst;
 }
 
 void init()
@@ -50,7 +73,8 @@ void init()
   move_mount_or_die("/mnt/system", NEWROOT"/run/initramfs/ro");
   move_mount_or_die("/mnt/rw", NEWROOT"/run/initramfs/rw");
 
-  process_inifile(NEWROOT"/run/initramfs/rw/system.ini", setup);
+  set_hostname_as_domname();
+  //TODO: setup eth0 according to attr/eth0/ip, attr/eth0/ipv6
 
   setup_initramfs_shutdown(NEWROOT);
 

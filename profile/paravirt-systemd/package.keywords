@@ -1,1 +1,2 @@
 sys-kernel/gentoo-sources
+=app-emulation/xen-tools-4.13.0-r2

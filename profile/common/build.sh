@@ -36,11 +36,14 @@ if [ -f modules_need_to_be_rebuilt ]; then
 fi
 
 if [ -f /init.c ]; then
-	if grep -q '#define INIFILE' /init.c; then
-		gcc -lblkid -lmount -liniparser init.c -o /init || exit 1
-	else
-		gcc -lblkid -lmount init.c -o /init || exit 1
+	LIBS="-lblkid -lmount"
+	if grep -q libiniparser /initramfs.lst; then
+		LIBS="$LIBS -liniparser"
 	fi
+	if grep -q libxenstore /initramfs.lst; then
+		LIBS="$LIBS -lxenstore"
+	fi
+	gcc $LIBS init.c -o /init || exit 1
 fi
 
 if [ -f /initramfs.lst ]; then

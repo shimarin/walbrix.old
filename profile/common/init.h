@@ -1151,6 +1151,7 @@ int setup_wifi(const char *rootdir, const char *ssid, const char *key)
   return symlink("/lib/systemd/system/wpa_supplicant@.service", buf);
 }
 
+#ifdef INIFILE
 void setup_hostname_according_to_inifile(const char *rootdir, inifile_t ini)
 {
   const char *hostname = ini_string(ini, ":hostname", NULL);
@@ -1230,6 +1231,7 @@ void setup_password_according_to_inifile(const char *rootdir, inifile_t ini)
     }
   }
 }
+#endif // INIFILE
 
 int enable_lvm()
 {
