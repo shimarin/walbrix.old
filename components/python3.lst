@@ -1,4 +1,4 @@
-$package dev-lang/python-3.7.7
+$package dev-lang/python-3.7.7-r1
 $symlink /usr/bin/python pytho3.7
 $package dev-lang/python-exec
 
