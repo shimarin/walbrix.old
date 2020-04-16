@@ -201,19 +201,10 @@ $copy resource/btrfs/expand-rw-layer /usr/sbin/
 
 # wb
 /usr/lib64/libgflags.so
-/usr/lib64/libncurses++w.so
-/usr/lib64/libncursesw.so
-/usr/lib64/libpanelw.so
-/usr/lib64/libtinfow.so
-/usr/lib64/libformw.so
-/usr/lib64/libmenuw.so
 /usr/lib64/libiniparser.so.0
 
-$copy wb/wb.cpp /tmp/
-$copy wb/start.cpp /tmp/
-$copy wb/monitor.cpp /tmp/
-$copy wb/wb.h /tmp/
-$exec --overlay "g++ -std=c++2a -o /usr/sbin/wb -lgflags -lxenlight -lxentoollog -lpam -lpam_misc -lncursesw -lncurses++w -lmenuw -ltinfow -liniparser -lsmartcols /tmp/*.cpp"
+$copy wb/. /tmp/
+$exec --overlay "cd /tmp && make && make install"
 /usr/bin/make
 $copy resource/walbrix/wbdomains.service /usr/lib/systemd/system/
 $exec "systemctl enable wbdomains"
