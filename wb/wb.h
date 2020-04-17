@@ -9,6 +9,7 @@
 #include <optional>
 #include <functional>
 #include <algorithm>
+#include <sstream>
 
 #include <libsmartcols/libsmartcols.h>
 
@@ -148,11 +149,13 @@ public:
 };
 
 std::pair<uint16_t, uint16_t> measure_text_size(const char* text);
+std::pair<uint16_t, uint16_t> resize(const std::pair<uint16_t, uint16_t>& size, int16_t width, int16_t height);
 
 class TbAbstractWindow {
   uint16_t _width, _height;
+  std::optional<std::string> _caption;
 public:
-  TbAbstractWindow(uint16_t __width, uint16_t __height) : _width(__width), _height(__height) {;}
+  TbAbstractWindow(uint16_t __width, uint16_t __height, std::optional<std::string> __caption = std::nullopt) : _width(__width), _height(__height), _caption(__caption) {;}
   virtual ~TbAbstractWindow() {;}
   virtual operator tb_cell*() = 0;
 
@@ -209,21 +212,37 @@ public:
   ~Termbox() { tb_shutdown(); }
   void clear() { tb_clear(); }
   void present() { tb_present(); }
-  int peek_event(tb_event* event, int timeout) { return tb_peek_event(event, timeout); }
-  int poll_event(tb_event* event) { return tb_poll_event(event); }
+  int peek_event(tb_event* event, int timeout) {
+    auto event_type = tb_peek_event(event, timeout);
+    if (event_type < 0) RUNTIME_ERROR("tb_peek_event");
+    return event_type;
+  }
+  int poll_event(tb_event* event) {
+    auto event_type = tb_poll_event(event);
+    if (event_type < 0) RUNTIME_ERROR("tb_poll_event");
+    return event_type;
+  }
+  bool wait_for_enter_or_esc_key() {
+    tb_event event;
+    while (true) {
+      if (poll_event(&event) != TB_EVENT_KEY) continue;
+      if (event.key == TB_KEY_ENTER) return true;
+      if (event.key == TB_KEY_ESC) return false;
+    }
+  }
   TbRootWindow root() { return TbRootWindow(); }
 };
 
 class TbWindow : public TbAbstractWindow {
   tb_cell* _buffer;
 public:
-  TbWindow(uint16_t width, uint16_t height) : TbAbstractWindow(width, height) {
+  TbWindow(uint16_t width, uint16_t height, std::optional<std::string> caption = std::nullopt) : TbAbstractWindow(width, height, caption) {
     if (width < 1 || height < 1) RUNTIME_ERROR("Invalid window size");
     _buffer = (tb_cell*)malloc(sizeof(tb_cell) * width * height);
     if (!_buffer) RUNTIME_ERROR("Failed to allocate window drawing buffer");
     memset(_buffer, 0, width * height * sizeof(tb_cell));
   }
-  TbWindow(std::pair<uint16_t, uint16_t> size) : TbWindow(size.first, size.second) {;}
+  TbWindow(std::pair<uint16_t, uint16_t> size, std::optional<std::string> caption = std::nullopt) : TbWindow(size.first, size.second, caption) {;}
   virtual ~TbWindow() {
     if (_buffer) free(_buffer);
   }
@@ -294,9 +313,30 @@ public:
       }
       for (int xi = 0; xi < _width; xi++) {
         auto& cell = window.cell_at(x + xi, y + i);
-        cell.bg = cell.fg = i == _selection? TB_REVERSE : TB_DEFAULT;
+        cell.fg = i == _selection? (TB_YELLOW | TB_REVERSE) : TB_DEFAULT;
+        cell.bg = i == _selection? TB_REVERSE : TB_DEFAULT;
       }
     }
+  }
+};
+
+class MessageBox : public TbWindow {
+  std::string message;
+public:
+  MessageBox(const char* _message) : message(_message), TbWindow(measure_text_size(_message)) {;}
+  virtual void draw_self() {
+    draw_text(0, 0, message.c_str());
+  }
+};
+
+class MessageBoxOk : public TbWindow {
+  std::string message;
+public:
+  MessageBoxOk(const char* _message) : message(_message), TbWindow(resize(measure_text_size(_message), 0, 2)) {;}
+  virtual void draw_self() {
+    draw_text(0, 0, message.c_str());
+    draw_hline(height() - 2);
+    draw_text_center(height() - 1, "[ OK ]", TB_YELLOW | TB_REVERSE, TB_REVERSE);
   }
 };
 
@@ -358,11 +398,18 @@ inline std::string trim(const std::string &s)
    return std::string(wsfront,std::find_if_not(s.rbegin(),std::string::const_reverse_iterator(wsfront),[](int c){return std::isspace(c);}).base());
 }
 
-int fork_exec_wait(const char* cmd, const std::vector<std::string>& args);
-int fork_exec_wait(const char* cmd, ...);
+class ExternalProcess {
+  std::stringstream output;
+public:
+  int fork_exec_wait(const char* cmd, const std::vector<std::string>& args);
+  int fork_exec_wait(const char* cmd, ...);
+  operator std::string() { return output.str(); }
+};
 
+void exec_linux_console();
 int ui(bool login = false);
 int install(int argc, char* argv[]);
+int installer();
 int list(std::map<std::string,VM>& vms);
 int start(int argc, char* argv[]);
 int monitor(int argc, char* argv[]);

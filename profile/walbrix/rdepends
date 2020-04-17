@@ -74,7 +74,9 @@ dev-libs/libevent	>=dev-libs/openssl-1.0.1h-r2:0/1.1=[abi_x86_64(-)] !<=dev-libs
 dev-libs/libgcrypt	>=dev-libs/libgpg-error-1.25[abi_x86_64(-)]
 dev-libs/libgpg-error	>=virtual/libintl-0-r1[abi_x86_64(-)]
 dev-libs/libgudev	>=dev-libs/glib-2.38.0:2[abi_x86_64(-)] >=virtual/libudev-199:0/1=[abi_x86_64(-)] !sys-fs/eudev[gudev(-)] !sys-fs/udev[gudev(-)] !sys-apps/systemd[gudev(-)]
-dev-libs/libical	dev-libs/icu:0/65.1= sys-libs/db:5.3/5.3= sys-libs/timezone-data
+dev-libs/libical	dev-libs/icu:0/65.1= sys-libs/db:5.3/5.3= dev-libs/glib:2 sys-libs/timezone-data
+dev-libs/libisoburn	>=dev-libs/libburn-1.5.0 >=dev-libs/libisofs-1.5.0 sys-libs/readline:0/7= virtual/acl sys-apps/attr sys-libs/zlib
+dev-libs/libisofs	virtual/acl sys-apps/attr sys-libs/zlib
 dev-libs/libksba	>=dev-libs/libgpg-error-1.8
 dev-libs/libltdl	!<sys-devel/libtool-2.4.3-r2:2
 dev-libs/libpcre	app-arch/bzip2 sys-libs/zlib sys-libs/readline:0/7=
@@ -174,7 +176,7 @@ net-mail/mailbase	acct-group/mail acct-user/mail acct-user/postmaster sys-libs/p
 net-mail/mailutils	!mail-client/nmh !mail-filter/libsieve !mail-client/mailx !mail-client/nail sys-libs/ncurses:0/6= sys-libs/readline:0/7= dev-libs/libltdl:0 virtual/mta sys-libs/db:5.3/5.3= sys-libs/gdbm sys-devel/gettext sys-libs/pam net-libs/gnutls:0/30= sys-apps/tcp-wrappers
 net-misc/curl	dev-libs/openssl:0/1.1=[abi_x86_64(-)] sys-libs/zlib[abi_x86_64(-)]
 net-misc/iperf	dev-libs/openssl:0/1.1=
-net-misc/iputils	!net-misc/arping dev-libs/openssl:0/1.1=
+net-misc/iputils	!net-misc/arping dev-libs/openssl:0/1.1= sys-devel/gettext sys-libs/libcap
 net-misc/modemmanager	>=dev-libs/glib-2.36.0:2 >=dev-libs/libgudev-230:0/0= >=dev-libs/gobject-introspection-0.9.6:0/0= >=net-libs/libmbim-1.18.0 >=net-libs/libqmi-1.22.0:0/5.4= >=sys-apps/systemd-209
 net-misc/netkit-telnetd	>=sys-libs/ncurses-5.2:0/6= !net-misc/telnet-bsd
 net-misc/ntp	>=sys-libs/readline-4.1:0/7= >=dev-libs/libevent-2.0.9:0/2.1-6=[threads] dev-libs/openssl:0/1.1= !net-misc/ntpsec !net-misc/openntpd
@@ -211,7 +213,7 @@ sys-apps/less	>=app-misc/editor-wrapper-3 >=sys-libs/ncurses-5.2:0/6= dev-libs/l
 sys-apps/lm-sensors	dev-lang/perl !<sys-apps/openrc-0.21.7
 sys-apps/lshw	sys-apps/hwids
 sys-apps/man-db	!sys-apps/man >=dev-libs/libpipeline-1.5.0 sys-apps/groff sys-libs/gdbm:0/1.13= sys-libs/libseccomp sys-libs/zlib acct-group/man acct-user/man
-sys-apps/man-pages	virtual/man !<sys-apps/keyutils-1.5.9-r4 !<sys-apps/attr-2.4.47-r2 !<dev-libs/libaio-0.3.109-r2 !<dev-libs/libbsd-0.8.3-r1
+sys-apps/man-pages	virtual/man !<sys-apps/keyutils-1.5.9-r4 !<dev-libs/libbsd-0.8.3-r1
 sys-apps/man-pages-posix	virtual/man !<sys-apps/man-pages-3
 sys-apps/net-tools	!sys-apps/coreutils[hostname] !<sys-apps/openrc-0.9.9.3
 sys-apps/pciutils	sys-apps/kmod >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=virtual/libudev-208[abi_x86_64(-)] sys-apps/hwids
@@ -257,7 +259,7 @@ sys-fs/btrfs-progs	dev-libs/lzo:2/2= sys-apps/util-linux:0/0= sys-libs/zlib:0/1=
 sys-fs/cryptsetup	dev-libs/json-c:0/4= dev-libs/libgpg-error dev-libs/popt >=sys-apps/util-linux-2.31-r1 app-crypt/argon2:0/1= dev-libs/openssl:0/1.1= sys-fs/lvm2 virtual/libudev
 sys-fs/dosfstools	virtual/libudev
 sys-fs/e2fsprogs	~sys-libs/e2fsprogs-libs-1.45.5 >=sys-apps/util-linux-2.16 virtual/libintl
-sys-fs/fuse	sys-fs/fuse-common
+sys-fs/fuse	>=sys-fs/fuse-common-3.3.0-r1
 sys-fs/fuse-common	!<sys-fs/fuse-2.9.7-r1:0
 sys-fs/lvm2	dev-libs/libaio dev-libs/libaio sys-libs/readline:0/7= >=sys-apps/systemd-205:0/2= >=virtual/libudev-208:0/1= >=sys-apps/baselayout-2.2 !<sys-apps/openrc-0.11 !<sys-fs/cryptsetup-1.1.2 !!sys-fs/lvm-user >=sys-apps/util-linux-2.16 >=sys-block/thin-provisioning-tools-0.3.0
 sys-fs/mdadm	>=sys-apps/util-linux-2.16

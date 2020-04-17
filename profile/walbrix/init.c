@@ -32,27 +32,39 @@ void setup(inifile_t ini)
   setup_wifi_according_to_inifile(NEWROOT, ini);
 }
 
-void init()
+void readonly_init(const char *boot_partition)
+{
+  printf("Loading Walbrix...\n");
+  mount_or_die2(boot_partition, "/mnt/cdrom", "auto", MS_RDONLY, "");
+  mkdir_p("/mnt/boot/efi/boot");
+  if (cp_a("/mnt/cdrom/system.img", "/mnt/boot/system.img") != 0) {
+    printf("Unable to copy system image to RAM.\n");
+    halt();
+  }
+  if (is_file("/mnt/cdrom/efi/boot/bootx64.efi")) {
+    cp_a("/mnt/cdrom/efi/boot/bootx64.efi", "/mnt/boot/efi/boot/bootx64.efi");
+  }
+  if (is_file("/mnt/cdrom/system.ini")) {
+    cp_a("/mnt/cdrom/system.ini", "/mnt/boot/system.ini");
+  }
+  umount("/mnt/cdrom");
+  mount_ro_loop_or_die("/mnt/boot/system.img", "/mnt/system", 0);
+  mount_or_die("tmpfs", "/mnt/rw", "tmpfs", MS_RELATIME, "");
+}
+
+void normal_init(const char *boot_partition)
 {
   const char *datafile = "/mnt/boot/system.dat";
   const char *swapfile = "/mnt/boot/system.swp";
   FILE *f;
   int rw_layer_mounted = 0;
-  struct partition_struct partition;
-  mount_procdevsys_or_die();
-
-  printf("Determining boot partition...");
-  if (search_boot_partition(&partition, PROBE_BOOT_PARTITION_MAX_RETRY) < 0) {
-    search_partition_by_fstype_or_die("vfat", &partition, PROBE_BOOT_PARTITION_MAX_RETRY);
-  }
-  printf("%s\n", partition.device);
 
   // mount boot partition
   mkdir_p("/mnt/boot");
-  if (mount(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077") < 0) {
+  if (mount(boot_partition, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077") < 0) {
     printf("Boot partition filesystem corrupted. Attempting repair...\n");
-    repair_fat(partition.device);
-    mount_or_die(partition.device, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077");
+    repair_fat(boot_partition);
+    mount_or_die(boot_partition, "/mnt/boot", "vfat", MS_RELATIME, "fmask=177,dmask=077");
   }
   mkdir_p("/mnt/boot/vm");
   mount_ro_loop_or_die("/mnt/boot/system.img", "/mnt/system", 0);
@@ -115,11 +127,49 @@ void init()
     printf("Activating swap...\n");
     activate_swap(swapfile);
   }
+}
+
+void init()
+{
+  int fd, installer = 0;
+  struct partition_struct partition;
+  mount_procdevsys_or_die();
+
+  fd = open("/proc/cmdline", O_RDONLY);
+  if (fd >= 0) {
+    char haystack[256], *found;
+    const char *needle = "systemd.unit=installer.target";
+    int r = read(fd, haystack, sizeof(haystack));
+    haystack[r < sizeof(haystack)? r : 255] = '\0';
+    close(fd);
+    found = strstr(haystack, needle);
+    if (found) {
+      char c = found[strlen(needle)];
+      if ((haystack == found || *(found - 1) == ' ') && (c == '\0' || c == ' ')) installer = 1;
+    }
+  }
+
+  printf("Determining boot partition...");
+  if (search_boot_partition(&partition, PROBE_BOOT_PARTITION_MAX_RETRY) < 0) {
+    search_partition_by_fstype_or_die("vfat", &partition, PROBE_BOOT_PARTITION_MAX_RETRY);
+  }
+  printf("%s\n", partition.device);
+
+  if (is_block_readonly(partition.device) || installer) { // CD-ROM, etc
+    readonly_init(partition.device);
+  } else {
+    normal_init(partition.device);
+  }
 
   mount_overlay_or_die("/mnt/system", "/mnt/rw/root", "/mnt/rw/work", NEWROOT);
   mount_or_die("tmpfs", NEWROOT"/run", "tmpfs", MS_NODEV|MS_NOSUID|MS_STRICTATIME, "mode=755");
 
-  move_mount_or_die("/mnt/boot", NEWROOT"/run/initramfs/boot");
+  if (is_mounted("/mnt/boot")) {
+    move_mount_or_die("/mnt/boot", NEWROOT"/run/initramfs/boot");
+  } else {
+    mkdir_p(NEWROOT"/run/initramfs");
+    mv("/mnt/boot", NEWROOT"/run/initramfs/boot");
+  }
   move_mount_or_die("/mnt/system", NEWROOT"/run/initramfs/ro");
   move_mount_or_die("/mnt/rw", NEWROOT"/run/initramfs/rw");
 

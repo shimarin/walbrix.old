@@ -1,10 +1,12 @@
 //#define STRIP_FLAG_HELP 1
 #include <gflags/gflags.h>
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <list>
 #include <set>
 #include <cstring>
+#include <filesystem>
 
 #include <dirent.h>
 #include <security/pam_appl.h>
@@ -19,26 +21,41 @@ extern "C" {
 DEFINE_bool(daemon, false, "Daemonize");
 DEFINE_bool(force, false, "Force operation");
 
-int fork_exec_wait(const char* cmd, const std::vector<std::string>& args)
+int ExternalProcess::fork_exec_wait(const char* cmd, const std::vector<std::string>& args)
 {
   char* argv[args.size() + 1];
   for (int i = 0; i < args.size(); i++) {
     argv[i] = (char*)/*argggh*/args[i].c_str();
   }
   argv[args.size()] = NULL;
+
+  int fd[2];
+  pipe(fd);
+
   pid_t pid = fork();
   if (pid < 0) RUNTIME_ERROR_WITH_ERRNO("fork");
   //else
   int rst;
   if (pid == 0) { //child
+    close(fd[0]);
+    if (dup2(fd[1], STDOUT_FILENO) < 0) _exit(-1);
+    if (dup2(fd[1], STDERR_FILENO) < 0) _exit(-1);
+    close(fd[1]);
     if (execv(cmd, argv) < 0) _exit(-1);
   } else { // parent
+    close(fd[1]);
+    char buf[1024];
+    int r;
+    while ((r = read(fd[0], buf, sizeof(buf))) > 0) {
+      output.write(buf, r);
+    };
+    close(fd[0]);
     waitpid(pid, &rst, 0);
   }
   return WIFEXITED(rst)? WEXITSTATUS(rst) : -1;
 }
 
-int fork_exec_wait(const char* cmd, ...)
+int ExternalProcess::fork_exec_wait(const char* cmd, ...)
 {
   std::vector<std::string> args;
 
@@ -151,8 +168,20 @@ int ui(int argc, char* argv[])
   return ui(false);
 }
 
+void exec_linux_console()
+{
+  std::cout << "コンソールを抜けるには exit と入力してください。" << std::endl;
+  execl("/bin/login", "/bin/login", "-p", "-f", "root", NULL);
+}
+
 int login(int argc, char* argv[])
 {
+  ExternalProcess process;
+  if (process.fork_exec_wait("/bin/systemctl", "/bin/systemctl", "is-active", "installer.target", NULL) == 0) {
+    // running in installer mode
+    return installer();
+  }
+  // else
   {
     Termbox termbox;
     TbRootWindow root = termbox.root();
@@ -182,8 +211,7 @@ int login(int argc, char* argv[])
   if (rc == PAM_ABORT || rc == PAM_MAXTRIES) return -1;
 
   if (ui(true) == 9) {
-    std::cout << "コンソールを抜けるには exit と入力してください。" << std::endl;
-    execl("/bin/login", "/bin/login", "-p", "-f", "root", NULL);
+    exec_linux_console();
   }
   //else
   return 0;
@@ -231,13 +259,99 @@ int console(int argc, char* argv[])
 
 int setkb(int argc, char* argv[])
 {
+  if (argc < 3) {
+    std::cout << "Usage: wb setkb <keymap>" << std::endl;
+    return 1;
+  }
+  const char* keymap = argv[2];
+  ExternalProcess process;
+  int rst = process.fork_exec_wait("/usr/bin/localectl", "/usr/bin/localectl", "set-keymap", keymap, NULL);
+  if (rst != 0) {
+    std::cerr << (std::string)process << std::endl;
+    return rst;
+  }
+  //else
+  rst = process.fork_exec_wait("/bin/systemctl", "/bin/systemctl", "restart", "kmsconvt@tty1", NULL);
+
   // /etc/vconsole.conf
   // localectl set-keymap jp106
   // systemctl restart kmsconvt\@tty1
   // ] -> '['   setting is jp actially us
   // ] -> '\' setting is us actuall jp
+  return rst;
+}
+
+class Tempdir {
+  std::filesystem::path path;
+public:
+  Tempdir(const char* prefix) {
+    path = std::filesystem::temp_directory_path() /= std::string(prefix) + std::to_string(getpid());
+    std::filesystem::create_directory(path);
+  }
+  ~Tempdir() {
+    std::filesystem::remove_all(path);
+  }
+  const char* c_str() { return path.c_str(); }
+  std::filesystem::path operator / (const std::string& subdir) { return std::filesystem::path(path) /= subdir; }
+};
+
+
+#define GRUB_MODULES "loopback", "xfs", "fat", "ntfs", "ntfscomp", "ext2", "part_gpt", "part_msdos", "normal", "linux", "echo", "all_video", "serial", "test", "probe", "multiboot", "multiboot2", "search", "iso9660", "gzio", "lvm", "chain", "configfile", "cpuid", "minicmd", "gfxterm", "font", "terminal", "ata", "biosdisk", "squash4", "videoinfo", "videotest", "png", "gfxterm_background", "sleep"
+
+int iso9660(int argc, char* argv[])
+{
+  const char* output_file = "/run/initramfs/boot/system.iso";
+  Tempdir tempdir("iso9660");
+  auto grubcfg_path = tempdir / "grub.cfg";
+  {
+    std::ofstream grubcfg(grubcfg_path);
+    grubcfg << "set BOOT_PARTITION=$root\n"
+      << "loopback --offset1m loop /efi/boot/bootx64.efi\n"
+      << "set root=loop\n"
+      << "set prefix=($root)/boot/grub" << std::endl;
+  }
+  ExternalProcess process;
+  std::filesystem::create_directory(tempdir / "boot");
+  auto boot_img = tempdir / "boot" / "boot.img";
+  process.fork_exec_wait("/usr/bin/grub-mkimage", "/usr/bin/grub-mkimage",
+    "-p", "/boot/grub", "-c", grubcfg_path.c_str(), "-o", boot_img.c_str(),
+    "-O", "i386-pc-eltorito",
+    GRUB_MODULES,
+    NULL);
+  auto bootx64_efi = tempdir / "bootx64.efi";
+  process.fork_exec_wait("/usr/bin/grub-mkimage", "/usr/bin/grub-mkimage",
+    "-p", "/boot/grub", "-c", grubcfg_path.c_str(), "-o", bootx64_efi.c_str(),
+    "-O", "x86_64-efi",
+    GRUB_MODULES,
+    NULL);
+  std::filesystem::remove(grubcfg_path);
+  {
+    std::ofstream systemcfg(tempdir / "system.cfg");
+    systemcfg << "systemd_unit=installer.target" << std::endl;
+  }
+  auto efiboot_img = tempdir / "boot" / "efiboot.img";
+  process.fork_exec_wait("/bin/dd", "/bin/dd", "if=/dev/zero", ((std::string)"of=" + (std::string)efiboot_img).c_str(), "bs=4k", "count=360", NULL);
+  process.fork_exec_wait("/usr/sbin/mkfs.vfat", "/usr/sbin/mkfs.vfat", "-F", "12", "-M", "0xf8", efiboot_img.c_str(), NULL);
+  process.fork_exec_wait("/usr/bin/mmd", "/usr/bin/mmd", "-i", efiboot_img.c_str(), "/efi", "/efi/boot", NULL);
+  process.fork_exec_wait("/usr/bin/mcopy", "/usr/bin/mcopy",  "-i", efiboot_img.c_str(), bootx64_efi.c_str(), "::/efi/boot/", NULL);
+  std::filesystem::remove(bootx64_efi);
+  process.fork_exec_wait("/usr/bin/xorriso", "/usr/bin/xorriso",
+    "-as", "mkisofs", "-f", "-J", "-r", "-no-emul-boot",
+    "-boot-load-size", "4", "-boot-info-table", "-graft-points",
+    "-eltorito-alt-boot",
+    "-e", "boot/efiboot.img",
+    "-b", "boot/boot.img",
+    "-V", "WBINSTALL", "-o", output_file, tempdir.c_str(),
+    "system.img=/run/initramfs/boot/system.img",
+    "efi/boot/bootx64.efi=/run/initramfs/boot/efi/boot/bootx64.efi",
+    NULL);
+
+  std::cout << (std::string)process << std::endl;
+
+  std::cout << "'xorriso -as cdrecord dev=/dev/sr0 -dao /run/initramfs/boot/system.iso' to burn."
   return 0;
 }
+
 
 int license(int argc, char* argv[]) {
   std::cout << "Open Source License" << std::endl;
@@ -274,6 +388,7 @@ struct Command { const char* name; int (*func)(int, char**); } commands [] = {
   {"setkb", setkb},
   {"ui", ui},
   {"install", install},
+  {"iso9660", iso9660},
   {"license", license},
   {NULL, NULL}
 };

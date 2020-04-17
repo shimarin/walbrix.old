@@ -2,6 +2,7 @@ init
 bin
 bin/cat
 bin/cp
+bin/mv
 bin/umount
 lib64
 lib64/libacl.so.1

@@ -34,6 +34,7 @@ struct partition_struct {
 #endif
 
 #define CP "/bin/cp"
+#define MV "/bin/mv"
 #define CAT "/bin/cat"
 #define TAR "/bin/tar"
 #define SWITCH_ROOT "/sbin/switch_root"
@@ -825,6 +826,11 @@ int is_nonexist_or_empty(const char *path)
 int cp_a(const char *src, const char *dst)
 {
   return fork_exec_wait(CP, "-a", src, dst, NULL);
+}
+
+int mv(const char *src, const char *dst)
+{
+  return fork_exec_wait(MV, src, dst, NULL);
 }
 
 void setup_initramfs_shutdown(const char *newroot)

@@ -195,6 +195,7 @@ $mkdir /etc/systemd/system/kmsconvt@tty1.service.d
 $write /etc/systemd/system/kmsconvt@tty1.service.d/walbrix.conf '[Service]\nExecStart=\nExecStart=/usr/bin/kmscon --login "--vt=%I" --seats=seat0 --no-switchvt -- /usr/sbin/wb login\nRestart=always'
 #$mkdir /etc/systemd/system/getty@tty1.service.d
 #$write /etc/systemd/system/getty@tty1.service.d/walbrix.conf '[Unit]\nConditionPathExists=!/dev/fb0'
+$copy resource/walbrix/installer.target /lib/systemd/system/
 
 $copy resource/install-system-image /usr/sbin/
 $copy resource/btrfs/expand-rw-layer /usr/sbin/
@@ -212,6 +213,8 @@ $package app-misc/tmux
 
 # self-build
 $mkdir /var/db/repos/gentoo
+$package sys-fs/mtools
+/usr/bin/xorriso
 
 $exec --overlay "env-update"
 $exec ldconfig
