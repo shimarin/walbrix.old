@@ -348,7 +348,7 @@ int iso9660(int argc, char* argv[])
 
   std::cout << (std::string)process << std::endl;
 
-  std::cout << "'xorriso -as cdrecord dev=/dev/sr0 -dao /run/initramfs/boot/system.iso' to burn."
+  std::cout << "'xorriso -as cdrecord dev=/dev/sr0 -dao /run/initramfs/boot/system.iso' to burn." << std::endl;
   return 0;
 }
 
