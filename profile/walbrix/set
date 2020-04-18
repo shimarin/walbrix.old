@@ -94,3 +94,4 @@ dev-cpp/pstreams
 app-misc/tmux
 sys-fs/mtools
 dev-libs/libisoburn
+sys-block/zram-init

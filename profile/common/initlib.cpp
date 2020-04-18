@@ -16,6 +16,7 @@
 
 #include "initlib.h"
 
+#define CP "/bin/cp"
 #define UMOUNT "/bin/umount"
 #define FSCK_FAT "/usr/sbin/fsck.fat"
 #define MKFS_BTRFS "/sbin/mkfs.btrfs"
@@ -24,7 +25,10 @@
 #define MKSWAP "/sbin/mkswap"
 #define SWAPON "/sbin/swapon"
 #define PASSWD "/usr/bin/passwd"
+#define SED "/bin/sed"
 #define CHPASSWD "/usr/sbin/chpasswd"
+#define SYSTEMCTL "/bin/systemctl"
+
 #define TIME_FILE "boottime.txt"
 
 class LibMntContext {
@@ -149,6 +153,12 @@ bool is_file(const std::filesystem::path& path)
   return std::filesystem::is_regular_file(path);
 }
 
+bool is_dir(const std::filesystem::path& path)
+{
+  if (!std::filesystem::exists(path)) return false;
+  return std::filesystem::is_directory(path);
+}
+
 int rename(const std::filesystem::path& old, const std::filesystem::path& _new)
 {
   return ::rename(old.c_str(), _new.c_str());
@@ -180,8 +190,8 @@ struct ForkExecOptions {
   std::optional<std::string> data = std::nullopt;
 };
 
-int fork_exec_wait(const char* cmd, const std::vector<std::string>& args,
-  std::optional<ForkExecOptions> options = std::nullopt)
+int fork_exec_wait_ex(const char* cmd, const std::vector<std::string>& args,
+  ForkExecOptions options = ForkExecOptions{})
 {
   char* argv[args.size() + 1];
   for (int i = 0; i < args.size(); i++) {
@@ -190,7 +200,7 @@ int fork_exec_wait(const char* cmd, const std::vector<std::string>& args,
   argv[args.size()] = NULL;
 
   int fd[2];
-  if (options && options.value().data) {
+  if (options.data) {
     pipe(fd);
   }
 
@@ -199,15 +209,14 @@ int fork_exec_wait(const char* cmd, const std::vector<std::string>& args,
   //else
   int rst;
   if (pid == 0) { //child
-    if (options && options.value().rootdir) {
-      if (chroot(options.value().rootdir.value().c_str()) < 0) _exit(-1);
+    if (options.rootdir) {
+      if (chroot(options.rootdir.value().c_str()) < 0) _exit(-1);
     }
     if (execv(cmd, argv) < 0) _exit(-1);
   } else { // parent
-    if (options && options.value().data) {
-      const auto& data = options.value().data;
+    if (options.data) {
       close(fd[0]);
-      write(fd[1], data.value().c_str(), data.value().length());
+      write(fd[1], options.data.value().c_str(), options.data.value().length());
       close(fd[1]);
     }
     waitpid(pid, &rst, 0);
@@ -226,7 +235,7 @@ int fork_exec_wait(const char* cmd, ...)
     args.push_back(arg);
   }
   va_end(list);
-  return fork_exec_wait(cmd, args);
+  return fork_exec_wait_ex(cmd, args);
 }
 
 int fork_chroot_exec_wait(const std::filesystem::path& rootdir, const char* cmd, ...)
@@ -240,7 +249,7 @@ int fork_chroot_exec_wait(const std::filesystem::path& rootdir, const char* cmd,
     args.push_back(arg);
   }
   va_end(list);
-  return fork_chroot_exec_wait(rootdir, cmd, args, ForkExecOptions {rootdir, std::nullopt});
+  return fork_exec_wait_ex(cmd, args, ForkExecOptions {rootdir, std::nullopt});
 }
 
 int fork_chroot_exec_write_wait(const std::filesystem::path& rootdir, const std::string& data, const char *cmd, ...)
@@ -254,7 +263,7 @@ int fork_chroot_exec_write_wait(const std::filesystem::path& rootdir, const std:
     args.push_back(arg);
   }
   va_end(list);
-  return fork_chroot_exec_wait(rootdir, cmd, args, ForkExecOptions {rootdir, data});
+  return fork_exec_wait_ex(cmd, args, ForkExecOptions {rootdir, data});
 }
 
 int umount_recursive(const std::filesystem::path& path)
@@ -384,6 +393,79 @@ int set_root_password(const std::filesystem::path& rootdir, const std::string& p
   return fork_chroot_exec_write_wait(rootdir, buf.c_str(), CHPASSWD, CHPASSWD, NULL);
 }
 
+int set_timezone(const std::filesystem::path& rootdir, const std::string& timezone)
+{
+  std::filesystem::path target(rootdir / "../usr/share/zoneinfo" / timezone);
+  std::filesystem::path link(rootdir / "etc/localtime");
+  unlink(link.c_str());
+  return symlink(target.c_str(), link.c_str());
+}
+
+int set_locale(const std::filesystem::path& rootdir, const std::string& locale)
+{
+  std::ofstream f(rootdir / "etc/locale.conf");
+  if (!f) return -1;
+  //else
+  f << locale;
+  return 0;
+}
+
+int set_keymap(const std::filesystem::path& rootdir,  const std::string& keymap)
+{
+  std::ofstream f(rootdir / "etc/vconsole.conf");
+  if (!f) return -1;
+  //else
+  f << keymap;
+  return 0;
+}
+
+int set_ssh_key(const std::filesystem::path& rootdir,  const std::string& ssh_key)
+{
+  std::regex re( R"(^(.+?\s.+?)(\s.*|$))");
+  std::smatch m;
+  if (!std::regex_search(ssh_key, m, re)) return 1;
+  std::string ssh_key_essential = m.str(1);
+  auto authorized_keys = rootdir / "root/.ssh/authorized_keys";
+  {
+    std::ifstream f(authorized_keys);
+    for( std::string line; std::getline( f, line ); ) {
+      if (!std::regex_search(line, m, re)) continue;
+      //else
+      if (m.str(1) == ssh_key_essential) return 2/*already there*/;
+    }
+  }
+
+  std::ofstream f(authorized_keys, std::fstream::app);
+  f << ssh_key << std::endl;
+
+  return 0;
+}
+
+std::optional<int> get_total_memory_in_mb()
+{
+  std::ifstream f("/proc/meminfo");
+  if (!f) return std::nullopt;
+  std::regex re( R"(^MemTotal:\s+(\d+)\s.+$)" ) ;
+  std::smatch m;
+  for( std::string line; std::getline( f, line ); ) {
+    if (std::regex_search(line, m, re)) return std::stoi(m.str(1)) / 1024;
+  }
+  return std::nullopt;
+}
+
+int set_zram_swap_capacity(const std::filesystem::path& rootdir, int mb) // needs /bin/sed
+{
+  auto service_unit = rootdir / "lib/systemd/system/zram_swap.service";
+  char regex[64];
+  sprintf(regex, R"(s/^\(ExecStart=.*\)\s[0-9]\+$/\1 %d/)", mb);
+  return fork_exec_wait(SED, SED, "-i", regex, service_unit.c_str(), NULL);
+}
+
+int cp_a(const std::filesystem::path& src, const std::filesystem::path& dst)
+{
+  return fork_exec_wait(CP, CP, "-a", src.c_str(), dst.c_str(), NULL);
+}
+
 Init::Init() : ini(NULL)
 {
 }
@@ -423,10 +505,12 @@ void Init::setup()
   std::cout << "Boot partition mounted." << std::endl;
 
   if (!readonly_boot_partition) {
-    std::ofstream time_file(mnt_boot / TIME_FILE);
-    time_file << time(NULL);
-
+    {
+      std::ofstream time_file(mnt_boot / TIME_FILE);
+      time_file << time(NULL);
+    }
     preserve_previous_system_image(mnt_boot);
+    sync();
   }
 
   auto ini_path = get_ini_path(mnt_boot);
@@ -507,6 +591,7 @@ std::filesystem::path Init::get_newroot()
   setup_wireguard(newroot);
   setup_openvpn(newroot);
   setup_ssh_key(newroot);
+  setup_zram_swap(newroot);
 
   setup_initramfs_shutdown(newroot);
 
@@ -572,7 +657,44 @@ void Init::mount_rw(const std::filesystem::path& boot, const std::filesystem::pa
 }
 
 void Init::setup_initramfs_shutdown(const std::filesystem::path& newroot)
-{}
+{
+  auto initramfs = newroot / "run/initramfs";
+  auto initramfs_bin = initramfs / "bin";
+  std::filesystem::create_directory(initramfs_bin);
+  cp_a("/bin/.", initramfs_bin);
+
+  if (is_dir("/lib")) {
+    auto initramfs_lib = initramfs / "lib";
+    std::filesystem::create_directory(initramfs_lib);
+    cp_a("/lib/.", initramfs_lib);
+  }
+
+  if (is_dir("/usr/lib")) {
+    auto initramfs_usr_lib = initramfs / "usr/lib";
+    std::filesystem::create_directories(initramfs_usr_lib);
+    cp_a("/usr/lib/.", initramfs_usr_lib);
+  }
+
+  if (is_dir("/lib64")) {
+    auto initramfs_lib64 = initramfs / "lib64";
+    std::filesystem::create_directory(initramfs_lib64);
+    cp_a("/lib64/.", initramfs_lib64);
+  }
+
+  if (is_dir("/usr/lib64")) {
+    auto initramfs_usr_lib64 = initramfs / "usr/lib64";
+    std::filesystem::create_directories(initramfs_usr_lib64);
+    cp_a("/usr/lib64/.", initramfs_usr_lib64);
+  }
+
+  if (is_dir("/usr/sbin")) {
+    auto initramfs_usr_sbin = initramfs / "usr/sbin";
+    std::filesystem::create_directories(initramfs_usr_sbin);
+    cp_a("/usr/sbin/.", initramfs_usr_sbin);
+  }
+
+  cp_a("/init", initramfs / "shutdown");
+}
 
 void Shutdown::cleanup()
 {
@@ -629,19 +751,20 @@ bool Init::ini_exists(const std::string& key)
   return iniparser_find_entry(ini, key.c_str());
 }
 
-
 void Init::setup_hostname(const std::filesystem::path& newroot)
 {
   auto hostname = ini_string(":hostname");
-  if (!hostname) return;
-  //else
-  if (set_hostname(newroot, hostname.value()) == 0) {
-    std::cout << "hostname: " << hostname.value() << std::endl;
+  if (hostname) {
+    if (set_hostname(newroot, hostname.value()) == 0) {
+      std::cout << "hostname: " << hostname.value() << std::endl;
+      return;
+    } else {
+      std::cout << "Hostname setup failed." << std::endl;
+    }
     return;
-  } else {
-    std::cout << "Hostname setup failed." << std::endl;
   }
 
+  //else
   if (!is_file(newroot / "run/initramfs/rw/root/etc/hostname")) {
     auto hostname = generate_default_hostname();
     if (set_hostname(newroot, hostname) == 0) {
@@ -665,20 +788,90 @@ void Init::setup_password(const std::filesystem::path& newroot)
 }
 
 void Init::setup_timezone(const std::filesystem::path& newroot)
-{}
+{
+  auto timezone = ini_string(":timezone");
+  if (timezone) {
+    if (set_timezone(newroot, timezone.value()) == 0) {
+      std::cout << "Timezone set to " << timezone.value() << "." << std::endl;
+    } else {
+      std::cout << "Timezone could not be configured." << std::endl;
+    }
+  }
+}
+
 void Init::setup_locale(const std::filesystem::path& newroot)
-{}
+{
+  auto locale = ini_string(":locale");
+  if (locale) {
+    if (set_locale(newroot, locale.value()) == 0) {
+      std::cout << "System locale set to " << locale.value() << "." << std::endl;
+    } else {
+      std::cout << "System locale could not be configured." << std::endl;
+    }
+  }
+}
+
 void Init::setup_keymap(const std::filesystem::path& newroot)
+{
+  auto keymap = ini_string(":keymap");
+  if (keymap) {
+    if (set_keymap(newroot, keymap.value()) == 0) {
+      std::cout << "Keymap set to " << keymap.value() << "." << std::endl;
+    } else {
+      std::cout << "Keymap could not be configured." << std::endl;
+    }
+  }
+}
+
+void Init::setup_openvpn(const std::filesystem::path& newroot)
+{
+  auto key_file = newroot / "run/initramfs/boot/openvpn/client.key";
+  auto crt_file = newroot / "run/initramfs/boot/openvpn/client.crt";
+  auto client_dir = newroot / "etc/openvpn/client";
+  if (is_file(key_file) && is_file(crt_file)) {
+    std::filesystem::create_directories(client_dir);
+    std::filesystem::copy_file(key_file, client_dir / "client.key", std::filesystem::copy_options::overwrite_existing);
+    std::filesystem::copy_file(crt_file, client_dir / "client.crt", std::filesystem::copy_options::overwrite_existing);
+    fork_chroot_exec_wait(newroot, SYSTEMCTL, SYSTEMCTL, "enable", "openvpn-client@openvpn", NULL);
+  }
+
+  auto conf_file = newroot / "run/initramfs/boot/openvpn/openvpn.conf";
+  if (is_file(conf_file)) {
+    std::filesystem::create_directories(client_dir);
+    std::filesystem::copy_file(conf_file, client_dir / "openvpn.conf", std::filesystem::copy_options::overwrite_existing);
+  }
+
+
+}
+void Init::setup_ssh_key(const std::filesystem::path& newroot)
+{
+  auto ssh_key = ini_string(":ssh_key");
+  if (ssh_key) {
+    if (set_ssh_key(newroot, ssh_key.value()) == 0) {
+      std::cout << "SSH key added to authorized_keys." << std::endl;
+    } else {
+      std::cout << "SSH key was not added." << std::endl;
+    }
+  }
+}
+
+void Init::setup_zram_swap(const std::filesystem::path& newroot)
+{
+  if (!is_file(newroot / "lib/systemd/system/zram_swap.service")) return;
+  //else
+  auto mb = get_total_memory_in_mb();
+  if (mb && set_zram_swap_capacity(newroot, mb.value()) == 0) {
+    std::cout << "Zram swap capacity set to " << mb.value() << "MB." << std::endl;
+  } else {
+    std::cout << "Zram swap couldn't be configured." << std::endl;
+  }
+}
+
+void Init::setup_wifi(const std::filesystem::path& newroot)
 {}
 void Init::setup_network(const std::filesystem::path& newroot)
 {}
-void Init::setup_wifi(const std::filesystem::path& newroot)
-{}
 void Init::setup_wireguard(const std::filesystem::path& newroot)
-{}
-void Init::setup_openvpn(const std::filesystem::path& newroot)
-{}
-void Init::setup_ssh_key(const std::filesystem::path& newroot)
 {}
 
 void init();

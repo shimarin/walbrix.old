@@ -65,7 +65,7 @@ void MyInit::mount_boot(const Partition& boot_partition,
 void MyInit::mount_rw(const std::filesystem::path& boot,
   const std::filesystem::path& mountpoint)
 {
-  if (is_boot_partition_readonly()) {
+  if (is_installer()) {
     mount_transient_rw_layer(mountpoint);
     return;
   }

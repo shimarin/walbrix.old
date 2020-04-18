@@ -234,6 +234,7 @@ sys-block/open-iscsi	sys-block/open-isns:0/0= sys-kernel/linux-headers sys-fs/ls
 sys-block/open-isns	dev-libs/openssl:0/1.1=
 sys-block/parted	>=sys-fs/e2fsprogs-1.27 >=sys-libs/readline-5.2:0/7= >=sys-libs/ncurses-5.7-r7:0/6=
 sys-block/thin-provisioning-tools	dev-libs/expat dev-libs/libaio
+sys-block/zram-init	>=app-shells/push-2.0 !<sys-apps/openrc-0.13
 sys-boot/efibootmgr	sys-apps/pciutils >=sys-libs/efivar-25:0/1=
 sys-boot/grub	app-arch/xz-utils >=sys-libs/ncurses-5.2-r5:0/6= >=sys-fs/lvm2-2.02.45 sys-boot/efibootmgr !sys-boot/grub:0 !sys-boot/grub-static sys-devel/gettext
 sys-cluster/drbd-utils	virtual/udev !!sys-cluster/drbd

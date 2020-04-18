@@ -185,6 +185,8 @@ $require ts-node.lst
 $require zabbix-agent.lst
 $require zabbix-proxy.lst
 $package dev-vcs/git
+$package sys-block/zram-init
+$exec "systemctl enable zram_swap"
 
 $require kmscon.lst
 #$exec "rm /lib/systemd/system/autovt\@.service"

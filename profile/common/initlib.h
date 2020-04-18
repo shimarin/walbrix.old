@@ -68,6 +68,7 @@ protected:
   virtual void setup_wireguard(const std::filesystem::path& newroot);
   virtual void setup_openvpn(const std::filesystem::path& newroot);
   virtual void setup_ssh_key(const std::filesystem::path& newroot);
+  virtual void setup_zram_swap(const std::filesystem::path& newroot);
 
 public:
   Init();
