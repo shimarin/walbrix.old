@@ -102,8 +102,15 @@ $SUDO ln -f profile/common/portage-bashrc $GENTOO_DIR/etc/portage/bashrc
 
 #[ -f profile/$PROFILE/linuxrc ] && $SUDO ln -f profile/$PROFILE/linuxrc $GENTOO_DIR/linuxrc
 $SUDO ln -f profile/common/init.h $GENTOO_DIR/init.h
-[ -f profile/$PROFILE/init.c ] && $SUDO ln -f profile/$PROFILE/init.c $GENTOO_DIR/init.c
+$SUDO ln -f profile/common/initlib.h $GENTOO_DIR/initlib.h
+if [ -f profile/$PROFILE/init.cpp ]; then
+  $SUDO ln -f profile/common/initlib.cpp $GENTOO_DIR/initlib.cpp
+  $SUDO ln -f profile/$PROFILE/init.cpp $GENTOO_DIR/init.cpp
+elif [ -f profile/$PROFILE/init.c ]; then
+  $SUDO ln -f profile/$PROFILE/init.c $GENTOO_DIR/init.c
+fi
 [ -f profile/$PROFILE/initramfs.lst ] && $SUDO ln -f profile/$PROFILE/initramfs.lst $GENTOO_DIR/initramfs.lst
+[ -f profile/$PROFILE/initramfs.gen ] && $SUDO ln -f profile/$PROFILE/initramfs.gen $GENTOO_DIR/initramfs.gen
 
 touch profile/$PROFILE/rdepends
 $SUDO ln -f profile/$PROFILE/rdepends $GENTOO_DIR/rdepends

@@ -3,6 +3,7 @@ bin
 bin/cat
 bin/cp
 bin/mv
+bin/sed
 bin/umount
 lib64
 lib64/libacl.so.1
@@ -28,11 +29,12 @@ sbin/switch_root
 sbin/mkfs.btrfs
 sbin/mkswap
 sbin/swapon
-sbin/lvm
 sbin/vgchange
 usr
 usr/lib64
 usr/lib64/libiniparser.so.0
 usr/lib64/libzstd.so.1
+usr/lib64/libgcc_s.so.1
+usr/lib64/libstdc++.so.6
 usr/sbin
 usr/sbin/fsck.fat

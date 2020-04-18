@@ -18,7 +18,13 @@
 #include <sys/sysmacros.h>
 
 #ifdef INIFILE
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <iniparser.h>
+#ifdef __cplusplus
+}
+#endif
 #endif
 
 struct partition_struct {
@@ -37,6 +43,7 @@ struct partition_struct {
 #define MV "/bin/mv"
 #define CAT "/bin/cat"
 #define TAR "/bin/tar"
+#define SED "/bin/sed"
 #define SWITCH_ROOT "/sbin/switch_root"
 #define SWAPON "/sbin/swapon"
 #define MKSWAP "/sbin/mkswap"
@@ -569,7 +576,7 @@ int mnt_context_mount_and_check_result(struct libmnt_context *ctx)
 
 int mount2(const char *source, const char *target,
                  const char *filesystemtype, unsigned long mountflags,
-                 const void *data)
+                 const char *data)
 {
   struct libmnt_context *ctx;
   int rst = -1;
@@ -592,7 +599,7 @@ int mount2(const char *source, const char *target,
 
 void mount_or_die2(const char *source, const char *target,
                  const char *filesystemtype, unsigned long mountflags,
-                 const void *data)
+                 const char *data)
 {
   int rst;
   mkdir_p(target);
@@ -629,20 +636,20 @@ int create_whiteout(const char* name)
   return mknod(name, S_IFCHR, makedev(0, 0));
 }
 
-int move_mount(const char *old, const char *new)
+int move_mount(const char *old, const char *_new)
 {
-  return mount(old, new, NULL, MS_MOVE, NULL);
+  return mount(old, _new, NULL, MS_MOVE, NULL);
 }
 
-void move_mount_or_die(const char *old, const char *new)
+void move_mount_or_die(const char *old, const char *_new)
 {
-  mkdir_p(new);
-  if (move_mount(old, new) < 0) {
+  mkdir_p(_new);
+  if (move_mount(old, _new) < 0) {
     perror("move_mount");
     halt();
   }
   // else
-  printf("Mountpoint moved from %s to %s.\n", old, new);
+  printf("Mountpoint moved from %s to %s.\n", old, _new);
 }
 
 int mount_loop(const char *imgfile, const char *mountpoint, int mflags, int offset)
@@ -1155,6 +1162,19 @@ int setup_wifi(const char *rootdir, const char *ssid, const char *key)
   sprintf(buf, "%s/etc/systemd/system/multi-user.target.wants/wpa_supplicant@wlan0.service", rootdir);
   unlink(buf);
   return symlink("/lib/systemd/system/wpa_supplicant@.service", buf);
+}
+
+int get_total_memory_in_mb()
+{
+  return 1024;
+}
+
+int set_zram_capacity(const char *rootdir, int mb) // needs /bin/sed
+{
+  char buf[PATH_MAX], regex[64];
+  sprintf(buf, "%s/lib/systemd/system/zram_swap.service", rootdir);
+  sprintf(regex, "s/^\\(ExecStart=.*\\)\\s[0-9]\\+$/\\1 %d/", mb);
+  return fork_exec_wait(SED, regex, buf, NULL);
 }
 
 #ifdef INIFILE
