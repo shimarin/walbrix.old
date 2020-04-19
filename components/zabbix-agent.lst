@@ -5,3 +5,5 @@
 /usr/bin/zabbix_sender
 /usr/sbin/zabbix_agentd
 /var/log/zabbix/.keep_net-analyzer_zabbix-0
+$sed /etc/zabbix/zabbix_agentd.conf 's/^Hostname=.\+/# Hostname=/'
+/lib/systemd/system/zabbix-agentd.service
