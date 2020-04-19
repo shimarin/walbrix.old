@@ -64,4 +64,4 @@ $sed /etc/bash/bashrc 's/alias .\?grep=.\+$//'   #need to remove aliases which i
 $exec ldconfig
 
 $copy resource/bootx64/grub-embed.cfg /var/tmp/grub.cfg
-$exec --overlay 'grub-mkimage -p /boot/grub -c /var/tmp/grub.cfg -o /done -O x86_64-efi xfs fat part_gpt part_msdos normal linux echo all_video test multiboot multiboot2 search sleep iso9660 gzio lvm chain configfile cpuid minicmd gfxterm font terminal squash4 loopback videoinfo videotest blocklist probe && rm /var/tmp/grub.cfg'
+$exec --overlay 'grub-mkimage -p /boot/grub -c /var/tmp/grub.cfg -o /done -O x86_64-efi xfs fat part_gpt part_msdos normal linux echo all_video test multiboot multiboot2 search sleep iso9660 gzio lvm chain configfile cpuid minicmd gfxterm_background png font terminal squash4 loopback videoinfo videotest blocklist probe efi_gop efi_uga && rm /var/tmp/grub.cfg'
