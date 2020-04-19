@@ -231,7 +231,8 @@ int install(ExternalProcess& process, const PhysDisk& disk)
   TempMount mnt(boot_partition.value().c_str(), "vfat", MS_RELATIME, "fmask=177,dmask=077");
 
   std::filesystem::create_directories(mnt / "efi/boot");
-  std::filesystem::copy("/run/initramfs/boot/efi/boot/bootx64.efi", mnt / "efi/boot/bootx64.efi");
+  std::filesystem::path run_initramfs_boot("/run/initramfs/boot");
+  std::filesystem::copy(run_initramfs_boot / "efi/boot/bootx64.efi", mnt / "efi/boot/bootx64.efi");
   process.fork_exec_wait("/usr/sbin/grub-install", "/usr/sbin/grub-install",
     "--target=i386-pc", "--recheck", ((std::string)"--boot-directory=" + (mnt / "boot").c_str()).c_str(),
     "--modules=xfs fat part_msdos normal linux echo all_video test multiboot multiboot2 search sleep gzio lvm chain configfile cpuid minicmd font terminal squash4 loopback videoinfo videotest blocklist probe gfxterm_background png",
@@ -246,6 +247,15 @@ int install(ExternalProcess& process, const PhysDisk& disk)
       << std::endl;
   }
   std::filesystem::copy("/run/initramfs/boot/system.img", mnt / "system.img");
+
+  auto system_ini = run_initramfs_boot / "system.ini";
+  if (is_file(system_ini)) {
+    std::filesystem::copy_file(system_ini, mnt / system_ini.filename());
+  }
+  auto openvpn = run_initramfs_boot / "openvpn";
+  if (is_dir(openvpn)) {
+    process.fork_exec_wait("/bin/cp", "/bin/cp", "-a", openvpn.c_str(), mnt.c_str(), NULL);
+  }
 
   if (has_secondary_partition) {
     auto secondary_partition = get_partition(name(disk), 2);

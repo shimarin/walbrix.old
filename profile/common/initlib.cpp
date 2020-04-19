@@ -180,11 +180,6 @@ int move_mount(const std::filesystem::path& old, const std::filesystem::path& _n
   return mount(old.c_str(), _new.c_str(), NULL, MS_MOVE, NULL);
 }
 
-int switch_root(const char *newroot)
-{
-  return execl(SWITCH_ROOT, SWITCH_ROOT, newroot, "/sbin/init", NULL);
-}
-
 struct ForkExecOptions {
   std::optional<std::filesystem::path> rootdir = std::nullopt;
   std::optional<std::string> data = std::nullopt;
@@ -312,15 +307,19 @@ int create_swapfile(const std::filesystem::path& swapfile, off_t length)
   return fork_exec_wait(MKSWAP, MKSWAP, swapfile.c_str(), NULL);
 }
 
-int activate_swap(const std::filesystem::path& swapfile)
+int swapon(const std::filesystem::path& swapfile,bool mkswap_and_retry_on_fail/* = true*/)
 {
-  if (fork_exec_wait(SWAPON, SWAPON, swapfile.c_str(), NULL) != 0) {
-    std::cout << "Broken swapfile? performing mkswap..." << std::endl;
-    if (fork_exec_wait(MKSWAP, MKSWAP, swapfile.c_str(), NULL) == 0) {
-      return fork_exec_wait(SWAPON, SWAPON, swapfile.c_str(), NULL);
-    }
+  auto rst = fork_exec_wait(SWAPON, SWAPON, swapfile.c_str(), NULL);
+  if (rst == 0 || !mkswap_and_retry_on_fail) return rst;
+  // else
+  std::cout << "Broken swapfile? performing mkswap..." << std::endl;
+  rst = fork_exec_wait(MKSWAP, MKSWAP, swapfile.c_str(), NULL);
+  if (rst == 0) {
+    return swapon(swapfile, false);
+  } else {
+    std::cout << "mkswap failed." << std::endl;
   }
-  return 0;
+  return rst;
 }
 
 class LibMntTable {
@@ -357,6 +356,16 @@ uint64_t get_free_disk_space(const std::filesystem::path& mountpoint)
   if (statvfs(mountpoint.c_str(), &s) < 0) RUNTIME_ERROR_WITH_ERRNO("statvfs");
   //else
   return (uint64_t)s.f_bsize * s.f_bfree;
+}
+
+int systemd_enable(const std::filesystem::path& rootdir, const std::string& unit)
+{
+  return fork_chroot_exec_wait(rootdir, SYSTEMCTL, SYSTEMCTL, "enable", unit.c_str(), NULL);
+}
+
+int sed(const std::filesystem::path& path, const std::string& regex)
+{
+  return fork_exec_wait(SED, SED, "-i", regex.c_str(), path.c_str(), NULL);
 }
 
 int set_hostname(const std::filesystem::path& rootdir, const std::string& hostname)
@@ -528,6 +537,23 @@ void Init::setup()
   std::filesystem::create_directory(mnt_rw);
   mount_rw(mnt_boot, mnt_rw);
   std::cout << "RW Layer mouned." << std::endl;
+  if (activate_swap(mnt_boot)) {
+    std::cout << "Swap file activated." << std::endl;
+  }
+}
+
+std::filesystem::path Init::get_upperdir(const std::filesystem::path& rw_layer)
+{
+  auto upperdir = rw_layer / "root";
+  if (!std::filesystem::exists(upperdir)) std::filesystem::create_directory(upperdir);
+  return upperdir;
+}
+
+std::filesystem::path Init::get_workdir(const std::filesystem::path& rw_layer)
+{
+  auto workdir = rw_layer / "work";
+  if (!std::filesystem::exists(workdir)) std::filesystem::create_directory(workdir);
+  return workdir;
 }
 
 std::filesystem::path Init::get_newroot()
@@ -536,8 +562,8 @@ std::filesystem::path Init::get_newroot()
   auto mnt_boot = mnt / "boot";
   auto mnt_system = mnt / "system";
   auto mnt_rw = mnt / "rw";
-  auto mnt_rw_root = mnt_rw / "root";
-  auto mnt_rw_work = mnt_rw / "work";
+  auto mnt_rw_root = get_upperdir(mnt_rw);
+  auto mnt_rw_work = get_workdir(mnt_rw);
   std::filesystem::path newroot("/newroot");
 
   const auto& lowerdir = mnt_system, upperdir = mnt_rw_root, workdir = mnt_rw_work;
@@ -545,8 +571,6 @@ std::filesystem::path Init::get_newroot()
   std::cout << "Mounting overlayfs(lowerdir=" << lowerdir
     << ",upperdir=" << upperdir << ",workdir=" << workdir << ") on "
     << newroot << "..." << std::flush;
-  std::filesystem::create_directory(upperdir);
-  std::filesystem::create_directory(workdir);
   std::filesystem::create_directory(newroot);
   if (mount_overlay(lowerdir, upperdir, workdir, newroot) != 0) {
     RUNTIME_ERROR("mount_overlay");
@@ -581,19 +605,27 @@ std::filesystem::path Init::get_newroot()
   //else
   std::cout << "done." << std::endl;
 
-  setup_hostname(newroot);
-  setup_password(newroot);
-  setup_timezone(newroot);
-  setup_locale(newroot);
-  setup_keymap(newroot);
-  setup_network(newroot);
-  setup_wifi(newroot);
-  setup_wireguard(newroot);
-  setup_openvpn(newroot);
-  setup_ssh_key(newroot);
-  setup_zram_swap(newroot);
+  try {
+    setup_hostname(newroot);
+    setup_password(newroot);
+    setup_timezone(newroot);
+    setup_locale(newroot);
+    setup_keymap(newroot);
+    setup_network(newroot);
+    setup_wifi(newroot);
+    setup_wireguard(newroot);
+    setup_openvpn(newroot);
+    setup_zabbix_agent(newroot);
+    setup_ssh_key(newroot);
+    setup_zram_swap(newroot);
 
-  setup_initramfs_shutdown(newroot);
+    invalidate_ld_cache(newroot);
+
+    setup_initramfs_shutdown(newroot);
+  }
+  catch (const std::exception& ex) {
+    std::cout << "Exception occured during optional configuration. '" << ex.what() << "'." << std::endl;
+  }
 
   return newroot;
 }
@@ -654,6 +686,12 @@ void Init::mount_transient_rw_layer(const std::filesystem::path& mountpoint)
 void Init::mount_rw(const std::filesystem::path& boot, const std::filesystem::path& mountpoint)
 {
   mount_transient_rw_layer(mountpoint);
+}
+
+bool Init::activate_swap(const std::filesystem::path& boot)
+{
+  // No swap at default
+  return false;
 }
 
 void Init::setup_initramfs_shutdown(const std::filesystem::path& newroot)
@@ -832,7 +870,7 @@ void Init::setup_openvpn(const std::filesystem::path& newroot)
     std::filesystem::create_directories(client_dir);
     std::filesystem::copy_file(key_file, client_dir / "client.key", std::filesystem::copy_options::overwrite_existing);
     std::filesystem::copy_file(crt_file, client_dir / "client.crt", std::filesystem::copy_options::overwrite_existing);
-    fork_chroot_exec_wait(newroot, SYSTEMCTL, SYSTEMCTL, "enable", "openvpn-client@openvpn", NULL);
+    systemd_enable(newroot, "openvpn-client@openvpn");
   }
 
   auto conf_file = newroot / "run/initramfs/boot/openvpn/openvpn.conf";
@@ -840,9 +878,41 @@ void Init::setup_openvpn(const std::filesystem::path& newroot)
     std::filesystem::create_directories(client_dir);
     std::filesystem::copy_file(conf_file, client_dir / "openvpn.conf", std::filesystem::copy_options::overwrite_existing);
   }
-
-
 }
+
+void Init::setup_zabbix_agent(const std::filesystem::path& newroot)
+{
+  auto server = ini_string("zabbix:server");
+  auto server_active = ini_string("zabbix:server_active");
+
+  if (!server && !server_active) return;
+  //else
+
+  auto conf = newroot / "etc/zabbix/zabbix_agentd.conf";
+  if (server) {
+    std::string regex(R"(s/^Server=.*/Server=)");
+    regex += server.value();
+    regex += "/";
+    if (sed(conf, regex) == 0) {
+      std::cout << "Server for zabbix-agent set." << std::endl;
+    } else {
+      std::cout << "Error setting Server for zabbix-agent." << std::endl;
+    }
+  }
+  if (server_active) {
+    std::string regex(R"(s/^ServerActive=.*/ServerActive=)");
+    regex += server_active.value();
+    regex += "/";
+    if (sed(conf, regex) == 0) {
+      std::cout << "ServerActive for zabbix-agent set." << std::endl;
+    } else {
+      std::cout << "Error setting ServerActive for zabbix-agent." << std::endl;
+    }
+  }
+
+  systemd_enable(newroot, "zabbix-agentd");
+}
+
 void Init::setup_ssh_key(const std::filesystem::path& newroot)
 {
   auto ssh_key = ini_string(":ssh_key");
@@ -874,14 +944,25 @@ void Init::setup_network(const std::filesystem::path& newroot)
 void Init::setup_wireguard(const std::filesystem::path& newroot)
 {}
 
-void init();
+void Init::invalidate_ld_cache(const std::filesystem::path& newroot)
+{
+  auto ld_so_cache = newroot / "etc/ld.so.cache";
+  if (std::filesystem::exists(ld_so_cache)) {
+    std::filesystem::remove(ld_so_cache);
+  }
+}
+
+std::filesystem::path init();
 void shutdown();
 
 int main(int argc, char* argv[])
 {
   if (strcmp(argv[0], "/init") == 0) {
     try {
-      init();
+      auto newroot = init();
+      std::cout << "Switching to newroot..." << std::endl;
+      if (execl(SWITCH_ROOT, SWITCH_ROOT, newroot.c_str(), "/sbin/init", NULL) != 0)
+        RUNTIME_ERROR("switch_root");
     }
     catch (const std::exception& e) {
       std::cout << e.what() << std::endl;

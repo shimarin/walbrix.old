@@ -78,12 +78,6 @@ release_lock:
 
 int Lock::fd_lock = -1;
 
-static bool is_file(const std::string& path)
-{
-  struct stat st;
-  return stat(path.c_str(), &st) == 0 && S_ISREG(st.st_mode);
-}
-
 int load_disk_config(const char* vmname, std::list<Disk>& disks)
 {
   VmIniFile ini(vmname);

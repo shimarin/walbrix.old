@@ -406,6 +406,9 @@ public:
   operator std::string() { return output.str(); }
 };
 
+bool is_file(const std::string& path);
+bool is_dir(const std::string& path);
+
 void exec_linux_console();
 int ui(bool login = false);
 int install(int argc, char* argv[]);

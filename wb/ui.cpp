@@ -1,3 +1,4 @@
+#include <sys/utsname.h>
 #include "wb.h"
 
 std::pair<uint16_t, uint16_t> measure_text_size(const char* text)
@@ -97,6 +98,10 @@ void TbAbstractWindow::draw(TbAbstractWindow& dst, int16_t x, int16_t y, bool bo
 
 int ui(bool login/* = false*/)
 {
+  /* TODO: remove after -
+  utsname uname_buf;
+  std::string version = uname(&uname_buf) == 0? uname_buf.release : "";
+  */
   std::pair<bool, std::optional<int> > result;
   {
     Termbox termbox;
@@ -108,7 +113,7 @@ int ui(bool login/* = false*/)
       menu.add_item(3, "Linuxコンソール");
     }
     menu.add_item(std::nullopt, "メニューを終了[ESC]");
-    TbWindow window(menu.get_size(), "Walbrix");
+    TbWindow window(menu.get_size(), (std::string)"Walbrix"/* + version*/);
     tb_event event;
     event.type = 0;
     menu.selection(0);

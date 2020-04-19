@@ -160,6 +160,7 @@ $mkdir /etc/X11/xorg.conf.d
 $write /etc/X11/xorg.conf.d/00-keyboard.conf 'Section "InputClass"\n\tIdentifier "system-keyboard"\n\tMatchIsKeyboard "on"\n\tOption "XkbLayout" "jp"\n\tOption "XkbModel" "jp106"\n\tOption "XkbOptions" "terminate:ctrl_alt_bksp"\nEndSection'
 
 $require xen-python3.lst
+$sed /etc/default/xendomains 's/^\(XENDOMAINS_SAVE=.*\)$/#\1/'
 
 # VPN
 $require openvpn.lst
@@ -217,6 +218,14 @@ $package app-misc/tmux
 $mkdir /var/db/repos/gentoo
 $package sys-fs/mtools
 /usr/bin/xorriso
+
+# services preferred by installer env
+$sed /lib/systemd/system/systemd-networkd.service 's/^WantedBy=multi-user.target$/WantedBy=multi-user.target installer.target/'
+$sed /lib/systemd/system/systemd-resolved.service 's/^WantedBy=multi-user.target$/WantedBy=multi-user.target installer.target/'
+$sed /lib/systemd/system/sshd.service 's/^WantedBy=multi-user.target$/WantedBy=multi-user.target installer.target/'
+$exec "systemctl enable systemd-networkd systemd-resolved sshd"
+$sed /lib/systemd/system/openvpn-client@.service 's/^WantedBy=multi-user.target$/WantedBy=multi-user.target installer.target/'
+$sed /lib/systemd/system/zabbix-agentd.service 's/^WantedBy=multi-user.target$/WantedBy=multi-user.target installer.target/'
 
 $exec --overlay "env-update"
 $exec ldconfig

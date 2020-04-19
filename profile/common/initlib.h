@@ -18,6 +18,8 @@ struct Partition {
 std::optional<Partition> search_partition(const std::string& name, const std::string& value);
 bool is_block_readonly(const std::filesystem::path& device_path);
 bool is_file(const std::filesystem::path& path);
+bool is_dir(const std::filesystem::path& path);
+int cp_a(const std::filesystem::path& src, const std::filesystem::path& dst);
 
 int mount(const std::filesystem::path& source,
   const std::filesystem::path& mountpoint,
@@ -33,9 +35,7 @@ int create_btrfs_imagefile(const std::filesystem::path& imagefile, off_t length)
 int btrfs_scan();
 int repair_btrfs(const std::filesystem::path& path);
 int create_swapfile(const std::filesystem::path& swapfile, off_t length);
-int activate_swap(const std::filesystem::path& swapfile);
-
-int switch_root(const char *newroot);
+int swapon(const std::filesystem::path& swapfile, bool mkswap_and_retry_on_fail = true);
 
 class Init {
   bool readonly_boot_partition = 0;
@@ -56,6 +56,11 @@ protected:
   virtual std::optional<std::filesystem::path> get_ini_path(const std::filesystem::path& boot);
   virtual void mount_system(const std::filesystem::path& boot, const std::filesystem::path& mountpoint);
   virtual void mount_rw(const std::filesystem::path& boot, const std::filesystem::path& mountpoint);
+  virtual bool activate_swap(const std::filesystem::path& boot);
+
+  virtual std::filesystem::path get_upperdir(const std::filesystem::path& rw_layer);
+  virtual std::filesystem::path get_workdir(const std::filesystem::path& rw_layer);
+
   virtual void setup_initramfs_shutdown(const std::filesystem::path& newroot);
 
   virtual void setup_hostname(const std::filesystem::path& newroot);
@@ -67,8 +72,10 @@ protected:
   virtual void setup_wifi(const std::filesystem::path& newroot);
   virtual void setup_wireguard(const std::filesystem::path& newroot);
   virtual void setup_openvpn(const std::filesystem::path& newroot);
+  virtual void setup_zabbix_agent(const std::filesystem::path& newroot);
   virtual void setup_ssh_key(const std::filesystem::path& newroot);
   virtual void setup_zram_swap(const std::filesystem::path& newroot);
+  virtual void invalidate_ld_cache(const std::filesystem::path& newroot);
 
 public:
   Init();

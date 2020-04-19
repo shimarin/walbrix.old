@@ -15,3 +15,20 @@ $exec --overlay "find /usr/lib/gcc -name 'lib*.so*' -exec touch {} \;"
 # generate locale archive
 $write /etc/locale.gen 'en_US.UTF-8 UTF-8\nen_GB.UTF-8 UTF-8\nja_JP.UTF-8 UTF-8'
 $exec --overlay /usr/sbin/locale-gen
+
+/usr/lib64/gconv/gconv-modules.cache
+/usr/lib64/gconv/CP932.so
+/usr/lib64/gconv/EUC-JISX0213.so
+/usr/lib64/gconv/EUC-JP-MS.so
+/usr/lib64/gconv/EUC-JP.so
+/usr/lib64/gconv/IBM850.so
+/usr/lib64/gconv/ISO-2022-JP-3.so
+/usr/lib64/gconv/ISO-2022-JP.so
+/usr/lib64/gconv/SHIFT_JISX0213.so
+/usr/lib64/gconv/SJIS.so
+/usr/lib64/gconv/UNICODE.so
+/usr/lib64/gconv/UTF-16.so
+/usr/lib64/gconv/UTF-32.so
+/usr/lib64/gconv/UTF-7.so
+/usr/lib64/gconv/libJIS.so
+/usr/lib64/gconv/libJISX0213.so

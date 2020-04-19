@@ -21,6 +21,18 @@ extern "C" {
 DEFINE_bool(daemon, false, "Daemonize");
 DEFINE_bool(force, false, "Force operation");
 
+bool is_file(const std::string& path)
+{
+  struct stat st;
+  return stat(path.c_str(), &st) == 0 && S_ISREG(st.st_mode);
+}
+
+bool is_dir(const std::string& path)
+{
+  struct stat st;
+  return stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
+}
+
 int ExternalProcess::fork_exec_wait(const char* cmd, const std::vector<std::string>& args)
 {
   char* argv[args.size() + 1];
@@ -174,10 +186,21 @@ void exec_linux_console()
   execl("/bin/login", "/bin/login", "-p", "-f", "root", NULL);
 }
 
+bool is_installer()
+{
+  std::ifstream cmdline("/proc/cmdline");
+  while (!cmdline.eof()) {
+    std::string arg;
+    cmdline >> arg;
+    if (arg == "systemd.unit=installer.target") return true;
+  }
+  return false;
+}
+
 int login(int argc, char* argv[])
 {
   ExternalProcess process;
-  if (process.fork_exec_wait("/bin/systemctl", "/bin/systemctl", "is-active", "installer.target", NULL) == 0) {
+  if (is_installer()) {
     // running in installer mode
     return installer();
   }
@@ -296,11 +319,13 @@ public:
 };
 
 
-#define GRUB_MODULES "loopback", "xfs", "fat", "ntfs", "ntfscomp", "ext2", "part_gpt", "part_msdos", "normal", "linux", "echo", "all_video", "serial", "test", "probe", "multiboot", "multiboot2", "search", "iso9660", "gzio", "lvm", "chain", "configfile", "cpuid", "minicmd", "gfxterm", "font", "terminal", "ata", "biosdisk", "squash4", "videoinfo", "videotest", "png", "gfxterm_background", "sleep"
-
+#define GRUB_MODULES "loopback", "xfs", "fat", "ntfs", "ntfscomp", "ext2", "part_gpt", "part_msdos", "normal", "linux", "echo", "all_video", "serial", "test", "probe", "multiboot", "multiboot2", "search", "iso9660", "gzio", "lvm", "chain", "configfile", "cpuid", "minicmd", "gfxterm", "font", "terminal", "ata", "squash4", "videoinfo", "videotest", "png", "gfxterm_background", "sleep"
+#define EFI_GRUB_MODULES GRUB_MODULES ,"efi_gop", "efi_uga"
+#define BIOS_GRUB_MODULES GRUB_MODULES ,"biosdisk"
 int iso9660(int argc, char* argv[])
 {
-  const char* output_file = "/run/initramfs/boot/system.iso";
+  std::filesystem::path run_initramfs_boot("/run/initramfs/boot");
+  auto output_file = run_initramfs_boot / "system.iso";
   Tempdir tempdir("iso9660");
   auto grubcfg_path = tempdir / "grub.cfg";
   {
@@ -316,13 +341,13 @@ int iso9660(int argc, char* argv[])
   process.fork_exec_wait("/usr/bin/grub-mkimage", "/usr/bin/grub-mkimage",
     "-p", "/boot/grub", "-c", grubcfg_path.c_str(), "-o", boot_img.c_str(),
     "-O", "i386-pc-eltorito",
-    GRUB_MODULES,
+    BIOS_GRUB_MODULES,
     NULL);
   auto bootx64_efi = tempdir / "bootx64.efi";
   process.fork_exec_wait("/usr/bin/grub-mkimage", "/usr/bin/grub-mkimage",
     "-p", "/boot/grub", "-c", grubcfg_path.c_str(), "-o", bootx64_efi.c_str(),
     "-O", "x86_64-efi",
-    GRUB_MODULES,
+    EFI_GRUB_MODULES,
     NULL);
   std::filesystem::remove(grubcfg_path);
   {
@@ -330,25 +355,53 @@ int iso9660(int argc, char* argv[])
     systemcfg << "systemd_unit=installer.target" << std::endl;
   }
   auto efiboot_img = tempdir / "boot" / "efiboot.img";
-  process.fork_exec_wait("/bin/dd", "/bin/dd", "if=/dev/zero", ((std::string)"of=" + (std::string)efiboot_img).c_str(), "bs=4k", "count=360", NULL);
+  // create zero filled 1.44MB file (4096 * 360)
+  int fd = creat(efiboot_img.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+  if (fd < 0) RUNTIME_ERROR_WITH_ERRNO("creat");
+  int rst = ftruncate(fd, 4096 * 360);
+  close(fd);
+  if (rst < 0) RUNTIME_ERROR("ftruncate");
   process.fork_exec_wait("/usr/sbin/mkfs.vfat", "/usr/sbin/mkfs.vfat", "-F", "12", "-M", "0xf8", efiboot_img.c_str(), NULL);
   process.fork_exec_wait("/usr/bin/mmd", "/usr/bin/mmd", "-i", efiboot_img.c_str(), "/efi", "/efi/boot", NULL);
-  process.fork_exec_wait("/usr/bin/mcopy", "/usr/bin/mcopy",  "-i", efiboot_img.c_str(), bootx64_efi.c_str(), "::/efi/boot/", NULL);
+  process.fork_exec_wait("/usr/bin/mcopy", "/usr/bin/mcopy",  "-i",
+    efiboot_img.c_str(), bootx64_efi.c_str(), "::/efi/boot/", NULL);
   std::filesystem::remove(bootx64_efi);
+  auto system_ini = run_initramfs_boot / "system.ini";
+  if (is_file(system_ini)) {
+    std::filesystem::copy_file(system_ini, tempdir / system_ini.filename());
+  }
+  auto openvpn = run_initramfs_boot / "openvpn";
+  if (is_dir(openvpn)) {
+    process.fork_exec_wait("/bin/cp", "/bin/cp", "-a", openvpn.c_str(), tempdir.c_str(), NULL);
+  }
   process.fork_exec_wait("/usr/bin/xorriso", "/usr/bin/xorriso",
     "-as", "mkisofs", "-f", "-J", "-r", "-no-emul-boot",
     "-boot-load-size", "4", "-boot-info-table", "-graft-points",
-    "-eltorito-alt-boot",
-    "-e", "boot/efiboot.img",
     "-b", "boot/boot.img",
-    "-V", "WBINSTALL", "-o", output_file, tempdir.c_str(),
+    "-eltorito-alt-boot",
+    "-append_partition", "2", "0xef", efiboot_img.c_str()/*"boot/efiboot.img"*/,
+    "-e", "--interval:appended_partition_2:all::",
+    "-no-emul-boot", "-isohybrid-gpt-basdat",
+    "-V", "WBINSTALL", "-o", output_file.c_str(), tempdir.c_str(),
     "system.img=/run/initramfs/boot/system.img",
     "efi/boot/bootx64.efi=/run/initramfs/boot/efi/boot/bootx64.efi",
     NULL);
 
   std::cout << (std::string)process << std::endl;
 
-  std::cout << "'xorriso -as cdrecord dev=/dev/sr0 -dao /run/initramfs/boot/system.iso' to burn." << std::endl;
+  std::cout << "'wb burn' or 'xorriso -as cdrecord dev=/dev/sr0 -dao /run/initramfs/boot/system.iso' to burn." << std::endl;
+  return 0;
+}
+
+int burn(int argc, char* argv[])
+{
+  std::filesystem::path isofile("/run/initramfs/boot/system.iso");
+  if (!is_file(isofile)) {
+    std::cerr << isofile << " does not exist.  do 'wb iso9660' first." << std::endl;
+    return 1;
+  }
+  //else
+  execl("/usr/bin/xorriso", "/usr/bin/xorriso", "-as", "cdrecord", "dev=/dev/sr0", "-dao", "-eject", isofile.c_str(), NULL);
   return 0;
 }
 
@@ -389,6 +442,7 @@ struct Command { const char* name; int (*func)(int, char**); } commands [] = {
   {"ui", ui},
   {"install", install},
   {"iso9660", iso9660},
+  {"burn", burn},
   {"license", license},
   {NULL, NULL}
 };

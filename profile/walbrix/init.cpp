@@ -1,4 +1,5 @@
 #include <sys/mount.h>
+#include <sys/utsname.h>
 
 #include <iostream>
 #include <fstream>
@@ -11,6 +12,7 @@ class MyInit : public Init {
 protected:
   virtual void mount_boot(const Partition& boot_partition, const std::filesystem::path& mountpoint);
   virtual void mount_rw(const std::filesystem::path& boot, const std::filesystem::path& mountpoint);
+  virtual bool activate_swap(const std::filesystem::path& boot);
 };
 
 bool MyInit::is_installer()
@@ -30,7 +32,7 @@ void MyInit::mount_boot(const Partition& boot_partition,
   const std::filesystem::path& mountpoint)
 {
   if (is_installer()) {
-    std::cout << "Loading Walbrix..." << std::endl;
+    std::cout << "Loading..." << std::endl;
     auto temp_ro_mount = std::filesystem::path(mountpoint).replace_filename("cdrom");
     std::filesystem::create_directory(temp_ro_mount);
     if (mount(boot_partition.path, temp_ro_mount, "auto", MS_RDONLY) != 0)
@@ -49,9 +51,12 @@ void MyInit::mount_boot(const Partition& boot_partition,
     if (is_file(ini_file)) {
       std::filesystem::copy_file(ini_file, mountpoint / "system.ini");
     }
+    auto openvpn = temp_ro_mount / "openvpn";
+    if (is_dir(openvpn)) {
+      cp_a(openvpn, mountpoint);
+    }
     umount(temp_ro_mount);
   } else {
-    std::filesystem::create_directories(mountpoint / "vm");
     if (mount(boot_partition.path, mountpoint, "vfat", MS_RELATIME, "fmask=177,dmask=077") != 0) {
       std::cout << "Boot partition filesystem corrupted. Attempting repair..." << std::endl;
       repair_fat(boot_partition.path);
@@ -59,6 +64,7 @@ void MyInit::mount_boot(const Partition& boot_partition,
         RUNTIME_ERROR("mount boot partition");
       }
     }
+    std::filesystem::create_directories(mountpoint / "vm");
   }
 }
 
@@ -72,7 +78,6 @@ void MyInit::mount_rw(const std::filesystem::path& boot,
   //else
 
   auto datafile = boot / "system.dat";
-  auto swapfile = boot / "system.swp";
 
   if (!std::filesystem::exists(datafile) && get_free_disk_space(boot) >= 1024L*1024*1024*2 ) {
     std::cout << "RW layer does not exist. Creating..." << std::flush;
@@ -97,35 +102,46 @@ void MyInit::mount_rw(const std::filesystem::path& boot,
     std::cout << "No valid persistent RW layer. Falling back to tmpfs." << std::endl;
     mount_transient_rw_layer(mountpoint);
   }
+}
+
+bool MyInit::activate_swap(const std::filesystem::path& boot)
+{
+  if (is_installer()) return false;
+  //else
+  auto swapfile = boot / "system.swp";
 
   if (!exists(swapfile) && get_free_disk_space(boot) >= 1024L*1024*1024*2 ) {
     std::cout << "Swapfile does not exist. Creating..." << std::flush;
     if (create_swapfile(swapfile, 1024L*1024*1024) == 0) {
-      printf("done.\n");
+      std::cout << "done." << std::endl;
     } else {
-      printf("failed.\n");
+      std::cout << "failed." << std::endl;
     }
   }
 
-  if (is_file(swapfile)) {
-    std::cout << "Activating swap..." << std::endl;
-    activate_swap(swapfile);
-  }
+  if (!is_file(swapfile)) return false;
+  std::cout << "Activating swap..." << std::endl;
+  return (swapon(swapfile) == 0);
 }
 
-void init()
+std::filesystem::path init()
 {
-  std::filesystem::path newroot;
-  {
-    MyInit init;
-    init.setup();
-    newroot = init.get_newroot();
-
-
+  std::cout
+    << R"( __      __        .__ ___.         .__        )" "\n"
+    << R"(/  \    /  \_____  |  |\_ |_________|__|__  ___)" "\n"
+    << R"(\   \/\/   /\__  \ |  | | __ \_  __ \  \  \/  /)" "\n"
+    << R"( \        /  / __ \|  |_| \_\ \  | \/  |>    < )" "\n"
+    << R"(  \__/\  /  (____  /____/___  /__|  |__/__/\_ \)" "\n"
+    << R"(       \/        \/         \/               \/)" << std::endl;
+/* TODO: remove after -
+  utsname buf;
+  if (uname(&buf) == 0) {
+    std::cout << buf.release << std::endl;
   }
-
-  std::cout << "Switching to newroot..." << std::endl;;
-  if (switch_root(newroot.c_str()) != 0) RUNTIME_ERROR("switch_root");
+*/
+  MyInit init;
+  init.setup();
+  return init.get_newroot();
 }
 
 void shutdown()
