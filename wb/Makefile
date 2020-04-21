@@ -8,7 +8,7 @@ all: wb
 	gcc -c $<
 
 wb: wb.o start.o monitor.o ui.o install.o termbox.o
-	g++ -std=c++2a -o $@ -lgflags -lxenlight -lxentoollog -lxenstore -lpam -lpam_misc -liniparser -lsmartcols -lmount $^
+	g++ -std=c++2a -o $@ -lgflags -lxenlight -lxentoollog -lxenstore -lpam -lpam_misc -liniparser -lsmartcols -lmount -lxlutil $^
 
 install: wb
 	cp -a wb /usr/sbin/

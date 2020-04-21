@@ -120,9 +120,10 @@ typedef struct {
 
 class VmIniFile {
   dictionary* ini;
+  std::string _vmname;
 public:
-  VmIniFile(const char* vmname) {
-    std::string inifile = (std::string)"/run/initramfs/boot/vm/" + vmname + ".ini";
+  VmIniFile(const std::string& __vmname) : _vmname(__vmname) {
+    std::string inifile = (std::string)"/run/initramfs/boot/vm/" + __vmname + ".ini";
     struct stat st;
     if (stat(inifile.c_str(), &st) == 0 && S_ISREG(st.st_mode)) {
       ini = iniparser_load(inifile.c_str());
@@ -131,21 +132,22 @@ public:
     }
   }
   ~VmIniFile() { if (ini) iniparser_freedict(ini); }
-  operator bool() { return ini != NULL; }
-  int getint(const char* key, int default_value) { return iniparser_getint(ini, key, default_value); }
-  std::optional<std::string> getstring(const char* key) {
+  const std::string& vmname() const { return _vmname; }
+  operator bool() const { return ini != NULL; }
+  int getint(const char* key, int default_value) const { return iniparser_getint(ini, key, default_value); }
+  std::optional<std::string> getstring(const char* key) const {
     const char* val = iniparser_getstring(ini, key, NULL);
     return val != NULL? std::optional<std::string>(val) : std::nullopt;
   }
-  std::string getstring(const char* key, const std::string& default_value) {
+  std::string getstring(const char* key, const std::string& default_value) const {
     char buf[default_value.length() + 1];
     strcpy(buf, default_value.c_str());
     return iniparser_getstring(ini, key, buf);
   }
-  bool getboolean(const char* key, bool default_value) {
+  bool getboolean(const char* key, bool default_value) const {
     return iniparser_getboolean(ini, key, default_value? 1: 0) == 1;
   }
-  bool exists(const char* entry) { return iniparser_find_entry(ini, entry) == 1; }
+  bool exists(const char* entry) const { return iniparser_find_entry(ini, entry) == 1; }
 };
 
 std::pair<uint16_t, uint16_t> measure_text_size(const char* text);

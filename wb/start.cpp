@@ -1,6 +1,11 @@
 #include <iostream>
 #include <map>
+#include <regex>
 #include <cassert>
+
+extern "C" {
+#include <libxlutil.h>
+}
 
 #include "wb.h"
 
@@ -78,17 +83,16 @@ release_lock:
 
 int Lock::fd_lock = -1;
 
-int load_disk_config(const char* vmname, std::list<Disk>& disks)
+int load_disk_config(const VmIniFile& ini, std::list<Disk>& disks)
 {
-  VmIniFile ini(vmname);
   disks.clear();
   std::optional<std::string> disk_names = ini.getstring(":disks");
   if (!disk_names) {
-    std::string img_file = (std::string)"/run/initramfs/boot/vm/" + vmname + ".img";
-    std::string dat_file = (std::string)"/run/initramfs/boot/vm/" + vmname + ".dat";
-    std::string swp_file = (std::string)"/run/initramfs/boot/vm/" + vmname + ".swp";
+    std::string img_file = (std::string)"/run/initramfs/boot/vm/" + ini.vmname() + ".img";
+    std::string dat_file = (std::string)"/run/initramfs/boot/vm/" + ini.vmname() + ".dat";
+    std::string swp_file = (std::string)"/run/initramfs/boot/vm/" + ini.vmname() + ".swp";
     if (!is_file(img_file)) {
-      std::cerr << "No image file for VM '" << vmname << "'" << std::endl;
+      std::cerr << "No image file for VM '" << ini.vmname() << "'" << std::endl;
       return 0;
     }
     //else
@@ -115,41 +119,33 @@ int load_disk_config(const char* vmname, std::list<Disk>& disks)
     return disks.size();
   }
   //else
-  std::list<std::string> disk_name_list;
-  std::string disk_name;
-  for (const char* pt = disk_names.value().c_str(); *pt; pt++) {
-    if (*pt == ',') {
-      disk_name_list.push_back(disk_name);
-      disk_name.clear();
-    } else {
-      disk_name += *pt;
-    }
-  }
-  disk_name_list.push_back(disk_name);
-  for (const auto& d : disk_name_list) {
-    if (!d.starts_with("xvd") || d.length() < 4 || (d[3] < 'a' || d[3] > 'z') || (d.length() == 5 && !isdigit(d[4])) || d.length() > 5) {
-      std::cerr << "Invalid virtual block device name '" << d << "'. Ignored." << std::endl;
+  std::smatch m ;
+  for (auto iter = disk_names.value().cbegin();
+    std::regex_search(iter, disk_names.value().cend(), m, std::regex("[^,]+"));
+    iter = m[0].second) {
+    const auto& disk_name = m.str();
+    if (!disk_name.starts_with("xvd") || disk_name.length() < 4 || (disk_name[3] < 'a' || disk_name[3] > 'z') || (disk_name.length() == 5 && !isdigit(disk_name[4])) || disk_name.length() > 5) {
+      std::cerr << "Invalid virtual block device name '" << disk_name << "'. Ignored." << std::endl;
       continue;
     }
-    const auto& path = ini.getstring((d + ":path").c_str());
+    const auto& path = ini.getstring((disk_name + ":path").c_str());
     if (!path) {
-      std::cerr << "No path defined for virtual block device '" << d << "'. Ignored." << std::endl;
+      std::cerr << "No path defined for virtual block device '" << disk_name << "'. Ignored." << std::endl;
       continue;
     }
     // else
     Disk disk;
-    disk.name = d;
+    disk.name = disk_name;
     disk.path = path.value();
-    disk.readonly = ini.getboolean((d + ":readonly").c_str(), false);
+    disk.readonly = ini.getboolean((disk_name + ":readonly").c_str(), false);
     disks.push_back(disk);
-  }
+  };
 
   return disks.size();
 }
 
-int load_nic_config(const char* vmname, std::list<NIC>& nics)
+int load_nic_config(const VmIniFile& ini, std::list<NIC>& nics)
 {
-  VmIniFile ini(vmname);
   int max_eth = 0;
   for (int i = 1; i <= 9; i++) {
     char buf[5];
@@ -180,6 +176,30 @@ int load_nic_config(const char* vmname, std::list<NIC>& nics)
   return nics.size();
 }
 
+struct PCI {
+  std::string bdf;
+  bool permissive = true;
+};
+
+int load_pci_config(const VmIniFile& ini, std::list<PCI>& pci_devices)
+{
+  pci_devices.clear();
+  std::optional<std::string> pci_bdfs = ini.getstring(":pci");
+  if (!pci_bdfs) return 0;
+  //else
+  std::smatch m;
+  for (auto iter = pci_bdfs.value().cbegin();
+    std::regex_search(iter, pci_bdfs.value().cend(), m, std::regex("[^,]+"));
+    iter = m[0].second) {
+
+    PCI pci;
+    pci.bdf = m.str();
+    pci_devices.push_back(pci);
+  }
+
+  return pci_devices.size();
+}
+
 uint32_t/*domid*/ start(const char* vmname)
 {
   std::map<std::string, VM> vms;
@@ -197,12 +217,16 @@ uint32_t/*domid*/ start(const char* vmname)
   }
 
   // load disks
+  VmIniFile ini(vm_config.name);
   std::list<Disk> disks;
-  load_disk_config(vm_config.name.c_str(), disks);
+  load_disk_config(ini, disks);
 
   // load nics
   std::list<NIC> nics;
-  load_nic_config(vm_config.name.c_str(), nics);
+  load_nic_config(ini, nics);
+
+  std::list<PCI> pci_devices;
+  load_pci_config(ini, pci_devices);
 
   const auto INVALID_DOMID = ~0;
   XtlLoggerStdio logger(stderr, XTL_ERROR, 0);
@@ -272,40 +296,51 @@ uint32_t/*domid*/ start(const char* vmname)
 
   {
     Lock lock;
-    /*
-    int notify_pipe[2] = { -1, -1 };
-    if (libxl_pipe(ctx, notify_pipe) != 0) throw std::runtime_error("libxl_pipe failed");
-    //else
-    libxl_asyncprogress_how autoconnect_console_how;
-    autoconnect_console_how.callback = autoconnect_console;
-    autoconnect_console_how.for_callback = &notify_pipe[1];
-    */
     libxl_domain_create_new(ctx, d_config, &domid, 0, 0/*&autoconnect_console_how*/);
   }
 
   /*
-  if (true) {
-    char buf[1];
-    int r;
-    do {
-      r = read(notify_pipe[0], buf, 1);
-    } while (r == -1 && errno == EINTR);
+  static int pciattach(uint32_t domid, const char *bdf, const char *vs)
+  {
+      libxl_device_pci pcidev;
+      XLU_Config *config;
+      int r = 0;
 
-    if (r == -1)
-      fprintf(stderr,
-            "Failed to get notification from xenconsole: %s\n",
-            strerror(errno));
-    else if (r == 0)
-      fprintf(stderr, "Got EOF from xenconsole notification fd\n");
-    else if (r == 1 && buf[0] != 0x00)
-      fprintf(stderr, "Got unexpected response from xenconsole: %#x\n",
-            buf[0]);
+      libxl_device_pci_init(&pcidev);
 
-    close(notify_pipe[0]);
-    close(notify_pipe[1]);
-    notify_pipe[0] = notify_pipe[1] = -1;
+      config = xlu_cfg_init(stderr, "command line");
+      if (!config) { perror("xlu_cfg_inig"); exit(-1); }
+
+      if (xlu_pci_parse_bdf(config, &pcidev, bdf)) {
+          fprintf(stderr, "pci-attach: malformed BDF specification \"%s\"\n", bdf);
+          exit(2);
+      }
+
+      if (libxl_device_pci_add(ctx, domid, &pcidev, 0))
+          r = 1;
+
+      libxl_device_pci_dispose(&pcidev);
+      xlu_cfg_destroy(config);
+
+      return r;
   }
   */
+
+  XLU_Config* xlu_config = xlu_cfg_init(stderr, "command line");
+  if (xlu_config) {
+    for (auto pci = pci_devices.cbegin(); pci != pci_devices.cend(); pci++) {
+      libxl_device_pci pcidev;
+      libxl_device_pci_init(&pcidev);
+
+      if (xlu_pci_parse_bdf(xlu_config, &pcidev, (pci->permissive ? (pci->bdf + ",permissive=1") : pci->bdf).c_str()) == 0) {
+        libxl_device_pci_add(ctx, domid, &pcidev, 0);
+      } else {
+        std::cerr << "PCI BDF " << pci->bdf << " is invalid." << std::endl;
+      }
+      libxl_device_pci_dispose(&pcidev);
+    }
+    xlu_cfg_destroy(xlu_config);
+  }
 
   libxl_domain_unpause(ctx, domid, NULL);
 
