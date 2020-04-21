@@ -6,6 +6,8 @@
 #include <sys/mount.h>
 #include <glob.h>
 
+#include <linux/fb.h>
+
 #include <libmount/libmount.h>
 
 #include <pstream.h>
@@ -264,6 +266,35 @@ int install(ExternalProcess& process, const PhysDisk& disk)
       if (process.fork_exec_wait("/sbin/pvcreate", "/sbin/pvcreate", "-ffy", partition_name, NULL) == 0) {
         process.fork_exec_wait("/sbin/vgcreate", "/sbin/vgcreate", "--yes", "--addtag=@wbvg", "wbvg", partition_name, NULL);
       }
+    }
+  }
+
+  std::list<std::string> system_cfg;
+
+  system_cfg.push_back("#dom0_mem=1G,max:1G");
+  system_cfg.push_back("#dom0=pvh");
+  system_cfg.push_back("#xen_pciback_hide=(AA:BB:C)(XX:YY:Z)");
+
+  int fb_fd = open("/dev/fb0", O_RDONLY);
+  if (fb_fd >= 0) {
+    fb_fix_screeninfo fix;
+    if (ioctl(fb_fd, FBIOGET_FSCREENINFO, &fix) == 0) {
+      if (strcmp(fix.id, "VESA VGA") == 0) {
+        fb_var_screeninfo var;
+        if (ioctl(fb_fd, FBIOGET_VSCREENINFO, &var) == 0) {
+          char buf[32];
+          sprintf(buf, "vga=gfx-%dx%dx%d", var.xres, var.yres, var.bits_per_pixel);
+          system_cfg.push_back(buf);
+        }
+      }
+    }
+    close(fb_fd);
+  }
+
+  if (system_cfg.size() > 0) {
+    std::ofstream f(mnt / "system.cfg");
+    for (auto l : system_cfg) {
+      f << l << std::endl;
     }
   }
 

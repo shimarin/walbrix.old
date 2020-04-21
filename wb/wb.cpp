@@ -8,9 +8,12 @@
 #include <cstring>
 #include <filesystem>
 
+#include <sys/ioctl.h>
+
 #include <dirent.h>
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
+#include <linux/fb.h>
 
 extern "C" {
 #include <xenstore.h>
@@ -405,6 +408,30 @@ int burn(int argc, char* argv[])
   return 0;
 }
 
+int fbinfo(int argc, char* argv[])
+{
+  int fd = open("/dev/fb0", O_RDONLY);
+  if (fd < 0) {
+    std::cerr << "No frame buffer device /dev/fb0." << std::endl;
+    return 1;
+  }
+  //else
+  fb_fix_screeninfo fix;
+  if (ioctl(fd, FBIOGET_FSCREENINFO, &fix) == 0) {
+    std::cout << "ID: " << fix.id << std::endl;
+  } else {
+    std::cerr << "FBIOGET_FSCREENINFO failed." << std::endl;
+  }
+  fb_var_screeninfo var;
+  if (ioctl(fd, FBIOGET_VSCREENINFO, &var) == 0) {
+    std::cout << "Mode: " << var.xres << "x" << var.yres << "x" << var.bits_per_pixel << std::endl;
+  } else {
+    std::cerr << "FBIOGET_VSCREENINFO failed." << std::endl;
+  }
+  close(fd);
+
+  return 0;
+}
 
 int license(int argc, char* argv[]) {
   std::cout << "Open Source License" << std::endl;
@@ -443,6 +470,7 @@ struct Command { const char* name; int (*func)(int, char**); } commands [] = {
   {"install", install},
   {"iso9660", iso9660},
   {"burn", burn},
+  {"fbinfo", fbinfo},
   {"license", license},
   {NULL, NULL}
 };
