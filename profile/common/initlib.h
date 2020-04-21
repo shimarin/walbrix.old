@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <regex>
 #include <sys/reboot.h>
+#include <sys/mount.h>
 
 extern "C" {
 #include <iniparser.h>
@@ -19,6 +20,7 @@ std::optional<Partition> search_partition(const std::string& name, const std::st
 bool is_block_readonly(const std::filesystem::path& device_path);
 bool is_file(const std::filesystem::path& path);
 bool is_dir(const std::filesystem::path& path);
+bool is_block(const std::filesystem::path& path);
 int cp_a(const std::filesystem::path& src, const std::filesystem::path& dst);
 
 int mount(const std::filesystem::path& source,
@@ -29,6 +31,7 @@ int mount_loop(std::filesystem::path source, std::filesystem::path mountpoint,
   const std::string& fstype = "auto", unsigned int mountflags = MS_RELATIME,
   const std::string& data = "", int offset = 0);
 int umount(const std::filesystem::path& mountpoint);
+int bind_mount(std::filesystem::path source, std::filesystem::path mountpoint);
 int repair_fat(const std::filesystem::path& path);
 uint64_t get_free_disk_space(const std::filesystem::path& mountpoint);
 int create_btrfs_imagefile(const std::filesystem::path& imagefile, off_t length);
@@ -36,6 +39,9 @@ int btrfs_scan();
 int repair_btrfs(const std::filesystem::path& path);
 int create_swapfile(const std::filesystem::path& swapfile, off_t length);
 int swapon(const std::filesystem::path& swapfile, bool mkswap_and_retry_on_fail = true);
+
+int set_hostname(const std::filesystem::path& rootdir, const std::string& hostname);
+std::string generate_default_hostname(const std::string& prefix = "host");
 
 class Init {
   bool readonly_boot_partition = 0;

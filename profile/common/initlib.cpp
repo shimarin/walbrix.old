@@ -81,6 +81,11 @@ int mount_loop(std::filesystem::path source, std::filesystem::path mountpoint,
   return mount(source, mountpoint, fstype, mountflags, data_loop.c_str());
 }
 
+int bind_mount(std::filesystem::path source, std::filesystem::path mountpoint)
+{
+  return mount(source, mountpoint, "none", MS_BIND);
+}
+
 class BlkidDevIterate {
   blkid_dev_iterate iter;
   blkid_cache cache;
@@ -157,6 +162,12 @@ bool is_dir(const std::filesystem::path& path)
 {
   if (!std::filesystem::exists(path)) return false;
   return std::filesystem::is_directory(path);
+}
+
+bool is_block(const std::filesystem::path& path)
+{
+  if (!std::filesystem::exists(path)) return false;
+  return std::filesystem::is_block_file(path);
 }
 
 int rename(const std::filesystem::path& old, const std::filesystem::path& _new)
@@ -377,7 +388,7 @@ int set_hostname(const std::filesystem::path& rootdir, const std::string& hostna
   return 0;
 }
 
-std::string generate_default_hostname(const std::string& prefix = "host")
+std::string generate_default_hostname(const std::string& prefix/* = "host"*/)
 {
   FILE *f;
   uint16_t randomnumber;
