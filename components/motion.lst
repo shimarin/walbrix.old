@@ -31,12 +31,10 @@ $package dev-db/sqlite
 $package dev-python/pyparsing
 
 # restkit
-$package dev-python/greenlet
 $package dev-python/webob
 $package dev-python/cython
 $package dev-python/http-parser
 $package net-dns/c-ares
-$package dev-python/gevent
 $package dev-python/socketpool
 $package dev-python/restkit
 
