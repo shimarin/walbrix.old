@@ -141,7 +141,10 @@ std::filesystem::path init()
 */
   MyInit init;
   init.setup();
-  return init.get_newroot();
+  auto newroot = init.get_newroot();
+  std::filesystem::create_directory(newroot / "run/vm");
+  bind_mount(newroot / "run/initramfs/boot/vm" , newroot / "run/vm");
+  return newroot;
 }
 
 void shutdown()
