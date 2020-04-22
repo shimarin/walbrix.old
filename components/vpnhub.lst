@@ -112,6 +112,13 @@ $package dev-python/mysqlclient
 $package dev-python/pyinotify
 $package sys-fs/inotify-tools
 
+$copy resource/vpnhub/openvpn2dnsmasq.cpp /tmp/
+$exec --overlay "g++ -std=c++2a -shared -fPIC -o /usr/lib64/openvpn/plugins/openvpn2dnsmasq.so /tmp/openvpn2dnsmasq.cpp"
+/usr/lib64/libboost_thread.so
+$sed /lib/systemd/system/openvpn-server\@.service 's/^CapabilityBoundingSet=.*$/\0 CAP_KILL/'
+
+$copy resource/install-system-image /usr/sbin/
+
 $require ts-node.lst
 $require timezone-jp.lst
 

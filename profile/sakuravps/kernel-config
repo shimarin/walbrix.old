@@ -1,13 +1,13 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.6.0-gentoo Kernel Configuration
+# Linux/x86 5.6.6-gentoo Kernel Configuration
 #
 
 #
-# Compiler: gcc (Gentoo 9.2.0-r2 p3) 9.2.0
+# Compiler: gcc (Gentoo 9.3.0 p2) 9.3.0
 #
 CONFIG_CC_IS_GCC=y
-CONFIG_GCC_VERSION=90200
+CONFIG_GCC_VERSION=90300
 CONFIG_CLANG_VERSION=0
 CONFIG_CC_CAN_LINK=y
 CONFIG_CC_HAS_ASM_GOTO=y
