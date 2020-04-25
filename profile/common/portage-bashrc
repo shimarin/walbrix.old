@@ -4,10 +4,6 @@ case "${CATEGORY}/${PN}" in
 	sys-process/cronie)
 		getent group crontab || groupadd -g 125 crontab
 		;;
-	net-vpn/openvpn)
-		getent group openvpn || groupadd -g 103 openvpn
-		getent passwd openvpn || useradd -c "" -d /dev/null -M -u 103 -g openvpn -s /sbin/nologin openvpn
-		;;
 	net-analyzer/tcpdump)
 		getent group tcpdump || groupadd -g 104 tcpdump
 		getent passwd tcpdump || useradd -c "" -d /dev/null -M -u 104 -g tcpdump -s /sbin/nologin tcpdump
