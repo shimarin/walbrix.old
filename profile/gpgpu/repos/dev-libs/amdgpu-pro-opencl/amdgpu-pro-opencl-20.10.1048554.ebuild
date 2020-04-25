@@ -49,13 +49,14 @@ src_unpack() {
 }
 
 multilib_src_unpack() {
-	local libdrm_ver="2.4.99"
+	local libdrm_ver="2.4.100"
 	local patchlevel=$(ver_cut 3)
 	local deb_abi
 	[[ ${ABI} == x86 ]] && deb_abi=i386
 
 	mkdir -p "${BUILD_DIR}" || die
 	pushd "${BUILD_DIR}" >/dev/null || die
+	unpack_deb "${S}/opencl-amdgpu-pro-icd_${MY_PV}_${deb_abi:-${ABI}}.deb"
 	unpack_deb "${S}/opencl-orca-amdgpu-pro-icd_${MY_PV}_${deb_abi:-${ABI}}.deb"
 	unpack_deb "${S}/libdrm-amdgpu-amdgpu1_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
 	popd >/dev/null || die
@@ -73,8 +74,11 @@ multilib_src_install() {
 
 	insinto /etc/OpenCL/vendors
 	echo "/opt/amdgpu/$(get_libdir)/libamdocl-orca${short_abi}.so" \
-		> "${T}/${SUPER_PN}-${ABI}.icd" || die "Failed to generate ICD file for ABI ${ABI}"
-	doins "${T}/${SUPER_PN}-${ABI}.icd"
+		> "${T}/${SUPER_PN}-orca-${ABI}.icd" || die "Failed to generate ICD file for ABI ${ABI}"
+	echo "/opt/amdgpu/$(get_libdir)/libamdocl${short_abi}.so" \
+		> "${T}/${SUPER_PN}-pal-${ABI}.icd" || die "Failed to generate ICD file for ABI ${ABI}"
+	doins "${T}/${SUPER_PN}-orca-${ABI}.icd"
+	doins "${T}/${SUPER_PN}-pal-${ABI}.icd" 
 }
 
 multilib_src_install_all() {

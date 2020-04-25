@@ -1,10 +1,13 @@
 #include <sys/wait.h>
 #include <sys/reboot.h>
+#include <sys/stat.h>
 #include <sys/statvfs.h>
 #include <string.h>
 #include <stdarg.h>
 #include <fcntl.h>
 #include <unistd.h>
+
+#include <sys/sysmacros.h>
 
 #include <libmount/libmount.h>
 #include <blkid/blkid.h>
@@ -173,6 +176,11 @@ bool is_block(const std::filesystem::path& path)
 int rename(const std::filesystem::path& old, const std::filesystem::path& _new)
 {
   return ::rename(old.c_str(), _new.c_str());
+}
+
+int create_whiteout(const std::filesystem::path& path)
+{
+  return mknod(path.c_str(), S_IFCHR, makedev(0, 0));
 }
 
 int mount_overlay(const std::filesystem::path& lowerdir, const std::filesystem::path& upperdir, const std::filesystem::path& workdir,
@@ -461,6 +469,25 @@ int set_ssh_key(const std::filesystem::path& rootdir,  const std::string& ssh_ke
   return 0;
 }
 
+int set_wifi_config(const std::filesystem::path& rootdir, const std::string& ssid, const std::string& key)
+{
+  {
+    std::ofstream conf(rootdir / "etc/wpa_supplicant/wpa_supplicant-wlan0.conf");
+    if (!conf) return -1;
+    // else
+    conf << "network={\n";
+    conf << "\tssid=\"" << ssid << "\"\n";
+    conf << "\tpsk=\"" << key << "\"\n";
+    conf << "}" << std::endl;
+
+    std::ofstream network(rootdir / "etc/systemd/network/51-wlan0-dhcp.network");
+    if (!network) return -1;
+    //else
+    network << "[Match]\nName=wlan0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes" << std::endl;
+  }
+  return systemd_enable(rootdir, "wpa_supplicant@wlan0");
+}
+
 std::optional<int> get_total_memory_in_mb()
 {
   std::ifstream f("/proc/meminfo");
@@ -547,7 +574,7 @@ void Init::setup()
   auto mnt_rw = mnt / "rw";
   std::filesystem::create_directory(mnt_rw);
   mount_rw(mnt_boot, mnt_rw);
-  std::cout << "RW Layer mouned." << std::endl;
+  std::cout << "RW Layer mounted." << std::endl;
   if (activate_swap(mnt_boot)) {
     std::cout << "Swap file activated." << std::endl;
   }
@@ -949,7 +976,23 @@ void Init::setup_zram_swap(const std::filesystem::path& newroot)
 }
 
 void Init::setup_wifi(const std::filesystem::path& newroot)
-{}
+{
+  auto wifi_ssid = ini_string(":wifi_ssid");
+  auto wifi_key = ini_string(":wifi_key");
+
+  if (!wifi_ssid) return;
+  //else
+  if (wifi_key) {
+    if (set_wifi_config(newroot, wifi_ssid.value(), wifi_key.value()) == 0) {
+      std::cout << "WiFi SSID: " << wifi_ssid.value() << std::endl;
+    } else {
+      std::cout << "WiFi setup failed." << std::endl;
+    }
+  } else {
+    std::cout << "wifi_key is not set." << std::endl;
+  }
+}
+
 void Init::setup_network(const std::filesystem::path& newroot)
 {}
 void Init::setup_wireguard(const std::filesystem::path& newroot)

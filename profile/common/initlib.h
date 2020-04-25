@@ -22,6 +22,8 @@ bool is_file(const std::filesystem::path& path);
 bool is_dir(const std::filesystem::path& path);
 bool is_block(const std::filesystem::path& path);
 int cp_a(const std::filesystem::path& src, const std::filesystem::path& dst);
+int unlink(const std::filesystem::path& path);
+int create_whiteout(const std::filesystem::path& path);
 
 int mount(const std::filesystem::path& source,
   const std::filesystem::path& mountpoint,
@@ -47,12 +49,6 @@ class Init {
   bool readonly_boot_partition = 0;
   dictionary* ini;
 protected:
-  std::string ini_string(const std::string& key, const std::string& def);
-  std::optional<std::string> ini_string(const std::string& key);
-  int ini_int(const std::string& key, int def);
-  bool ini_bool(const std::string& key, bool def);
-  bool ini_exists(const std::string& key);
-
   void mount_transient_rw_layer(const std::filesystem::path& mountpoint);
 
   virtual std::optional<Partition> determine_boot_partition(int max_retry = 3);
@@ -90,6 +86,12 @@ public:
   bool is_boot_partition_readonly() { return readonly_boot_partition; }
   virtual void setup();
   virtual std::filesystem::path get_newroot();
+
+  std::string ini_string(const std::string& key, const std::string& def);
+  std::optional<std::string> ini_string(const std::string& key);
+  int ini_int(const std::string& key, int def);
+  bool ini_bool(const std::string& key, bool def);
+  bool ini_exists(const std::string& key);
 };
 
 class Shutdown {
