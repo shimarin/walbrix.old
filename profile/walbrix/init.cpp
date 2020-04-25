@@ -96,9 +96,7 @@ void MyInit::mount_rw(const std::filesystem::path& boot,
     repair_btrfs(datafile);
     rw_layer_mounted = mount_loop(datafile, mountpoint, "btrfs", MS_RELATIME, "compress=zstd") == 0;
   }
-  if (rw_layer_mounted) {
-    std::cout << "RW layer mounted." << std::endl;
-  } else {
+  if (!rw_layer_mounted) {
     std::cout << "No valid persistent RW layer. Falling back to tmpfs." << std::endl;
     mount_transient_rw_layer(mountpoint);
   }
