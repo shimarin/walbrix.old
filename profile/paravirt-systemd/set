@@ -56,3 +56,9 @@ app-emulation/xen-tools
 x11-libs/pixman
 dev-cpp/gflags
 
+app-admin/logrotate
+net-analyzer/zabbix
+mail-mta/postfix
+www-apache/mod_extract_forwarded
+www-apache/mod_authnz_external
+

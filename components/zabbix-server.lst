@@ -1,0 +1,31 @@
+$require mysql-systemd.lst
+
+#dev-libs/oniguruma
+#net-libs/libssh2
+$package dev-lang/swig
+$package net-analyzer/zabbix
+$require openipmi.lst
+$require php7.lst
+
+# net-analyzer/fping
+/usr/sbin/fping
+/usr/sbin/fping6
+$exec "chmod u=rwsx,g=rx,o=rx /usr/sbin/fping /usr/sbin/fping6"
+
+$package net-analyzer/zabbix --use="frontend mysql openipmi server"
+$exec "chown -R zabbix.zabbix /etc/zabbix"
+
+$set ZABBIX_VERSION 4.4.6
+$copy resource/zabbix/zabbix.conf.php /usr/share/webapps/zabbix/$ZABBIX_VERSION/htdocs/conf/zabbix.conf.php
+/usr/share/fonts/vlgothic/VL-PGothic-Regular.ttf
+$symlink /usr/share/webapps/zabbix/$ZABBIX_VERSION/htdocs/assets/fonts/VL-PGothic-Regular.ttf ../../../../../fonts/vlgothic/VL-PGothic-Regular.ttf
+$sed /usr/share/webapps/zabbix/$ZABBIX_VERSION/htdocs/include/defines.inc.php s/DejaVuSans/VL-PGothic-Regular/
+
+$copy resource/zabbix/setup_initial_database.sh /tmp/
+$exec "with-mysqld 'sh /tmp/setup_initial_database.sh'"
+$sed /etc/zabbix/zabbix_server.conf 's/^DBUser=root$/DBUser=zabbix/'
+
+$sed /etc/php/apache2-php7.4/php.ini 's/^max_execution_time.\+$/max_execution_time = 300/'
+$sed /etc/php/apache2-php7.4/php.ini 's/^max_input_time.\+$/max_input_time = 300/'
+$sed /etc/php/apache2-php7.4/php.ini 's/^post_max_size.\+$/post_max_size = 16M/'
+

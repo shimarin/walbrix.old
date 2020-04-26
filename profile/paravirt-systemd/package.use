@@ -1,4 +1,4 @@
-sys-kernel/gentoo-sources symlink
+Sys-kernel/gentoo-sources symlink
 sys-kernel/genkernel -firmware
 dev-vcs/git -perl -gpg
 app-admin/sudo -sendmail
@@ -25,3 +25,14 @@ net-vpn/openvpn systemd
 dev-db/mysql -perl cjk
 
 app-emulation/xen-tools -hvm -ipxe -pam -qemu -qemu-traditional -rombios 
+
+# Zabbix
+net-analyzer/zabbix curl frontend mysql proxy server snmp openipmi ssh libxml2 -postgres 
+net-analyzer/fping suid
+dev-lang/php apache2 bcmath truetype xmlreader gd sysvipc sockets xmlwriter mysqli fpm gd mysql postgres xslt zip pdo pcntl sysvipc curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap
+app-eselect/eselect-php fpm apache2
+sys-libs/openipmi snmp
+
+www-servers/apache apache2_modules_http2 apache2_modules_proxy apache2_modules_proxy_connect
+www-apache/mod_extract_forwarded mod-proxy
+mail-mta/postfix mysql sasl

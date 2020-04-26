@@ -1,46 +1,22 @@
-$require domU.lst
-$require domU-overlayfs-kernel.lst
-$require cron.lst
-$require apache.lst
-$require mysql.lst
+$require base-systemd.lst
+
+$mkdir /boot/grub
+$write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
+$write /etc/hostname 'zabbix'
+
+$require xfsprogs.lst
+$package sys-block/zram-init
+$exec "systemctl enable zram_swap"
+$require timezone-jp.lst
+
 $require postfix.lst
-$require java.lst
 
-$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1zabbix\2/'
+$require zabbix-server.lst
 
-$require openipmi.lst
-$require mysql.lst
-$require php72.lst
+$exec "systemctl enable zabbix-server"
+$exec "systemctl enable zabbix-agentd"
+$exec "systemctl enable apache2"
 
-# for java monitoring
-$package dev-java/slf4j-api
-$package dev-java/json-simple
+$copy resource/zabbix/default_vhost.include /etc/apache2/vhosts.d/default_vhost.include
+$sed /etc/apache2/vhosts.d/default_vhost.include "s/ZABBIX_VERSION/$ZABBIX_VERSION/"
 
-# net-analyzer/fping
-/usr/sbin/fping
-/usr/sbin/fping6
-$exec "chmod u=rwsx,g=rx,o=rx /usr/sbin/fping /usr/sbin/fping6"
-
-$package net-analyzer/zabbix --use="frontend java mysql openipmi server"
-$exec "chown -R zabbix.zabbix /etc/zabbix"
-$set ZABBIX_VERSION 2.2.16
-$copy zabbix/zabbix.conf.php /usr/share/webapps/zabbix/$(ZABBIX_VERSION)/htdocs/conf/zabbix.conf.php
-/usr/share/fonts/vlgothic/VL-PGothic-Regular.ttf
-$symlink /usr/share/webapps/zabbix/$(ZABBIX_VERSION)/htdocs/fonts/VL-PGothic-Regular.ttf ../../../../../fonts/vlgothic/VL-PGothic-Regular.ttf
-$sed /usr/share/webapps/zabbix/$(ZABBIX_VERSION)/htdocs/include/defines.inc.php s/DejaVuSans/VL-PGothic-Regular/
-
-$symlink /etc/runlevels/default/zabbix-server /etc/init.d/zabbix-server
-$symlink /etc/runlevels/default/zabbix-agentd /etc/init.d/zabbix-agentd
-
-$mkdir /tmp/mysql
-$copy mysql/operate.sh /tmp/mysql/operate.sh
-$copy zabbix/setup_initial_database.sh /tmp/setup_initial_database.sh
-$exec "/tmp/mysql/operate.sh shell /tmp/setup_initial_database.sh"
-$sed /etc/zabbix/zabbix_server.conf 's/^DBUser=root$/DBUser=zabbix/'
-
-$sed /etc/php/apache2-php5.6/php.ini 's/^max_execution_time.\+$/max_execution_time = 300/'
-$sed /etc/php/apache2-php5.6/php.ini 's/^max_input_time.\+$/max_input_time = 300/'
-$sed /etc/php/apache2-php5.6/php.ini 's/^post_max_size.\+$/post_max_size = 16M/'
-
-$copy zabbix/default_vhost.include /etc/apache2/vhosts.d/default_vhost.include
-$sed /etc/apache2/vhosts.d/default_vhost.include 's/ZABBIX_VERSION/2.2.16/'
