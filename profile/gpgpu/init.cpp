@@ -62,23 +62,37 @@ std::filesystem::path init()
 
   auto driver_for_amdgpu = init.ini_string(":driver_for_amdgpu");
   if (driver_for_amdgpu) {
-    std::filesystem::path whiteout_for_amdgpu_pro[] = {
-      newroot / "run/initramfs/rw/root/etc/OpenCL/vendors/amdgpu-pro-orca-amd64.icd",
-      newroot / "run/initramfs/rw/root/etc/OpenCL/vendors/amdgpu-pro-pal-amd64.icd"
+
+    const char* whiteout_for_amdgpu_pro[] = {
+      "etc/OpenCL/vendors/amdgpu-pro-orca-amd64.icd",
+      "etc/OpenCL/vendors/amdgpu-pro-pal-amd64.icd",
+      NULL
     };
-    auto whiteout_for_rocm = newroot / "run/initramfs/rw/root/etc/OpenCL/vendors/amdocl64.icd";
+    const char* whiteout_for_rocm[] = {
+      "etc/OpenCL/vendors/amdocl64.icd",
+      "usr/lib64/libdrm.so.2",
+      "usr/lib64/libdrm_amdgpu.so.1",
+      "usr/lib64/libamd_comgr.so",
+      NULL
+    };
 
-    std::filesystem::create_directories(newroot / "run/initramfs/rw/root/etc/OpenCL/vendors");
+    auto rw_root = newroot / "run/initramfs/rw/root";
 
-    unlink(whiteout_for_amdgpu_pro[0]);
-    unlink(whiteout_for_amdgpu_pro[1]);
-    unlink(whiteout_for_rocm);
+    for (int i = 0; whiteout_for_amdgpu_pro[i]; i++) {
+      unlink(rw_root / whiteout_for_amdgpu_pro[i]);
+    }
+    for (int i = 0; whiteout_for_rocm[i]; i++) {
+      unlink(rw_root / whiteout_for_rocm[i]);
+    }
 
     if (driver_for_amdgpu.value() == "amdgpu-pro") {
-      create_whiteout(whiteout_for_rocm);
+      for (int i = 0; whiteout_for_rocm[i]; i++) {
+        unlink(newroot / whiteout_for_rocm[i]);
+      }
     } else if (driver_for_amdgpu.value() == "rocm"){
-      create_whiteout(whiteout_for_amdgpu_pro[0]);
-      create_whiteout(whiteout_for_amdgpu_pro[1]);
+      for (int i = 0; whiteout_for_amdgpu_pro[i]; i++) {
+        unlink(newroot / whiteout_for_amdgpu_pro[i]);
+      }
     } else {
       std::cout << "Unknown amdgpu driver name '" << driver_for_amdgpu.value() << "' is given. ('amdgpu-pro' or 'rocm' expected)" << std::endl;
     }

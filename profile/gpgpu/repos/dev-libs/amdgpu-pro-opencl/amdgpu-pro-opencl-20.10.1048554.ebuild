@@ -58,7 +58,9 @@ multilib_src_unpack() {
 	pushd "${BUILD_DIR}" >/dev/null || die
 	unpack_deb "${S}/opencl-amdgpu-pro-icd_${MY_PV}_${deb_abi:-${ABI}}.deb"
 	unpack_deb "${S}/opencl-orca-amdgpu-pro-icd_${MY_PV}_${deb_abi:-${ABI}}.deb"
+	unpack_deb "${S}/opencl-amdgpu-pro-comgr_${MY_PV}_${deb_abi:-${ABI}}.deb"
 	unpack_deb "${S}/libdrm-amdgpu-amdgpu1_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
+	unpack_deb "${S}/libdrm2-amdgpu_${libdrm_ver}-${patchlevel}_amd64.deb"
 	popd >/dev/null || die
 }
 
