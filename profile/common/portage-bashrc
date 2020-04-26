@@ -30,9 +30,6 @@ case "${CATEGORY}/${PN}" in
 	sci-geosciences/gpsd)
 		getent passwd gpsd || useradd -c "" -d /dev/null -M -u 200 -g uucp -s /sbin/nologin gpsd
 		;;
-	mail-mta/ssmtp)
-		getent group ssmtp || groupadd -g 207 ssmtp # exclusive with postfix
-		;;
 	*) : ;;
 esac
 }
