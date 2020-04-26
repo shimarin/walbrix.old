@@ -8,9 +8,9 @@
 #net-libs/c-client
 #media-libs/freetype
 #media-libs/libjpeg-turbo
-$require apache.lst
+$require apache-systemd.lst
 $package net-mail/mailbase
-$package dev-lang/php --use="apache2 gd mysql mysqli postgres xslt zip pdo truetype xmlwriter bcmath xmlreader pcntl sysvipc sockets curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap opcache" --exclude='^/usr/lib(64)?/php[0-9]+\.[0-9]+/(man|include)/'
+$package dev-lang/php --use="apache2 gd mysql mysqli xslt zip pdo truetype xmlwriter bcmath xmlreader pcntl sysvipc sockets curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap opcache" --exclude='^/usr/lib(64)?/php[0-9]+\.[0-9]+/(man|include)/'
 /usr/bin/php
 /usr/lib64/apache2/modules/mod_php.so
 /etc/apache2/modules.d/70_mod_php.conf

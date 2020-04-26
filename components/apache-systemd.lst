@@ -1,0 +1,26 @@
+$package app-admin/logrotate
+
+#dev-libs/apr
+#dev-libs/apr-util
+$package www-servers/apache # USE="apache2_modules_proxy_connect apache2_modules_proxy apache2_modules_proxy_http apache2_modules_proxy_ajp"
+$package app-admin/apache-tools
+
+# disable SSL / enable PROXY and DAV
+$sed /etc/conf.d/apache2 's/-D SSL//'
+$sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D PROXY -D DAV"/'
+# no automatically enable service as nginx may be preferred instead
+
+$mkdir /var/www/localhost/htdocs
+$mkdir /var/www/localhost/cgi-bin
+
+# from mime-types
+/etc/mime.types
+
+$package www-apache/mod_extract_forwarded # USE="mod_proxy"
+$sed /etc/apache2/modules.d/98_mod_extract_forwarded.conf 's/localhost/all/'
+$sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D EXTRACT_FORWARDED"/'
+
+$package www-apache/mod_authnz_external
+$sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D AUTHNZ_EXTERNAL"/'
+
+
