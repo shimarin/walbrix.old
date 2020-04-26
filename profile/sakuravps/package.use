@@ -81,11 +81,19 @@ dev-python/cython -python_targets_python2_7 python_targets_python3_7
 app-admin/syslog-ng -python_single_target_python3_6 python_single_target_python3_7 -tcpd python
 
 #zabbix
-net-analyzer/zabbix -postgres
+net-analyzer/zabbix curl frontend mysql proxy server snmp openipmi ssh libxml2 -postgres 
+dev-lang/php apache2 bcmath truetype xmlreader gd sysvipc sockets xmlwriter mysqli fpm gd mysql xslt zip pdo pcntl sysvipc curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap
+app-eselect/eselect-php fpm apache2
+www-servers/apache apache2_modules_http2 apache2_modules_proxy apache2_modules_proxy_connect
+www-apache/mod_extract_forwarded mod-proxy
+net-analyzer/fping suid
+sys-libs/openipmi snmp -python_single_target_python3_6 python_single_target_python3_7
 
 #mysql
 dev-db/mysql -perl cjk
 dev-python/mysqlclient -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-
 dev-python/pyinotify -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+
+mail-mta/postfix mysql sasl
+dev-libs/cyrus-sasl mysql
 

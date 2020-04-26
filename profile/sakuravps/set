@@ -50,6 +50,9 @@ dev-python/twisted
 app-admin/syslog-ng
 
 net-analyzer/zabbix
+www-apache/mod_extract_forwarded
+www-apache/mod_authnz_external
+media-fonts/vlgothic
 
 dev-db/mysql
 dev-db/mysql-init-scripts
@@ -58,4 +61,6 @@ dev-python/mysqlclient
 dev-python/pyinotify
 
 net-vpn/wireguard-tools
+mail-mta/postfix
+app-admin/logrotate
 

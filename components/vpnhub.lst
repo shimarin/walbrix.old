@@ -112,10 +112,19 @@ $package dev-python/mysqlclient
 $package dev-python/pyinotify
 $package sys-fs/inotify-tools
 
+# email
+$require postfix.lst
+
+# zabbix
+$require zabbix-server.lst
+
 $copy resource/vpnhub/openvpn2dnsmasq.cpp /tmp/
 $exec --overlay "g++ -std=c++2a -shared -fPIC -o /usr/lib64/openvpn/plugins/openvpn2dnsmasq.so /tmp/openvpn2dnsmasq.cpp"
 /usr/lib64/libboost_thread.so
 $sed /lib/systemd/system/openvpn-server\@.service 's/^CapabilityBoundingSet=.*$/\0 CAP_KILL/'
+
+$write /etc/sysctl.d/99-sysctl.conf 'net.ipv4.ip_forward = 1'
+
 
 $copy resource/install-system-image /usr/sbin/
 
