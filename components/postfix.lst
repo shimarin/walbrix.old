@@ -2,5 +2,6 @@
 $package net-mail/mailbase
 $package dev-libs/cyrus-sasl
 $package mail-mta/postfix --use="sasl"
-$symlink /etc/runlevels/default/postfix /etc/init.d/postfix
+$exec "systemctl enable postfix"
 $exec /usr/bin/newaliases
+
