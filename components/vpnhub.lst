@@ -30,7 +30,6 @@ $write /etc/hostname vpnhub
 $write /etc/sysctl.d/nf_conntrack_max.conf 'net.nf_conntrack_max = 65536'
 
 # networks
-$package net-vpn/wireguard-tools
 $package net-vpn/openvpn
 $package net-analyzer/traceroute
 $require tcpdump.lst
@@ -52,38 +51,7 @@ $package www-servers/nginx --use="nginx_modules_http_lua"
 $exec "systemctl enable nginx"
 
 # certbot
-$package dev-python/pytz
-$package dev-python/namespace-zope
-$package dev-python/idna
-$package dev-python/configargparse
-$package dev-python/configobj
-$package dev-python/distro
-$package dev-python/future
-$package dev-python/pbr
-$package dev-python/ply
-$package dev-python/chardet
-$package dev-python/PySocks
-$package dev-python/mock
-$package dev-python/pyrfc3339
-$package dev-python/zope-interface
-$package dev-python/parsedatetime
-$package dev-python/zope-event
-$package dev-python/pycparser
-$package dev-python/zope-component
-$package dev-python/cffi
-$package dev-python/cryptography
-$package dev-python/pyopenssl
-$package dev-python/josepy
-$package dev-python/urllib3
-$package dev-python/requests
-$package dev-python/requests-toolbelt
-$package app-crypt/acme
-$package app-crypt/certbot
-$package dev-python/six
-$package dev-python/certifi
-$package dev-python/setuptools
-$package dev-python/pip
-$require google-api-python-client.lst
+$require certbot.lst
 
 # twisted
 $package dev-python/constantly
@@ -120,7 +88,6 @@ $require zabbix-server.lst
 
 $copy resource/vpnhub/openvpn2dnsmasq.cpp /tmp/
 $exec --overlay "g++ -std=c++2a -shared -fPIC -o /usr/lib64/openvpn/plugins/openvpn2dnsmasq.so /tmp/openvpn2dnsmasq.cpp"
-/usr/lib64/libboost_thread.so
 $sed /lib/systemd/system/openvpn-server\@.service 's/^CapabilityBoundingSet=.*$/\0 CAP_KILL/'
 
 $write /etc/sysctl.d/99-sysctl.conf 'net.ipv4.ip_forward = 1'
