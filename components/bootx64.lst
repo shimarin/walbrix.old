@@ -49,7 +49,6 @@ $package screen
 /usr/bin/beep
 $package lshw
 $package usbutils
-$package wireguard-tools
 $require timezone-jp.lst
 $sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
 
