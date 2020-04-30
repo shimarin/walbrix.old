@@ -52,7 +52,7 @@ sys-block/zram-init
 net-dns/avahi
 net-vpn/openvpn
 
-app-emulation/libxenstore
+app-emulation/xen-tools
 x11-libs/pixman
 dev-cpp/gflags
 

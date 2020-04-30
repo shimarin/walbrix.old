@@ -24,7 +24,7 @@ net-dns/avahi -introspection mdnsresponder-compat dbus
 net-vpn/openvpn systemd
 dev-db/mysql -perl cjk
 
-app-emulation/xen-tools -hvm -ipxe -pam -qemu -qemu-traditional -rombios 
+app-emulation/xen-tools -hvm -ipxe -pam -qemu -qemu-traditional -rombios -python_single_target_python3_6 python_single_target_python3_7
 
 # Zabbix
 net-analyzer/zabbix curl frontend mysql proxy server snmp openipmi ssh libxml2 -postgres 
