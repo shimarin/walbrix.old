@@ -15,10 +15,7 @@ $package media-video/motion
 $exec "systemctl enable motion"
 
 # nginx
-$require lua.lst
-$package dev-lang/luajit
-$package www-servers/nginx --use="nginx_modules_http_lua"
-$exec "systemctl enable nginx"
+$require nginx.lst
 
 # mysql
 $require mysql-systemd.lst
@@ -80,7 +77,7 @@ $exec "systemctl enable avahi-daemon"
 $sed /etc/systemd/network/50-dhcp.network 's/MulticastDNS=yes/MulticastDNS=no/'
 
 # openvpn
-$package net-vpn/openvpn --use="systemd"
+$require openvpn.lst
 
 $package sys-apps/usbutils
 #/usr/sbin/usbip

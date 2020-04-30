@@ -1,2 +1,2 @@
 #dev-libs/lzo
-$package net-vpn/openvpn
+$package net-vpn/openvpn --use="systemd"

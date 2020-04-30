@@ -1,4 +1,5 @@
 $require lua.lst
 $package dev-lang/luajit
 $package www-servers/nginx --use="nginx_modules_http_lua"
-$symlink /etc/runlevels/default/nginx /etc/init.d/nginx
+$exec "systemctl enable nginx"
+
