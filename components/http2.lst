@@ -1,31 +1,28 @@
-$require domU.lst
-$require domU-overlayfs-kernel.lst
+$require base-systemd.lst
+
+$mkdir /boot/grub
+$write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
+
 $require nginx.lst
-$require uwsgi.lst
-$require twisted-names.lst
+#$require uwsgi.lst
 $require postfix.lst
 $require git.lst
-$require certbot-nginx.lst
-$require cron.lst
-$package net-proxy/haproxy
-$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1http2\2/'
+$require certbot.lst
+#$package net-proxy/haproxy
+$require iptables.lst
+$write /etc/hostname vpnhub
 
-/usr/lib/libnss_wins.so
+/usr/lib64/libnss_wins.so
 $sed /etc/nsswitch.conf 's/^\(hosts:.* \)dns\( *\)/\1wins dns\2/'
-
-$exec "wget -O /usr/sbin/fakedns https://raw.githubusercontent.com/wbrxcorp/fakedns/master/fakedns.py"
-$exec "wget -O /etc/init.d/fakedns https://raw.githubusercontent.com/wbrxcorp/fakedns/master/fakedns.init"
-$exec "chmod 755 /etc/init.d/fakedns /usr/sbin/fakedns"
-$symlink /etc/runlevels/default/fakedns /etc/init.d/fakedns
 
 $write /etc/nginx/proxy.map "aipo.example.com http://aipo.local;\nowncloud.example.com http://owncloud.local;"
 
-$copy revproxy/nginx.conf /etc/nginx/nginx.conf
-$copy revproxy/proxy.conf /etc/nginx/proxy.conf
+$copy resource/revproxy/nginx.conf /etc/nginx/nginx.conf
+$copy resource/revproxy/proxy.conf /etc/nginx/proxy.conf
 
 $mkdir /etc/nginx/conf.d
-$copy revproxy/always-ssl.conf.sample /etc/nginx/conf.d/always-ssl.conf.sample
-$copy revproxy/ssl-site.conf.sample /etc/nginx/conf.d/ssl-site.conf.sample
+$copy resource/revproxy/always-ssl.conf.sample /etc/nginx/conf.d/always-ssl.conf.sample
+$copy resource/revproxy/ssl-site.conf.sample /etc/nginx/conf.d/ssl-site.conf.sample
 
 $mkdir /etc/ssl/nginx
 $exec "openssl genrsa 2048 > /etc/ssl/nginx/nginx.key"
@@ -37,17 +34,24 @@ $mkdir /var/cache/nginx
 $exec "chown nginx /var/cache/nginx"
 
 $mkdir /var/www/localhost/htdocs
-$copy revproxy/index.html /var/www/localhost/htdocs/index.html
+$copy resource/revproxy/index.html /var/www/localhost/htdocs/index.html
 
 $mkdir /var/www/localhost/app
 $copy revproxy/info.py /var/www/localhost/app/info.py
 $exec "chown -R nginx.nginx /var/www/localhost"
 
-$write /etc/conf.d/uwsgi.info 'UWSGI_SOCKET=/run/uwsgi_info/info.socket\nUWSGI_THREADS=0\nUWSGI_PROCESSES=1\nUWSGI_USER=nginx\nUWSGI_GROUP=nginx\nUWSGI_EXTRA_OPTIONS="--plugins=python27 --wsgi-file=/var/www/localhost/app/info.py"'
-$symlink /etc/init.d/uwsgi.info uwsgi
-$symlink /etc/runlevels/default/uwsgi.info /etc/init.d/uwsgi.info
+#$write /etc/conf.d/uwsgi.info 'UWSGI_SOCKET=/run/uwsgi_info/info.socket\nUWSGI_THREADS=0\nUWSGI_PROCESSES=1\nUWSGI_USER=nginx\nUWSGI_GROUP=nginx\nUWSGI_EXTRA_OPTIONS="--plugins=python27 --wsgi-file=/var/www/localhost/app/info.py"'
+#$symlink /etc/init.d/uwsgi.info uwsgi
+#$symlink /etc/runlevels/default/uwsgi.info /etc/init.d/uwsgi.info
 
-$mkdir /etc/xen
-$write /etc/xen/config "memory=96\n#vif=['bridge=eth0,mac=XX:YY:ZZ:XX:YY:ZZ']"
+$require openvpn.lst
 
-#$vadesc
+$copy resource/vpnhub/openvpn2dnsmasq.cpp /tmp/
+$exec --overlay "g++ -std=c++2a -shared -fPIC -o /usr/lib64/openvpn/plugins/openvpn2dnsmasq.so /tmp/openvpn2dnsmasq.cpp"
+$sed /lib/systemd/system/openvpn-server\@.service 's/^CapabilityBoundingSet=.*$/\0 CAP_KILL/'
+
+$require ndppd.lst
+$require zabbix-agent.lst
+
+$write /etc/sysctl.d/90-ip-forwarding.conf 'net.ipv4.ip_forward=1\nnet.ipv6.conf.default.forwarding=1\nnet.ipv6.conf.all.forwarding=1'
+

@@ -1,0 +1,14 @@
+server {
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
+	server_name mysite.example.com;
+
+	ssl_certificate /etc/ssl/nginx/mysite.example.com.pem;
+	ssl_certificate_key /etc/ssl/nginx/mysite.example.com.key;
+
+	set $upstream http://mysite.local;
+	location / {
+		include proxy.conf;
+	}
+	access_log off;
+}

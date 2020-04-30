@@ -1,0 +1,63 @@
+<html lang="ja" ng-app="MyApp">
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>revproxy - Walbrix仮想アプライアンス</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-resource.min.js"></script>
+    <script language="JavaScript">
+      angular.module("MyApp", ["ngResource"])
+      .run(["$rootScope","$resource", function($scope, $resource) {
+        var info = $resource("./info");
+        $scope.info = info.get();
+      }]);
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://www.walbrix.net">Walbrixについて</a></li>
+        </ul>
+        <h3 class="text-muted">Walbrix 仮想アプライアンス</h3>
+      </div>
+      <div class="jumbotron">
+      	<h1>revproxy</h1>
+      	<p>HTTPリクエストをLAN内のWebサーバに振り分けするリバースProxy</p>
+      </div>
+      <h3>IPアドレス</h3>
+      <p>このホストのIPアドレスは <big><strong>{{info.ipv4_address}}</strong></big> です。このIPアドレスに対して外部からのアクセスをフォワードするようルーターなどの通信機器を設定してください。IPアドレスを固定するには <a href="http://www.walbrix.net/tech/ipaddress.html">/etc/conf.d/net を編集</a>するか、Walbrix 4.1以降の場合は /etc/xen/config の vif=行をコメントインして MACアドレスを固定し、DHCPサーバに登録してください。</p>
+      <h3>Proxy設定</h3>
+      <p>現在のマッピングは下記のようになっています。この設定内容は /etc/nginx/proxy.map ファイルに記載されています。このファイルへの変更を反映するには service nginx reload として下さい。</p>
+      <pre>{{info.proxy_map}}</pre>
+
+      <h3>Let's Encrypt</h3>
+      <p>certbotコマンドを使用すると、無料のSSL証明書(Let's Encrypt)を取得することができます。ただし、ドメインの所有権確認のため certbotコマンドを実行する時点でインターネット側から対象ドメインに対するHTTP通信がこのホストに到達できるようになっている必要があります。</p>
+      <p>certbotの設定ファイル /etc/letsencrypt/cli.ini は現在下記のような内容になっています。</p>
+      <pre>{{info.cli_ini}}</pre>
+      <p>このファイルを適宜編集して、
+        <pre>certbot certonly</pre>
+        を実行し、証明書の取得に成功したら下記のようにしてデフォルトの証明書/秘密鍵ファイルを取得したもので置き換えてください。
+      </p>
+
+      <pre>cd /etc/ssl/nginx
+rm nginx.pem nginx.key
+ln -s /etc/letsencrypt/live/nginx/fullchain.pem nginx.pem
+ln -s /etc/letsencrypt/live/nginx/privkey.pem nginx.key
+service nginx reload
+</pre>
+
+      <p>Let's Encryptの証明書は3ヶ月間のみ有効なので定期的に更新する必要があります。証明書の更新はcronで1週間ごとに試行されます (/etc/cron.weekly/certbot-renew) 。</p>
+
+      <h3>その他</h3>
+      <p>詳細は <a href="https://github.com/wbrxcorp/walbrix/wiki/revproxy" target="_blank">https://github.com/wbrxcorp/walbrix/wiki/revproxy</a> をご覧ください。</p>
+
+      <div class="footer">
+        <hr>
+	<p>© <a href="http://www.walbrix.com/jp/">Walbrix Corporation</a> 2015</p>
+      </div>
+    </div>
+</html>

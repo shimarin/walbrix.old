@@ -1,0 +1,3 @@
+$package net-misc/ndppd
+$write /lib/systemd/system/ndppd.service '[Unit]\nDescription=NDP Proxy Daemon\nAfter=network.target network-online.target\n\n[Service]\nUser=root\nGroup=root\nExecStart=/usr/sbin/ndppd\n[Install]\nWantedBy=multi-user.target'
+#$exec "systemctl enable ndppd"

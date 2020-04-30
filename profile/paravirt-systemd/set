@@ -52,7 +52,7 @@ sys-block/zram-init
 net-dns/avahi
 net-vpn/openvpn
 
-app-emulation/xen-tools
+app-emulation/libxenstore
 x11-libs/pixman
 dev-cpp/gflags
 
@@ -61,4 +61,10 @@ net-analyzer/zabbix
 mail-mta/postfix
 www-apache/mod_extract_forwarded
 www-apache/mod_authnz_external
+net-misc/ndppd
+net-fs/samba
+net-vpn/wireguard-tools
 
+app-crypt/certbot
+dev-python/pip
+dev-python/google-api-python-client
