@@ -1,13 +1,9 @@
-$package dev-lang/python-3.6.10-r1
-$symlink /usr/bin/python pytho3.6
-$package dev-lang/python-exec
+$require python3.lst
 
 $package dev-python/lxml
 $package app-emulation/xen-tools
 $package app-emulation/xen-pvgrub
 $package app-emulation/xen
-$package dev-lang/ocaml --exclude='^/usr/lib(64)?/ocaml/((ocamldoc|ocamlbuild|compiler-libs)/|.+\.(cmx|cmxa|ml|mli|a|h)$)'
-$package dev-ml/findlib
 /var/lib/xen
 /var/log/xen
 #$symlink /usr/lib/xen/boot ../../libexec/xen/boot

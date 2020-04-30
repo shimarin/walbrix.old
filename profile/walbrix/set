@@ -36,7 +36,7 @@ sys-power/cpupower
 sys-power/nut
 sys-apps/smartmontools
 net-wireless/bluez
-sci-geosciences/gpsd
+#sci-geosciences/gpsd # it still needs python2.7
 net-libs/libqmi
 sys-firmware/bluez-firmware
 net-misc/modemmanager

@@ -10,6 +10,7 @@ sys-kernel/gentoo-sources
 =app-emulation/xen-tools-4.13.0-r2
 =app-emulation/xen-pvgrub-4.13.0
 =dev-lang/swig-4.0.0
+=dev-python/pypam-0.5.0-r4
 
 #snort
 =net-analyzer/snort-2.9.12
@@ -31,7 +32,7 @@ sys-apps/hwids
 =net-misc/usbip-4.13
 =net-libs/libqmi-1.22.2
 =net-libs/libmbim-1.18.0
-=sci-geosciences/gpsd-3.18.1
+=sci-geosciences/gpsd-3.19
 
 # wireguard
 =net-vpn/wireguard-tools-1.0.20200319
