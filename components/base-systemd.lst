@@ -13,6 +13,7 @@ $package sys-libs/pam
 #dev-libs/libpcre2
 #sys-libs/libseccomp
 $package sys-apps/kmod
+$package net-vpn/wireguard-tools
 
 $require cron-systemd.lst
 $package net-misc/openssh
