@@ -79,7 +79,7 @@ if [ -d profile/$PROFILE/patches ]; then
 fi
 
 if [ -d profile/common/repos ]; then
-  $SUDO mkdir -p $GENTOO_DIR/var/db/repos/localrep
+  $SUDO mkdir -p $GENTOO_DIR/var/db/repos/localrepo
   $SUDO cp -a profile/common/repos/. $GENTOO_DIR/var/db/repos/localrepo/
 fi
 
