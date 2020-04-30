@@ -26,6 +26,7 @@ net-vpn/openvpn
 net-wireless/iw
 net-wireless/wireless-tools
 net-wireless/wpa_supplicant
+net-wireless/hostapd
 sys-apps/dmidecode
 sys-apps/haveged
 sys-apps/hwloc

@@ -6,8 +6,8 @@ $package net-wireless/wireless-regdb
 #$package net-wireless/crda
 $package net-wireless/iw
 $package net-wireless/wpa_supplicant
+$sed /lib/systemd/system/wpa_supplicant@.service 's/-i%I$/-i%I -Dnl80211,wext/'
+$write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nssid="YOUR-SSID"\npsk="YOUR-KEY"\npriority=1\n}'
 $package net-wireless/hostapd
-$copy walbrix/conf-hostapd /etc/conf.d/hostapd
-$copy walbrix/hostapd.conf /etc/hostapd/hostapd.conf
 /usr/sbin/rfkill
 

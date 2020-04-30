@@ -9,6 +9,8 @@ sys-fs/mtools
 sys-process/cronie
 net-wireless/wireless-tools
 net-wireless/wpa_supplicant
+net-wireless/iw
+net-wireless/hostapd
 sys-fs/btrfs-progs
 dev-util/strace
 net-misc/netkit-telnetd

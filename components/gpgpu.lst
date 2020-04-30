@@ -29,9 +29,7 @@ $copy resource/walbrix/save /sbin/save
 
 $sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
 
-$package net-wireless/wpa_supplicant
-$sed /lib/systemd/system/wpa_supplicant@.service 's/-i%I$/-i%I -Dnl80211,wext/'
-$write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nssid="YOUR-SSID"\npsk="YOUR-KEY"\npriority=1\n}'
+$require wireless-tools.lst
 
 $package app-misc/ca-certificates
 $package app-misc/mime-types
