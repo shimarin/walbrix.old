@@ -55,7 +55,6 @@ $package app-misc/ca-certificates
 /mnt
 
 $require glibc-minimal.lst
-/etc/ld.so.conf
 
 $dir /dev
 
