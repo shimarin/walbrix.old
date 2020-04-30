@@ -1,23 +1,37 @@
-$require python27.lst
-$require configobj.lst
-$require mock.lst
-$require acme.lst
-$require urllib3.lst
-$package dev-python/configargparse
-$require parsedatetime.lst
-$package dev-python/pyparsing
-$package dev-python/zope-event
-$package dev-python/funcsigs
-$package dev-python/pyrfc3339
-$package dev-python/zope-component
-$package app-crypt/certbot
-$package dev-python/pyopenssl
 $package dev-python/pytz
-$package dev-python/six
-$package dev-python/zope-interface
+$package dev-python/namespace-zope
+$package dev-python/idna
+$package dev-python/configargparse
+$package dev-python/configobj
+$package dev-python/distro
+$package dev-python/future
+$package dev-python/pbr
+$package dev-python/ply
 $package dev-python/chardet
+$package dev-python/PySocks
+$package dev-python/mock
+$package dev-python/pyrfc3339
+$package dev-python/zope-interface
+$package dev-python/parsedatetime
+$package dev-python/zope-event
+$package dev-python/pycparser
+$package dev-python/zope-component
+$package dev-python/cffi
+$package dev-python/cryptography
+$package dev-python/pyopenssl
 $package dev-python/josepy
+$package dev-python/urllib3
+$package dev-python/requests
+$package dev-python/requests-toolbelt
+$package app-crypt/acme
+$package app-crypt/certbot
+$package dev-python/six
+$package dev-python/certifi
+$package dev-python/setuptools
+$package dev-python/pip
+$require google-api-python-client.lst
+
 $mkdir /etc/letsencrypt
 $write /etc/letsencrypt/cli.ini 'authenticator = webroot\nwebroot-path = /var/www/localhost/htdocs\ncert-name = nginx\n#email = you@example.com\n#agree-tos = True\n#domains = domain1.tld,domain2.tld,domain3.tld'
-$copy certbot/certbot-renew /etc/cron.weekly/certbot-renew
+$copy resource/certbot/certbot-renew /etc/cron.weekly/certbot-renew
 
