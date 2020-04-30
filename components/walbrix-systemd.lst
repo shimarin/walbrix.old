@@ -166,7 +166,6 @@ $sed /etc/default/xendomains 's/^\(XENDOMAINS_SAVE=.*\)$/#\1/'
 $require openvpn.lst
 $copy resource/walbrix/ca.crt /etc/openvpn/client/ca.crt
 $copy resource/walbrix/openvpn.conf /etc/openvpn/client/openvpn.conf
-$package net-vpn/wireguard-tools
 
 # node
 $require ts-node.lst
