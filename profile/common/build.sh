@@ -4,15 +4,15 @@ if [ -x before-emerge.sh ]; then
 fi
 
 if [ -d /var/db/repos/localrepo ]; then
-		emerge -uDN -bk --binpkg-respect-use=y repoman
-		pushd /var/db/repos/localrepo && repoman manifest
-		popd
-		mkdir -p /etc/portage/repos.conf
-	  echo -e '[localrepo]\nlocation = /var/db/repos/localrepo' > /etc/portage/repos.conf/localrepo.conf
-		mkdir -p /var/db/repos/localrepo/{metadata,profiles}
-		chown -R portage:portage /var/db/repos/localrepo
-		echo 'localrepo' > /var/db/repos/localrepo/profiles/repo_name
-		echo -e "masters = gentoo\nauto-sync = false" > /var/db/repos/localrepo/metadata/layout.conf
+	emerge -uDN -bk --binpkg-respect-use=y repoman
+	pushd /var/db/repos/localrepo && repoman manifest || exit 1
+	popd
+	mkdir -p /etc/portage/repos.conf
+	echo -e '[localrepo]\nlocation = /var/db/repos/localrepo' > /etc/portage/repos.conf/localrepo.conf
+	mkdir -p /var/db/repos/localrepo/{metadata,profiles}
+	chown -R portage:portage /var/db/repos/localrepo
+	echo 'localrepo' > /var/db/repos/localrepo/profiles/repo_name
+	echo -e "masters = gentoo\nauto-sync = false" > /var/db/repos/localrepo/metadata/layout.conf
 fi
 
 emerge -uDN -bk --binpkg-respect-use=y system gentoolkit
