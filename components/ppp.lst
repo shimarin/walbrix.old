@@ -19,3 +19,5 @@ $dir /usr/lib64/pppd
 /etc/ppp/ip-up.d
 /etc/ppp/ipv6-down
 /etc/ppp/ipv6-up
+
+$write /lib/systemd/system/ppp@.service '[Unit]\nDescription=PPP link to %I\nBefore=network.target\n\n[Service]\nExecStart=/usr/sbin/pppd call %I nodetach nolog\n\n[Install]\nWantedBy=multi-user.target'

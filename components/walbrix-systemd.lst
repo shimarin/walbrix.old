@@ -70,6 +70,7 @@ $copy resource/walbrix/77-mm-docomo-l-03f.rules /lib/udev/rules.d/
 $require nfs.lst
 $package sys-fs/multipath-tools
 $package sys-fs/btrfs-progs
+/usr/bin/compsize
 $package sys-fs/squashfs-tools
 #$require exfat.lst
 $package net-fs/cifs-utils --use="-acl -ads -caps"
@@ -96,7 +97,7 @@ $package sys-fs/mdadm
 $exec "systemctl enable mdmonitor"
 
 # LVM
-$package sys-block/thin-provisioning-tools
+#$package sys-block/thin-provisioning-tools
 $package sys-fs/lvm2
 $sed /etc/lvm/lvm.conf 's/snapshot_autoextend_threshold = 100/snapshot_autoextend_threshold = 80/'
 $sed /etc/lvm/lvm.conf 's/use_lvmetad = 0/use_lvmetad = 1/'
@@ -104,6 +105,7 @@ $exec "systemctl enable lvm2-lvmetad.socket"
 
 # networks
 $package net-analyzer/traceroute
+$require iptables.lst
 $require tcpdump.lst
 /usr/bin/cu
 /usr/bin/curl
@@ -133,16 +135,18 @@ $write /etc/systemd/network/50-eth0.network "[Match]\nName=eth0\n[Network]\nBrid
 $write /etc/systemd/network/52-xenbr0.network "[Match]\nName=xenbr0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes"
 
 # complementary PPP configs
-#$mkdir /etc/chatscripts
-#$copy ppp/chatscript-3g /etc/chatscripts/3g
-#$copy ppp/pap-secrets /etc/ppp/pap-secrets
-#$mkdir /etc/ppp/peers
-#$copy ppp/peer-mineo-d /etc/ppp/peers/mineo-d
-#$copy ppp/peer-mineo-a /etc/ppp/peers/mineo-a
-#$copy ppp/peer-interlink /etc/ppp/peers/interlink
-#$copy ppp/peer-soracom-air /etc/ppp/peers/soracom-air
-#$copy ppp/ip-up.route.sh /etc/ppp/ip-up.d/route.sh
-#$copy ppp/ip-down.route.sh /etc/ppp/ip-down.d/route.sh
+$mkdir /etc/ppp/chatscripts
+$copy resource/ppp/chatscript-3g /etc/ppp/chatscripts/3g
+$mkdir /etc/ppp/peers
+$copy resource/ppp/peer-mineo-d /etc/ppp/peers/mineo-d
+$copy resource/ppp/peer-mineo-a /etc/ppp/peers/mineo-a
+$copy resource/ppp/peer-interlink /etc/ppp/peers/interlink
+$copy resource/ppp/peer-soracom-air /etc/ppp/peers/soracom-air
+$copy resource/ppp/ip-up.route.sh /etc/ppp/ip-up.d/route.sh
+$copy resource/ppp/ip-down.route.sh /etc/ppp/ip-down.d/route.sh
+$copy resource/ppp/connect-ppp /usr/sbin/
+$copy resource/ppp/modem-candidates /etc/ppp/modem-candidates
+$write /lib/systemd/system/ppp@.service '[Unit]\nDescription=PPP link to %I\nBefore=network.target\n\n[Service]\nRestart=on-failure\nRestartSec=180s\nExecStart=/usr/sbin/connect-ppp %I\n\n[Install]\nWantedBy=multi-user.target'
 
 # wireless
 $package net-wireless/wpa_supplicant
@@ -159,7 +163,7 @@ $mkdir /etc/X11/xorg.conf.d
 $write /etc/X11/xorg.conf.d/00-keyboard.conf 'Section "InputClass"\n\tIdentifier "system-keyboard"\n\tMatchIsKeyboard "on"\n\tOption "XkbLayout" "jp"\n\tOption "XkbModel" "jp106"\n\tOption "XkbOptions" "terminate:ctrl_alt_bksp"\nEndSection'
 
 $require xen-python3.lst
-$sed /etc/default/xendomains 's/^\(XENDOMAINS_SAVE=.*\)$/#\1/'
+$sed /etc/sysconfig/xendomains 's/^\(XENDOMAINS_SAVE=.*\)$/#\1/'
 
 # VPN
 $require openvpn.lst
@@ -206,7 +210,7 @@ $copy resource/btrfs/expand-rw-layer /usr/sbin/
 /usr/lib64/libiniparser.so.0
 
 $copy wb/. /tmp/
-$exec --overlay "cd /tmp && make && make install"
+$exec --overlay "cd /tmp && make clean && make && make install"
 /usr/bin/make
 $copy resource/walbrix/wbdomains.service /usr/lib/systemd/system/
 $exec "systemctl enable wbdomains"

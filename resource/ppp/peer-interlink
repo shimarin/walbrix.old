@@ -1,0 +1,9 @@
+noauth
+connect "/usr/sbin/chat -v -f /etc/ppp/chatscripts/3g -T lte-mobile.jp -U *99***1#"
+230400
+crtscts
+noipdefault 
+#defaultroute
+#usepeerdns
+user "YOURID@d0.sim.moe"
+maxfail 0

@@ -25,6 +25,9 @@ sys-fs/zfs
 sys-fs/zfs-kmod
 sys-kernel/spl
 
+# btrfs
+=sys-fs/compsize-1.1
+
 # hardware
 sys-kernel/linux-firmware
 sys-apps/hwids

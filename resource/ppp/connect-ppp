@@ -1,0 +1,23 @@
+#!/bin/sh
+if [ "$#" -eq 0 ] ; then
+  echo "Usage: $0 peername" 1>&2
+  exit 1
+fi
+
+PEER_NAME=$1
+
+n=0
+until [ $n -ge 5 ]
+do
+	for i in `cat /etc/ppp/modem-candidates`; do
+		if [ -c "$i" ]; then
+			echo "Using modem $i"
+			exec /usr/sbin/pppd $i call $PEER_NAME nodetach persist
+		fi
+	done
+	n=$[$n+1]
+	sleep 3
+done
+
+echo "No modem found."
+exit 1

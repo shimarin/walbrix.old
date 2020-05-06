@@ -12,6 +12,7 @@ net-wireless/wpa_supplicant
 net-wireless/iw
 net-wireless/hostapd
 sys-fs/btrfs-progs
+sys-fs/compsize
 dev-util/strace
 net-misc/netkit-telnetd
 app-misc/screen
