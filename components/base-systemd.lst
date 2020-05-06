@@ -1,11 +1,12 @@
 # set sys-fs/xfsprogs app-editors/nvi
 
 $require base.lst
+$symlink /var/lock /run/lock
 $package sys-apps/systemd
 $package sys-apps/gentoo-systemd-integration
 $package sys-apps/util-linux
 $package sys-apps/dbus
-#sys-libs/libcap
+$package sys-libs/libcap
 $package sys-apps/acl
 #dev-libs/libgcrypt
 $package app-arch/lz4
