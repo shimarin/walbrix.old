@@ -5,3 +5,4 @@ sys-kernel/gentoo-sources
 =dev-python/ifaddr-0.1.6
 =dev-python/ndg-httpsclient-0.4.2-r1
 =net-vpn/wireguard-tools-1.0.20200319
+=dev-python/matplotlib-2.2.4

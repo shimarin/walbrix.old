@@ -69,4 +69,5 @@ app-crypt/certbot
 dev-python/pip
 dev-python/google-api-python-client
 net-analyzer/tcpdump
+net-misc/netkit-telnetd
 

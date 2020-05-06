@@ -114,6 +114,14 @@ sys-libs/tdb -python_single_target_python3_6 python_single_target_python3_7
 sys-libs/ldb -python_single_target_python3_6 python_single_target_python3_7 -ldap
 dev-libs/gobject-introspection -python_single_target_python3_6 python_single_target_python3_7
 app-emulation/xen-pvgrub -python_single_target_python3_6 python_single_target_python3_7
+app-editors/vim -python_single_target_python3_6 python_single_target_python3_7
+net-analyzer/nmap -python_single_target_python2_7 -python_single_target_python3_6 python_single_target_python3_7
+dev-vcs/git -python_single_target_python3_6 python_single_target_python3_7
+sys-devel/clang -python_single_target_python2_7 -python_single_target_python3_6 python_single_target_python3_7
+dev-util/bcc -python_single_target_python3_6 python_single_target_python3_7
+sys-fs/btrfs-progs -python_single_target_python3_6 python_single_target_python3_7
+sys-apps/usbutils -python_single_target_python3_6 python_single_target_python3_7
+
 x11-base/xcb-proto -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
 dev-python/setuptools -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
 dev-python/certifi -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
@@ -145,3 +153,6 @@ app-admin/eclean-kernel -python_targets_python2_7 -python_targets_python3_6 pyth
 app-portage/gentoolkit -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
 app-portage/repoman -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
 dev-util/scons -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-libs/libnl -python_targets_python3_6 python_targets_python3_7
+sys-libs/libcap-ng -python_targets_python3_6 python_targets_python3_7
+

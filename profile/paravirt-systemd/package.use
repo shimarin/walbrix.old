@@ -31,7 +31,7 @@ net-analyzer/zabbix curl frontend mysql proxy server snmp openipmi ssh libxml2 -
 net-analyzer/fping suid
 dev-lang/php apache2 bcmath truetype xmlreader gd sysvipc sockets xmlwriter mysqli fpm gd mysql postgres xslt zip pdo pcntl sysvipc curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap
 app-eselect/eselect-php fpm apache2
-sys-libs/openipmi snmp
+sys-libs/openipmi snmp -python_single_target_python2_7 -python_single_target_python3_6 python_single_target_python3_7
 
 www-servers/apache apache2_modules_http2 apache2_modules_proxy apache2_modules_proxy_connect
 www-apache/mod_extract_forwarded mod-proxy
@@ -130,4 +130,22 @@ dev-python/importlib_metadata -python_targets_python3_6 python_targets_python3_7
 dev-python/oauth2client -python_targets_python3_6 python_targets_python3_7
 dev-python/google-api-python-client -python_targets_python3_6 python_targets_python3_7
 
+app-editors/vim  -python_single_target_python3_6 python_single_target_python3_7
+sys-devel/clang -python_single_target_python3_6 python_single_target_python3_7
+sys-fs/btrfs-progs -python_single_target_python3_6 python_single_target_python3_7
+dev-util/glib-utils -python_single_target_python3_6 python_single_target_python3_7
+sys-apps/usbutils -python_single_target_python3_6 python_single_target_python3_7
+dev-vcs/git -python_single_target_python3_6 python_single_target_python3_7
+dev-db/postgresql -python_single_target_python3_6 python_single_target_python3_7
 
+net-dns/avahi -python_targets_python3_6 python_targets_python3_7
+sys-libs/libcap-ng -python_targets_python3_6 python_targets_python3_7
+x11-base/xcb-proto -python_targets_python3_6 python_targets_python3_7
+dev-python/backports -python_targets_python3_6 python_targets_python3_7
+dev-python/python-magic -python_targets_python3_6 python_targets_python3_7
+dev-python/socketpool -python_targets_python3_6 python_targets_python3_7
+dev-python/olefile -python_targets_python3_6 python_targets_python3_7
+dev-python/asn1crypto -python_targets_python3_6 python_targets_python3_7
+dev-python/paho-mqtt -python_targets_python3_6 python_targets_python3_7
+dev-python/pillow -python_targets_python3_6 python_targets_python3_7
+dev-python/webob -python_targets_python3_6 python_targets_python3_7

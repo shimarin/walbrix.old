@@ -57,3 +57,5 @@ dev-libs/roct-thunk-interface
 dev-libs/hsa-ext-rocr
 dev-util/rocminfo
 dev-libs/amdgpu-pro-opencl
+
+net-vpn/wireguard-tools
