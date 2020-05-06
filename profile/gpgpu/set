@@ -15,12 +15,11 @@ dev-util/strace
 dev-vcs/git
 net-analyzer/tcpdump
 net-analyzer/traceroute
-net-fs/samba
 net-libs/libmicrohttpd
 net-libs/nodejs
 net-misc/bridge-utils
 net-misc/netkit-telnetd
-net-misc/s3cmd
+#net-misc/s3cmd # due to lack of python3.7 support
 net-misc/taylor-uucp
 net-vpn/openvpn
 net-wireless/iw
