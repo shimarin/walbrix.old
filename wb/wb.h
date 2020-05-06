@@ -10,6 +10,7 @@
 #include <functional>
 #include <algorithm>
 #include <sstream>
+#include <filesystem>
 
 #include <libsmartcols/libsmartcols.h>
 
@@ -26,6 +27,8 @@ extern "C" {
 
 #define RUNTIME_ERROR(msg) throw std::runtime_error((std::string)__FILE__ + '(' + std::to_string(__LINE__) + ") " + msg)
 #define RUNTIME_ERROR_WITH_ERRNO(msg) throw std::runtime_error((std::string)__FILE__ + '(' + std::to_string(__LINE__) + ") " + msg + ':' + strerror(errno))
+
+static const std::filesystem::path vm_root("/var/vm");
 
 class XtlLoggerStdio {
   xentoollog_logger_stdiostream* logger;
@@ -100,11 +103,12 @@ typedef struct {
   std::optional<uint32_t> domid = std::nullopt;
   unsigned long mem = 0;
   uint32_t ncpu = 0;
+  bool pvh = false;
   std::string kernel;
   std::optional<std::string> ramdisk = std::nullopt;
   std::optional<std::string> cmdline = std::nullopt;
-  std::optional<std::string> root = std::nullopt;
-  std::optional<std::string> extra = std::nullopt;
+  //std::optional<std::string> root = std::nullopt;
+  //std::optional<std::string> extra = std::nullopt;
 } VM;
 
 typedef struct {
@@ -112,6 +116,11 @@ typedef struct {
   std::string path;
   bool readonly;
 } Disk;
+
+typedef struct {
+  std::string tag;
+  std::string path;
+} P9;
 
 typedef struct {
   std::string bridge;
@@ -123,7 +132,7 @@ class VmIniFile {
   std::string _vmname;
 public:
   VmIniFile(const std::string& __vmname) : _vmname(__vmname) {
-    std::string inifile = (std::string)"/run/initramfs/boot/vm/" + __vmname + ".ini";
+    auto inifile = vm_root / __vmname / "vm.ini";
     struct stat st;
     if (stat(inifile.c_str(), &st) == 0 && S_ISREG(st.st_mode)) {
       ini = iniparser_load(inifile.c_str());
@@ -409,6 +418,7 @@ public:
 };
 
 bool is_file(const std::string& path);
+bool is_block(const std::string& path);
 bool is_dir(const std::string& path);
 
 void exec_linux_console();

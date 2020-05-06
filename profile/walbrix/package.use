@@ -26,6 +26,7 @@ net-fs/nfs-utils -tcpd
 sys-apps/kmod lzma -python
 dev-libs/libxml2 -python
 sys-libs/ncurses tinfo
+sys-fs/lvm2 -readline systemd -thin udev
 
 # splash
 sys-libs/zlib static-libs
@@ -38,10 +39,10 @@ media-gfx/splashutils fbcondecor
 
 # xen
 app-emulation/xen efi
-app-emulation/xen-tools api pygrub xend hvm qemu -ocaml python -ovmf -python_single_target_python3_6 python_single_target_python3_7
+app-emulation/xen-tools api pygrub xend hvm -qemu system-qemu -ocaml python -ovmf -python_single_target_python3_6 python_single_target_python3_7
 sys-apps/kexec-tools lzma xen
 sys-cluster/drbd-utils xen
-#app-emulation/qemu xen
+app-emulation/qemu aio bzip2 curl fdt filecaps -gtk jpeg ncurses nls virtfs -oss pin-upstream-blobs png -pulseaudio -python -seccomp -usb -vhost-net vnc xattr xen -xfs -xkb -qemu_softmmu_targets_i386 -qemu_user_targets_i386 -python_targets_python3_6 python_targets_python3_7
 
 # wbui
 dev-python/numpy -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7

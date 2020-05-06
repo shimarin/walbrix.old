@@ -31,6 +31,7 @@
 #define SED "/bin/sed"
 #define CHPASSWD "/usr/sbin/chpasswd"
 #define SYSTEMCTL "/bin/systemctl"
+#define VGCHANGE "/sbin/vgchange"
 
 #define TIME_FILE "boottime.txt"
 
@@ -313,6 +314,11 @@ int repair_btrfs(const std::filesystem::path& path)
   return fork_exec_wait(BTRFS, BTRFS, "check", "--repair", "--force", path.c_str(), NULL);
 }
 
+int enable_lvm()
+{
+  return fork_exec_wait(VGCHANGE, VGCHANGE, "-ay", "--sysinit", NULL);
+}
+
 int btrfs_scan()
 {
   return fork_exec_wait(BTRFS, BTRFS, "device", "scan", NULL);
@@ -393,6 +399,46 @@ int set_hostname(const std::filesystem::path& rootdir, const std::string& hostna
   if (!f) return -1;
   //else
   f << hostname;
+  return 0;
+}
+
+int set_static_ip_address(const std::filesystem::path& rootdir, const std::string& interface, int interface_prio,
+  const std::optional<std::string>& ip_address, const std::optional<std::string>& gateway, const std::optional<std::string>& dns, const std::optional<std::string>& fallback_dns,
+  const std::optional<std::string>& ipv6_address, const std::optional<std::string>& ipv6_gateway, const std::optional<std::string>& ipv6_dns, const std::optional<std::string>& ipv6_fallback_dns)
+{
+  std::filesystem::create_directories(rootdir / "etc/systemd/network");
+  char interface_prio_str[16];
+  sprintf(interface_prio_str, "%02d", interface_prio);
+  std::ofstream f(rootdir / "etc/systemd/network" / (std::string(interface_prio_str) + '-' + interface + ".network"));
+  if (!f) return -1;
+  // else
+  f << "[Match]\nName=" << interface << "\n[Network]" << std::endl;
+
+  if (ip_address) {
+    f << "Address=" << ip_address.value() << std::endl;
+    if (gateway) f << "Gateway=" << gateway.value() << std::endl;
+    if (dns) {
+      f << "DNS=" << dns.value() << std::endl;
+      if (fallback_dns)  f << "FallbackDNS=" << fallback_dns.value() << std::endl;
+    } else if (gateway) { // assume reachable to public dns if gateway is there
+      f << "DNS=8.8.8.8\nFallbackDNS=8.8.4.4" << std::endl;
+    }
+  } else {
+    f << "DHCP=yes" << std::endl;
+  }
+
+  if (ipv6_address) {
+    f << "Address=" << ipv6_address.value() << std::endl;
+    if (ipv6_gateway) f << "Gateway=" << ipv6_gateway.value() << std::endl;
+    if (ipv6_dns) {
+      f << "DNS=" << ipv6_dns.value() << std::endl;
+      if (ipv6_fallback_dns) f << "FallbackDNS=" << ipv6_fallback_dns.value() << std::endl;
+    } else if (ipv6_gateway) { // assume reachable to public dns if gateway is there
+      f << "DNS=2001:4860:4860::8888\nFallbackDNS=2001:4860:4860::8844" << std::endl;
+    }
+  }
+
+  f << "MulticastDNS=yes\nLLMNR=yes" << std::endl;
   return 0;
 }
 
@@ -511,6 +557,11 @@ int set_zram_swap_capacity(const std::filesystem::path& rootdir, int mb) // need
 int cp_a(const std::filesystem::path& src, const std::filesystem::path& dst)
 {
   return fork_exec_wait(CP, CP, "-a", src.c_str(), dst.c_str(), NULL);
+}
+
+int cp_au(const std::filesystem::path& src, const std::filesystem::path& dst)
+{
+  return fork_exec_wait(CP, CP, "-au", src.c_str(), dst.c_str(), NULL);
 }
 
 Init::Init() : ini(NULL)
@@ -645,11 +696,11 @@ std::filesystem::path Init::get_newroot()
 
   try {
     setup_hostname(newroot);
+    setup_network(newroot);
     setup_password(newroot);
     setup_timezone(newroot);
     setup_locale(newroot);
     setup_keymap(newroot);
-    setup_network(newroot);
     setup_wifi(newroot);
     setup_wireguard(newroot);
     setup_openvpn(newroot);
@@ -851,6 +902,34 @@ void Init::setup_hostname(const std::filesystem::path& newroot)
   }
 }
 
+std::pair<std::string,int> Init::get_default_network_interface_name()
+{
+  return std::make_pair("eth0", 50);
+}
+
+void Init::setup_network(const std::filesystem::path& newroot)
+{
+  auto ip_address = ini_string(":ip_address");
+  auto ipv6_address = ini_string(":ipv6_address");
+  if (!ip_address && !ipv6_address) return;
+  //else
+
+  const auto interface = get_default_network_interface_name();
+
+  if (set_static_ip_address(newroot, interface.first, interface.second,
+    ip_address, ini_string(":gateway"), ini_string(":dns"), ini_string(":fallback_dns"),
+    ipv6_address, ini_string(":ipv6_gateway"), ini_string(":ipv6_dns"), ini_string(":ipv6_fallback_dns")) == 0) {
+    if (ip_address) {
+      std::cout << "IP address set to " << ip_address.value() << std::endl;
+    }
+    if (ipv6_address) {
+      std::cout << "IPv6 address set to " << ipv6_address.value() << std::endl;
+    }
+  } else {
+    std::cout << "Setting static IP address failed." << std::endl;
+  }
+}
+
 void Init::setup_password(const std::filesystem::path& newroot)
 {
   auto password = ini_string(":password");
@@ -993,8 +1072,6 @@ void Init::setup_wifi(const std::filesystem::path& newroot)
   }
 }
 
-void Init::setup_network(const std::filesystem::path& newroot)
-{}
 void Init::setup_wireguard(const std::filesystem::path& newroot)
 {}
 
@@ -1005,6 +1082,88 @@ void Init::invalidate_ld_cache(const std::filesystem::path& newroot)
     std::filesystem::remove(ld_so_cache);
   }
 }
+
+/*
+ssh_host_dsa_key
+-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABsgAAAAdzc2gtZH
+NzAAAAgQCqIfQlmelk3tAJyWJsalcPZc7qoT+JuZMNTPbKMKkaiH8W054jmfLZf5CQ8Dy4
+DdoQLQOvic41JnT0u/+dHhkQbmIZeGAWTrLsWxv2+wqQu6umNZJC3BrmBoicaJa4KEG2Ag
+8PF59DASENOD5BewpR0zGSISpdm1WZX3DBoLbNzwAAABUAvSRpXkQ++JczeklFRb0G/5tF
+YisAAACAMmO/H6+3/iiDIPDZSURenS8PuBZgH5WPKmJ8nhXBRqNaqJZp/YEagNElQk+Eaq
+mFIXahPrjA0lMxjgI5uXvysIXW3MpCyGo/0FjSpOh4uTxi3S45lCgd/8nIe+svbhmoLGKI
+58ZhuKbQ6f/koO4+01gjLGFfMhJB1jd8l/BF+EEAAACBAKd7Dwa/KCrGwkngLhHjH6JWq/
+v3Lqmjd4r59ll3B4bk7iwqKZ/3hlRO/t138iG4ySSBmN3F04YrbHYPy2WJogN61Iqml/v2
+N4NubG1qAfvhVQV01ZSbfU8Xcup/XoHqrSCPPSqs3x/vmmvg1enn80iZqtIhPgx+L0HUrL
+fqIztyAAAB6Gv9bZ1r/W2dAAAAB3NzaC1kc3MAAACBAKoh9CWZ6WTe0AnJYmxqVw9lzuqh
+P4m5kw1M9sowqRqIfxbTniOZ8tl/kJDwPLgN2hAtA6+JzjUmdPS7/50eGRBuYhl4YBZOsu
+xbG/b7CpC7q6Y1kkLcGuYGiJxolrgoQbYCDw8Xn0MBIQ04PkF7ClHTMZIhKl2bVZlfcMGg
+ts3PAAAAFQC9JGleRD74lzN6SUVFvQb/m0ViKwAAAIAyY78fr7f+KIMg8NlJRF6dLw+4Fm
+AflY8qYnyeFcFGo1qolmn9gRqA0SVCT4RqqYUhdqE+uMDSUzGOAjm5e/KwhdbcykLIaj/Q
+WNKk6Hi5PGLdLjmUKB3/ych76y9uGagsYojnxmG4ptDp/+Sg7j7TWCMsYV8yEkHWN3yX8E
+X4QQAAAIEAp3sPBr8oKsbCSeAuEeMfolar+/cuqaN3ivn2WXcHhuTuLCopn/eGVE7+3Xfy
+IbjJJIGY3cXThitsdg/LZYmiA3rUiqaX+/Y3g25sbWoB++FVBXTVlJt9Txdy6n9egeqtII
+89KqzfH++aa+DV6efzSJmq0iE+DH4vQdSst+ojO3IAAAAVALQJ0NPuoqXM6K4N4hf12CMq
+eRawAAAACnJvb3RAbW9jaGEBAgMEBQYH
+-----END OPENSSH PRIVATE KEY-----
+ssh_host_ecdsa_key
+-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAaAAAABNlY2RzYS
+1zaGEyLW5pc3RwMjU2AAAACG5pc3RwMjU2AAAAQQQ3xOEVgt59NrY4nE2d/t8oUWNRasAQ
+sHzTOc1v5Jzos3YyxptCUQn2InoSrbUXHlNkT9fhRAgJ3zaKB3gLm2mAAAAAqGytuQ1srb
+kNAAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDfE4RWC3n02tjic
+TZ3+3yhRY1FqwBCwfNM5zW/knOizdjLGm0JRCfYiehKttRceU2RP1+FECAnfNooHeAubaY
+AAAAAhAOjEFfS1TtkbauvHPyO55yl7LzHJY5rbFwqvMsf6fVRhAAAACnJvb3RAbW9jaGEB
+AgMEBQ==
+-----END OPENSSH PRIVATE KEY-----
+ssh_host_ed25519_key
+-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+QyNTUxOQAAACCGlHXfGGEyWCx0SPeu/52fNBw+wvy8VIJM/vJx6ZRzBAAAAJAOz6sKDs+r
+CgAAAAtzc2gtZWQyNTUxOQAAACCGlHXfGGEyWCx0SPeu/52fNBw+wvy8VIJM/vJx6ZRzBA
+AAAEASakzso1vW2CKl+XkTkh6nMjPF6GpyM/EzNhC2Jx1WUIaUdd8YYTJYLHRI967/nZ80
+HD7C/LxUgkz+8nHplHMEAAAACnJvb3RAbW9jaGEBAgM=
+-----END OPENSSH PRIVATE KEY-----
+ssh_host_rsa_key
+-----BEGIN OPENSSH PRIVATE KEY-----
+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
+C8K23inkSXleEAAAAKcm9vdEBtb2NoYQE=
+-----END OPENSSH PRIVATE KEY-----
+*/
 
 std::filesystem::path init();
 void shutdown();

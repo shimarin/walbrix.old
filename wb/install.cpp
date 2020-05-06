@@ -1,4 +1,3 @@
-#include <filesystem>
 #include <fstream>
 
 #include <limits.h>
@@ -9,6 +8,7 @@
 #include <linux/fb.h>
 
 #include <libmount/libmount.h>
+#include <blkid/blkid.h>
 
 #include <pstream.h>
 #define PICOJSON_USE_INT64
@@ -188,8 +188,24 @@ public:
   }
 };
 
+static std::optional<std::string> get_partition_uuid(const std::string& partition)
+{
+  blkid_cache cache;
+  if (blkid_get_cache(&cache, "/dev/null") != 0) return std::nullopt;
+  // else
+  std::optional<std::string> rst = std::nullopt;
+  if (blkid_probe_all(cache) == 0) {
+    auto tag_value = blkid_get_tag_value(cache, "UUID", partition.c_str());
+    if (tag_value) rst = tag_value;
+  }
+  blkid_put_cache(cache);
+  return rst;
+}
+
 int install(ExternalProcess& process, const PhysDisk& disk)
 {
+  process.fork_exec_wait("/sbin/vgchange", "/sbin/vgchange", "-an", NULL);
+  
   const char* parted = "/usr/sbin/parted";
   std::vector<std::string> parted_args;
   parted_args.push_back(parted);
@@ -199,14 +215,13 @@ int install(ExternalProcess& process, const PhysDisk& disk)
   bool bios_compatible = is_bios_compatible(disk);
   parted_args.push_back((std::string)"mklabel " + (bios_compatible? "msdos" : "gpt"));
 
-  bool has_secondary_partition = size(disk) >= 35000000000L;
+  bool has_secondary_partition = size(disk) >= 9000000000L; // more than 8GiB
 
   if (has_secondary_partition) {
-    parted_args.push_back("mkpart primary 1MiB 32GiB");
-    parted_args.push_back("mkpart primary 32GiB -1");
-    parted_args.push_back("set 2 lvm on");
+    parted_args.push_back("mkpart primary fat32 1MiB 8GiB");
+    parted_args.push_back("mkpart primary btrfs 8GiB -1");
   } else {
-    parted_args.push_back("mkpart primary 1MiB -1");
+    parted_args.push_back("mkpart primary fat32 1MiB -1");
   }
   parted_args.push_back("set 1 boot on");
   if (bios_compatible) {
@@ -262,9 +277,11 @@ int install(ExternalProcess& process, const PhysDisk& disk)
   if (has_secondary_partition) {
     auto secondary_partition = get_partition(name(disk), 2);
     if (secondary_partition) {
-      const char* partition_name = secondary_partition.value().c_str();
-      if (process.fork_exec_wait("/sbin/pvcreate", "/sbin/pvcreate", "-ffy", partition_name, NULL) == 0) {
-        process.fork_exec_wait("/sbin/vgcreate", "/sbin/vgcreate", "--yes", "--addtag=@wbvg", "wbvg", partition_name, NULL);
+      auto boot_partition_uuid = get_partition_uuid(boot_partition.value());
+      if (boot_partition_uuid) {
+        auto label = std::string("wbdata-") + boot_partition_uuid.value();
+        const char* partition_name = secondary_partition.value().c_str();
+        process.fork_exec_wait("/sbin/mkfs.btrfs", "/sbin/mkfs.btrfs", "-L", label.c_str(), "-f", partition_name, NULL);
       }
     }
   }

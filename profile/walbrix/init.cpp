@@ -13,6 +13,7 @@ protected:
   virtual void mount_boot(const Partition& boot_partition, const std::filesystem::path& mountpoint);
   virtual void mount_rw(const std::filesystem::path& boot, const std::filesystem::path& mountpoint);
   virtual bool activate_swap(const std::filesystem::path& boot);
+  virtual std::pair<std::string,int> get_default_network_interface_name();
 };
 
 bool MyInit::is_installer()
@@ -64,7 +65,7 @@ void MyInit::mount_boot(const Partition& boot_partition,
         RUNTIME_ERROR("mount boot partition");
       }
     }
-    std::filesystem::create_directories(mountpoint / "vm");
+    //std::filesystem::create_directories(mountpoint / "vm");
   }
 }
 
@@ -89,6 +90,7 @@ void MyInit::mount_rw(const std::filesystem::path& boot,
   }
 
   std::cout << "Mounting RW layer..." << std::endl;
+  enable_lvm();
   btrfs_scan();
   bool rw_layer_mounted = mount_loop(datafile, mountpoint, "btrfs", MS_RELATIME, "compress=zstd") == 0;
   if (!rw_layer_mounted) {
@@ -122,6 +124,11 @@ bool MyInit::activate_swap(const std::filesystem::path& boot)
   return (swapon(swapfile) == 0);
 }
 
+std::pair<std::string,int> MyInit::get_default_network_interface_name()
+{
+  return std::make_pair("xenbr0", 52);
+}
+
 std::filesystem::path init()
 {
   std::cout
@@ -140,8 +147,33 @@ std::filesystem::path init()
   MyInit init;
   init.setup();
   auto newroot = init.get_newroot();
-  std::filesystem::create_directory(newroot / "run/vm");
-  bind_mount(newroot / "run/initramfs/boot/vm" , newroot / "run/vm");
+  const auto vm_root = newroot / "var/vm";
+
+  try {
+    const auto adhoc_vol_src = newroot / "run/initramfs/boot/vm";
+    if (is_dir(adhoc_vol_src)) {
+      const auto adhoc_vol = vm_root / "@adhoc";
+      std::filesystem::create_directories(adhoc_vol);
+      bind_mount(adhoc_vol_src, adhoc_vol);
+    }
+
+    const char *boot_partition_uuid = getenv("boot_partition_uuid");
+    if (boot_partition_uuid) {
+      const auto default_vol = vm_root / "@default";
+      std::filesystem::create_directories(default_vol);
+      const auto wbdata = std::string("LABEL=") + "wbdata-" + boot_partition_uuid;
+      const auto btrfs_options = std::string("compress=") + init.ini_string("data-volume-compression", "no") +
+        (init.ini_bool("data-volume-cow", false) ? "" : ",nodatacow") +
+        (init.ini_bool("data-volume-trim", false) ? ",discard" : "") +
+        ",degraded";
+      if (mount(wbdata, default_vol, "btrfs", MS_RELATIME, btrfs_options) != 0) {
+        std::cout << "Default data partition couldn't be mounted." << std::endl;
+      }
+    }
+  }
+  catch (const std::exception& ex) {
+    std::cout << "Exception occured when mounting data volumes. " << ex.what() << std::endl;
+  }
   return newroot;
 }
 

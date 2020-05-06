@@ -3,6 +3,8 @@
 #include <regex>
 #include <cassert>
 
+#include <libmount/libmount.h>
+
 extern "C" {
 #include <libxlutil.h>
 }
@@ -16,6 +18,8 @@ public:
   libxl_domain_build_info& b_info;
   int& num_disks;
   libxl_device_disk*& disks;
+  int& num_p9s;
+  libxl_device_p9*& p9s;
   int& num_nics;
   libxl_device_nic*& nics;
   libxl_action_on_shutdown& on_poweroff;
@@ -27,6 +31,7 @@ public:
   LibXlDomainConfig() : c_info(d_config.c_info), b_info(d_config.b_info),
     on_poweroff(d_config.on_poweroff), on_reboot(d_config.on_reboot), on_watchdog(d_config.on_watchdog), on_crash(d_config.on_crash), on_soft_reset(d_config.on_soft_reset),
     num_disks(d_config.num_disks), disks(d_config.disks),
+    num_p9s(d_config.num_p9s), p9s(d_config.p9s),
     num_nics(d_config.num_nics), nics(d_config.nics)
     { libxl_domain_config_init(&d_config); }
   ~LibXlDomainConfig() { libxl_domain_config_dispose(&d_config); }
@@ -36,7 +41,7 @@ public:
 
 
 class Lock {
-  const char* lockfile = "/run/wb.lock";
+  const std::filesystem::path lockfile = vm_root / ".lock";
   static int fd_lock;
 public:
   Lock() {
@@ -48,17 +53,17 @@ public:
     fl.l_whence = SEEK_SET;
     fl.l_start = 0;
     fl.l_len = 0;
-    fd_lock = open(lockfile, O_WRONLY|O_CREAT, S_IWUSR);
-    if (fd_lock < 0) RUNTIME_ERROR_WITH_ERRNO((std::string)"cannot open the lockfile " + lockfile);
+    fd_lock = open(lockfile.c_str(), O_WRONLY|O_CREAT, S_IWUSR);
+    if (fd_lock < 0) RUNTIME_ERROR_WITH_ERRNO((std::string)"cannot open the lockfile " + lockfile.c_str());
     if (fcntl(fd_lock, F_SETFD, FD_CLOEXEC) < 0) {
         close(fd_lock);
-        RUNTIME_ERROR_WITH_ERRNO((std::string)"cannot set cloexec to lockfile " + lockfile);
+        RUNTIME_ERROR_WITH_ERRNO((std::string)"cannot set cloexec to lockfile " + lockfile.c_str());
     }
 get_lock:
     int rc = fcntl(fd_lock, F_SETLKW, &fl);
     if (rc < 0 && errno == EINTR) goto get_lock;
     //else
-    if (rc < 0) RUNTIME_ERROR_WITH_ERRNO((std::string)"cannot acquire lock " + lockfile);
+    if (rc < 0) RUNTIME_ERROR_WITH_ERRNO((std::string)"cannot acquire lock " + lockfile.c_str());
   }
   ~Lock() {
 
@@ -88,29 +93,39 @@ int load_disk_config(const VmIniFile& ini, std::list<Disk>& disks)
   disks.clear();
   std::optional<std::string> disk_names = ini.getstring(":disks");
   if (!disk_names) {
-    std::string img_file = (std::string)"/run/initramfs/boot/vm/" + ini.vmname() + ".img";
-    std::string dat_file = (std::string)"/run/initramfs/boot/vm/" + ini.vmname() + ".dat";
-    std::string swp_file = (std::string)"/run/initramfs/boot/vm/" + ini.vmname() + ".swp";
-    if (!is_file(img_file)) {
+    auto vm_dir = vm_root / ini.vmname();
+    auto system_file = vm_dir / "system";
+    auto data_file = vm_dir / "data";
+    auto swp_file = vm_dir / "swapfile";
+
+    bool system_file_exists = is_file(system_file);
+    bool data_file_exists = (is_file(data_file) || is_block(data_file));
+
+    Disk xvda1;
+    xvda1.name = "xvda1";
+    if (system_file_exists) {
+      xvda1.path = system_file;
+      xvda1.readonly = true; // todo: make it false in case image file contains writable filesystem
+    } else if (data_file_exists) {
+      xvda1.path = data_file;
+      xvda1.readonly = false;
+    } else {
       std::cerr << "No image file for VM '" << ini.vmname() << "'" << std::endl;
       return 0;
     }
-    //else
-    // setup default disks
-    Disk xvda1 = Disk();
-    xvda1.name = "xvda1";
-    xvda1.path = img_file;
-    xvda1.readonly = true; // todo: make it false in case image file contains writable filesystem
     disks.push_back(xvda1);
-    if (is_file(dat_file)) {
-      Disk xvda2 = Disk();
+
+
+    if (system_file_exists && data_file_exists) {
+      Disk xvda2;
       xvda2.name = "xvda2";
-      xvda2.path = dat_file;
+      xvda2.path = data_file;
       xvda2.readonly = false;
       disks.push_back(xvda2);
     }
+
     if (is_file(swp_file)) {
-      Disk xvda3 = Disk();
+      Disk xvda3;
       xvda3.name = "xvda3";
       xvda3.path = swp_file;
       xvda3.readonly = false;
@@ -142,6 +157,20 @@ int load_disk_config(const VmIniFile& ini, std::list<Disk>& disks)
   };
 
   return disks.size();
+}
+
+int load_9p_config(const VmIniFile& ini, std::list<P9>& p9s)
+{
+  p9s.clear();
+  auto vm_dir = vm_root / ini.vmname();
+  auto fs_dir = vm_dir / "fs";
+  if (is_dir(fs_dir)) {
+    P9 p9;
+    p9.tag = "rw";
+    p9.path = fs_dir;
+    p9s.push_back(p9);
+  }
+  return p9s.size();
 }
 
 int load_nic_config(const VmIniFile& ini, std::list<NIC>& nics)
@@ -200,6 +229,19 @@ int load_pci_config(const VmIniFile& ini, std::list<PCI>& pci_devices)
   return pci_devices.size();
 }
 
+static bool is_mounted(const std::filesystem::path& path)
+{
+  struct libmnt_table *tb = mnt_new_table_from_file("/proc/self/mountinfo");
+	struct libmnt_cache *cache = mnt_new_cache();
+	struct libmnt_fs *fs;
+  mnt_table_set_cache(tb, cache);
+	mnt_unref_cache(cache);
+  fs = mnt_table_find_target(tb, path.c_str(), MNT_ITER_BACKWARD);
+  bool rst = (fs && mnt_fs_get_target(fs));
+  mnt_unref_table(tb);
+  return rst;
+}
+
 uint32_t/*domid*/ start(const char* vmname)
 {
   std::map<std::string, VM> vms;
@@ -221,6 +263,10 @@ uint32_t/*domid*/ start(const char* vmname)
   std::list<Disk> disks;
   load_disk_config(ini, disks);
 
+  // load 9ps
+  std::list<P9> p9s;
+  load_9p_config(ini, p9s);
+
   // load nics
   std::list<NIC> nics;
   load_nic_config(ini, nics);
@@ -239,7 +285,7 @@ uint32_t/*domid*/ start(const char* vmname)
 
   // build domain config
   d_config.c_info.name = strdup(vmname);
-  d_config.c_info.type = LIBXL_DOMAIN_TYPE_PV;
+  d_config.c_info.type = vm_config.pvh? LIBXL_DOMAIN_TYPE_PVH : LIBXL_DOMAIN_TYPE_PV;
   libxl_uuid_generate(&d_config.c_info.uuid);
   libxl_domain_build_info_init_type(&d_config.b_info, d_config.c_info.type);
   int memory = vm_config.mem;
@@ -264,6 +310,8 @@ uint32_t/*domid*/ start(const char* vmname)
   d_config.on_soft_reset = (libxl_action_on_shutdown)7/*soft-reset*/;
 
   d_config.b_info.kernel = strdup(vm_config.kernel.c_str());
+  if (vm_config.ramdisk) d_config.b_info.ramdisk = strdup(vm_config.ramdisk.value().c_str());
+  if (vm_config.cmdline) d_config.b_info.cmdline = strdup(vm_config.cmdline.value().c_str());
   d_config.num_disks = disks.size();
   d_config.disks = (libxl_device_disk*)malloc(sizeof(libxl_device_disk) * d_config.num_disks);
   int i = 0;
@@ -277,6 +325,21 @@ uint32_t/*domid*/ start(const char* vmname)
     disk.vdev = strdup(disk_config.name.c_str());
     disk.pdev_path = strdup(disk_config.path.c_str());
   }
+
+  d_config.num_p9s = p9s.size();
+  d_config.p9s = (libxl_device_p9*)malloc(sizeof(libxl_device_p9) * d_config.num_p9s);
+  i = 0;
+  for (const auto& p9_config : p9s) {
+    libxl_device_p9& p9 = d_config.p9s[i++];
+    libxl_device_p9_init(&p9);
+    if (p9.tag) free(p9.tag);
+    p9.tag = strdup(p9_config.tag.c_str());
+    if (p9.security_model) free(p9.security_model);
+    p9.security_model = strdup("none");
+    if (p9.path) free(p9.path);
+    p9.path = strdup(p9_config.path.c_str());
+  }
+
   d_config.num_nics = nics.size();
   d_config.nics = (libxl_device_nic*)malloc(sizeof(libxl_device_nic) * d_config.num_nics);
   i = 0;
@@ -298,33 +361,6 @@ uint32_t/*domid*/ start(const char* vmname)
     Lock lock;
     libxl_domain_create_new(ctx, d_config, &domid, 0, 0/*&autoconnect_console_how*/);
   }
-
-  /*
-  static int pciattach(uint32_t domid, const char *bdf, const char *vs)
-  {
-      libxl_device_pci pcidev;
-      XLU_Config *config;
-      int r = 0;
-
-      libxl_device_pci_init(&pcidev);
-
-      config = xlu_cfg_init(stderr, "command line");
-      if (!config) { perror("xlu_cfg_inig"); exit(-1); }
-
-      if (xlu_pci_parse_bdf(config, &pcidev, bdf)) {
-          fprintf(stderr, "pci-attach: malformed BDF specification \"%s\"\n", bdf);
-          exit(2);
-      }
-
-      if (libxl_device_pci_add(ctx, domid, &pcidev, 0))
-          r = 1;
-
-      libxl_device_pci_dispose(&pcidev);
-      xlu_cfg_destroy(config);
-
-      return r;
-  }
-  */
 
   XLU_Config* xlu_config = xlu_cfg_init(stderr, "command line");
   if (xlu_config) {

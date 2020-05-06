@@ -22,6 +22,7 @@ bool is_file(const std::filesystem::path& path);
 bool is_dir(const std::filesystem::path& path);
 bool is_block(const std::filesystem::path& path);
 int cp_a(const std::filesystem::path& src, const std::filesystem::path& dst);
+int cp_au(const std::filesystem::path& src, const std::filesystem::path& dst);
 int unlink(const std::filesystem::path& path);
 int create_whiteout(const std::filesystem::path& path);
 
@@ -37,6 +38,7 @@ int bind_mount(std::filesystem::path source, std::filesystem::path mountpoint);
 int repair_fat(const std::filesystem::path& path);
 uint64_t get_free_disk_space(const std::filesystem::path& mountpoint);
 int create_btrfs_imagefile(const std::filesystem::path& imagefile, off_t length);
+int enable_lvm();
 int btrfs_scan();
 int repair_btrfs(const std::filesystem::path& path);
 int create_swapfile(const std::filesystem::path& swapfile, off_t length);
@@ -63,14 +65,16 @@ protected:
   virtual std::filesystem::path get_upperdir(const std::filesystem::path& rw_layer);
   virtual std::filesystem::path get_workdir(const std::filesystem::path& rw_layer);
 
+  virtual std::pair<std::string,int> get_default_network_interface_name();
+
   virtual void setup_initramfs_shutdown(const std::filesystem::path& newroot);
 
   virtual void setup_hostname(const std::filesystem::path& newroot);
+  virtual void setup_network(const std::filesystem::path& newroot);
   virtual void setup_password(const std::filesystem::path& newroot);
   virtual void setup_timezone(const std::filesystem::path& newroot);
   virtual void setup_locale(const std::filesystem::path& newroot);
   virtual void setup_keymap(const std::filesystem::path& newroot);
-  virtual void setup_network(const std::filesystem::path& newroot);
   virtual void setup_wifi(const std::filesystem::path& newroot);
   virtual void setup_wireguard(const std::filesystem::path& newroot);
   virtual void setup_openvpn(const std::filesystem::path& newroot);

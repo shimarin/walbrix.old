@@ -6,7 +6,6 @@
 #include <list>
 #include <set>
 #include <cstring>
-#include <filesystem>
 
 #include <sys/ioctl.h>
 
@@ -34,6 +33,12 @@ bool is_dir(const std::string& path)
 {
   struct stat st;
   return stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
+}
+
+bool is_block(const std::string& path)
+{
+  struct stat st;
+  return stat(path.c_str(), &st) == 0 && S_ISBLK(st.st_mode);
 }
 
 int ExternalProcess::fork_exec_wait(const char* cmd, const std::vector<std::string>& args)
@@ -84,7 +89,7 @@ int ExternalProcess::fork_exec_wait(const char* cmd, ...)
   return fork_exec_wait(cmd, args);
 }
 
-int load_vm_config(const char* vmname, VM& vm)
+int load_vm_config(const std::string& vmname, VM& vm)
 {
   VmIniFile ini(vmname);
 
@@ -94,36 +99,34 @@ int load_vm_config(const char* vmname, VM& vm)
   if (vm.mem < 64) vm.mem = 64;
   vm.ncpu = ini.getint(":cpu", 1);
   if (vm.ncpu < 1) vm.ncpu = 1;
-  vm.kernel = ini.getstring(":kernel", "/usr/libexec/xen/boot/pv-grub2-x86_64.gz");
+  vm.pvh = ini.getboolean(":pvh", false);
+  vm.kernel = ini.getstring(":kernel", vm.pvh? "/usr/libexec/xen/boot/pvh-grub2-x86_64.gz" : "/usr/libexec/xen/boot/pv-grub2-x86_64.gz");
   vm.ramdisk = ini.getstring(":ramdisk");
   vm.cmdline = ini.getstring(":cmdline");
-  vm.root = ini.getstring(":root");
-  vm.extra = ini.getstring(":extra");
+  //vm.root = ini.getstring(":root");
+  //vm.extra = ini.getstring(":extra");
   return 0;
 }
 
 int list(std::map<std::string,VM>& vms)
 {
   struct dirent **namelist;
-  int n = scandir("/run/initramfs/boot/vm", &namelist, NULL, alphasort);
+  int n = scandir(vm_root.c_str(), &namelist, NULL, alphasort);
 
   if (n < 0) RUNTIME_ERROR_WITH_ERRNO("scandir");
   //else
   vms.clear();
   for (int i = 0; i < n; i++) {
-    if (namelist[i]->d_type == DT_REG) {
-      std::string name = std::string(namelist[i]->d_name);
-      std::transform(name.begin(), name.end(), name.begin(), tolower);
-      if (name.ends_with(".img") || name.ends_with(".ini")) {
-        name = name.substr(0, name.length() - 4);
-        if (std::any_of(name.begin(), name.end(), [](char c) { return (!isalpha(c) && !isdigit(c) && c != '-'); })) {
-          std::cerr << "Name '" << name << "' contains invalid character. Skipping." << std::endl;
-          continue;
-        }
-        //else
-        load_vm_config(name.c_str(), vms[name]);
-      }
+    const std::string name(namelist[i]->d_name);
+    auto status = std::filesystem::status(vm_root / name);
+    if (!std::filesystem::is_directory(status)) continue;
+
+    if (std::any_of(name.begin(), name.end(), [](char c) { return (!islower(c) && !isdigit(c) && c != '-'); })) {
+      //std::cerr << "Name '" << name << "' contains invalid character. Skipping." << std::endl;
+      continue;
     }
+    //else
+    load_vm_config(name, vms[name]);
     free(namelist[i]);
   }
   free(namelist);

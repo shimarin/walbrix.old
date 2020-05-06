@@ -4,6 +4,13 @@ $package dev-python/lxml
 $package app-emulation/xen-tools
 $package app-emulation/xen-pvgrub
 $package app-emulation/xen
+$package app-emulation/qemu
+$package sys-firmware/edk2-ovmf
+$package sys-firmware/ipxe
+$package sys-firmware/seabios
+$package sys-firmware/sgabios
+$package sys-apps/dtc
+
 /var/lib/xen
 /var/log/xen
 #$symlink /usr/lib/xen/boot ../../libexec/xen/boot
