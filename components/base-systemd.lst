@@ -16,6 +16,10 @@ $package sys-libs/pam
 $package sys-apps/kmod
 $package net-vpn/wireguard-tools
 
+/usr/bin/strace
+/usr/sbin/tcpdump
+/usr/bin/telnet
+
 $require cron-systemd.lst
 $package net-misc/openssh
 $sed /etc/ssh/sshd_config 's/^#PermitRootLogin prohibit-password$/PermitRootLogin yes/'

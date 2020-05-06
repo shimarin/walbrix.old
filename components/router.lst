@@ -45,7 +45,6 @@ $write /etc/sysctl.d/nf_conntrack_max.conf 'net.nf_conntrack_max = 65536'
 
 # networks
 $package net-analyzer/traceroute
-$require tcpdump.lst
 /usr/bin/iperf3
 /usr/bin/curl
 /sbin/brctl
@@ -53,8 +52,6 @@ $require tcpdump.lst
 # tools
 $package sys-apps/dmidecode
 $package sys-fs/btrfs-progs
-/usr/bin/strace
-/usr/bin/telnet
 $package screen
 
 # hardware

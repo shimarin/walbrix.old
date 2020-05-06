@@ -32,7 +32,6 @@ $write /etc/sysctl.d/nf_conntrack_max.conf 'net.nf_conntrack_max = 65536'
 # networks
 $package net-vpn/openvpn
 $package net-analyzer/traceroute
-$require tcpdump.lst
 $package net-dns/bind-tools
 /usr/bin/iperf3
 /usr/bin/curl
@@ -40,8 +39,6 @@ $package net-dns/bind-tools
 
 # tools
 $package sys-fs/btrfs-progs
-/usr/bin/strace
-/usr/bin/telnet
 $package screen
 
 # nginx

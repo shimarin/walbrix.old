@@ -52,15 +52,12 @@ $write --append /etc/profile.env "export GPU_MAX_HEAP_SIZE=100\nexport GPU_USE_S
 
 # networks
 $package net-analyzer/traceroute
-$require tcpdump.lst
 /usr/bin/cu
 /usr/bin/curl
 /sbin/brctl
 
 # tools
 $package sys-fs/btrfs-progs
-/usr/bin/strace
-/usr/bin/telnet
 $package screen
 
 # hardware

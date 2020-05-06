@@ -2,7 +2,6 @@ $require base-systemd.lst
 
 $require busybox.lst
 
-/usr/bin/strace
 $write /etc/hostname "node-site"
 
 $package app-admin/sudo

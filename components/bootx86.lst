@@ -39,7 +39,6 @@ $write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nss
 
 $package sys-fs/btrfs-progs
 $require xfsprogs.lst
-/usr/bin/strace
 $package screen
 /usr/bin/beep
 $package lshw

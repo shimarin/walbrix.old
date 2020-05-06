@@ -33,7 +33,6 @@ $require openssl.lst
 $write /etc/hostname WBFREE01
 
 # tools
-/usr/bin/strace
 $package screen
 $require sudo.lst
 /usr/bin/ftp
@@ -106,11 +105,9 @@ $exec "systemctl enable lvm2-lvmetad.socket"
 # networks
 $package net-analyzer/traceroute
 $require iptables.lst
-$require tcpdump.lst
 /usr/bin/cu
 /usr/bin/curl
 /sbin/brctl
-/usr/bin/telnet
 $package net-dns/bind-tools
 $package net-analyzer/traceroute
 $require rp-pppoe.lst

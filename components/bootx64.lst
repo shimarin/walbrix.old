@@ -39,7 +39,6 @@ $require wireless-tools.lst
 
 $package sys-fs/btrfs-progs
 $require xfsprogs.lst
-/usr/bin/strace
 $package screen
 /usr/bin/beep
 $package lshw

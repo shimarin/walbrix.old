@@ -1,0 +1,8 @@
+$kernel /boot/kernel
+/boot/kernel
+/boot/initramfs
+/lib/modules
+$dir /lib/modules/$KERNEL_VERSION
+
+$mkdir /boot/grub
+$write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
