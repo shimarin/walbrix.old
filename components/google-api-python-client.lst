@@ -8,7 +8,7 @@ $package dev-python/uritemplate
 $package dev-python/pyasn1-modules
 $package dev-python/secretstorage
 $package dev-python/rsa
-$package dev-python/keyring
+$require keyring.lst
 $package dev-python/oauth2client
 $package dev-python/google-api-python-client
 
