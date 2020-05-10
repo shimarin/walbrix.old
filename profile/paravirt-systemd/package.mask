@@ -1,1 +1,3 @@
 >=dev-db/mysql-8
+>=dev-lang/php-7.4
+<dev-lang/php-7.3

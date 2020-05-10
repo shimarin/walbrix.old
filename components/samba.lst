@@ -23,9 +23,7 @@ $package net-fs/samba --no-elf-cache --use="ldap" --exclude='^/usr/lib(64)?/pyth
 #$symlink /var/lock /run/lock
 /var/lib/samba/private
 
-$symlink /etc/init.d/samba.nmbd samba
-$symlink /etc/init.d/samba.smbd samba
-$symlink /etc/conf.d/samba.nmbd samba
-$symlink /etc/conf.d/samba.smbd samba
-$symlink /etc/runlevels/default/samba.nmbd /etc/init.d/samba.nmbd
-$symlink /etc/runlevels/default/samba.smbd /etc/init.d/samba.smbd
+$write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = utf-8\ndeadtime = 15'
+
+$exec "systemctl enable nmb"
+$exec "systemctl enable smb"

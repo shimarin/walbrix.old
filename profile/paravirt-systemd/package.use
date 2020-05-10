@@ -10,7 +10,8 @@ sys-apps/systemd -acl
 # motion
 media-video/motion ffmpeg v4l webp
 media-libs/opencv jpeg png threads v4l ffmpeg
-media-video/ffmpeg mp3 xvid x264 x265 vpx cpudetection mmx mmxext theora threads truetype v4l vorbis webp vdpau cpu_flags_x86_3dnow cpu_flags_x86_3dnowext cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_sse3 cpu_flags_x86_mmx cpu_flags_x86_mmxext cpu_flags_x86_ssse3 cpu_flags_x86_aes cpu_flags_x86_avx cpu_flags_x86_avx2 cpu_flags_x86_fma3 cpu_flags_x86_fma4 cpu_flags_x86_sse4_1 cpu_flags_x86_sse4_2 cpu_flags_x86_xop
+media-video/ffmpeg mp3 xvid x264 x265 vpx cpudetection mmx mmxext theora threads truetype v4l vorbis webp vdpau vaapi cpu_flags_x86_3dnow cpu_flags_x86_3dnowext cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_sse3 cpu_flags_x86_mmx cpu_flags_x86_mmxext cpu_flags_x86_ssse3 cpu_flags_x86_aes cpu_flags_x86_avx cpu_flags_x86_avx2 cpu_flags_x86_fma3 cpu_flags_x86_fma4 cpu_flags_x86_sse4_1 cpu_flags_x86_sse4_2 cpu_flags_x86_xop
+x11-libs/libva X
 www-servers/nginx aio luajit http2 nginx_modules_http_auth_pam nginx_modules_http_cache_purge nginx_modules_http_lua nginx_modules_http_spdy nginx_modules_http_realip nginx_modules_http_mp4 nginx_modules_http_flv nginx_modules_http_stub_status nginx_modules_mail_smtp nginx_modules_mail_pop3 nginx_modules_mail_imap nginx_modules_http_gunzip nginx_modules_http_image_filter nginx_modules_http_push_stream nginx_modules_http_security nginx_modules_http_upload_progress nginx_modules_http_upstream_check nginx_modules_http_vhost_traffic_status nginx_modules_stream_access nginx_modules_stream_limit_conn nginx_modules_stream_realip nginx_modules_stream_return nginx_modules_stream_upstream_least_conn
 media-libs/gd png jpeg
 media-libs/libv4l jpeg
@@ -24,128 +25,88 @@ net-dns/avahi -introspection mdnsresponder-compat dbus
 net-vpn/openvpn systemd
 dev-db/mysql -perl cjk
 
-app-emulation/xen-tools -hvm -ipxe -pam -qemu -qemu-traditional -rombios -python_single_target_python3_6 python_single_target_python3_7
+app-emulation/xen-tools -hvm -ipxe -pam -qemu -qemu-traditional -rombios
 
 # Zabbix
 net-analyzer/zabbix curl frontend mysql proxy server snmp openipmi ssh libxml2 -postgres 
 net-analyzer/fping suid
 dev-lang/php apache2 bcmath truetype xmlreader gd sysvipc sockets xmlwriter mysqli fpm gd mysql postgres xslt zip pdo pcntl sysvipc curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap
 app-eselect/eselect-php fpm apache2
-sys-libs/openipmi snmp -python_single_target_python2_7 -python_single_target_python3_6 python_single_target_python3_7
+sys-libs/openipmi snmp -python_single_target_python2_7
 
+dev-php/pecl-redis -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
+dev-php/pecl-imagick -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
+dev-php/pecl-apcu -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
+media-gfx/imagemagick -openmp # pecl-imagick hates openmp
 www-servers/apache apache2_modules_http2 apache2_modules_proxy apache2_modules_proxy_connect
 www-apache/mod_extract_forwarded mod-proxy
 mail-mta/postfix mysql sasl
 
 # samba
-net-fs/samba -python_single_target_python3_6 python_single_target_python3_7 client winbind zeroconf
-sys-libs/ldb -python_single_target_python3_6 python_single_target_python3_7
-sys-libs/talloc -python_single_target_python3_6 python_single_target_python3_7
-sys-libs/tdb -python_single_target_python3_6 python_single_target_python3_7
-sys-libs/tevent -python_single_target_python3_6 python_single_target_python3_7
-dev-python/subunit -python_targets_python3_6 python_targets_python3_7
-dev-python/testtools -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/extras -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/setuptools python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/certifi python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/mimeparse -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pbr -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyrsistent -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/six python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/traceback2 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/unittest2 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/fixtures -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/linecache2 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyopenssl python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/cryptography python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/python-dateutil python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/matplotlib python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/cycler python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/zeroconf python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pytz python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-app-portage/gemato -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/chardet python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-util/meson -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/cffi python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/urllib3 python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/requests python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/lxml -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-app-portage/repoman -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/cython python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/setuptools_scm python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/idna python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/PySocks python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pycparser python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/ply python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/numpy python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/kiwisolver python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyparsing python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/versioneer python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyblake2 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-sys-apps/portage -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyyaml -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-app-admin/webapp-config -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/ifaddr python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-app-portage/gentoolkit -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/py -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/ndg-httpsclient -python_targets_python3_6 python_targets_python3_7
-media-libs/opencv -python_targets_python3_6 python_targets_python3_7
-
-dev-python/http-parser -python_targets_python3_6
-net-misc/s3cmd -python_targets_python3_6
-
-app-crypt/certbot -python_targets_python3_6 python_targets_python3_7
-app-crypt/acme -python_targets_python3_6 python_targets_python3_7
-dev-python/configargparse -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/configobj -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/distro -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/josepy -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/mock -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyrfc3339 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/zope-component -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/zope-interface -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/namespace-zope -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/zope-event -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/future -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/requests-toolbelt -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/parsedatetime -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/funcsigs -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pip -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/httplib2 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/simplejson -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyasn1 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyasn1-modules -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/entrypoints -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/rsa -python_targets_python3_6 python_targets_python3_7
-dev-python/jeepney -python_targets_python3_6 python_targets_python3_7
-dev-python/uritemplate -python_targets_python3_6 python_targets_python3_7
-dev-python/secretstorage -python_targets_python3_6 python_targets_python3_7
-dev-python/keyring -python_targets_python3_6 python_targets_python3_7
-dev-python/contextlib2 -python_targets_python3_6 python_targets_python3_7
-dev-python/scandir -python_targets_python3_6 python_targets_python3_7
-dev-python/pathlib2 -python_targets_python3_6 python_targets_python3_7
-dev-python/more-itertools -python_targets_python3_6 python_targets_python3_7
-dev-python/zipp -python_targets_python3_6 python_targets_python3_7
-dev-python/importlib_metadata -python_targets_python3_6 python_targets_python3_7
-dev-python/oauth2client -python_targets_python3_6 python_targets_python3_7
-dev-python/google-api-python-client -python_targets_python3_6 python_targets_python3_7
-
-app-editors/vim  -python_single_target_python3_6 python_single_target_python3_7
-sys-devel/clang -python_single_target_python3_6 python_single_target_python3_7
-sys-fs/btrfs-progs -python_single_target_python3_6 python_single_target_python3_7
-dev-util/glib-utils -python_single_target_python3_6 python_single_target_python3_7
-sys-apps/usbutils -python_single_target_python3_6 python_single_target_python3_7
-dev-vcs/git -python_single_target_python3_6 python_single_target_python3_7
-dev-db/postgresql -python_single_target_python3_6 python_single_target_python3_7
-
-net-dns/avahi -python_targets_python3_6 python_targets_python3_7
-sys-libs/libcap-ng -python_targets_python3_6 python_targets_python3_7
-x11-base/xcb-proto -python_targets_python3_6 python_targets_python3_7
-dev-python/backports -python_targets_python3_6 python_targets_python3_7
-dev-python/python-magic -python_targets_python3_6 python_targets_python3_7
-dev-python/socketpool -python_targets_python3_6 python_targets_python3_7
-dev-python/olefile -python_targets_python3_6 python_targets_python3_7
-dev-python/asn1crypto -python_targets_python3_6 python_targets_python3_7
-dev-python/paho-mqtt -python_targets_python3_6 python_targets_python3_7
-dev-python/pillow -python_targets_python3_6 python_targets_python3_7
-dev-python/webob -python_targets_python3_6 python_targets_python3_7
+net-fs/samba ldap client winbind zeroconf
+net-fs/cifs-utils -acl -ads -caps
+net-nds/openldap -tcpd samba
+dev-python/testtools -python_targets_python2_7
+dev-python/extras -python_targets_python2_7
+dev-python/setuptools python_targets_python2_7
+dev-python/certifi python_targets_python2_7
+dev-python/mimeparse -python_targets_python2_7
+dev-python/pbr -python_targets_python2_7
+dev-python/pyrsistent -python_targets_python2_7
+dev-python/six python_targets_python2_7
+dev-python/traceback2 -python_targets_python2_7
+dev-python/unittest2 -python_targets_python2_7
+dev-python/fixtures -python_targets_python2_7
+dev-python/linecache2 -python_targets_python2_7
+dev-python/pyopenssl python_targets_python2_7
+dev-python/cryptography python_targets_python2_7
+dev-python/python-dateutil python_targets_python2_7
+dev-python/matplotlib python_targets_python2_7
+dev-python/cycler python_targets_python2_7
+dev-python/zeroconf python_targets_python2_7
+dev-python/pytz python_targets_python2_7
+app-portage/gemato -python_targets_python2_7
+dev-python/chardet python_targets_python2_7
+dev-util/meson -python_targets_python2_7
+dev-python/cffi python_targets_python2_7
+dev-python/urllib3 python_targets_python2_7
+dev-python/requests python_targets_python2_7
+dev-python/lxml -python_targets_python2_7
+app-portage/repoman -python_targets_python2_7
+dev-python/cython python_targets_python2_7
+dev-python/setuptools_scm python_targets_python2_7
+dev-python/idna python_targets_python2_7
+dev-python/PySocks python_targets_python2_7
+dev-python/pycparser python_targets_python2_7
+dev-python/ply python_targets_python2_7
+dev-python/numpy python_targets_python2_7
+dev-python/kiwisolver python_targets_python2_7
+dev-python/pyparsing python_targets_python2_7
+dev-python/versioneer python_targets_python2_7
+dev-python/pyblake2 -python_targets_python2_7
+sys-apps/portage -python_targets_python2_7
+dev-python/pyyaml -python_targets_python2_7
+app-admin/webapp-config -python_targets_python2_7
+dev-python/ifaddr python_targets_python2_7
+app-portage/gentoolkit -python_targets_python2_7
+dev-python/py -python_targets_python2_7
+dev-python/configargparse -python_targets_python2_7
+dev-python/configobj -python_targets_python2_7
+dev-python/distro -python_targets_python2_7
+dev-python/josepy -python_targets_python2_7
+dev-python/mock -python_targets_python2_7
+dev-python/pyrfc3339 -python_targets_python2_7
+dev-python/zope-component -python_targets_python2_7
+dev-python/zope-interface -python_targets_python2_7
+dev-python/namespace-zope -python_targets_python2_7
+dev-python/zope-event -python_targets_python2_7
+dev-python/future -python_targets_python2_7
+dev-python/requests-toolbelt -python_targets_python2_7
+dev-python/parsedatetime -python_targets_python2_7
+dev-python/funcsigs -python_targets_python2_7
+dev-python/pip -python_targets_python2_7
+dev-python/httplib2 -python_targets_python2_7
+dev-python/simplejson -python_targets_python2_7
+dev-python/pyasn1 -python_targets_python2_7
+dev-python/pyasn1-modules -python_targets_python2_7
+dev-python/entrypoints -python_targets_python2_7

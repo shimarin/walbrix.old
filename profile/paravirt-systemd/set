@@ -30,7 +30,7 @@ dev-python/ndg-httpsclient
 dev-python/py
 dev-python/requests
 
-net-misc/s3cmd
+#net-misc/s3cmd # due to lack of python3.7 support
 
 dev-python/matplotlib
 dev-python/pillow
@@ -63,6 +63,7 @@ www-apache/mod_extract_forwarded
 www-apache/mod_authnz_external
 net-misc/ndppd
 net-fs/samba
+net-fs/cifs-utils
 net-vpn/wireguard-tools
 
 app-crypt/certbot
@@ -71,3 +72,9 @@ dev-python/google-api-python-client
 net-analyzer/tcpdump
 net-misc/netkit-telnetd
 
+dev-db/redis
+dev-php/pecl-redis
+media-fonts/urw-fonts
+dev-php/pecl-imagick
+dev-php/pecl-apcu
+dev-php/PEAR-PEAR

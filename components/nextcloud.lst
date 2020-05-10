@@ -1,5 +1,9 @@
-$require paravirt.lst
-$require php73.lst
+$require base-systemd.lst
+
+$mkdir /boot/grub
+$write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
+
+$require php7.lst
 $require mysql.lst
 $require postfix.lst
 $require samba.lst
@@ -11,19 +15,13 @@ $package dev-php/pecl-redis
 $require pecl-apcu.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1nextcloud\2/'
 
-/bin/bzip2
-#$set TARBALL nextcloud-18.0.0.tar.bz2
-$download https://download.nextcloud.com/server/releases/nextcloud-18.0.0.tar.bz2 /tmp/
+$download https://download.nextcloud.com/server/releases/nextcloud-18.0.4.tar.bz2 /tmp/
 $exec "tar xvf /tmp/*.tar.bz2 -C /var/www/localhost"
 $exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/nextcloud /var/www/localhost/htdocs"
 
 # create database
 $write /tmp/create-db.sh "mysql -u root -e 'create database `nextcloud`; create user `nextcloud`@localhost; grant all privileges on `nextcloud`.* to `nextcloud`@localhost'"
 $exec "with-mysqld 'sh /tmp/create-db.sh'"
-
-$write /etc/conf.d/app-init 'rc_after="mysql redis"\nrc_before="apache2"'
-$copy resource/nextcloud/app-init /etc/init.d/app-init
-$symlink /etc/runlevels/default/app-init /etc/init.d/app-init
 
 $copy resource/nextcloud/config.php /var/www/localhost/htdocs/config/config.php
 
@@ -52,12 +50,7 @@ $symlink $PHP_CLI_ETC/ext-active/smbclient.ini ../ext/smbclient.ini
 $copy resource/nextcloud/occ.c /tmp/occ.c
 $exec --overlay "gcc -o /usr/sbin/occ /tmp/occ.c"
 
-# upgrade script
-$copy resource/nextcloud/update /usr/sbin/
-
-/usr/bin/wget
-$copy resource/nextcloud/upgrade-nextcloud /usr/sbin/
-
-$cleanup /tmp
-$cleanup /var/tmp
-$cleanup /run
+# app init
+$copy resource/nextcloud/cloud-server-init /usr/sbin/
+$mkdir /etc/systemd/system/apache2.service.d
+$write /etc/systemd/system/apache2.service.d/cloud-server-init.conf '[Unit]\nAfter=mysqld.service\n\n[Service]\nExecStartPre=/usr/sbin/cloud-server-init'

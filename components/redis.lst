@@ -1,4 +1,4 @@
 #dev-libs/jemalloc
 $package dev-db/redis
 $package dev-lang/lua
-$symlink /etc/runlevels/default/redis /etc/init.d/redis
+$exec "systemctl enable redis"
