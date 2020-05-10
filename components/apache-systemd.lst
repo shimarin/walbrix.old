@@ -8,7 +8,7 @@ $package app-admin/apache-tools
 # disable SSL / enable PROXY and DAV
 $sed /etc/conf.d/apache2 's/-D SSL//'
 $sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D PROXY -D DAV"/'
-# no automatically enable service as nginx may be preferred instead
+$exec "systemctl enable apache2"
 
 $mkdir /var/www/localhost/htdocs
 $mkdir /var/www/localhost/cgi-bin
@@ -23,4 +23,4 @@ $sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D EXTRACT_FORWARDED"/'
 $package www-apache/mod_authnz_external
 $sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D AUTHNZ_EXTERNAL"/'
 
-
+$write /etc/apache2/modules.d/50_trust_x_forwarded_proto.conf 'SetEnvIf X-Forwarded-Proto "https" HTTPS=on'
