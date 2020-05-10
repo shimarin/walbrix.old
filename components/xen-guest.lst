@@ -1,0 +1,6 @@
+/usr/bin/xenstore-list
+/usr/bin/xenstore-ls
+/usr/bin/xenstore-read
+/usr/bin/xenstore-write
+/usr/bin/xen-detect
+

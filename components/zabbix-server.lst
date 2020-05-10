@@ -1,4 +1,4 @@
-$require mysql-systemd.lst
+$require mysql.lst
 
 #dev-libs/oniguruma
 #net-libs/libssh2
@@ -28,4 +28,3 @@ $sed /etc/zabbix/zabbix_server.conf 's/^DBUser=root$/DBUser=zabbix/'
 $sed /etc/php/apache2-php7.4/php.ini 's/^max_execution_time.\+$/max_execution_time = 300/'
 $sed /etc/php/apache2-php7.4/php.ini 's/^max_input_time.\+$/max_input_time = 300/'
 $sed /etc/php/apache2-php7.4/php.ini 's/^post_max_size.\+$/post_max_size = 16M/'
-

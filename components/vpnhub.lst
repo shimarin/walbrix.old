@@ -71,7 +71,7 @@ $require syslog-ng.lst
 $package net-analyzer/zabbix
 
 # mysql
-$require mysql-systemd.lst
+$require mysql.lst
 $package dev-python/mysqlclient
 
 $package dev-python/pyinotify

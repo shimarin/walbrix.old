@@ -6,8 +6,11 @@ $write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1motion\2/'
 
 $require xfsprogs.lst
+
+$package app-shells/push
 $package sys-block/zram-init
 $exec "systemctl enable zram_swap"
+
 $require timezone-jp.lst
 
 # motion
@@ -18,7 +21,7 @@ $exec "systemctl enable motion"
 $require nginx.lst
 
 # mysql
-$require mysql-systemd.lst
+$require mysql.lst
 
 # python and modules
 $require python27.lst
@@ -98,8 +101,4 @@ $package net-misc/wol
 $package sys-process/at
 
 # domU
-/usr/bin/xenstore-list
-/usr/bin/xenstore-ls
-/usr/bin/xenstore-read
-/usr/bin/xenstore-write
-/usr/bin/xen-detect
+$require xen-guest.lst
