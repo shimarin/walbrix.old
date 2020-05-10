@@ -22,6 +22,10 @@ public:
   libxl_device_p9*& p9s;
   int& num_nics;
   libxl_device_nic*& nics;
+  int& num_vfbs;
+  libxl_device_vfb*& vfbs;
+  int& num_vkbs;
+  libxl_device_vkb*& vkbs;
   libxl_action_on_shutdown& on_poweroff;
   libxl_action_on_shutdown& on_reboot;
   libxl_action_on_shutdown& on_watchdog;
@@ -32,7 +36,9 @@ public:
     on_poweroff(d_config.on_poweroff), on_reboot(d_config.on_reboot), on_watchdog(d_config.on_watchdog), on_crash(d_config.on_crash), on_soft_reset(d_config.on_soft_reset),
     num_disks(d_config.num_disks), disks(d_config.disks),
     num_p9s(d_config.num_p9s), p9s(d_config.p9s),
-    num_nics(d_config.num_nics), nics(d_config.nics)
+    num_nics(d_config.num_nics), nics(d_config.nics),
+    num_vfbs(d_config.num_vfbs), vfbs(d_config.vfbs),
+    num_vkbs(d_config.num_vkbs), vkbs(d_config.vkbs)
     { libxl_domain_config_init(&d_config); }
   ~LibXlDomainConfig() { libxl_domain_config_dispose(&d_config); }
   operator libxl_domain_config*() { return &d_config; }
@@ -352,6 +358,33 @@ uint32_t/*domid*/ start(const char* vmname)
     nic.bridge = strdup(nic_config.bridge.c_str());
     if (nic_config.mac) {
       memcpy(nic.mac, nic_config.mac, sizeof(nic.mac));
+    }
+  }
+
+  auto vnc_port = ini.getint(":vnc-port");
+  if (vnc_port) {
+    if (vnc_port.value() >= 5900 && vnc_port.value() <= 5999) {
+      auto vfb = (libxl_device_vfb*)malloc(sizeof(libxl_device_vfb));
+      auto vkb = (libxl_device_vkb*)malloc(sizeof(libxl_device_vkb));
+      libxl_device_vfb_init(vfb);
+      libxl_device_vkb_init(vkb);
+      d_config.vfbs = vfb;
+      d_config.vkbs = vkb;
+      d_config.num_vfbs = 1;
+      d_config.num_vkbs = 1;
+      libxl_defbool_set(&vfb->vnc.enable, 1);
+      auto vnc_address = ini.getstring(":vnc-address", "*");
+      vfb->vnc.listen = strdup((vnc_address + ":" + std::to_string(vnc_port.value() - 5900)).c_str());
+      auto vnc_password = ini.getstring(":vnc-password");
+      if (vnc_password) {
+        vfb->vnc.passwd = strdup(vnc_password.value().c_str());
+      }
+      auto vnc_keymap = ini.getstring(":vnc-keymap");
+      if (vnc_keymap) {
+        vfb->keymap = strdup(vnc_keymap.value().c_str());
+      }
+    } else {
+      std::cout << "VNC port number must be between 5900 and 5999." << std::endl;
     }
   }
 

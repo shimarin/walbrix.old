@@ -143,20 +143,27 @@ public:
   ~VmIniFile() { if (ini) iniparser_freedict(ini); }
   const std::string& vmname() const { return _vmname; }
   operator bool() const { return ini != NULL; }
-  int getint(const char* key, int default_value) const { return iniparser_getint(ini, key, default_value); }
-  std::optional<std::string> getstring(const char* key) const {
-    const char* val = iniparser_getstring(ini, key, NULL);
+  int getint(const std::string& key, int default_value) const { return iniparser_getint(ini, key.c_str(), default_value); }
+  std::optional<int> getint(const std::string& key) {
+    if (exists(key)) {
+      return iniparser_getint(ini, key.c_str(), 0);
+    }
+    //else
+    return std::nullopt;
+  }
+  std::optional<std::string> getstring(const std::string& key) const {
+    const char* val = iniparser_getstring(ini, key.c_str(), NULL);
     return val != NULL? std::optional<std::string>(val) : std::nullopt;
   }
-  std::string getstring(const char* key, const std::string& default_value) const {
+  std::string getstring(const std::string& key, const std::string& default_value) const {
     char buf[default_value.length() + 1];
     strcpy(buf, default_value.c_str());
-    return iniparser_getstring(ini, key, buf);
+    return iniparser_getstring(ini, key.c_str(), buf);
   }
-  bool getboolean(const char* key, bool default_value) const {
-    return iniparser_getboolean(ini, key, default_value? 1: 0) == 1;
+  bool getboolean(const std::string& key, bool default_value) const {
+    return iniparser_getboolean(ini, key.c_str(), default_value? 1: 0) == 1;
   }
-  bool exists(const char* entry) const { return iniparser_find_entry(ini, entry) == 1; }
+  bool exists(const std::string& entry) const { return iniparser_find_entry(ini, entry.c_str()) == 1; }
 };
 
 std::pair<uint16_t, uint16_t> measure_text_size(const char* text);
