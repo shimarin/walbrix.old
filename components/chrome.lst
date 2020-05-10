@@ -1,0 +1,102 @@
+$require base-systemd.lst
+$require xen-guest.lst
+
+$mkdir /boot/grub
+$write /boot/grub/grub.cfg 'linux /boot/kernel xen-fbfront.video=32,1024,768 xen-kbdfront.ptr_size=1024,768 \ninitrd /boot/initramfs\nboot'
+
+$write /etc/hostname chrome
+
+$package app-shells/push
+$package sys-block/zram-init
+$exec "systemctl enable zram_swap"
+$sed /lib/systemd/system/systemd-udev-trigger.service 's/^ExecStart=/ExecStart=-/g'
+$require timezone-jp.lst
+$require sudo.lst
+
+# Chrome
+$package media-fonts/liberation-fonts
+$package x11-themes/hicolor-icon-theme
+$package x11-base/xcb-proto
+$package app-text/qpdf
+$package x11-base/xorg-proto
+$package x11-apps/xprop
+$package media-libs/mesa
+$package x11-apps/xset
+$package dev-util/gtk-update-icon-cache
+$package x11-libs/gdk-pixbuf
+$package gnome-base/librsvg # to provide svg loader
+$package x11-misc/shared-mime-info #gdk-pixbuf needs this
+$exec "update-mime-database /usr/share/mime"
+$package media-libs/fontconfig
+$package app-text/poppler
+$package app-text/mupdf
+$package net-print/cups
+$package net-print/cups-filters
+$package x11-libs/gtk+
+$package x11-libs/pango
+$package dev-libs/atk
+$package dev-libs/glib
+$package x11-themes/adwaita-icon-theme
+$package dev-libs/nss
+$package sys-apps/dbus
+$package www-client/google-chrome
+
+# X11
+$package x11-misc/xbitmaps
+$package x11-misc/util-macros
+$package x11-base/xorg-drivers
+$package x11-misc/xkeyboard-config
+$package x11-apps/rgb
+$package x11-apps/iceauth
+$package x11-apps/xkbcomp
+$package x11-apps/xauth
+$package x11-apps/xrdb
+$package x11-apps/xinit
+$package dev-libs/libinput
+$package x11-base/xorg-server
+$package x11-apps/xrandr
+$package x11-apps/xinput
+$package x11-drivers/xf86-video-dummy
+$package x11-drivers/xf86-video-fbdev
+$package x11-drivers/xf86-input-libinput
+$package x11-drivers/xf86-input-joystick
+
+$package x11-wm/fvwm
+$write /etc/env.d/50xesssion 'XSESSION="fvwm"'
+$exec --overlay "env-update"
+$package x11-apps/xsetroot
+$package x11-apps/sessreg
+$package x11-apps/xconsole
+$package x11-apps/xsm
+$package x11-apps/xdm
+
+# sakura
+$package dev-util/glib-utils
+$package media-gfx/graphite2
+$package x11-terms/sakura
+$symlink /usr/bin/xterm sakura
+
+# font
+$package media-fonts/noto-cjk
+#$package media-fonts/noto
+
+# mozc+fcitx
+$package app-text/hunspell
+$package app-text/enchant
+$package app-i18n/fcitx
+$package app-i18n/fcitx-configtool
+$package app-i18n/mozc
+$write /etc/X11/xinit/xinitrc.d/90-fcitx '#!/bin/sh\nexport GTK_IM_MODULE=fcitx\nexport QT_IM_MODULE=fcitx\nexport XMODIFIERS=@im=fcitx\nfcitx-autostart'
+$exec "chmod +x /etc/X11/xinit/xinitrc.d/90-fcitx"
+
+# remote desktop
+$package net-misc/freerdp
+$package net-misc/tigervnc
+$copy resource/gui/xorg.conf /etc/X11/xorg.conf
+
+# misc
+$require openvpn.lst
+/usr/bin/iperf3
+/usr/bin/ftp
+$package net-dns/bind-tools 
+

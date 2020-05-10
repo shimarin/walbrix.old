@@ -1,0 +1,325 @@
+#chrome
+[ebuild  N     ] sys-devel/llvm-common-9.0.1 
+[ebuild  N     ] media-fonts/liberation-fonts-2.1.0  USE="-X -fontforge" 
+[ebuild  N     ] dev-libs/libatomic_ops-7.6.10  ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/fribidi-1.0.9  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/gobject-introspection-common-1.62.0 
+[ebuild  N     ] dev-libs/vala-common-0.46.7 
+[ebuild  N     ] x11-themes/hicolor-icon-theme-0.17 
+[ebuild  N     ] media-libs/freetype-2.9.1-r3  USE="adobe-cff bzip2 cleartype_hinting -X -bindist -debug -doc -fontforge -harfbuzz -infinality -png -static-libs -utils" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-libs/libpng-1.6.37  USE="-apng (-neon) -static-libs" ABI_X86="(64) -32 (-x32)" CPU_FLAGS_X86="sse" 
+[ebuild  N     ] media-libs/lcms-2.9  USE="threads -doc -jpeg -static-libs -test -tiff" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/boehm-gc-8.0.4  USE="threads -cxx -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-perl/LWP-MediaTypes-6.20.0-r1 
+[ebuild  N     ] dev-perl/Text-Iconv-1.700.0-r2 
+[ebuild  N     ] dev-perl/HTML-Tagset-3.200.0-r1 
+[ebuild  N     ] dev-perl/Socket6-0.280.0 
+[ebuild  N     ] dev-lang/nasm-2.14.02  USE="-doc" 
+[ebuild  N     ] dev-perl/HTTP-Date-6.20.0-r1 
+[ebuild  N     ] dev-perl/URI-1.730.0  USE="-test" 
+[ebuild  N     ] dev-perl/HTML-Parser-3.720.0  USE="-test" 
+[ebuild  N     ] dev-perl/Encode-Locale-1.50.0  USE="-test" 
+[ebuild  N     ] dev-perl/ExtUtils-Config-0.8.0  USE="-test" 
+[ebuild  N     ] dev-perl/XML-XPath-1.420.0  USE="-examples -test" 
+[ebuild  N     ] dev-perl/IO-HTML-1.1.0  USE="-test" 
+[ebuild  N     ] dev-perl/ExtUtils-Helpers-0.26.0  USE="-test" 
+[ebuild  N     ] dev-perl/IPC-System-Simple-1.250.0  USE="-test" 
+[ebuild  N     ] dev-perl/Sub-Name-0.210.0  USE="-suggested -test" 
+[ebuild  N     ] dev-perl/HTTP-Message-6.130.0  USE="-test" 
+[ebuild  N     ] dev-perl/File-Listing-6.40.0-r1 
+[ebuild  N     ] dev-perl/Try-Tiny-0.300.0  USE="-minimal -test" 
+[ebuild  N     ] dev-perl/WWW-RobotRules-6.20.0-r1 
+[ebuild  N     ] dev-perl/ExtUtils-InstallPaths-0.11.0  USE="-test" 
+[ebuild  N     ] dev-perl/File-BaseDir-0.70.0  USE="-test" 
+[ebuild  N     ] dev-perl/Tie-IxHash-1.230.0  USE="-test" 
+[ebuild  N     ] dev-perl/HTTP-Cookies-6.40.0  USE="-test" 
+[ebuild  N     ] dev-perl/HTTP-Negotiate-6.10.0-r1 
+[ebuild  N     ] dev-perl/IO-Socket-INET6-2.720.0-r1 
+[ebuild  N     ] dev-perl/Module-Build-Tiny-0.39.0  USE="-test" 
+[ebuild  N     ] dev-perl/HTTP-Daemon-6.60.0  USE="-test" 
+[ebuild  N     ] dev-perl/File-DesktopEntry-0.220.0  USE="-test" 
+[ebuild  N     ] x11-libs/xtrans-1.4.0  USE="-doc" 
+[ebuild  N     ] dev-libs/nspr-4.25  USE="-debug" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-libs/alsa-lib-1.2.2-r1  USE="thread-safety -alisp -debug -doc -python" ABI_X86="(64) -32 (-x32)" PYTHON_SINGLE_TARGET="python3_7 -python2_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] app-text/libpaper-1.1.24_p5  ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-libs/jbig2dec-0.17-r1  USE="-png -static-libs -test" 
+[ebuild  N     ] media-libs/tiff-4.1.0  USE="cxx zlib -jbig -jpeg -lzma -static-libs -test -webp -zstd" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-db/sqlite-3.31.1  USE="readline -debug -doc -icu -secure-delete -static-libs -tcl -test -tools" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/nss-3.51  USE="-cacert -utils" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-perl/Net-SSLeay-1.880.0  USE="-examples -libressl -minimal -test" 
+[ebuild  N     ] www-client/w3m-0.5.3_p20180125  USE="nls ssl unicode -X -fbcon -gdk-pixbuf -gpm -imlib -libressl -lynxkeymap -nntp -xface" L10N="-de -ja" 
+[ebuild  N     ] dev-perl/Mozilla-CA-20999999 
+[ebuild  N     ] dev-perl/IO-Socket-SSL-2.66.0  USE="-examples -idn" 
+[ebuild  N     ] dev-perl/Net-HTTP-6.170.0  USE="-minimal -test" 
+[ebuild  N     ] dev-perl/libwww-perl-6.270.0  USE="ssl -test" 
+[ebuild  N     ] dev-perl/LWP-Protocol-https-6.70.0  USE="-test" 
+[ebuild  N     ] dev-perl/XML-Twig-3.520.0  USE="nls -test" 
+[ebuild  N     ] x11-libs/libpciaccess-0.16  USE="zlib -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-base/xcb-proto-1.14-r1  ABI_X86="(64) -32 (-x32)" PYTHON_TARGETS="python3_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] sys-libs/binutils-libs-2.33.1-r1  USE="nls -64-bit-bfd -multitarget -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-util/glib-utils-2.62.6  PYTHON_SINGLE_TARGET="python3_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] dev-util/gdbus-codegen-2.62.6  PYTHON_SINGLE_TARGET="python3_7 -python3_6 (-python3_8)" 
+[ebuild   R    ] app-text/xmlto-0.0.28-r1  USE="text*" 
+[ebuild  N     ] dev-perl/Net-DBus-1.1.0  USE="-test" 
+[ebuild  N     ] media-libs/openjpeg-2.3.1-r1  USE="-doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-gfx/graphite2-1.3.13  USE="-perl -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] sys-devel/llvm-9.0.1  USE="libffi ncurses -debug -doc -exegesis -gold -libedit -test -xar -xml -z3" ABI_X86="(64) -32 (-x32)" LLVM_TARGETS="AMDGPU BPF NVPTX (X86) -AArch64 -ARM -Hexagon -Lanai -MSP430 -Mips -PowerPC -RISCV -Sparc -SystemZ -WebAssembly -XCore" 
+[ebuild  N     ] media-libs/libjpeg-turbo-2.0.4  USE="-java -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] app-text/qpdf-9.0.2  USE="-doc -examples -perl -static-libs -test" 
+[ebuild  N     ] dev-python/markupsafe-1.1.1  USE="-test" PYTHON_TARGETS="python3_7 (-pypy3) -python2_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] x11-base/xorg-proto-2019.2 
+[ebuild  N     ] x11-libs/libdrm-2.4.100  USE="-libkms -valgrind" ABI_X86="(64) -32 (-x32)" VIDEO_CARDS="amdgpu intel nouveau radeon (-exynos) (-freedreno) (-omap) (-tegra) (-vc4) (-vivante) -vmware" 
+[ebuild  N     ] dev-python/mako-1.1.2  USE="-doc -test" PYTHON_TARGETS="python3_7 (-pypy3) -python2_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] x11-libs/libICE-1.0.10  USE="ipv6 -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXau-1.0.9  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXdmcp-1.1.3  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libxshmfence-1.3-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libxcb-1.14  USE="xkb -doc (-selinux) -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libSM-1.2.3  USE="ipv6 uuid -doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libX11-1.6.9  USE="ipv6 -doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXext-1.3.4  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXfixes-5.0.3-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXrender-0.9.10-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-apps/xprop-1.2.4 
+[ebuild  N     ] x11-libs/libXt-1.2.0  USE="-doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXdamage-1.1.5  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXi-1.7.10  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXrandr-1.5.2  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXcomposite-0.4.5  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXcursor-1.2.0  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXScrnSaver-1.2.3  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-perl/X11-Protocol-0.560.0-r1 
+[ebuild  N     ] x11-libs/libXmu-1.1.3  USE="ipv6 -doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-libs/libglvnd-1.3.1  USE="X -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXxf86vm-1.1.4-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-libs/mesa-19.3.5  USE="X classic dri3 egl gallium gbm gles2 libglvnd llvm -d3d9 -debug -gles1 -lm-sensors -opencl -osmesa -pax_kernel (-selinux) -test -unwind -vaapi -valgrind -vdpau -vulkan -vulkan-overlay -wayland -xa -xvmc" ABI_X86="(64) -32 (-x32)" VIDEO_CARDS="intel nouveau radeon radeonsi (-freedreno) -i915 -i965 -iris (-lima) (-panfrost) -r100 -r200 -r300 -r600 (-vc4) -virgl (-vivante) -vmware" 
+[ebuild  N     ] x11-libs/libXtst-1.2.3-r1  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-apps/xset-1.2.4 
+[ebuild  N     ] media-libs/libepoxy-1.5.4  USE="X egl -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/gobject-introspection-1.62.0  USE="-doctool -gtk-doc -test" PYTHON_SINGLE_TARGET="python3_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] dev-perl/File-MimeInfo-0.280.0  USE="-test" 
+[ebuild  N     ] dev-libs/libcroco-0.6.13  USE="-test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-lang/vala-0.46.7  USE="-test -valadoc" 
+[ebuild  N     ] x11-libs/gdk-pixbuf-2.40.0  USE="introspection -X -gtk-doc -jpeg -tiff" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/atk-2.34.1  USE="introspection -gtk-doc" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-misc/xdg-utils-1.1.3-r1  USE="-doc" 
+[ebuild  N     ] app-accessibility/at-spi2-core-2.34.0  USE="introspection -X -gtk-doc -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] app-accessibility/at-spi2-atk-2.34.2  USE="-test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-util/gtk-update-icon-cache-3.24.16 
+[ebuild  N     ] media-libs/fontconfig-2.13.0-r4  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] app-eselect/eselect-fontconfig-1.1-r1 
+[ebuild  N     ] x11-libs/cairo-1.16.0-r3  USE="X glib svg (-aqua) -debug (-gles2-only) -opengl -static-libs -utils -valgrind" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] app-text/poppler-0.85.0  USE="cxx introspection jpeg jpeg2k lcms utils -cairo -cjk -curl -debug -doc -nss -png -qt5 -tiff" 
+[ebuild  N     ] media-libs/harfbuzz-2.6.4  USE="cairo glib graphite introspection truetype -debug -icu -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/pango-1.42.4-r2  USE="introspection -X -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] app-text/mupdf-1.16.1  USE="javascript ssl -X -libressl -opengl -static-libs" 
+[ebuild  N     ] gnome-base/librsvg-2.40.21  USE="introspection vala -tools" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] net-print/cups-2.3.3-r1  USE="acl pam ssl systemd threads -X -dbus -debug -kerberos -lprng-compat (-selinux) -static-libs -usb -xinetd -zeroconf" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] net-print/cups-filters-1.25.11  USE="foomatic pdf -dbus -ipp_autosetup -jpeg -ldap -pclm -perl -png -postscript -static-libs -test -tiff -zeroconf" 
+[ebuild  N     ] x11-libs/gtk+-3.24.16  USE="X introspection (-aqua) -broadway -cloudprint -colord -cups -examples -gtk-doc -test -vim-syntax -wayland -xinerama" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-themes/adwaita-icon-theme-3.32.0  USE="-branding" 
+[ebuild  N     ] www-client/google-chrome-81.0.4044.138  USE="(-selinux)" L10N="am ar bg bn ca cs da de el en-GB es es-419 et fa fi fil fr gu he hi hr hu id it ja kn ko lt lv ml mr ms nb nl pl pt-BR pt-PT ro ru sk sl sr sv sw ta te th tr uk vi zh-CN zh-TW" 
+
+
+#xorg
+[ebuild  N     ] x11-misc/xbitmaps-1.1.2-r1 
+[ebuild  N     ] sys-devel/llvm-common-9.0.1 
+[ebuild  N     ] x11-misc/util-macros-1.19.2-r1 
+[ebuild  N     ] dev-libs/libatomic_ops-7.6.10  ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/boehm-gc-8.0.4  USE="threads -cxx -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] sys-libs/mtdev-1.1.6 
+[ebuild  N     ] x11-libs/xtrans-1.4.0  USE="-doc" 
+[ebuild  N     ] www-client/w3m-0.5.3_p20180125  USE="nls ssl unicode -X -fbcon -gdk-pixbuf -gpm -imlib -libressl -lynxkeymap -nntp -xface" L10N="-de -ja" 
+[ebuild  N     ] x11-base/xorg-drivers-1.20-r2  INPUT_DEVICES="libinput -elographics -evdev -joystick -synaptics -vmmouse -void -wacom" VIDEO_CARDS="dummy fbdev -amdgpu -ast (-freedreno) (-geode) -glint -i915 -i965 -intel -mga -nouveau -nv -nvidia (-omap) -qxl -r128 -radeon -radeonsi -siliconmotion (-tegra) (-vc4) -vesa -via -virtualbox -vmware" 
+[ebuild  N     ] x11-libs/libpciaccess-0.16  USE="zlib -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-misc/xkeyboard-config-2.29 
+[ebuild   R    ] app-text/xmlto-0.0.28-r1  USE="text*" 
+[ebuild  N     ] x11-base/xcb-proto-1.14-r1  ABI_X86="(64) -32 (-x32)" PYTHON_TARGETS="python3_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] sys-devel/llvm-9.0.1  USE="libffi ncurses -debug -doc -exegesis -gold -libedit -test -xar -xml -z3" ABI_X86="(64) -32 (-x32)" LLVM_TARGETS="BPF (X86) -AArch64 -AMDGPU -ARM -Hexagon -Lanai -MSP430 -Mips -NVPTX -PowerPC -RISCV -Sparc -SystemZ -WebAssembly -XCore" 
+[ebuild  N     ] x11-base/xorg-proto-2019.2 
+[ebuild  N     ] x11-libs/libXau-1.0.9  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libdrm-2.4.100  USE="-libkms -valgrind" ABI_X86="(64) -32 (-x32)" VIDEO_CARDS="-amdgpu (-exynos) (-freedreno) -intel -nouveau (-omap) -radeon (-tegra) (-vc4) (-vivante) -vmware" 
+[ebuild  N     ] x11-libs/libXdmcp-1.1.3  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libxshmfence-1.3-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-apps/rgb-1.0.6 
+[ebuild  N     ] x11-libs/libICE-1.0.10  USE="ipv6 -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-apps/iceauth-1.0.8 
+[ebuild  N     ] x11-libs/libxcb-1.14  USE="xkb -doc (-selinux) -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libX11-1.6.9  USE="ipv6 -doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXext-1.3.4  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-libs/libglvnd-1.3.1  USE="X -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libxkbfile-1.1.0  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-apps/xkbcomp-1.4.3 
+[ebuild  N     ] x11-libs/libXfixes-5.0.3-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/libevdev-1.9.0  USE="-doc -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/libinput-1.15.4  USE="-doc -test" INPUT_DEVICES="-wacom" 
+[ebuild  N     ] x11-libs/libSM-1.2.3  USE="ipv6 uuid -doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXt-1.2.0  USE="-doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXmu-1.1.3  USE="ipv6 -doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-apps/xauth-1.1  USE="ipv6 -test" 
+[ebuild  N     ] x11-apps/xrdb-1.2.0 
+[ebuild  N     ] x11-apps/xinit-1.4.1  USE="-twm" 
+[ebuild  N     ] x11-libs/libXdamage-1.1.5  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXxf86vm-1.1.4-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXrender-0.9.10-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXrandr-1.5.2  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libfontenc-1.1.4  USE="-static-libs" 
+[ebuild  N     ] x11-libs/libXfont2-2.0.4  USE="bzip2 ipv6 -doc -static-libs -truetype" 
+[ebuild  N     ] dev-python/markupsafe-1.1.1  USE="-test" PYTHON_TARGETS="python3_7 (-pypy3) -python2_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] dev-python/mako-1.1.2  USE="-doc -test" PYTHON_TARGETS="python3_7 (-pypy3) -python2_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] media-libs/mesa-19.3.5  USE="X classic dri3 egl gallium gbm gles2 libglvnd llvm -d3d9 -debug -gles1 -lm-sensors -opencl -osmesa -pax_kernel (-selinux) -test -unwind -vaapi -valgrind -vdpau -vulkan -vulkan-overlay -wayland -xa -xvmc" ABI_X86="(64) -32 (-x32)" VIDEO_CARDS="(-freedreno) -i915 -i965 -intel -iris (-lima) -nouveau (-panfrost) -r100 -r200 -r300 -r600 -radeon -radeonsi (-vc4) -virgl (-vivante) -vmware" 
+[ebuild  N     ] media-libs/libepoxy-1.5.4  USE="X egl -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-base/xorg-server-1.20.7  USE="ipv6 libglvnd suid systemd udev xorg -debug -dmx -doc (-elogind) -kdrive -libressl -minimal (-selinux) -static-libs -unwind -wayland -xcsecurity -xephyr -xnest -xvfb" 
+[ebuild  N     ] x11-drivers/xf86-video-dummy-0.3.8  USE="-dga" 
+[ebuild  N     ] x11-drivers/xf86-video-fbdev-0.5.0 
+[ebuild  N     ] x11-drivers/xf86-input-libinput-0.29.0 
+
+
+#fvwm
+
+[ebuild  N     ] dev-libs/libatomic_ops-7.6.10  ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/boehm-gc-8.0.4  USE="threads -cxx -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/xtrans-1.4.0  USE="-doc" 
+[ebuild  N     ] www-client/w3m-0.5.3_p20180125  USE="nls ssl unicode -X -fbcon -gdk-pixbuf -gpm -imlib -libressl -lynxkeymap -nntp -xface" L10N="-de -ja" 
+[ebuild  N     ] virtual/w3m-0 
+[ebuild  N     ] x11-base/xcb-proto-1.14-r1  ABI_X86="(64) -32 (-x32)" PYTHON_TARGETS="python3_7 -python3_6 (-python3_8)" 
+[ebuild   R    ] app-text/xmlto-0.0.28-r1  USE="text*" 
+[ebuild  N     ] x11-base/xorg-proto-2019.2 
+[ebuild  N     ] x11-libs/libICE-1.0.10  USE="ipv6 -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXau-1.0.9  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXdmcp-1.1.3  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libSM-1.2.3  USE="ipv6 uuid -doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libxcb-1.14  USE="xkb -doc (-selinux) -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libX11-1.6.9  USE="ipv6 -doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXext-1.3.4  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXrender-0.9.10-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXfixes-5.0.3-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXt-1.2.0  USE="-doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXcursor-1.2.0  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXpm-3.5.13  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXrandr-1.5.2  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-wm/fvwm-2.6.5-r3  USE="nls readline vanilla -bidi -debug -doc -gtk2-perl -lock -netpbm -perl -png -rplay -stroke -svg -tk -truetype -xinerama" 
+
+
+#sakura
+[ebuild  N     ] sys-devel/llvm-common-9.0.1 
+[ebuild  N     ] media-fonts/liberation-fonts-2.1.0  USE="-X -fontforge" 
+[ebuild  N     ] dev-libs/libatomic_ops-7.6.10  ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] virtual/ttf-fonts-1-r1 
+[ebuild  N     ] dev-libs/fribidi-1.0.9  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/gobject-introspection-common-1.62.0 
+[ebuild  N     ] dev-libs/vala-common-0.46.7 
+[ebuild  N     ] x11-themes/hicolor-icon-theme-0.17 
+[ebuild  N     ] dev-libs/boehm-gc-8.0.4  USE="threads -cxx -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-libs/freetype-2.9.1-r3  USE="adobe-cff bzip2 cleartype_hinting -X -bindist -debug -doc -fontforge -harfbuzz -infinality -png -static-libs -utils" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-libs/libpng-1.6.37  USE="-apng (-neon) -static-libs" ABI_X86="(64) -32 (-x32)" CPU_FLAGS_X86="sse" 
+[ebuild  N     ] x11-libs/xtrans-1.4.0  USE="-doc" 
+[ebuild  N     ] www-client/w3m-0.5.3_p20180125  USE="nls ssl unicode -X -fbcon -gdk-pixbuf -gpm -imlib -libressl -lynxkeymap -nntp -xface" L10N="-de -ja" 
+[ebuild  N     ] virtual/w3m-0 
+[ebuild  N     ] x11-base/xcb-proto-1.14-r1  ABI_X86="(64) -32 (-x32)" PYTHON_TARGETS="python3_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] sys-libs/binutils-libs-2.33.1-r1  USE="nls -64-bit-bfd -multitarget -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-util/glib-utils-2.62.6  PYTHON_SINGLE_TARGET="python3_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] dev-util/gdbus-codegen-2.62.6  PYTHON_SINGLE_TARGET="python3_7 -python3_6 (-python3_8)" 
+[ebuild   R    ] app-text/xmlto-0.0.28-r1  USE="text*" 
+[ebuild  N     ] media-gfx/graphite2-1.3.13  USE="-perl -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] sys-devel/llvm-9.0.1  USE="libffi ncurses -debug -doc -exegesis -gold -libedit -test -xar -xml -z3" ABI_X86="(64) -32 (-x32)" LLVM_TARGETS="BPF (X86) -AArch64 -AMDGPU -ARM -Hexagon -Lanai -MSP430 -Mips -NVPTX -PowerPC -RISCV -Sparc -SystemZ -WebAssembly -XCore" 
+[ebuild  N     ] dev-python/markupsafe-1.1.1  USE="-test" PYTHON_TARGETS="python3_7 (-pypy3) -python2_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] x11-base/xorg-proto-2019.2 
+[ebuild  N     ] x11-libs/libdrm-2.4.100  USE="-libkms -valgrind" ABI_X86="(64) -32 (-x32)" VIDEO_CARDS="-amdgpu (-exynos) (-freedreno) -intel -nouveau (-omap) -radeon (-tegra) (-vc4) (-vivante) -vmware" 
+[ebuild  N     ] dev-python/mako-1.1.2  USE="-doc -test" PYTHON_TARGETS="python3_7 (-pypy3) -python2_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] x11-libs/libXau-1.0.9  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXdmcp-1.1.3  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libxshmfence-1.3-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libxcb-1.14  USE="xkb -doc (-selinux) -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libX11-1.6.9  USE="ipv6 -doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXext-1.3.4  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXfixes-5.0.3-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXrender-0.9.10-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXrandr-1.5.2  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXdamage-1.1.5  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXi-1.7.10  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXcursor-1.2.0  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXcomposite-0.4.5  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-libs/libglvnd-1.3.1  USE="X -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/libXxf86vm-1.1.4-r1  USE="-static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-libs/mesa-19.3.5  USE="X classic dri3 egl gallium gbm gles2 libglvnd llvm -d3d9 -debug -gles1 -lm-sensors -opencl -osmesa -pax_kernel (-selinux) -test -unwind -vaapi -valgrind -vdpau -vulkan -vulkan-overlay -wayland -xa -xvmc" ABI_X86="(64) -32 (-x32)" VIDEO_CARDS="(-freedreno) -i915 -i965 -intel -iris (-lima) -nouveau (-panfrost) -r100 -r200 -r300 -r600 -radeon -radeonsi (-vc4) -virgl (-vivante) -vmware" 
+[ebuild  N     ] media-libs/libepoxy-1.5.4  USE="X egl -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/gobject-introspection-1.62.0  USE="-doctool -gtk-doc -test" PYTHON_SINGLE_TARGET="python3_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] dev-lang/vala-0.46.7  USE="-test -valadoc" 
+[ebuild  N     ] dev-libs/libcroco-0.6.13  USE="-test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/gdk-pixbuf-2.40.0  USE="introspection -X -gtk-doc -jpeg -tiff" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/atk-2.34.1  USE="introspection -gtk-doc" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] app-accessibility/at-spi2-core-2.34.0  USE="introspection -X -gtk-doc -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] app-accessibility/at-spi2-atk-2.34.2  USE="-test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-util/gtk-update-icon-cache-3.24.16 
+[ebuild  N     ] media-libs/fontconfig-2.13.0-r4  USE="-doc -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] app-eselect/eselect-fontconfig-1.1-r1 
+[ebuild  N     ] x11-libs/cairo-1.16.0-r3  USE="X glib svg (-aqua) -debug (-gles2-only) -opengl -static-libs -utils -valgrind" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] media-libs/harfbuzz-2.6.4  USE="cairo glib graphite introspection truetype -debug -icu -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/pango-1.42.4-r2  USE="introspection -X -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] gnome-base/librsvg-2.40.21  USE="introspection vala -tools" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/gtk+-3.24.16  USE="X introspection (-aqua) -broadway -cloudprint -colord -cups -examples -gtk-doc -test -vim-syntax -wayland -xinerama" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-themes/adwaita-icon-theme-3.32.0  USE="-branding" 
+[ebuild  N     ] x11-libs/vte-0.58.3  USE="crypt introspection vala -debug -gtk-doc -vanilla" 
+[ebuild  N     ] x11-terms/sakura-3.5.0 
+
+
+#ricty
+[ebuild  N     ] media-fonts/inconsolata-20140821  USE="-X" 
+[ebuild  N     ] media-libs/libuninameslist-20091231-r1 
+[ebuild  N     ] dev-libs/libatomic_ops-7.6.10  ABI_X86="(64) -32 (-x32)" 
+[ebuild  N    ~] media-fonts/mix-mplus-ipa-20130617-r1  USE="-X" 
+[ebuild  N     ] media-libs/freetype-2.9.1-r3  USE="adobe-cff bzip2 cleartype_hinting -X -bindist -debug -doc -fontforge -harfbuzz -infinality -png -static-libs -utils" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/boehm-gc-8.0.4  USE="threads -cxx -static-libs" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] www-client/w3m-0.5.3_p20180125  USE="nls ssl unicode -X -fbcon -gdk-pixbuf -gpm -imlib -libressl -lynxkeymap -nntp -xface" L10N="-de -ja" 
+[ebuild  N     ] virtual/w3m-0 
+[ebuild   R    ] app-text/xmlto-0.0.28-r1  USE="text*" 
+[ebuild  N     ] media-gfx/fontforge-20200314  USE="python readline unicode -X -doc -gif -gtk -jpeg -png -svg -test -tiff -truetype-debugger -woff2" PYTHON_SINGLE_TARGET="python3_7 -python3_6 (-python3_8)" 
+[ebuild  N    ~] media-fonts/ricty-3.2.0-r2  USE="-X" 
+
+
+#noto
+[ebuild  N     ] media-fonts/noto-cjk-20190416::gentoo  USE="-X" 1838037 KiB
+[ebuild  N     ] media-fonts/noto-20190524::gentoo  USE="cjk extra -X" 722903 KiB
+
+#mozc
+[ebuild  N     ] dev-qt/qtchooser-66  USE="-test" 
+[ebuild  N     ] app-i18n/unicode-emoji-11.0 
+[ebuild  N     ] app-i18n/tegaki-zinnia-japanese-0.3 
+[ebuild  N     ] app-i18n/unicode-cldr-33.0 
+[ebuild  N     ] app-i18n/unicode-data-12.0.0 
+[ebuild   R    ] dev-libs/libpcre2-10.34  USE="pcre16*" 
+[ebuild  N     ] virtual/opengl-7.0-r2  ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-perl/TimeDate-2.300.0 
+[ebuild  N     ] virtual/perl-Digest-SHA-6.20.0 
+[ebuild  N     ] dev-perl/MailTools-2.190.0  USE="-examples -test" 
+[ebuild  N     ] dev-perl/Digest-HMAC-1.30.0-r1 
+[ebuild  N     ] dev-perl/Authen-SASL-2.160.0-r1  USE="-kerberos" 
+[ebuild  N     ] dev-perl/Error-0.170.250  USE="-test" 
+[ebuild  N     ] x11-libs/xcb-util-renderutil-0.3.9-r2  USE="-doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/xcb-util-keysyms-0.4.0-r1  USE="-doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/xcb-util-wm-0.4.1-r2  USE="-doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-libs/protobuf-3.11.4  USE="zlib -emacs -examples -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] app-i18n/zinnia-0.06-r3  USE="-perl -static-libs" 
+[ebuild  N     ] x11-libs/xcb-util-0.4.0-r1  USE="-doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/xcb-util-image-0.4.0-r1  USE="-doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] x11-libs/xcb-util-cursor-0.1.3-r2  USE="-doc -static-libs -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-vcs/git-2.26.2  USE="blksha1 curl gpg iconv nls pcre pcre-jit perl threads webdav -cgi -cvs -doc -emacs -gnome-keyring -highlight -libressl -mediawiki -mediawiki-experimental -perforce (-ppcsha1) -subversion -test -tk -xinetd" PYTHON_SINGLE_TARGET="python3_7 -python3_6" 
+[ebuild  N     ] app-text/iso-codes-4.4 
+[ebuild   R    ] sys-apps/dbus-1.12.16  USE="X*" 
+[ebuild  N     ] dev-libs/double-conversion-3.1.5 
+[ebuild  N    *] dev-util/gyp-99999999999999  PYTHON_SINGLE_TARGET="python3_7 -python3_6" 
+[ebuild  N     ] x11-libs/libxkbcommon-0.10.0  USE="X -doc -test" ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] dev-qt/qtcore-5.14.1-r1  USE="systemd -debug -icu -test" 
+[ebuild  N     ] gnome-base/dconf-0.34.0  USE="-gtk-doc -test" 
+[ebuild  N     ] gnome-base/gsettings-desktop-schemas-3.34.0  USE="introspection" 
+[ebuild  N     ] x11-themes/gnome-themes-standard-3.28 
+[ebuild  N     ] dev-python/pycairo-1.18.2  USE="-doc -examples -test" PYTHON_TARGETS="python3_7 (-pypy3) -python2_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] dev-qt/qtgui-5.14.1-r4  USE="X gif libinput png udev -accessibility -dbus -debug -egl -eglfs -evdev -gles2-only -ibus -jpeg -test -tslib -tuio -vnc -vulkan -wayland" 
+[ebuild  N     ] dev-python/pygobject-3.34.0  USE="cairo -examples -test" PYTHON_TARGETS="python3_7 -python2_7 -python3_6 (-python3_8)" 
+[ebuild  N     ] dev-qt/qtwidgets-5.14.1-r1  USE="X png -debug -gles2-only -gtk -test" 
+[ebuild  NS    ] x11-libs/gtk+-2.24.32-r1 [3.24.16]
+[ebuild  N     ] x11-themes/gtk-engines-adwaita-3.28  ABI_X86="(64) -32 (-x32)" 
+[ebuild  N     ] app-i18n/ibus-1.5.21-r1  USE="X emoji gtk gtk2 introspection nls python unicode -gconf -kde -test -vala -wayland" PYTHON_TARGETS="python3_7 -python2_7 -python3_6" 
+[ebuild  N     ] app-i18n/mozc-2.23.2815.102  USE="gui handwriting-tegaki ibus -debug -emacs -fcitx4 -handwriting-tomoe -renderer -test" 
+
