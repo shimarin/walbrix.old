@@ -68,6 +68,7 @@ export function process_package(context:Context, pkgname:string, options?:{use?:
   if (options?.no_copy) return; // just make sure package is installed
 
   const excluded_prefixes = [
+    "/run",
     "/usr/share/man",
     "/usr/share/doc",
     "/usr/share/info",
