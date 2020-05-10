@@ -19,7 +19,7 @@ app-admin/sudo -sendmail pam
 net-analyzer/zabbix sqlite agent proxy curl snmp -postgres
 net-analyzer/fping suid
 sys-apps/smartmontools minimal
-net-fs/samba -system-mitkrb5 winbind client -python_single_target_python3_6 python_single_target_python3_7
+net-fs/samba -system-mitkrb5 winbind client python_single_target_python3_7
 dev-db/mysql -perl
 sys-power/nut usb
 net-fs/nfs-utils -tcpd
@@ -39,15 +39,15 @@ media-gfx/splashutils fbcondecor
 
 # xen
 app-emulation/xen efi
-app-emulation/xen-tools api pygrub xend hvm -qemu system-qemu -ocaml python -ovmf -python_single_target_python3_6 python_single_target_python3_7
+app-emulation/xen-tools api pygrub xend hvm -qemu system-qemu -ocaml python -ovmf python_single_target_python3_7
 sys-apps/kexec-tools lzma xen
 sys-cluster/drbd-utils xen
-app-emulation/qemu aio bzip2 curl fdt filecaps -gtk jpeg ncurses nls virtfs -oss pin-upstream-blobs png -pulseaudio -python -seccomp -usb -vhost-net vnc xattr xen -xfs -xkb -qemu_softmmu_targets_i386 -qemu_user_targets_i386 -python_targets_python3_6 python_targets_python3_7
+app-emulation/qemu aio bzip2 curl fdt filecaps -gtk jpeg ncurses nls virtfs -oss pin-upstream-blobs png -pulseaudio -python -seccomp -usb -vhost-net vnc xattr xen -xfs -xkb -qemu_softmmu_targets_i386 -qemu_user_targets_i386 python_targets_python3_7
 
 # wbui
-dev-python/numpy -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pygame -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyalsaaudio -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+dev-python/numpy -python_targets_python2_7
+dev-python/pygame -python_targets_python2_7
+dev-python/pyalsaaudio -python_targets_python2_7
 media-libs/libsdl alsa fbcon
 media-libs/sdl-image jpeg png webp
 media-libs/sdl-mixer vorbis
@@ -63,7 +63,7 @@ net-dns/dnsmasq dhcp-tools script
 # misc
 media-sound/mpg123 alsa
 net-fs/s3fs openssl
-app-arch/rpm python python_single_target_python3_7 -python_single_target_python3_6 -python_single_target_python2_7
+app-arch/rpm python -python_single_target_python2_7
 dev-python/netaddr -cli
 
 # assume EC algorythms are safe
@@ -73,8 +73,8 @@ net-wireless/wpa_supplicant -bindist
 
 # hardware
 x11-base/xorg-drivers -input_devices_keyboard -input_devices_libinput -input_devices_mouse -video_cards_amdgpu -video_cards_dummy -video_cards_fbdev -video_cards_intel -video_cards_nouveau -video_cards_radeon -video_cards_radeonsi -video_cards_vesa
-sci-geosciences/gpsd bluetooth ntp python usb gpsd_protocols_fury gpsd_protocols_geostar gpsd_protocols_nmea0183 gpsd_protocols_nmea2000 gpsd_protocols_passthrough -gpsd_protocols_isync -gpsd_protocols_ublox -gpsd_protocols_greis -python -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7  #due to lack of python3.7 support
-dev-python/pyserial -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
+sci-geosciences/gpsd bluetooth ntp python usb gpsd_protocols_fury gpsd_protocols_geostar gpsd_protocols_nmea0183 gpsd_protocols_nmea2000 gpsd_protocols_passthrough -gpsd_protocols_isync -gpsd_protocols_ublox -gpsd_protocols_greis -python -python_targets_python2_7
+dev-python/pyserial -python_targets_python2_7
 net-misc/modemmanager mbim
 
 # omit ruby 2.4
@@ -104,55 +104,40 @@ sys-libs/cracklib -python
 dev-libs/libnl -python
 sys-libs/libcap-ng -python
 
-# stick to python 3.7
-net-wireless/bluez -python_single_target_python3_6 python_single_target_python3_7
-sys-libs/talloc -python_single_target_python3_6 python_single_target_python3_7
-sys-libs/tevent -python_single_target_python3_6 python_single_target_python3_7
-dev-util/glib-utils -python_single_target_python3_6 python_single_target_python3_7
-dev-util/gdbus-codegen -python_single_target_python3_6 python_single_target_python3_7
-sys-libs/tdb -python_single_target_python3_6 python_single_target_python3_7
-sys-libs/ldb -python_single_target_python3_6 python_single_target_python3_7 -ldap
-dev-libs/gobject-introspection -python_single_target_python3_6 python_single_target_python3_7
-app-emulation/xen-pvgrub -python_single_target_python3_6 python_single_target_python3_7
-app-editors/vim -python_single_target_python3_6 python_single_target_python3_7
-net-analyzer/nmap -python_single_target_python2_7 -python_single_target_python3_6 python_single_target_python3_7
-dev-vcs/git -python_single_target_python3_6 python_single_target_python3_7
-sys-devel/clang -python_single_target_python2_7 -python_single_target_python3_6 python_single_target_python3_7
-dev-util/bcc -python_single_target_python3_6 python_single_target_python3_7
-sys-fs/btrfs-progs -python_single_target_python3_6 python_single_target_python3_7
-sys-apps/usbutils -python_single_target_python3_6 python_single_target_python3_7
+# eliminate python 2.7
+sys-libs/ldb -ldap
+net-analyzer/nmap -python_single_target_python2_7
+sys-devel/clang -python_single_target_python2_7
 
-x11-base/xcb-proto -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/setuptools -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/certifi -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-util/meson -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pbr -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/six -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/extras -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/cython -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/mimeparse -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pypam -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyblake2 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/markupsafe -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/m2crypto -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/lxml -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/linecache2 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyrsistent -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pyyaml -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-app-portage/gemato -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/mako -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/traceback2 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/unittest2 -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/testtools -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/fixtures -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/subunit -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-sys-apps/portage -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-python/pymountboot -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-sys-fs/bcache-tools -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-app-admin/eclean-kernel -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-app-portage/gentoolkit -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-app-portage/repoman -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-util/scons -python_targets_python2_7 -python_targets_python3_6 python_targets_python3_7
-dev-libs/libnl -python_targets_python3_6 python_targets_python3_7
-sys-libs/libcap-ng -python_targets_python3_6 python_targets_python3_7
+x11-base/xcb-proto -python_targets_python2_7
+dev-python/setuptools -python_targets_python2_7
+dev-python/certifi -python_targets_python2_7
+dev-util/meson -python_targets_python2_7
+dev-python/pbr -python_targets_python2_7
+dev-python/six -python_targets_python2_7
+dev-python/extras -python_targets_python2_7
+dev-python/cython -python_targets_python2_7
+dev-python/mimeparse -python_targets_python2_7
+dev-python/pypam -python_targets_python2_7
+dev-python/pyblake2 -python_targets_python2_7
+dev-python/markupsafe -python_targets_python2_7
+dev-python/m2crypto -python_targets_python2_7
+dev-python/lxml -python_targets_python2_7
+dev-python/linecache2 -python_targets_python2_7
+dev-python/pyrsistent -python_targets_python2_7
+dev-python/pyyaml -python_targets_python2_7
+app-portage/gemato -python_targets_python2_7
+dev-python/mako -python_targets_python2_7
+dev-python/traceback2 -python_targets_python2_7
+dev-python/unittest2 -python_targets_python2_7
+dev-python/testtools -python_targets_python2_7
+dev-python/fixtures -python_targets_python2_7
+dev-python/subunit -python_targets_python2_7
+sys-apps/portage -python_targets_python2_7
+dev-python/pymountboot -python_targets_python2_7
+sys-fs/bcache-tools -python_targets_python2_7
+app-admin/eclean-kernel -python_targets_python2_7
+app-portage/gentoolkit -python_targets_python2_7
+app-portage/repoman -python_targets_python2_7
+dev-util/scons -python_targets_python2_7
 
