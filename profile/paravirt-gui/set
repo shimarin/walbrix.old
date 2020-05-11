@@ -18,7 +18,8 @@ app-admin/sudo
 # xorg
 x11-base/xorg-server
 x11-apps/xdm
-x11-wm/fvwm
+#x11-wm/fvwm
+x11-wm/wm2
 x11-terms/sakura
 x11-apps/xrandr
 x11-apps/xinput

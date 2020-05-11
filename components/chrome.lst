@@ -36,6 +36,7 @@ $package x11-libs/gtk+
 $package x11-libs/pango
 $package dev-libs/atk
 $package dev-libs/glib
+$package x11-misc/xdg-utils
 $package x11-themes/adwaita-icon-theme
 $package dev-libs/nss
 $package sys-apps/dbus
@@ -49,6 +50,7 @@ $package x11-misc/xkeyboard-config
 $package x11-apps/rgb
 $package x11-apps/iceauth
 $package x11-apps/xkbcomp
+$package app-text/iso-codes
 $package x11-apps/xauth
 $package x11-apps/xrdb
 $package x11-apps/xinit
@@ -61,8 +63,14 @@ $package x11-drivers/xf86-video-fbdev
 $package x11-drivers/xf86-input-libinput
 $package x11-drivers/xf86-input-joystick
 
-$package x11-wm/fvwm
-$write /etc/env.d/50xesssion 'XSESSION="fvwm"'
+$mkdir /etc/X11/X11
+$write /etc/X11/X11/Xwrapper.config 'allowed_users = anybody'
+
+#$package x11-wm/fvwm
+$package x11-wm/wm2
+$write /etc/X11/Sessions/wm2 "/usr/bin/wm2"
+$exec "chmod +x /etc/X11/Sessions/wm2"
+$write /etc/env.d/50xesssion 'XSESSION="wm2"'
 $exec --overlay "env-update"
 $package x11-apps/xsetroot
 $package x11-apps/sessreg
