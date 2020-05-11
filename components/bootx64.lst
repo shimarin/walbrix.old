@@ -39,6 +39,7 @@ $require wireless-tools.lst
 
 $package sys-fs/btrfs-progs
 $require xfsprogs.lst
+$package sys-fs/exfat-utils
 $package screen
 /usr/bin/beep
 $package lshw

@@ -20,3 +20,5 @@ app-misc/beep
 sys-apps/lshw
 sys-apps/usbutils
 net-vpn/wireguard-tools
+net-analyzer/tcpdump
+sys-fs/exfat-utils

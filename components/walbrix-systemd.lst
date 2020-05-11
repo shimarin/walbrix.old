@@ -71,7 +71,7 @@ $package sys-fs/multipath-tools
 $package sys-fs/btrfs-progs
 /usr/bin/compsize
 $package sys-fs/squashfs-tools
-#$require exfat.lst
+$package sys-fs/exfat-utils
 $package net-fs/cifs-utils --use="-acl -ads -caps"
 #$package sys-fs/xfsdump
 $require ntfs3g.lst

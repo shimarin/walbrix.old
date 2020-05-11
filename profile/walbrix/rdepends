@@ -44,7 +44,7 @@ app-misc/pax-utils	sys-libs/libseccomp
 app-misc/screen	>=sys-libs/ncurses-5.2:0/6= sys-libs/pam acct-group/utmp virtual/tmpfiles
 app-misc/tmux	dev-libs/libevent:0/2.1-6= sys-libs/ncurses:0/6=
 app-portage/elt-patches	sys-apps/gentoo-functions
-app-portage/gemato	app-crypt/gnupg dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
+app-portage/gemato	app-crypt/gnupg dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
 app-portage/gentoolkit	sys-apps/portage[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] sys-apps/gawk sys-apps/gentoo-functions dev-lang/python:3.7[xml(+),threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
 app-portage/portage-utils	dev-libs/iniparser:0 || ( >=sys-devel/gcc-4.2:*[openmp] sys-devel/clang-runtime:*[openmp] ) app-crypt/libb2:0/0= dev-libs/openssl:0/1.1= sys-libs/zlib:0/1= app-crypt/gpgme:1/11= || ( >=sys-devel/gcc-4.2:*[openmp] sys-devel/clang-runtime:*[openmp] ) dev-libs/openssl:0/1.1=
 app-portage/repoman	>=sys-apps/portage-2.3.80[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] >=dev-python/lxml-3.6.0[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] dev-python/pyyaml[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] dev-lang/python:3.7[bzip2(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
@@ -219,7 +219,7 @@ sys-apps/systemd	>=sys-apps/util-linux-2.30:0/0=[abi_x86_64(-)] sys-libs/libcap:
 sys-apps/texinfo	!=app-text/tetex-2* >=sys-libs/ncurses-5.2-r2:0/6= dev-lang/perl:0/5.30= dev-perl/libintl-perl dev-perl/Unicode-EastAsianWidth dev-perl/Text-Unidecode virtual/libintl
 sys-apps/usb_modeswitch	virtual/udev virtual/libusb:1 dev-lang/jimtcl
 sys-apps/usbutils	virtual/libusb:1/1= virtual/libudev:0/1= sys-apps/hwids
-sys-apps/util-linux	sys-libs/zlib:0/1= >=sys-libs/ncurses-5.2-r2:0/6=[unicode] virtual/libintl[abi_x86_64(-)] sys-libs/pam sys-libs/readline:0/8= sys-apps/systemd virtual/libudev:0/1= !net-wireless/rfkill !<app-shells/bash-completion-2.7-r1
+sys-apps/util-linux	virtual/libcrypt:0/1= sys-libs/zlib:0/1= >=sys-libs/ncurses-5.2-r2:0/6=[unicode] virtual/libintl[abi_x86_64(-)] sys-libs/pam sys-libs/readline:0/8= sys-apps/systemd virtual/libudev:0/1= !>=app-admin/sysklogd-2.0[logger] !net-wireless/rfkill !<app-shells/bash-completion-2.7-r1
 sys-auth/pambase	>=sys-libs/pam-1.1.3 sys-libs/pam[cracklib] >=sys-libs/pam-1.1.3 sys-apps/systemd[pam]
 sys-block/megacli	sys-libs/ncurses-compat:5
 sys-block/nbd	>=dev-libs/glib-2.26.0 sys-libs/zlib
@@ -296,9 +296,9 @@ virtual/libcrypt	sys-libs/glibc[crypt(+),static-libs(+)]
 virtual/libelf	|| ( >=dev-libs/elfutils-0.155-r1:0/0[abi_x86_64(-)] >=sys-freebsd/freebsd-lib-9.2_rc1[abi_x86_64(-)] )
 virtual/libffi	>=dev-libs/libffi-3.3_rc0:0/7[abi_x86_64(-)]
 virtual/libudev	>=sys-apps/systemd-232:0/2[abi_x86_64(-)]
-virtual/libusb	|| ( >=dev-libs/libusb-compat-0.1.5-r2[abi_x86_64(-)] >=sys-freebsd/freebsd-lib-9.1-r11[usb,abi_x86_64(-)] )
-virtual/libusb	|| ( >=dev-libs/libusb-1.0.19:1[udev(+),abi_x86_64(-)] >=sys-freebsd/freebsd-lib-9.1-r10[usb,abi_x86_64(-)] )
-virtual/mailx	|| ( net-mail/mailutils mail-client/mailx mail-client/nail sys-freebsd/freebsd-ubin )
+virtual/libusb	>=dev-libs/libusb-compat-0.1.5-r2[abi_x86_64(-)]
+virtual/libusb	>=dev-libs/libusb-1.0.19:1[udev(+),abi_x86_64(-)]
+virtual/mailx	|| ( net-mail/mailutils mail-client/mailx mail-client/nail )
 virtual/man	sys-apps/man-db
 virtual/modutils	|| ( sys-apps/kmod[tools] sys-apps/modutils )
 virtual/mta	|| ( mail-mta/nullmailer mail-mta/msmtp[mta] mail-mta/ssmtp[mta] mail-mta/courier mail-mta/esmtp mail-mta/exim mail-mta/netqmail mail-mta/postfix mail-mta/sendmail mail-mta/opensmtpd[mta] )
