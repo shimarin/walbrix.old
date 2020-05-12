@@ -23,7 +23,7 @@ net-misc/dhcpcd
 net-misc/iperf
 net-misc/netkit-telnetd
 net-misc/ntp
-net-misc/s3cmd
+# net-misc/s3cmd # due to lack of support python 3.7
 net-vpn/openvpn
 sys-block/parted
 sys-block/zram-init
