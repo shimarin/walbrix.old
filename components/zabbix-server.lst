@@ -15,7 +15,7 @@ $exec "chmod u=rwsx,g=rx,o=rx /usr/sbin/fping /usr/sbin/fping6"
 $package net-analyzer/zabbix --use="frontend mysql openipmi server"
 $exec "chown -R zabbix.zabbix /etc/zabbix"
 
-$set ZABBIX_VERSION 4.4.6
+$set ZABBIX_VERSION 4.4.7
 $copy resource/zabbix/zabbix.conf.php /usr/share/webapps/zabbix/$ZABBIX_VERSION/htdocs/conf/zabbix.conf.php
 /usr/share/fonts/vlgothic/VL-PGothic-Regular.ttf
 $symlink /usr/share/webapps/zabbix/$ZABBIX_VERSION/htdocs/assets/fonts/VL-PGothic-Regular.ttf ../../../../../fonts/vlgothic/VL-PGothic-Regular.ttf
