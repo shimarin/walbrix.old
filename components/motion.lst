@@ -30,6 +30,9 @@ $package dev-python/paho-mqtt
 $package dev-db/sqlite
 $package dev-python/pyparsing
 
+# nodejs
+$require ts-node.lst
+
 # restkit
 $package dev-python/webob
 $package dev-python/cython
@@ -53,11 +56,11 @@ $require cryptography.lst
 $package dev-python/pyopenssl
 $package dev-python/ndg-httpsclient
 
-# s3cmd
-$package dev-python/python-magic
-$package dev-python/six
-$package dev-python/python-dateutil
-$package net-misc/s3cmd
+# s3cmd removed due to lack of python3.7 support
+#$package dev-python/python-magic
+#$package dev-python/six
+#$package dev-python/python-dateutil
+#$package net-misc/s3cmd
 
 $require matplotlib.lst
 $require pillow.lst
