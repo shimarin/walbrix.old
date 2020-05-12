@@ -1,3 +1,4 @@
+acct-user/dnsmasq	acct-group/dnsmasq
 acct-user/mail	acct-group/mail
 acct-user/man	acct-group/man
 acct-user/messagebus	acct-group/messagebus
@@ -151,7 +152,7 @@ net-dialup/ppp	sys-libs/pam dev-libs/openssl:0/1.1= !<net-misc/netifrc-0.7.1
 net-dialup/ppp-scripts	!<net-dialup/ppp-2.4.7-r1
 net-dialup/rp-pppoe	net-dialup/ppp:0/2.4.8=
 net-dns/bind-tools	sys-libs/libcap dev-libs/openssl:0/1.1= sys-libs/readline:0/8=
-net-dns/dnsmasq	sys-devel/gettext
+net-dns/dnsmasq	acct-group/dnsmasq acct-user/dnsmasq sys-devel/gettext
 net-dns/libidn2	dev-libs/libunistring[abi_x86_64(-)]
 net-firewall/ipset	>=net-firewall/iptables-1.4.7 net-libs/libmnl
 net-fs/cifs-utils	!net-fs/mount-cifs !<net-fs/samba-3.6_rc1 sys-apps/keyutils:0/1.9= sys-libs/pam
@@ -203,7 +204,7 @@ sys-apps/kbd	sys-libs/pam app-arch/gzip
 sys-apps/kmod	!sys-apps/module-init-tools !sys-apps/modutils !<sys-apps/openrc-0.13.8 !<sys-apps/systemd-216-r3 >=app-arch/xz-utils-5.0.4-r1 >=sys-libs/zlib-1.2.6
 sys-apps/kmscon	>=virtual/udev-172 x11-libs/libxkbcommon >=dev-libs/libtsm-4.0.0:0/4= media-libs/mesa[X(+)] x11-libs/libdrm >=media-libs/mesa-8.0.3[egl,gbm] >=media-libs/mesa-8.0.3[gles2] sys-apps/systemd x11-libs/pango dev-libs/glib:2 x11-misc/xkeyboard-config
 sys-apps/less	>=app-misc/editor-wrapper-3 >=sys-libs/ncurses-5.2:0/6= dev-libs/libpcre2
-sys-apps/lm-sensors	dev-lang/perl !<sys-apps/openrc-0.21.7
+sys-apps/lm-sensors	dev-lang/perl !<sys-apps/openrc-0.36
 sys-apps/lshw	sys-apps/hwids
 sys-apps/man-db	!sys-apps/man >=dev-libs/libpipeline-1.5.0 sys-apps/groff sys-libs/gdbm:0/1.13= sys-libs/libseccomp sys-libs/zlib acct-group/man acct-user/man
 sys-apps/man-pages	virtual/man !<sys-apps/keyutils-1.5.9-r4 !<dev-libs/libbsd-0.8.3-r1
