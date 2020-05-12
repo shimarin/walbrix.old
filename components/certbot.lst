@@ -5,7 +5,6 @@ $package dev-python/configargparse
 $package dev-python/configobj
 $package dev-python/distro
 $package dev-python/future
-$package dev-python/pbr
 $package dev-python/ply
 $package dev-python/chardet
 $package dev-python/PySocks
