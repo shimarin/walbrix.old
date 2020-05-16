@@ -37,6 +37,7 @@ $package sys-apps/less
 /bin/bunzip2
 /usr/bin/xz
 /usr/bin/unxz
+/usr/bin/unzip
 
 /usr/bin/wget
 /usr/bin/curl
