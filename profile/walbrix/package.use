@@ -140,4 +140,19 @@ app-admin/eclean-kernel -python_targets_python2_7
 app-portage/gentoolkit -python_targets_python2_7
 app-portage/repoman -python_targets_python2_7
 dev-util/scons -python_targets_python2_7
+app-admin/ansible -python_targets_python2_7
+dev-python/packaging -python_targets_python2_7
+dev-python/pyparsing -python_targets_python2_7
+dev-python/pexpect -python_targets_python2_7
+dev-python/ptyprocess -python_targets_python2_7
+dev-python/httplib2 -python_targets_python2_7
+dev-python/cryptography -python_targets_python2_7
+dev-python/cffi -python_targets_python2_7
+dev-python/pycparser -python_targets_python2_7
+dev-python/ply -python_targets_python2_7
+dev-python/jinja -python_targets_python2_7
+dev-python/paramiko -python_targets_python2_7
+dev-python/pyasn1 -python_targets_python2_7
+dev-python/pynacl -python_targets_python2_7
+dev-python/bcrypt -python_targets_python2_7
 
