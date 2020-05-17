@@ -27,3 +27,4 @@ media-video/motion
 www-servers/nginx
 dev-lua/luajson
 dev-lua/luasec
+dev-libs/iniparser
