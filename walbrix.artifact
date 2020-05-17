@@ -1,4 +1,5 @@
 {
 	"profile":"walbrix",
-	"main_lstfile":"components/walbrix-systemd.lst"
+	"main_lstfile":"components/walbrix-systemd.lst",
+	"main_component":"components/walbrix.ts"
 }

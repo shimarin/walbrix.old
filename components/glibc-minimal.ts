@@ -12,7 +12,7 @@ f(
 
 dir("/etc/ld.so.conf.d");
 
-exec("find /usr/lib/gcc -name 'lib*.so*' -exec touch {} \;", {overlay:true});
+exec("find /usr/lib/gcc -name 'lib*.so*' -exec touch {} \\;", {overlay:true});
 
 f(
   "/usr/bin/locale",

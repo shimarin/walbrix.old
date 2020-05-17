@@ -8,4 +8,4 @@ f(
   "/bin/sh"
 )
 
-import "./terminfo.ts"
+import("./terminfo.ts")

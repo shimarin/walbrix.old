@@ -1,19 +1,19 @@
-import {f,kernel,dir,pkg,write,sed,symlink,mkdir,touch,exec,copy} from "./collect.ts"
+import {f,kernel,dir,pkg,write,sed,symlink,mkdir,touch,exec,copy,env} from "./collect.ts"
 
-import "./base.ts"
+await import("./base.ts")
 
 dir("/lib/firmware")
 
-import "./kbd-minimal.ts"
-import "./xfsprogs.ts"
+import("./kbd-minimal.ts")
+import("./xfsprogs.ts")
 
 pkg("dosfstools")
 pkg("parted")
-import "./grub.ts"
-
+await import("./grub.ts")
 mkdir("/boot/grub")
 copy("resource/walbrix/grub.cfg", "/boot/grub/grub.cfg")
-copy("resource/walbrix/background.png", "/boot/grub/")
+await copy("resource/walbrix/background.png", "/boot/grub/")
+sed("/boot/grub/grub.cfg", `s/__VERSION__/${env["KERNEL_VERSION"].replace(/-.+$/, "")}/g`)
 
 // hwids
 f(
@@ -23,22 +23,21 @@ f(
   "/usr/share/misc/usb.ids.gz"
 )
 
-sed("/boot/grub/grub.cfg", "s/__VERSION__/$WALBRIX_VERSION/g")
 
-import "./wireless-tools.ts"
+await import("./wireless-tools.ts")
 write("/etc/hostapd/hostapd.conf", "interface=wlan0\nbridge=xenbr0\n#driver=nl80211\nhw_mode=g\nssid=walbrix-ap\nwpa_passphrase=secret\nwpa=2\n#channel=11\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=CCMP")
 
 pkg("app-misc/ca-certificates")
 pkg("app-misc/mime-types")
 pkg("app-misc/pax-utils")
-import "./openssl.ts"
+import("./openssl.ts")
 //#$package sys-apps/haveged
 
 write("/etc/hostname", "WBFREE01")
 
 // tools
 pkg("screen")
-import "./sudo.ts"
+import("./sudo.ts")
 f(
   "/usr/bin/ftp",
   "/usr/bin/stress"
@@ -47,7 +46,7 @@ pkg("app-editors/bvi")
 pkg("app-admin/sysstat")
 pkg("app-crypt/chntpw")
 pkg("sys-process/lsof")
-import "./ansible.ts"
+import("./ansible.ts")
 
 // hardware
 f (
@@ -60,14 +59,14 @@ pkg("lm-sensors")
 pkg("lshw")
 pkg("sys-apps/dmidecode")
 pkg("sys-apps/smartmontools")
-import "./usb_modeswitch.ts"
-import "./bluez.ts"
+import("./usb_modeswitch.ts")
+import("./bluez.ts")
 pkg("sys-block/megacli")
 //#$copy walbrix/arcconf /opt/bin/arcconf
 pkg("sys-power/cpupower")
 //#$require nut.lst
 //#$require omronups.lst
-import "./libqmi.ts"
+import("./libqmi.ts")
 pkg("net-misc/modemmanager")
 //#$require gpsd.lst # it still needs python2.7
 copy("resource/walbrix/77-mm-docomo-l-03f.rules", "/lib/udev/rules.d/")
@@ -78,28 +77,28 @@ f(
   "/usr/bin/compsize"
 )
 
-import "./nfs.ts"
+import("./nfs.ts")
 pkg("sys-fs/multipath-tools")
 pkg("sys-fs/btrfs-progs")
 pkg("sys-fs/squashfs-tools")
 pkg("sys-fs/exfat-utils")
 pkg("net-fs/cifs-utils", {use:["-acl", "-ads", "-caps"]})
 //#$package sys-fs/xfsdump
-import "./ntfs3g.ts"
-import "./cryptsetup.ts"
+import("./ntfs3g.ts")
+import("./cryptsetup.ts")
 pkg("sys-block/nbd")
-import "./sg3_utils.ts"
+import("./sg3_utils.ts")
 pkg("sys-apps/hdparm")
-import "./ddrescue.ts"
+import("./ddrescue.ts")
 pkg("sys-fs/safecopy")
 pkg("app-admin/testdisk", {use:"ntfs"})
 pkg("sys-apps/gptfdisk")
 pkg("app-backup/fsarchiver")
 //#$require s3fs.lst
 pkg("sys-apps/cciss_vol_status")
-import "./drbd.ts"
+await import("./drbd.ts")
 //#$patch /etc/xen/scripts/block-drbd xen/block-drbd.patch
-import "./open-iscsi.ts"
+import("./open-iscsi.ts")
 pkg("sys-fs/bcache-tools")
 
 // MDADM
@@ -115,7 +114,7 @@ exec("systemctl enable lvm2-lvmetad.socket")
 
 // networks
 pkg("net-analyzer/traceroute")
-import "./iptables.ts"
+import("./iptables.ts")
 f(
   "/usr/bin/cu",
   "/usr/bin/curl",
@@ -124,9 +123,8 @@ f(
 )
 pkg("net-dns/bind-tools")
 pkg("net-analyzer/traceroute")
-import "./rp-pppoe.ts"
 pkg("net-misc/wget")
-import "./nmap.ts"
+import("./nmap.ts")
 pkg("net-analyzer/netcat")
 pkg("net-firewall/ipset")
 pkg("net-misc/wakeonlan")
@@ -136,14 +134,15 @@ pkg("net-misc/whois")
 pkg("sys-apps/ethtool")
 pkg("net-analyzer/snort")
 pkg("net-dns/dnsmasq")
-import "./ssmtp.ts"
-import "./smbclient.ts"
+import("./ssmtp.ts")
+import("./smbclient.ts")
 pkg("net-analyzer/net-snmp")
 
 write("/etc/systemd/network/49-xenbr0.netdev", "[NetDev]\nName=xenbr0\nKind=bridge")
 write("/etc/systemd/network/50-eth0.network", "[Match]\nName=eth0\n[Network]\nBridge=xenbr0")
 write("/etc/systemd/network/52-xenbr0.network", "[Match]\nName=xenbr0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes")
 
+await import("./rp-pppoe.ts")
 // complementary PPP configs
 mkdir("/etc/ppp/chatscripts")
 copy("resource/ppp/chatscript-3g", "/etc/ppp/chatscripts/3g")
@@ -166,41 +165,28 @@ write("/etc/wpa_supplicant/wpa_supplicant-wlan0.conf", 'network={\nscan_ssid=1\n
 // extend nf_conntrack capacity
 write("/etc/sysctl.conf", 'net.nf_conntrack_max = 65536', {append:true})
 
-import "./timezone-jp.ts"
+import("./timezone-jp.ts")
 write("/etc/locale.conf", "LANG=ja_JP.utf8")
 write("/etc/vconsole.conf", "KEYMAP=jp106")
 mkdir("/etc/X11/xorg.conf.d")
 write("/etc/X11/xorg.conf.d/00-keyboard.conf", 'Section "InputClass"\n\tIdentifier "system-keyboard"\n\tMatchIsKeyboard "on"\n\tOption "XkbLayout" "jp"\n\tOption "XkbModel" "jp106"\n\tOption "XkbOptions" "terminate:ctrl_alt_bksp"\nEndSection')
 
-import "./xen.ts"
+await import("./xen.ts")
 sed("/etc/sysconfig/xendomains", "s/^\\(XENDOMAINS_SAVE=.*\\)$/#\\1/")
 
 // VPN
-import "./openvpn.ts"
+await import("./openvpn.ts")
 copy("resource/walbrix/ca.crt", "/etc/openvpn/client/ca.crt")
 copy("resource/walbrix/openvpn.conf", "/etc/openvpn/client/openvpn.conf")
 
-/*
-// backup cron scripts
-#$mkdir /etc/wb
-#$write /etc/wb/backup "#BACKUP_ROOT=rsync://backup.local/backup"
-#$copy walbrix/backup /etc/cron.daily/backup
-#$symlink /etc/cron.weekly/backup ../cron.daily/backup
-#$symlink /etc/cron.monthly/backup ../cron.daily/backup
-
-# alert cron scripts
-#$write /etc/wb/alert "#ALERT_RECIPIENT=your@email.address"
-#$copy walbrix/megaraid_alert /etc/cron.hourly/megaraid-alert
-*/
-
 // system services
-import "./zabbix-agent.ts"
-import "./zabbix-proxy.ts"
+import("./zabbix-agent.ts")
+import("./zabbix-proxy.ts")
 pkg("dev-vcs/git")
 pkg("sys-block/zram-init")
 exec("systemctl enable zram_swap")
 
-import "./kmscon.ts"
+await import("./kmscon.ts")
 exec("systemctl disable getty@tty1")
 exec("systemctl enable kmsconvt@tty1")
 mkdir("/etc/systemd/system/kmsconvt@tty1.service.d")

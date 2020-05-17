@@ -1,6 +1,6 @@
 import {f,pkg,exec,write} from "./collect.ts"
 
-import "./python.ts"
+import("./python.ts")
 
 pkg("dev-python/lxml")
 pkg("app-emulation/xen-tools")

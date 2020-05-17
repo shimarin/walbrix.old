@@ -1,16 +1,15 @@
-import {f,kernel,dir,pkg,write,sed,symlink,mkdir,touch,exec} from "./collect.ts";
+import {f,kernel,dir,pkg,write,sed,symlink,mkdir,touch,exec,env} from "./collect.ts";
 
 kernel("/boot/kernel");
-f(
+await f(
   "/boot/kernel",
   "/boot/initramfs",
   "/lib/modules"
 );
-dir("/lib/modules/$KERNEL_VERSION");
-
+dir(`/lib/modules/${env["KERNEL_VERSION"]}`);
 pkg("sys-apps/kmod");
 
-import "./baselayout.ts";
+await import("./baselayout.ts");
 
 pkg("coreutils");
 pkg("grep");
@@ -22,9 +21,9 @@ pkg("sys-apps/attr");
 pkg("net-tools");
 pkg("sys-apps/iproute2");
 
-import "./bash-minimal.ts";
-import "./pam.ts";
-import "./psmisc.ts";
+await import("./bash-minimal.ts");
+await import("./pam.ts");
+import("./psmisc.ts");
 
 pkg("iputils");
 pkg("sys-apps/less");
@@ -72,7 +71,7 @@ f(
   "/mnt"
 );
 
-import "./glibc-minimal.ts";
+await import("./glibc-minimal.ts");
 
 dir("/dev");
 
@@ -94,10 +93,10 @@ pkg("sys-libs/pam");
 pkg("sys-apps/kmod");
 pkg("net-vpn/wireguard-tools");
 
-import "./cron.ts";
+import("./cron.ts");
 pkg("net-misc/openssh");
 sed("/etc/ssh/sshd_config", `s/^#PermitRootLogin prohibit-password$/PermitRootLogin yes/`);
-mkdir("/root/.ssh", {mode:"700"});
+mkdir("/root/.ssh", {mode:0o700});
 touch("/root/.ssh/authorized_keys");
 exec("systemctl enable sshd");
 

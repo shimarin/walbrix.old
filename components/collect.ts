@@ -102,7 +102,7 @@ async function get_elf_deps(_path:string)
     const p1_output = utf8decoder.decode(await p1.output()).trim();
     const p2_output = utf8decoder.decode(await p2.output()).trim();
     const rpath = p2_output.split(":").map(_=>_ == "$ORIGIN" ? path.dirname(_path) : _);
-    const deps = p1_output.split(",").map(_=> {
+    const deps = p1_output == ""? [] : p1_output.split(",").map(_=> {
       if (_[0] == '/') return _;
       //else
       for (let rp of rpath) {
@@ -180,18 +180,6 @@ export const f = runExclusive.build(exclusives,
     await flush();
   }
 )
-
-export function kernel(path:string)
-{
-  console.log(context.srcdir);
-  console.log("kernel=" + path);
-}
-
-export function dir(path:string)
-{
-  console.log(context.srcdir);
-  console.log("dir=" + path);
-}
 
 function find_package(pkgname:string|RegExp)
 {
@@ -288,51 +276,168 @@ export const pkg = runExclusive.build(exclusives,
   }
 )
 
-export function write(path:string, content:string, options:{append:boolean}={append:false})
+function getbyte(fd:Deno.File):[boolean,number|null]
 {
-  console.log(context.srcdir);
-  console.log("write(" + path + ")=" + content);
+  const buf = new Uint8Array(1);
+  const read = fd.readSync(buf);
+  if (!read || read < 1) return [false, null];
+  //else
+  return [true, buf[0]];
 }
 
-export function sed(path:string, expr:string)
-{
-  console.log(context.srcdir);
-  console.log("sed(" + path + ")=" +expr);
-}
+export const kernel = runExclusive.build(exclusives,
+  async(_path:string) => {
+    const kernel_image = path.join(context.srcdir, _path);
 
-export function symlink(path:string, target:string)
-{
-  console.log(context.srcdir);
-  console.log("symlink(" + path + ")=" + target);
-}
+    const fd = Deno.openSync(kernel_image, {read:true});
+    try {
+      if (fd.seekSync(526, Deno.SeekMode.Start) != 526) throw new Error(`Invalid kernel image: ${path}`);
+      const buf = new Uint8Array(2);
+      const read = fd.readSync(buf);
+      if (!read || read < 2) throw new Error(`Invalid kernel image: ${path}`);
 
-export function mkdir(path:string,options:{mode?:string}={})
-{
-  console.log(context.srcdir);
-  console.log("mkdir=" + path);
-}
+      const head = buf[0] + buf[1] * 256 + 0x200;
+      if (fd.seekSync(head, Deno.SeekMode.Start) != head) throw new Error(`Invalid kernel image: ${path}`);
 
-export function touch(path:string)
-{
-  console.log(context.srcdir);
-  console.log("touch=" + path);
-}
+      var kernelver = "";
+      var r = getbyte(fd);
+      while (r[0] && r[1] && r[1] > 0 && r[1] != 0x20/*space*/) {
+        kernelver += String.fromCharCode(r[1]);
+        r = getbyte(fd);
+      }
+      context.env["KERNEL_VERSION"] = kernelver;
+      console.log(`KERNEL_VERSION set to ${kernelver}`);
+      return kernelver;
+    }
+    finally {
+      fd.close();
+    }
+  }
+);
 
-export function exec(cmd:string, options:{overlay:boolean} = {overlay:false})
-{
-  console.log(context.srcdir);
-  console.log("exec=" + cmd);
-}
+export const dir = runExclusive.build(exclusives,
+  async(_path:string) => {
+    const dirname = _path.replace(/\/+$/, "");
+    console.log(`Directory: ${dirname}`);
 
-export function copy(src:string, dst:string)
-{
-  console.log(context.srcdir);
-  console.log("copy " + src + " => " + dst);
-}
+    const status = await Deno.run({cmd:["rsync", "-ax", "--delete", path.join(context.srcdir, dirname), path.join(context.dstdir, path.dirname(dirname))]}).status();
+
+    if (!status.success) {
+      throw new Error(`Error copying directory ${dirname}`);
+    }
+
+  }
+);
+
+export const write = runExclusive.build(exclusives,
+  async(_path:string, content:string, options:{append:boolean}={append:false}) => {
+    const actual_path = path.join(context.dstdir, _path);
+    if (!existsSync(path.dirname(actual_path))) {
+      throw new Error(`Directory ${path.dirname(_path)} does not exist.`);
+    }
+    Deno.writeFileSync(actual_path, utf8encoder.encode(content), {append:options.append});
+  }
+);
+
+export const sed = runExclusive.build(exclusives,
+  async(_path:string, expr:string) => {
+    const status = await Deno.run({cmd:["sed", "-i", expr, path.join(context.dstdir, _path)]}).status();
+    if (status.success) {
+      console.log(`sed -i ${expr} ${_path}`);
+    } else {
+      throw new Error(`sed failed while applying ${expr} to ${_path}`);
+    }
+  }
+);
+
+export const mkdir = runExclusive.build(exclusives,
+  async(_path:string,options:{mode?:number}={}) => {
+    const dir_to_make = path.join(context.dstdir, _path);
+    ensureDirSync(dir_to_make);
+    if (options.mode) {
+      Deno.chmodSync(dir_to_make, options.mode)
+    }
+    console.log(`mkdir: ${_path}`);
+  }
+);
+
+export const copy = runExclusive.build(exclusives,
+  async(src:string, dst:string) => {
+    let dst_full = path.join(context.dstdir, dst);
+    if (dst.endsWith('/')) {
+     try {
+       if (!Deno.statSync(dst_full).isDirectory) {
+         console.log("Warning: destination is not a directory");
+       }
+     }
+     catch (e) {
+       // no dst dir found
+       process_single_file(dst.replace(/\/+$/, ""));
+       flush();
+     }
+    }
+    try {
+     const stat = Deno.statSync(dst_full);
+     if (stat.isDirectory) {
+       dst_full = path.join(dst_full, path.basename(src));
+     }
+    }
+    catch (e) {
+     // pass through
+    }
+    ensureDirSync(path.dirname(dst_full));
+    console.log(`copy ${src} -> ${dst_full}`);
+    const status = await Deno.run({cmd:["cp", "-a", src, dst_full]}).status();
+    if (status.success) {
+      await Deno.run({cmd:["chown", "-R", "root.root", dst_full]}).status();
+    } else {
+      throw new Error(`Failed to copy ${src} to ${dst_full}`);
+    }
+  }
+);
+
+export const touch = runExclusive.build(exclusives,
+  async(_path:string) => {
+    console.log(`touch: ${_path}`);
+    Deno.openSync(path.join(context.dstdir, _path), {write:true,create:true}).close();
+  }
+);
+
+export const symlink = runExclusive.build(exclusives,
+  async(_path:string, target:string, options:{owner?:number,group?:number}={})=> {
+    const templink = path.join(context.dstdir, `symlink.${Deno.pid}`);
+    const status = await Deno.run({cmd:["ln", "-sf", target, templink]}).status();
+    if (!status.success) throw new Error(`Failed to create symlink ${templink}`);
+    //Deno.symlinkSync(target, templink);
+    const finallink = path.join(context.dstdir, _path);
+    Deno.renameSync(templink, finallink);
+
+    if (options.owner !== undefined || options.group !== undefined) {
+      const owner = options?.owner || 0;
+      const group = options?.group || 0;
+      Deno.chownSync(finallink, owner, group);
+    }
+
+    console.log(`symlink: ${_path} => ${target}`);
+  }
+);
+
+export const exec = runExclusive.build(exclusives,
+  async(cmd:string|string[], options:{overlay:boolean} = {overlay:false}) => {
+    const dst_abs = Deno.realPathSync(context.dstdir);
+    const actual_cmd = Array.isArray(cmd)? cmd : ["sh", "-c", cmd];
+    const status = options.overlay?
+      (await Deno.run({cmd:["systemd-nspawn", "-D", context.srcdir, `--overlay=+/:${dst_abs}:/`].concat(actual_cmd),env:{SYSTEMD_NSPAWN_TMPFS_TMP:"0"}}).status())
+      :
+      (await Deno.run({cmd:["systemd-nspawn", "-D", context.dstdir].concat(actual_cmd),env:{SYSTEMD_NSPAWN_TMPFS_TMP:"0"}}).status())
+    if (!status.success) throw new Error(`Error executing command ${cmd}. overlay=${options.overlay}`);
+  }
+);
 
 //const userInfo = os.userInfo()
 
 const args = parse(Deno.args);
+
 context = new Context(args._[0].toString(), args._[1].toString());
 
 emptyDirSync(context.dstdir);
@@ -349,3 +454,7 @@ if (utf8decoder.decode(await p.output()).includes("80386")) {
 p.close();
 
 export const env = context.env;
+
+if (import.meta.main) {
+  console.log("main");
+}
