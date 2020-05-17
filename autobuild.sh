@@ -122,11 +122,12 @@ $SUDO ln -f profile/common/*.sh $GENTOO_DIR/
 [ -f profile/$PROFILE/before-emerge.sh ] && $SUDO ln -f profile/$PROFILE/before-emerge.sh $GENTOO_DIR/
 [ -f profile/$PROFILE/after-emerge.sh ] && $SUDO ln -f profile/$PROFILE/after-emerge.sh $GENTOO_DIR/
 
+$SUDO mkdir -p cache/profile/$PROFILE
 if file -L $GENTOO_DIR/bin/sh | grep -q 80386; then
-  $SUDO ./do.ts chroot --profile=$PROFILE "$GENTOO_DIR" "setarch i686 /build.sh" || exit 1
-else
-  $SUDO ./do.ts chroot --profile=$PROFILE "$GENTOO_DIR" "/build.sh" || exit 1
+	SETARCH="setarch i686"
 fi
+
+$SUDO systemd-nspawn -D "$GENTOO_DIR" --bind=`readlink -f cache/profile/$PROFILE`:/var/cache --bind=/var/db/repos/gentoo $SETARCH /build.sh || exit 1
 
 echo "$STAGE3_HASH" > done-$$.tmp
 $SUDO mv done-$$.tmp $GENTOO_DIR/done # mark as built
