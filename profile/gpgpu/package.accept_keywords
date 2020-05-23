@@ -3,10 +3,10 @@ sys-kernel/linux-firmware
 sys-apps/hwids
 =sys-boot/grub-2.04-r1
 =net-vpn/wireguard-tools-1.0.20200319
-=dev-util/clinfo-2.2.18.04.06
+=dev-util/clinfo-2.2.18.04.06-r1
 
 =dev-libs/amdgpu-pro-opencl-19.30.838629
-=x11-drivers/nvidia-drivers-440.82
+=x11-drivers/nvidia-drivers-440.82-r3
 
 # AMD rocm
 =virtual/opencl-3-r1
@@ -26,10 +26,10 @@ sys-apps/hwids
 =dev-util/intel-graphics-compiler-1.0.3826
 =dev-util/spirv-llvm-translator-9.0.1.1
 =sys-devel/clang-8.0.1
-=media-libs/gmmlib-19.3.4
+=media-libs/gmmlib-20.1.1
 =dev-libs/opencl-clang-9.0.1
 =sys-libs/compiler-rt-sanitizers-9.0.1
 =sys-libs/compiler-rt-9.0.1
 =sys-devel/clang-runtime-9.0.1
-=dev-libs/intel-neo-19.48.14977
+=dev-libs/intel-neo-20.16.16582
 

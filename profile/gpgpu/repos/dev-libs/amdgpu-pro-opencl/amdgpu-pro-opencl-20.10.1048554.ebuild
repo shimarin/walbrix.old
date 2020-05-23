@@ -21,8 +21,7 @@ KEYWORDS="amd64 ~x86"
 RESTRICT="bindist mirror fetch strip"
 
 BDEPEND="dev-util/patchelf"
-COMMON="app-eselect/eselect-opencl
-	dev-libs/ocl-icd"
+COMMON="dev-libs/ocl-icd"
 DEPEND="${COMMON}"
 RDEPEND="${COMMON}
 	!media-libs/mesa[opencl]" # Bug #686790
