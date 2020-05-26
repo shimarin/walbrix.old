@@ -71,6 +71,7 @@ if [ -f /tmp/initramfs ]; then
 fi
 
 emerge -uDN world
+emerge @preserved-rebuild
 emerge --depclean
 [ -x /usr/bin/eclean-kernel ] && eclean-kernel -n 1
 
