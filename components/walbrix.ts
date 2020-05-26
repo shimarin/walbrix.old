@@ -1,11 +1,11 @@
-import {f,kernel,dir,pkg,write,sed,symlink,mkdir,touch,exec,copy,env} from "./collect.ts"
+import {f,pkg,exec} from "./collect.ts"
 
 await import("./base.ts")
 
-dir("/lib/firmware")
+exec("find /lib/firmware -exec touch -ch {} \\;")
 
-import("./kbd-minimal.ts")
-import("./xfsprogs.ts")
+await import("./kbd-minimal.ts")
+await import("./xfsprogs.ts")
 
 pkg("dosfstools")
 pkg("parted")
