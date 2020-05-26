@@ -1,6 +1,7 @@
 app-emulation/xen
 app-emulation/xen-pvgrub
 sys-boot/grub
+dev-libs/iniparser
 sys-fs/xfsprogs
 app-editors/vim
 app-editors/nano
@@ -99,3 +100,4 @@ sys-fs/mtools
 dev-libs/libisoburn
 sys-block/zram-init
 app-admin/ansible
+
