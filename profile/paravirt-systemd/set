@@ -78,3 +78,6 @@ media-fonts/urw-fonts
 dev-php/pecl-imagick
 dev-php/pecl-apcu
 dev-php/PEAR-PEAR
+
+dev-libs/iniparser
+
