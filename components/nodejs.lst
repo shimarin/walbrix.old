@@ -1,4 +1,3 @@
-#net-libs/http-parser
 #dev-libs/libuv
 #net-libs/nghttp2 # /usr/share/nghttp2/fetch-ocsp-response
 $package net-libs/nodejs
