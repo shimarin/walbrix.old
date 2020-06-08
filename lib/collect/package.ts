@@ -72,7 +72,8 @@ export function process_package(context:Context, pkgname:string, options?:{use?:
     "/usr/share/man",
     "/usr/share/doc",
     "/usr/share/info",
-    "/usr/include"
+    "/usr/include",
+    "/var/cache"
   ];
 
   const included_locales = [
