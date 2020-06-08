@@ -8,11 +8,11 @@ $require mit-krb5.lst
 
 $package dev-python/pbr
 $package dev-python/extras
-$package dev-python/mimeparse
 $package dev-python/linecache2
 $package dev-python/traceback2
 $package dev-python/unittest2
 $package dev-python/subunit
+$package dev-python/python-mimeparse
 $require testtools.lst
 
 $package net-fs/cifs-utils
