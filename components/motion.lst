@@ -33,13 +33,13 @@ $package dev-python/pyparsing
 # nodejs
 $require ts-node.lst
 
-# restkit
-$package dev-python/webob
-$package dev-python/cython
-$package dev-python/http-parser
-$package net-dns/c-ares
-$package dev-python/socketpool
-$package dev-python/restkit
+# restkit(deprecated)
+#$package dev-python/webob
+#$package dev-python/cython
+#$package dev-python/http-parser
+#$package net-dns/c-ares
+#$package dev-python/socketpool
+#$package dev-python/restkit
 
 # python-zeroconf
 $require python-zeroconf.lst
