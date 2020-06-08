@@ -2,7 +2,6 @@ $package dev-python/setuptools
 $package dev-python/certifi
 $package dev-python/six
 $package dev-python/setuptools_scm
-$package dev-python/more-itertools
 $package dev-python/zipp
 $package dev-python/importlib_metadata
 $package dev-python/keyring
