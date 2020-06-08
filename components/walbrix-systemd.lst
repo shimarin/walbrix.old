@@ -3,8 +3,6 @@ $require base-systemd.lst
 $dir /lib/firmware
 $require kbd-minimal.lst
 
-$require xfsprogs.lst
-
 $package dosfstools
 $package parted
 $require grub.lst
@@ -68,7 +66,9 @@ $copy resource/walbrix/77-mm-docomo-l-03f.rules /lib/udev/rules.d/
 /usr/bin/lsscsi
 $require nfs.lst
 $package sys-fs/multipath-tools
+$require xfsprogs.lst
 $package sys-fs/btrfs-progs
+$package sys-fs/e2fsprogs
 /usr/bin/compsize
 $package sys-fs/squashfs-tools
 $package sys-fs/exfat-utils
