@@ -7,6 +7,8 @@ $package dosfstools
 $package parted
 $require grub-i386-pc.lst
 
+$package app-emulation/qemu-guest-agent
+
 /bin/ip
 /usr/bin/awk
 
@@ -33,6 +35,7 @@ $write /etc/sysctl.d/nf_conntrack_max.conf 'net.nf_conntrack_max = 65536'
 $package net-vpn/openvpn
 $package net-analyzer/traceroute
 $package net-dns/bind-tools
+$package net-misc/quagga
 /usr/bin/iperf3
 /usr/bin/curl
 /sbin/brctl
