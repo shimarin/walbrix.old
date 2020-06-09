@@ -35,3 +35,4 @@ net-vpn/openvpn
 net-ftp/ftp
 net-dns/bind-tools
 net-misc/iperf
+dev-libs/iniparser

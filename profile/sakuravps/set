@@ -64,3 +64,8 @@ net-vpn/wireguard-tools
 mail-mta/postfix
 app-admin/logrotate
 
+dev-libs/iniparser
+app-emulation/qemu-guest-agent
+net-misc/quagga
+net-vpn/pptpd
+

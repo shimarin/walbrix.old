@@ -20,7 +20,6 @@ dev-python/mysql-python
 dev-python/paho-mqtt
 dev-db/sqlite
 
-dev-python/restkit
 dev-python/zeroconf
 
 dev-python/backports-ssl-match-hostname

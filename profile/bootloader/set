@@ -22,3 +22,4 @@ sys-apps/usbutils
 net-vpn/wireguard-tools
 net-analyzer/tcpdump
 sys-fs/exfat-utils
+dev-libs/iniparser

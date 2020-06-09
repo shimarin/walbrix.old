@@ -1,1 +1,9 @@
 www-client/google-chrome google-chrome
+x11-drivers/nvidia-drivers NVIDIA-r2
+net-im/skypeforlinux Skype-TOS
+net-im/slack all-rights-reserved
+sys-kernel/linux-firmware linux-fw-redistributable no-source-code
+dev-libs/amdgpu-pro-opencl AMD-GPU-PRO-EULA
+net-im/discord-bin all-rights-reserved
+sys-firmware/bluez-firmware bluez-firmware
+media-fonts/ipamonafont grass-ipafonts

@@ -86,3 +86,4 @@ dev-python/pyinotify -python_targets_python2_7
 mail-mta/postfix mysql sasl
 dev-libs/cyrus-sasl mysql
 
+net-vpn/pptpd -tcpd
