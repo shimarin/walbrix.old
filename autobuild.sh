@@ -10,6 +10,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 PROFILE=$1
+COMMAND=${2:-/build.sh}
 GENTOO_DIR=gentoo/$PROFILE
 
 if [ -z "$SKIP_INIT" ]; then
@@ -127,7 +128,7 @@ if file -L $GENTOO_DIR/bin/sh | grep -q 80386; then
 	SETARCH="setarch i686"
 fi
 
-$SUDO systemd-nspawn -D "$GENTOO_DIR" --bind=`readlink -f cache/profile/$PROFILE`:/var/cache --bind=/var/db/repos/gentoo $SETARCH /build.sh || exit 1
+$SUDO systemd-nspawn -D "$GENTOO_DIR" --bind=`readlink -f cache/profile/$PROFILE`:/var/cache --bind=/var/db/repos/gentoo $SETARCH $COMMAND || exit 1
 
 echo "$STAGE3_HASH" > done-$$.tmp
 $SUDO mv done-$$.tmp $GENTOO_DIR/done # mark as built
