@@ -24,10 +24,6 @@ case "${CATEGORY}/${PN}" in
 		getent group nginx || groupadd -g 110 nginx
 		getent passwd nginx || useradd -c "" -d /var/lib/nginx -M -u 110 -g nginx -s /sbin/nologin nginx
 		;;
-	media-video/motion)
-		getent group motion || groupadd -g 395 motion
-		getent passwd motion || useradd -c "" -d /var/lib/motion -M -u 395 -g motion -G video -s /sbin/nologin motion
-		;;
 	sci-geosciences/gpsd)
 		getent passwd gpsd || useradd -c "" -d /dev/null -M -u 200 -g uucp -s /sbin/nologin gpsd
 		;;
