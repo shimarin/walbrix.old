@@ -1,0 +1,33 @@
+#!/bin/sh
+INIFILE=$1
+WORKDIR=/tmp/make-bootx64-iso-$$
+ISOROOT=$WORKDIR/bootx64.iso
+mkdir -p $ISOROOT/boot || exit 1
+echo -e 'set BOOT_PARTITION=$root\nloopback --offset1m loop /efi/boot/bootx64.efi\nset root=loop\nset prefix=($root)/boot/grub' > $WORKDIR/grub.cfg
+
+GRUB_MODULES_COMMON="loopback xfs fat ntfs ntfscomp ext2 part_gpt part_msdos normal linux echo all_video serial test probe multiboot multiboot2 search iso9660 gzio lvm chain configfile cpuid minicmd gfxterm font terminal squash4 png gfxterm_background"
+
+echo "Generating BIOS bootloader image..."
+grub-mkimage -p /boot/grub -c $WORKDIR/grub.cfg -o $ISOROOT/boot/boot.img -O i386-pc-eltorito $GRUB_MODULES_COMMON ata biosdisk videoinfo videotest || exit 1
+
+echo "Generating EFI bootloader image..."
+dd if=/run/initramfs/boot/efi/boot/bootx64.efi of=$WORKDIR/bootx64.efi bs=1M count=1 || exit 1
+dd if=/dev/zero of=$ISOROOT/efiboot.img bs=4k count=360 || exit 1
+mkfs.vfat -F 12 -M 0xf8 $ISOROOT/efiboot.img || exit 1
+mmd -i $ISOROOT/efiboot.img /efi /efi/boot || exit 1
+mcopy -i $ISOROOT/efiboot.img $WORKDIR/bootx64.efi ::/efi/boot/ || exit 1
+ 
+echo "Copying system image..."
+mkdir -p $ISOROOT/efi/boot
+cp /run/initramfs/boot/efi/boot/bootx64.efi $ISOROOT/efi/boot/ || exit 1
+
+if [ -n "$INIFILE" -a -f "$INIFILE" ]; then
+	echo "Copying $INIFILE as /efi/boot/bootx64.ini..."
+	cp "$INIFILE" $ISOROOT/efi/boot/bootx64.ini || exit 1
+fi
+
+echo "Generating bootx64.iso..."
+xorriso -as mkisofs -f -J -r -no-emul-boot -boot-load-size 4 -boot-info-table -graft-points -eltorito-alt-boot -e boot/efiboot.img -b boot/boot.img -V BOOTX64 -o bootx64.iso $ISOROOT || exit 1
+
+rm -r $WORKDIR
+echo "Done."

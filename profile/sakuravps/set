@@ -68,4 +68,6 @@ dev-libs/iniparser
 app-emulation/qemu-guest-agent
 net-misc/quagga
 net-vpn/pptpd
+sys-fs/mtools
+dev-libs/libisoburn
 

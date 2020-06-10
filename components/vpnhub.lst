@@ -6,6 +6,7 @@ $require python3.lst
 $package dosfstools
 $package parted
 $require grub-i386-pc.lst
+$package sys-fs/mtools
 
 $package app-emulation/qemu-guest-agent
 
@@ -47,14 +48,19 @@ $package net-vpn/pptpd
 $package sys-fs/btrfs-progs
 $package screen
 
+# certbot
+$require certbot.lst
+
 # nginx
 $require lua.lst
 $package dev-lang/luajit
 $package www-servers/nginx --use="nginx_modules_http_lua"
 $exec "systemctl enable nginx"
-
-# certbot
-$require certbot.lst
+$copy resource/vpnhub/nginx.conf /etc/nginx/nginx.conf
+$mkdir /etc/nginx/conf.d
+$copy resource/vpnhub/default.conf.example /etc/nginx/conf.d/default.conf.example
+$write /etc/letsencrypt/renewal-hooks/deploy/nginx '#!/bin/sh\nsystemctl reload nginx'
+$exec "chmod 755 /etc/letsencrypt/renewal-hooks/deploy/nginx"
 
 # twisted
 $package dev-python/constantly
@@ -97,6 +103,8 @@ $sed /etc/sysctl.conf 's/^net\.ipv4\.ip_forward\s*=.\+/#\0/'
 $write /etc/sysctl.d/90-ip-forwarding.conf 'net.ipv4.ip_forward=1\nnet.ipv6.conf.default.forwarding=1\nnet.ipv6.conf.all.forwarding=1'
 
 $copy resource/install-system-image /usr/sbin/
+$copy resource/make-bootx64-iso	/usr/sbin/
+/usr/bin/xorriso
 
 $require ts-node.lst
 $require timezone-jp.lst

@@ -95,6 +95,8 @@ dev-libs/libassuan	>=dev-libs/libgpg-error-1.8
 dev-libs/libevent	>=dev-libs/openssl-1.0.1h-r2:0/1.1=[abi_x86_64(-)] !<=dev-libs/9libs-1.0
 dev-libs/libgcrypt	>=dev-libs/libgpg-error-1.25[abi_x86_64(-)]
 dev-libs/libgpg-error	>=virtual/libintl-0-r1[abi_x86_64(-)]
+dev-libs/libisoburn	>=dev-libs/libburn-1.5.2 >=dev-libs/libisofs-1.5.2 sys-libs/readline:0/8= virtual/acl sys-apps/attr sys-libs/zlib
+dev-libs/libisofs	virtual/acl sys-apps/attr sys-libs/zlib
 dev-libs/libksba	>=dev-libs/libgpg-error-1.8
 dev-libs/libltdl	!<sys-devel/libtool-2.4.3-r2:2
 dev-libs/libpcre	app-arch/bzip2 sys-libs/zlib sys-libs/readline:0/8=
@@ -216,7 +218,7 @@ net-libs/c-client	dev-libs/openssl:0/1.1= !net-mail/uw-imap
 net-libs/gnutls	>=dev-libs/libtasn1-4.9:0/6=[abi_x86_64(-)] dev-libs/libunistring:0/2=[abi_x86_64(-)] >=dev-libs/nettle-3.4.1:0/7=[gmp,abi_x86_64(-)] >=dev-libs/gmp-5.1.3-r1:0/10.4=[abi_x86_64(-)] >=virtual/libintl-0-r1:0/0=[abi_x86_64(-)] >=net-dns/libidn2-0.16-r1:0/2=[abi_x86_64(-)]
 net-libs/libnsl	>=net-libs/libtirpc-1.0.2-r1[abi_x86_64(-)] !<sys-libs/glibc-2.26
 net-libs/libssh2	>=dev-libs/openssl-1.0.1h-r2:0/1.1=[abi_x86_64(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)]
-net-libs/nodejs	>=dev-libs/libuv-1.37.0:0/1= >=net-dns/c-ares-1.16.0 >=net-libs/nghttp2-1.40.0 sys-libs/zlib >=dev-libs/openssl-1.1.1:0/1.1=
+net-libs/nodejs	>=dev-libs/libuv-1.37.0:0/1= >=net-dns/c-ares-1.16.0 >=net-libs/nghttp2-1.41.0 sys-libs/zlib >=dev-libs/icu-65:0/67.1= >=dev-libs/openssl-1.1.1:0/1.1=
 net-mail/mailbase	acct-group/mail acct-user/mail acct-user/postmaster sys-libs/pam !<net-mail/metamail-2.7.53.3-r2
 net-misc/curl	dev-libs/openssl:0/1.1=[abi_x86_64(-)] sys-libs/zlib[abi_x86_64(-)]
 net-misc/dhcpcd	virtual/udev
@@ -359,5 +361,5 @@ virtual/yacc	|| ( sys-devel/bison dev-util/byacc dev-util/yacc )
 www-apache/mod_authnz_external	=www-servers/apache-2.4*
 www-apache/mod_extract_forwarded	www-servers/apache[apache2_modules_proxy_connect] =www-servers/apache-2.4*
 www-servers/apache	>=net-libs/nghttp2-1.2.1 >=dev-libs/apr-1.5.1:1/1.6= !www-apache/mod_macro dev-lang/perl =dev-libs/apr-util-1*:1/1=[gdbm] dev-libs/libpcre sys-libs/zlib app-misc/mime-types sys-libs/gdbm:0/1.13= >=dev-libs/openssl-1.0.2:0/1.1= !=www-servers/apache-1* virtual/tmpfiles
-www-servers/nginx	dev-libs/libpcre:3/3= dev-libs/openssl:0/1.1= >=dev-libs/openssl-1.0.1c:0/1.1= dev-libs/openssl:0/1.1= sys-libs/zlib sys-libs/zlib media-libs/gd:2/3=[jpeg,png] dev-libs/libpcre:3/3= dev-lang/luajit:2/2= sys-libs/pam !www-servers/nginx:mainline
+www-servers/nginx	dev-libs/libpcre:3/3= dev-libs/openssl:0/1.1= >=dev-libs/openssl-1.0.1c:0/1.1= dev-libs/openssl:0/1.1= sys-libs/zlib sys-libs/zlib media-libs/gd:2/3=[jpeg,png] dev-libs/libpcre:3/3= dev-lang/luajit:2/2= sys-libs/pam dev-libs/apr:1/1.6= dev-libs/apr-util:1/1= dev-libs/libxml2:2/2= net-misc/curl www-servers/apache !www-servers/nginx:mainline
 x11-misc/shared-mime-info	dev-libs/glib:2 dev-libs/libxml2

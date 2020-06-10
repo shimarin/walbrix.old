@@ -29,7 +29,7 @@ $package dev-python/setuptools
 $package dev-python/pip
 $require google-api-python-client.lst
 
-$mkdir /etc/letsencrypt
-$write /etc/letsencrypt/cli.ini 'authenticator = webroot\nwebroot-path = /var/www/localhost/htdocs\ncert-name = nginx\n#email = you@example.com\n#agree-tos = True\n#domains = domain1.tld,domain2.tld,domain3.tld'
+$mkdir /etc/letsencrypt/renewal-hooks/deploy
+$write /etc/letsencrypt/cli.ini 'authenticator = webroot\nwebroot-path = /var/www/localhost/htdocs\n#register-unsafely-without-email = True\n#agree-tos = True\n'
 $copy resource/certbot/certbot-renew /etc/cron.weekly/certbot-renew
 

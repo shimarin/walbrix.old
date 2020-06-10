@@ -1,0 +1,18 @@
+# certbot certonly --cert-name default -d your.domain.1 [-d your.domain.2]...
+ssl_certificate /etc/letsencrypt/live/default/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/default/privkey.pem;
+
+server {
+	listen 443 default_server ssl http2;
+	listen [::]:443 default_server ssl http2;
+	server_name _;
+	return 404;
+}
+
+server {
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
+	server_name www.example.com;
+	location / { proxy_pass http://$host.vpn; }
+}
+

@@ -1,5 +1,6 @@
 #!/bin/sh
-tty -s || exec >/dev/null 2>&1
-for i in /etc/letsencrypt/renewal/*.conf; do
-	certbot renew --cert-name `basename "$i"|sed 's/\.conf$//'` --renew-hook "service nginx reload"
-done
+LOGFILE=/var/log/certbot-renew.log
+tty -s || exec >$LOGFILE 2>&1
+
+certbot renew
+
