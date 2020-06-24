@@ -6,8 +6,8 @@ sys-kernel/gentoo-sources
 =sys-block/zram-init-3.8
 
 # Xen
-=app-emulation/xen-4.13.1
-=app-emulation/xen-tools-4.13.1
+=app-emulation/xen-4.13.1-r1
+=app-emulation/xen-tools-4.13.1-r1
 =dev-util/bcc-0.14.0
 =app-emulation/xen-pvgrub-4.13.1
 =dev-lang/swig-4.0.0
