@@ -22,7 +22,6 @@ dev-db/sqlite
 
 dev-python/zeroconf
 
-dev-python/backports-ssl-match-hostname
 dev-python/pyasn1
 dev-python/asn1crypto
 dev-python/ndg-httpsclient
@@ -79,4 +78,5 @@ dev-php/pecl-apcu
 dev-php/PEAR-PEAR
 
 dev-libs/iniparser
-
+net-fs/nfs-utils
+app-admin/tripwire

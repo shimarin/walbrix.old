@@ -18,7 +18,6 @@ media-libs/libv4l jpeg
 
 dev-python/pillow jpeg jpeg2k truetype webp
 dev-lang/python sqlite
-dev-python/restkit -cli
 
 app-misc/mosquitto websockets
 net-dns/avahi -introspection mdnsresponder-compat dbus
@@ -110,3 +109,7 @@ dev-python/simplejson -python_targets_python2_7
 dev-python/pyasn1 -python_targets_python2_7
 dev-python/pyasn1-modules -python_targets_python2_7
 dev-python/entrypoints -python_targets_python2_7
+
+#nfs
+net-fs/nfs-utils -tcpd
+net-nds/rpcbind -tcpd
