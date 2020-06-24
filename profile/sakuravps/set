@@ -70,4 +70,6 @@ net-misc/quagga
 net-vpn/pptpd
 sys-fs/mtools
 dev-libs/libisoburn
-
+sys-auth/pam_mysql
+net-ftp/vsftpd
+net-fs/nfs-utils

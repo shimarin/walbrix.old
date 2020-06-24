@@ -40,6 +40,7 @@ $package net-analyzer/traceroute
 $package net-dns/bind-tools
 $package net-misc/quagga
 $package net-vpn/pptpd
+$require nfs.lst
 /usr/bin/iperf3
 /usr/bin/curl
 /sbin/brctl
@@ -85,12 +86,16 @@ $package net-analyzer/zabbix
 # mysql
 $require mysql.lst
 $package dev-python/mysqlclient
+$package sys-auth/pam_mysql
 
 $package dev-python/pyinotify
 $package sys-fs/inotify-tools
 
 # email
 $require postfix.lst
+
+# ftp
+$require vsftpd.lst
 
 # zabbix
 $require zabbix-server.lst
