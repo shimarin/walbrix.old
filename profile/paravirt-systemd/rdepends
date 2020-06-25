@@ -237,7 +237,9 @@ media-sound/lame	>=sys-libs/ncurses-5.7-r7:0/6=
 media-tv/v4l-utils	>=media-libs/libv4l-1.16.6[jpeg] virtual/libudev >=virtual/jpeg-0-r2:0/0= virtual/libelf:0/1= !media-tv/v4l2-ctl !<media-tv/ivtv-utils-1.4.0-r2
 media-video/ffmpeg	>=app-arch/bzip2-1.0.6-r4[abi_x86_64(-)] >=media-sound/lame-3.99.5-r1[abi_x86_64(-)] >=media-libs/libtheora-1.1.1[encode,abi_x86_64(-)] >=media-libs/libogg-1.3.0[abi_x86_64(-)] >=media-libs/libwebp-0.3.0:0/7=[abi_x86_64(-)] >=media-libs/x264-0.0.20130506:0/157=[abi_x86_64(-)] >=media-libs/x265-1.6:0/160=[abi_x86_64(-)] >=media-libs/xvid-1.3.2-r1[abi_x86_64(-)] >=virtual/libiconv-0-r1[abi_x86_64(-)] >=media-libs/freetype-2.5.0.1:2[abi_x86_64(-)] >=x11-libs/libva-1.2.1-r1:0/2=[abi_x86_64(-)] >=x11-libs/libvdpau-0.7[abi_x86_64(-)] >=media-libs/libvorbis-1.3.3-r1[abi_x86_64(-)] >=media-libs/libogg-1.3.0[abi_x86_64(-)] >=media-libs/libvpx-1.4.0:0/5=[abi_x86_64(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] !media-libs/libpostproc
 media-video/motion	acct-group/motion acct-user/motion virtual/jpeg:0/0= media-video/ffmpeg:0/56.58.58= media-libs/libwebp:0/7=
+net-analyzer/barnyard2	net-libs/libpcap dev-db/mysql-connector-c:0/21=
 net-analyzer/net-snmp	app-arch/bzip2 >=dev-libs/openssl-0.9.6d:0/1.1= >=sys-apps/tcp-wrappers-7.6 >=sys-libs/zlib-1.1.4
+net-analyzer/snort	>=net-libs/libpcap-1.3.0 >=net-libs/daq-2.0.2 >=dev-libs/libpcre-8.33 dev-libs/libdnet net-libs/libnsl:0/2= sys-libs/zlib net-libs/libtirpc virtual/tmpfiles
 net-analyzer/tcpdump	sys-libs/libcap-ng net-libs/libpcap >=dev-libs/openssl-0.9.6m:0/1.1=
 net-analyzer/zabbix	net-misc/curl dev-libs/libxml2 dev-db/mysql-connector-c sys-libs/openipmi sys-libs/zlib dev-libs/libevent sys-libs/zlib net-analyzer/net-snmp net-libs/libssh2 dev-libs/openssl:0/1.1=[-bindist] virtual/mysql net-analyzer/fping[suid] app-admin/webapp-config dev-libs/libevent dev-libs/libpcre net-analyzer/fping[suid] app-admin/webapp-config dev-lang/php:*[bcmath,ctype,sockets,gd,truetype,xml,session,xmlreader,xmlwriter,nls,sysvipc,unicode] media-libs/gd[png] virtual/httpd-php:* dev-lang/php[mysqli]
 net-dns/avahi	acct-user/avahi acct-group/avahi acct-group/netdev dev-libs/libdaemon dev-libs/libevent:0/2.1-7=[abi_x86_64(-)] dev-libs/expat dev-libs/glib:2[abi_x86_64(-)] sys-libs/gdbm:0/1.13=[abi_x86_64(-)] sys-apps/dbus[abi_x86_64(-)] sys-libs/libcap
@@ -246,6 +248,7 @@ net-fs/cifs-utils	!net-fs/mount-cifs !<net-fs/samba-3.6_rc1 sys-apps/keyutils:0/
 net-fs/nfs-utils	>=dev-db/sqlite-3.3 dev-libs/libxml2 net-libs/libtirpc:0/3= >=net-nds/rpcbind-0.2.4 sys-libs/e2fsprogs-libs sys-apps/util-linux dev-libs/libevent:0/2.1-7= >=sys-apps/keyutils-1.5.9:0/1.9= sys-apps/util-linux !net-libs/libnfsidmap !net-nds/portmap !<sys-apps/openrc-0.13.9
 net-fs/samba	>=app-arch/libarchive-3.1.2[abi_x86_64(-)] dev-lang/perl:0/5.30= dev-libs/libbsd[abi_x86_64(-)] dev-libs/libtasn1[abi_x86_64(-)] dev-libs/popt[abi_x86_64(-)] >=net-libs/gnutls-3.2.0[abi_x86_64(-)] net-libs/libnsl:0/2=[abi_x86_64(-)] sys-apps/dbus[abi_x86_64(-)] sys-libs/e2fsprogs-libs[abi_x86_64(-)] >=sys-libs/ldb-2.0.10[ldap(+),python_single_target_python3_7(-),abi_x86_64(-)] <sys-libs/ldb-2.1.0[ldap(+),python_single_target_python3_7(-),abi_x86_64(-)] sys-libs/libcap sys-libs/ncurses:0/6= sys-libs/readline:0/8= >=sys-libs/talloc-2.2.0[python_single_target_python3_7(-),abi_x86_64(-)] >=sys-libs/tdb-1.4.2[python_single_target_python3_7(-),abi_x86_64(-)] >=sys-libs/tevent-0.10.0[python_single_target_python3_7(-),abi_x86_64(-)] sys-libs/zlib[abi_x86_64(-)] virtual/libiconv sys-libs/pam virtual/acl dev-python/subunit[python_targets_python3_7(-),abi_x86_64(-)] net-nds/openldap[abi_x86_64(-)] >=app-crypt/mit-krb5-1.15.1[abi_x86_64(-)] sys-apps/systemd:0/2= net-dns/avahi net-fs/cifs-utils !dev-perl/Parse-Yapp
 net-libs/c-client	dev-libs/openssl:0/1.1= !net-mail/uw-imap
+net-libs/daq	>=net-libs/libpcap-1.0.0 >=net-libs/libpcap-1.0.0
 net-libs/gnutls	>=dev-libs/libtasn1-4.9:0/6=[abi_x86_64(-)] dev-libs/libunistring:0/2=[abi_x86_64(-)] >=dev-libs/nettle-3.4.1:0/7=[gmp,abi_x86_64(-)] >=dev-libs/gmp-5.1.3-r1:0/10.4=[abi_x86_64(-)] >=virtual/libintl-0-r1:0/0=[abi_x86_64(-)] >=net-dns/libidn2-0.16-r1:0/2=[abi_x86_64(-)]
 net-libs/libmicrohttpd	dev-libs/libgcrypt:0/20= net-libs/gnutls
 net-libs/libnsl	>=net-libs/libtirpc-1.0.2-r1[abi_x86_64(-)] !<sys-libs/glibc-2.26
@@ -255,10 +258,11 @@ net-libs/nodejs	>=dev-libs/libuv-1.37.0:0/1= >=net-dns/c-ares-1.16.0 >=net-libs/
 net-libs/rpcsvc-proto	!<sys-libs/glibc-2.26 virtual/libintl
 net-mail/mailbase	acct-group/mail acct-user/mail acct-user/postmaster sys-libs/pam !<net-mail/metamail-2.7.53.3-r2
 net-misc/curl	dev-libs/openssl:0/1.1=[abi_x86_64(-)] sys-libs/zlib[abi_x86_64(-)]
+net-misc/iperf	dev-libs/openssl:0/1.1=
 net-misc/iputils	!net-misc/arping dev-libs/openssl:0/1.1= sys-devel/gettext sys-libs/libcap
 net-misc/netkit-telnetd	>=sys-libs/ncurses-5.2:0/6= !net-misc/telnet-bsd
 net-misc/openssh	acct-group/sshd acct-user/sshd || ( ( >=dev-libs/openssl-1.0.1:0[-bindist] <dev-libs/openssl-1.1.0:0[-bindist] ) >=dev-libs/openssl-1.1.0g:0[-bindist] ) dev-libs/openssl:0/1.1= virtual/libcrypt:0/1= >=sys-libs/zlib-1.2.3:0/1= sys-libs/pam >=sys-auth/pambase-20081028 sys-apps/shadow
-net-misc/rsync	virtual/acl sys-apps/attr >=dev-libs/popt-1.5 virtual/libiconv
+net-misc/rsync	virtual/acl dev-libs/openssl:0/1.1= sys-apps/attr >=dev-libs/popt-1.5 virtual/libiconv
 net-misc/wget	dev-libs/libpcre2 dev-libs/openssl:0/1.1= sys-libs/zlib
 net-nds/openldap	>=dev-libs/openssl-1.0.1h-r2:0/1.1=[abi_x86_64(-)] sys-devel/libtool sys-libs/e2fsprogs-libs >=dev-db/lmdb-0.9.18:0/0.9.23= dev-libs/openssl:0/1.1= <sys-libs/db-6.0:5.3/5.3= || ( sys-libs/db:5.3 sys-libs/db:5.1 sys-libs/db:4.8 sys-libs/db:4.7 sys-libs/db:4.6 sys-libs/db:4.5 sys-libs/db:4.4 )
 net-nds/rpcbind	>=net-libs/libtirpc-0.2.3:0/3= sys-apps/systemd:0/2=

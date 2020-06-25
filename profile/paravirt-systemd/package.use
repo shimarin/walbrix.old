@@ -23,6 +23,7 @@ app-misc/mosquitto websockets
 net-dns/avahi -introspection mdnsresponder-compat dbus
 net-vpn/openvpn systemd
 dev-db/mysql -perl cjk
+net-analyzer/barnyard2 mysql
 
 app-emulation/xen-tools -hvm -ipxe -pam -qemu -qemu-traditional -rombios
 
@@ -113,3 +114,4 @@ dev-python/entrypoints -python_targets_python2_7
 #nfs
 net-fs/nfs-utils -tcpd
 net-nds/rpcbind -tcpd
+

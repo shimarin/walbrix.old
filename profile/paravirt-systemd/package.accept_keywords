@@ -7,3 +7,5 @@ sys-kernel/gentoo-sources
 =net-vpn/wireguard-tools-1.0.20200513
 =dev-python/matplotlib-2.2.4
 =media-video/motion-4.3.1
+=net-analyzer/snort-2.9.16
+=net-analyzer/barnyard2-1.13
