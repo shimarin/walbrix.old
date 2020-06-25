@@ -44,7 +44,7 @@ sys-apps/systemd -acl
 dev-python/setuptools -python_targets_python2_7
 dev-util/meson -python_targets_python2_7
 dev-python/certifi -python_targets_python2_7
-dev-libs/libxml2 -python
+dev-libs/libxml2 -python_targets_python2_7
 dev-python/subunit -python_targets_python2_7
 sys-devel/clang -python_single_target_python2_7
 dev-python/pyyaml -python_targets_python2_7
