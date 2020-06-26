@@ -39,6 +39,21 @@ public:
   auto shutdown_reason() { return event->u.domain_shutdown.shutdown_reason; }
 };
 
+static uint32_t domid = 0;
+static libxl_ctx *ctx = NULL;
+
+static void process_sigterm(int sig)
+{
+  if (domid == 0 || ctx == NULL) return;
+  //else
+  int rc = libxl_domain_shutdown(ctx, domid, NULL);
+  if (rc == ERROR_DOMAIN_NOTFOUND) exit(1);
+  //else
+  if (rc == ERROR_NOPARAVIRT) {
+    libxl_send_trigger(ctx, domid, LIBXL_TRIGGER_POWER, 0, NULL);
+  }
+}
+
 int monitor(int argc, char* argv[])
 {
   if (argc < 3) {
@@ -51,7 +66,7 @@ int monitor(int argc, char* argv[])
     std::cerr << "Invalid domid" << std::endl;
     return 1;
   }
-  uint32_t domid = (uint32_t)_domid;
+  domid = (uint32_t)_domid;
   //else
   if (FLAGS_daemon) {
     daemon(0, 0);
@@ -63,6 +78,9 @@ int monitor(int argc, char* argv[])
   LibXlCtx ctx(LIBXL_VERSION, 0, logger);
   if (!ctx) return -1;
 
+  //else
+  ::ctx = ctx;
+
   char* _domname = libxl_domid_to_name(ctx, domid);
   if (!_domname) RUNTIME_ERROR("Obtaining domain name failed(already gone?)");
   std::string domname = _domname;
@@ -70,6 +88,9 @@ int monitor(int argc, char* argv[])
 
   libxl_evgen_domain_death* deathw = NULL;
   if (libxl_evenable_domain_death(ctx, domid, 0, &deathw) != 0) RUNTIME_ERROR("libxl_evenable_domain_death");
+
+
+  signal(SIGTERM, process_sigterm);
 
   while (true) {
     LibXlEvent event(ctx);

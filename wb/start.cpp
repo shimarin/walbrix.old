@@ -2,6 +2,7 @@
 #include <map>
 #include <regex>
 #include <cassert>
+#include <fstream>
 
 #include <libmount/libmount.h>
 
@@ -435,6 +436,14 @@ int start(int argc, char* argv[])
     return 1;
   }
   //else
+
+  // evacuate from systemd's user session
+  auto cgroup = std::filesystem::path("/sys/fs/cgroup/system.slice/xenstored.service");
+  if (is_dir(cgroup)) {
+    std::ofstream f(cgroup / "cgroup.procs");
+    f << getpid();
+  }
+
   const char* vmname = argv[2];
   if (strcmp(vmname, "@all") == 0) {
     std::map<std::string, VM> vms;
