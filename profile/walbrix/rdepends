@@ -186,7 +186,7 @@ net-misc/iputils	!net-misc/arping dev-libs/openssl:0/1.1= sys-devel/gettext sys-
 net-misc/modemmanager	>=dev-libs/glib-2.36.0:2 >=dev-libs/libgudev-230:0/0= >=dev-libs/gobject-introspection-0.9.6:0/0= >=net-libs/libmbim-1.18.0 >=net-libs/libqmi-1.22.0:0/5.4= >=sys-apps/systemd-209
 net-misc/netkit-telnetd	>=sys-libs/ncurses-5.2:0/6= !net-misc/telnet-bsd
 net-misc/openssh	acct-group/sshd acct-user/sshd || ( ( >=dev-libs/openssl-1.0.1:0[-bindist] <dev-libs/openssl-1.1.0:0[-bindist] ) >=dev-libs/openssl-1.1.0g:0[-bindist] ) dev-libs/openssl:0/1.1= virtual/libcrypt:0/1= >=sys-libs/zlib-1.2.3:0/1= sys-libs/pam >=sys-auth/pambase-20081028 sys-apps/shadow
-net-misc/rsync	virtual/acl sys-apps/attr >=dev-libs/popt-1.5 virtual/libiconv
+net-misc/rsync	virtual/acl dev-libs/openssl:0/1.1= sys-apps/attr >=dev-libs/popt-1.5 virtual/libiconv
 net-misc/sshpass	net-misc/openssh
 net-misc/wakeonlan	dev-lang/perl[-build(-)]
 net-misc/wget	dev-libs/libpcre2 dev-libs/openssl:0/1.1= sys-libs/zlib
@@ -278,7 +278,7 @@ sys-fs/xfsprogs	>=sys-apps/util-linux-2.17.2 sys-libs/readline:0/8= !<sys-fs/xfs
 sys-kernel/genkernel	app-arch/cpio >=app-misc/pax-utils-1.2.2 app-portage/elt-patches sys-apps/sandbox sys-devel/autoconf sys-devel/autoconf-archive sys-devel/automake sys-devel/libtool virtual/pkgconfig sys-kernel/linux-firmware
 sys-kernel/gentoo-sources	dev-lang/perl sys-devel/bc sys-devel/bison sys-devel/flex sys-devel/make >=sys-libs/ncurses-5.2 virtual/libelf
 sys-kernel/installkernel-gentoo	>=sys-apps/debianutils-4.9-r1 !<sys-apps/debianutils-4.9-r1[installkernel(+)] !sys-kernel/installkernel-systemd-boot
-sys-kernel/linux-firmware	!sys-firmware/alsa-firmware[alsa_cards_ca0132] !media-tv/cx18-firmware !<sys-firmware/ivtv-firmware-20080701-r1 !media-tv/linuxtv-dvb-firmware[dvb_cards_cx231xx] !media-tv/linuxtv-dvb-firmware[dvb_cards_cx23885] !media-tv/linuxtv-dvb-firmware[dvb_cards_usb-dib0700] !net-dialup/ueagle-atm !net-dialup/ueagle4-atm !net-wireless/ar9271-firmware !net-wireless/i2400m-fw !net-wireless/libertas-firmware !sys-firmware/rt61-firmware !net-wireless/rt73-firmware !net-wireless/rt2860-firmware !net-wireless/rt2870-firmware !sys-block/qla-fc-firmware !sys-firmware/amd-ucode !sys-firmware/iwl1000-ucode !sys-firmware/iwl2000-ucode !sys-firmware/iwl2030-ucode !sys-firmware/iwl3945-ucode !sys-firmware/iwl4965-ucode !sys-firmware/iwl5000-ucode !sys-firmware/iwl5150-ucode !sys-firmware/iwl6000-ucode !sys-firmware/iwl6005-ucode !sys-firmware/iwl6030-ucode !sys-firmware/iwl6050-ucode !sys-firmware/iwl3160-ucode !sys-firmware/iwl7260-ucode !sys-firmware/iwl7265-ucode !sys-firmware/iwl3160-7260-bt-ucode !sys-firmware/radeon-ucode
+sys-kernel/linux-firmware	!sys-firmware/alsa-firmware[alsa_cards_ca0132] !net-dialup/ueagle-atm !net-dialup/ueagle4-atm !sys-block/qla-fc-firmware !sys-firmware/iwl1000-ucode !sys-firmware/iwl6005-ucode !sys-firmware/iwl6030-ucode !sys-firmware/iwl6050-ucode !sys-firmware/iwl3160-ucode !sys-firmware/iwl7260-ucode !sys-firmware/iwl3160-7260-bt-ucode
 sys-libs/binutils-libs	sys-libs/zlib[abi_x86_64(-)] >=sys-devel/binutils-config-5 !<sys-devel/gdb-7.10-r1[nls]
 sys-libs/cracklib	>=sys-libs/zlib-1.2.8-r1:0/1=[abi_x86_64(-)]
 sys-libs/e2fsprogs-libs	!sys-libs/com_err !sys-libs/ss !<sys-fs/e2fsprogs-1.41.8
