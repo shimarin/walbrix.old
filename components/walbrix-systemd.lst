@@ -21,6 +21,7 @@ $sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
 
 $require wireless-tools.lst
 $write /etc/hostapd/hostapd.conf 'interface=wlan0\nbridge=xenbr0\n#driver=nl80211\nhw_mode=g\nssid=walbrix-ap\nwpa_passphrase=secret\nwpa=2\n#channel=11\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=CCMP'
+$copy resource/walbrix/hostapd@.service /lib/systemd/system/hostapd@.service
 
 $package app-misc/ca-certificates
 $package app-misc/mime-types
