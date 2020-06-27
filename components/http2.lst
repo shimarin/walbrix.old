@@ -50,10 +50,12 @@ $copy resource/vpnhub/openvpn2dnsmasq.cpp /tmp/
 $exec --overlay "g++ -std=c++2a -shared -fPIC -o /usr/lib64/openvpn/plugins/openvpn2dnsmasq.so /tmp/openvpn2dnsmasq.cpp"
 $sed /lib/systemd/system/openvpn-server\@.service 's/^CapabilityBoundingSet=.*$/\0 CAP_KILL/'
 
+$package net-dns/dnsmasq
 $require ndppd.lst
 $require zabbix-agent.lst
 $require snort.lst
 /usr/bin/iperf3
 
+$sed /etc/sysctl.conf 's/^net\.ipv4\.ip_forward\s*=.\+/#\0/'
 $write /etc/sysctl.d/90-ip-forwarding.conf 'net.ipv4.ip_forward=1\nnet.ipv6.conf.default.forwarding=1\nnet.ipv6.conf.all.forwarding=1'
 

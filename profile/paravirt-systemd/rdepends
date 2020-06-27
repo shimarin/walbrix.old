@@ -1,4 +1,5 @@
 acct-user/avahi	acct-group/avahi
+acct-user/dnsmasq	acct-group/dnsmasq
 acct-user/mail	acct-group/mail
 acct-user/man	acct-group/man
 acct-user/messagebus	acct-group/messagebus
@@ -243,6 +244,7 @@ net-analyzer/snort	>=net-libs/libpcap-1.3.0 >=net-libs/daq-2.0.2 >=dev-libs/libp
 net-analyzer/tcpdump	sys-libs/libcap-ng net-libs/libpcap >=dev-libs/openssl-0.9.6m:0/1.1=
 net-analyzer/zabbix	net-misc/curl dev-libs/libxml2 dev-db/mysql-connector-c sys-libs/openipmi sys-libs/zlib dev-libs/libevent sys-libs/zlib net-analyzer/net-snmp net-libs/libssh2 dev-libs/openssl:0/1.1=[-bindist] virtual/mysql net-analyzer/fping[suid] app-admin/webapp-config dev-libs/libevent dev-libs/libpcre net-analyzer/fping[suid] app-admin/webapp-config dev-lang/php:*[bcmath,ctype,sockets,gd,truetype,xml,session,xmlreader,xmlwriter,nls,sysvipc,unicode] media-libs/gd[png] virtual/httpd-php:* dev-lang/php[mysqli]
 net-dns/avahi	acct-user/avahi acct-group/avahi acct-group/netdev dev-libs/libdaemon dev-libs/libevent:0/2.1-7=[abi_x86_64(-)] dev-libs/expat dev-libs/glib:2[abi_x86_64(-)] sys-libs/gdbm:0/1.13=[abi_x86_64(-)] sys-apps/dbus[abi_x86_64(-)] sys-libs/libcap
+net-dns/dnsmasq	acct-group/dnsmasq acct-user/dnsmasq sys-devel/gettext
 net-dns/libidn2	dev-libs/libunistring[abi_x86_64(-)]
 net-fs/cifs-utils	!net-fs/mount-cifs !<net-fs/samba-3.6_rc1 sys-apps/keyutils:0/1.9= sys-libs/pam
 net-fs/nfs-utils	>=dev-db/sqlite-3.3 dev-libs/libxml2 net-libs/libtirpc:0/3= >=net-nds/rpcbind-0.2.4 sys-libs/e2fsprogs-libs sys-apps/util-linux dev-libs/libevent:0/2.1-7= >=sys-apps/keyutils-1.5.9:0/1.9= sys-apps/util-linux !net-libs/libnfsidmap !net-nds/portmap !<sys-apps/openrc-0.13.9

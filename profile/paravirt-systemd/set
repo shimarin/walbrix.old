@@ -63,6 +63,7 @@ net-misc/ndppd
 net-fs/samba
 net-fs/cifs-utils
 net-vpn/wireguard-tools
+net-dns/dnsmasq
 
 app-crypt/certbot
 dev-python/pip
@@ -83,3 +84,4 @@ app-admin/tripwire
 net-misc/iperf
 net-analyzer/snort
 net-analyzer/barnyard2
+
