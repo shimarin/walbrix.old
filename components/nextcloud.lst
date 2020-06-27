@@ -12,6 +12,7 @@ $require redis.lst
 $require pecl-imagick.lst
 $package sys-fs/btrfs-progs
 $require xfsprogs.lst
+$package net-misc/rsync
 $package dev-php/pecl-redis
 $require pecl-apcu.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1nextcloud\2/'
