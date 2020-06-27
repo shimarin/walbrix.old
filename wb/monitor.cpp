@@ -90,7 +90,7 @@ int monitor(int argc, char* argv[])
   if (libxl_evenable_domain_death(ctx, domid, 0, &deathw) != 0) RUNTIME_ERROR("libxl_evenable_domain_death");
 
 
-  signal(SIGTERM, process_sigterm);
+  //signal(SIGTERM, process_sigterm);
 
   while (true) {
     LibXlEvent event(ctx);
