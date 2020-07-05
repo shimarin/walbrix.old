@@ -80,7 +80,7 @@ $package dev-libs/rocm-comgr
 $package dev-util/rocminfo
 $package dev-libs/roct-thunk-interface
 $package dev-libs/rocr-runtime
-$package dev-libs/hsa-ext-rocr
+#$package dev-libs/hsa-ext-rocr
 $package sys-devel/llvm-roc
 $package sci-libs/lapack
 
