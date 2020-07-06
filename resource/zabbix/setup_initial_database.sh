@@ -1,6 +1,6 @@
 #!/bin/sh
 MYSQL="/usr/bin/mysql"
-$MYSQL -u root -e "create database zabbix" || exit 1
+$MYSQL -u root -e "create database zabbix default character set utf8" || exit 1
 $MYSQL -u root -e 'create user zabbix@localhost; grant all privileges on zabbix.* to zabbix@localhost' || exit 1
 $MYSQL -u zabbix zabbix < /usr/share/zabbix/database/mysql/schema.sql || exit 1
 $MYSQL -u zabbix zabbix < /usr/share/zabbix/database/mysql/images.sql || exit 1
