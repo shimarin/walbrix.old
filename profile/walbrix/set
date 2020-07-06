@@ -100,4 +100,5 @@ sys-fs/mtools
 dev-libs/libisoburn
 sys-block/zram-init
 app-admin/ansible
+app-admin/logrotate
 

@@ -42,6 +42,7 @@ dev-lua/luajson
 dev-lua/luasec
 
 app-crypt/certbot
+dev-python/mock
 dev-python/pip
 dev-python/google-api-python-client
 

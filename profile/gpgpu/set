@@ -61,4 +61,5 @@ net-vpn/wireguard-tools
 dev-libs/iniparser
 sys-fs/mtools
 dev-libs/libisoburn
+app-admin/logrotate
 
