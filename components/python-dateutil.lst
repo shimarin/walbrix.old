@@ -1,0 +1,3 @@
+$package dev-python/six
+$package sys-libs/timezone-data
+$package dev-python/python-dateutil

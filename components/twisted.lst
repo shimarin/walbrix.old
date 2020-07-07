@@ -1,0 +1,11 @@
+$package dev-python/idna
+$require service_identity.lst
+$require zope-interface.lst
+$require pyhamcrest.lst
+$package dev-python/incremental
+$require hyperlink.lst
+$package dev-python/constantly
+$require automat.lst
+$require attrs.lst
+$require pyopenssl.lst
+$package dev-python/twisted

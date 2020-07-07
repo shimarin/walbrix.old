@@ -45,7 +45,7 @@ $require ts-node.lst
 $require python-zeroconf.lst
 
 # requests
-$require urllib3.lst
+#$require urllib3.lst
 $package dev-python/chardet
 $package dev-python/requests
 $package dev-python/py
@@ -53,13 +53,13 @@ $package dev-python/ipaddress
 $package dev-python/ply
 #$package dev-python/pytest
 $require cryptography.lst
-$package dev-python/pyopenssl
+$require pyopenssl.lst
 $package dev-python/ndg-httpsclient
 
 # s3cmd removed due to lack of python3.7 support
 #$package dev-python/python-magic
 #$package dev-python/six
-#$package dev-python/python-dateutil
+#$require python-dateutil.lst
 #$package net-misc/s3cmd
 
 $require matplotlib.lst

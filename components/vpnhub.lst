@@ -64,19 +64,7 @@ $write /etc/letsencrypt/renewal-hooks/deploy/nginx '#!/bin/sh\nsystemctl reload 
 $exec "chmod 755 /etc/letsencrypt/renewal-hooks/deploy/nginx"
 
 # twisted
-$package dev-python/constantly
-$package dev-python/incremental
-$package dev-python/pyhamcrest
-$package dev-python/mistune
-$package dev-python/pygments
-$package dev-python/hyperlink
-$package dev-python/docutils
-$package dev-python/attrs
-$package dev-python/m2r
-$package dev-python/automat
-$package dev-python/bcrypt
-$package dev-python/service_identity
-$package dev-python/twisted
+$require twisted.lst
 
 $require syslog-ng.lst
 

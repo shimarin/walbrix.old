@@ -1,11 +1,10 @@
 $require python3.lst
-$package dev-python/pyasn1
 $package dev-python/httplib2
 $package dev-python/simplejson
 $package dev-python/entrypoints
 $package dev-python/jeepney
 $package dev-python/uritemplate
-$package dev-python/pyasn1-modules
+$require pyasn1-modules.lst
 $package dev-python/secretstorage
 $package dev-python/rsa
 $require keyring.lst

@@ -1,0 +1,4 @@
+$package dev-python/automat
+$require attrs.lst
+$package dev-python/six
+

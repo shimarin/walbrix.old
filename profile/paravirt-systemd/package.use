@@ -107,6 +107,9 @@ dev-python/funcsigs -python_targets_python2_7
 dev-python/pip -python_targets_python2_7
 dev-python/httplib2 -python_targets_python2_7
 dev-python/simplejson -python_targets_python2_7
+dev-python/attrs -python_targets_python2_7
+dev-python/service_identity -python_targets_python2_7
+dev-python/automat -python_targets_python2_7
 dev-python/pyasn1 -python_targets_python2_7
 dev-python/pyasn1-modules -python_targets_python2_7
 dev-python/entrypoints -python_targets_python2_7

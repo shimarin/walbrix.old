@@ -1,0 +1,2 @@
+$package dev-python/attrs
+$require zope-interface.lst

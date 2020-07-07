@@ -1,5 +1,4 @@
 $package dev-python/pytz
-$package dev-python/namespace-zope
 $package dev-python/idna
 $package dev-python/configargparse
 $package dev-python/configobj
@@ -9,14 +8,14 @@ $package dev-python/ply
 $package dev-python/chardet
 $package dev-python/PySocks
 $package dev-python/pyrfc3339
-$package dev-python/zope-interface
+$require zope-interface.lst
 $package dev-python/parsedatetime
 $package dev-python/zope-event
 $package dev-python/pycparser
 $package dev-python/zope-component
 $package dev-python/cffi
 $package dev-python/cryptography
-$package dev-python/pyopenssl
+$require pyopenssl.lst
 $package dev-python/josepy
 $package dev-python/urllib3
 $package dev-python/requests

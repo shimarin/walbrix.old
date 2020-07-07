@@ -1,0 +1,4 @@
+$package dev-python/service_identity
+$require pyasn1-modules.lst
+$require pyopenssl.lst
+$require attrs.lst

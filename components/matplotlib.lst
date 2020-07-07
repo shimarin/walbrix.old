@@ -1,12 +1,16 @@
 $package dev-python/numpy
 $package media-fonts/stix-fonts
-$package dev-python/cycler
+$require cycler.lst
 $package dev-python/versioneer
-$package dev-python/subprocess32
-$package dev-python/functools32
-$package dev-python/backports
-$package dev-python/backports-functools-lru-cache
-$package media-libs/qhull
-$package dev-python/kiwisolver
+$require kiwisolver.lst
+$package dev-python/pyparsing
+$require python-dateutil.lst
+$package dev-python/pytz
+$package dev-python/six
+$package media-fonts/dejavu
+#media-libs/freetype
+#media-libs/libpng
+#media-libs/qhull
+$require tornado.lst
 $package dev-python/matplotlib
 

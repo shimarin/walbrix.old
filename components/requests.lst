@@ -6,6 +6,6 @@ $package dev-python/ipaddress
 $package dev-python/ply
 #$package dev-python/pytest
 $require cryptography.lst
-$package dev-python/pyopenssl
+$require pyopenssl.lst
 $package dev-python/ndg-httpsclient
 

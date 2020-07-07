@@ -1,5 +1,4 @@
 $package net-nds/openldap
-$package dev-python/pyasn1
-$package dev-python/pyasn1-modules
+$require pyasn1-modules.lst
 $package dev-python/python-ldap
 
