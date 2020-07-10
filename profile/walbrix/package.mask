@@ -1,2 +1,5 @@
 <dev-lang/python-3.7
 >=dev-lang/python-3.8
+<app-emulation/xen-4.13
+<app-emulation/xen-tools-4.13
+<app-emulation/xen-pvgrub-4.13
