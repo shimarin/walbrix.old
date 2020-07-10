@@ -131,7 +131,7 @@ int load_disk_config(const VmIniFile& ini, std::list<Disk>& disks)
       disks.push_back(xvda2);
     }
 
-    if (is_file(swp_file)) {
+    if (is_file(swp_file) || is_block(swp_file)) {
       Disk xvda3;
       xvda3.name = "xvda3";
       xvda3.path = swp_file;
