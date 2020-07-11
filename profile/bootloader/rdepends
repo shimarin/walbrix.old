@@ -8,6 +8,7 @@ acct-user/systemd-resolve	acct-group/systemd-resolve
 acct-user/systemd-timesync	acct-group/systemd-timesync
 app-admin/eclean-kernel	dev-python/pymountboot[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
 app-admin/eselect	sys-apps/sed || ( sys-apps/coreutils app-misc/realpath ) sys-apps/file sys-libs/ncurses:0
+app-admin/logrotate	>=dev-libs/popt-1.5 virtual/acl virtual/cron
 app-admin/perl-cleaner	app-shells/bash dev-lang/perl || ( ( sys-apps/portage app-portage/portage-utils ) sys-apps/pkgcore )
 app-arch/libarchive	virtual/acl[abi_x86_64(-)] app-arch/bzip2[abi_x86_64(-)] dev-libs/libxml2[abi_x86_64(-)] virtual/libiconv[abi_x86_64(-)] sys-apps/attr[abi_x86_64(-)] dev-libs/openssl:0/1.1=[abi_x86_64(-)] app-arch/xz-utils[threads,abi_x86_64(-)] sys-libs/zlib[abi_x86_64(-)]
 app-arch/tar	virtual/acl
@@ -62,7 +63,7 @@ dev-libs/libxml2	>=sys-libs/zlib-1.2.8-r1:0/1=[abi_x86_64(-)] >=dev-lang/python-
 dev-libs/libxslt	>=dev-libs/libxml2-2.9.1-r5:2[abi_x86_64(-)] >=dev-libs/libgcrypt-1.5.3:0/20=[abi_x86_64(-)]
 dev-libs/mpc	>=dev-libs/gmp-5.0.0:0/10.4=[abi_x86_64(-)] >=dev-libs/mpfr-3.0.0:0/6=[abi_x86_64(-)]
 dev-libs/mpfr	>=dev-libs/gmp-5.0.0[abi_x86_64(-)]
-dev-libs/nettle	>=dev-libs/gmp-6.0:0/10.4=[abi_x86_64(-)]
+dev-libs/nettle	>=dev-libs/gmp-6.1:0/10.4=[abi_x86_64(-)]
 dev-libs/openssl	>=app-misc/c_rehash-1.7-r1 >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] !<net-misc/openssh-8.0_p1-r3
 dev-libs/popt	>=virtual/libintl-0-r1[abi_x86_64(-)]
 dev-perl/Locale-gettext	sys-devel/gettext dev-lang/perl:0/5.30=
@@ -76,11 +77,11 @@ dev-perl/Unicode-LineBreak	dev-perl/MIME-Charset virtual/perl-Encode dev-lang/pe
 dev-perl/XML-Parser	>=dev-libs/expat-1.95.1-r1 dev-lang/perl:0/5.30=[-build(-)]
 dev-perl/YAML-Tiny	virtual/perl-Carp virtual/perl-Exporter virtual/perl-Scalar-List-Utils dev-lang/perl:0/5.30=
 dev-python/certifi	app-misc/ca-certificates >=dev-lang/python-2.7.5-r2:2.7 dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
-dev-python/cython	>=dev-lang/python-2.7.5-r2:2.7[threads(+)] dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
-dev-python/lxml	>=dev-libs/libxml2-2.9.5 >=dev-libs/libxslt-1.1.28 >=dev-lang/python-2.7.5-r2:2.7 dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
+dev-python/cython	>=dev-lang/python-2.7.5-r2:2.7[threads(+)] dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
+dev-python/lxml	>=dev-libs/libxml2-2.9.5 >=dev-libs/libxslt-1.1.28 >=dev-lang/python-2.7.5-r2:2.7 dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/m2crypto	dev-libs/openssl:0/1.1= dev-python/typing[python_targets_python2_7(-),-python_single_target_python2_7(-)] >=dev-lang/python-2.7.5-r2:2.7[threads(+)] dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-)]
 dev-python/pymountboot	>=sys-apps/util-linux-2.20 dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
-dev-python/setuptools	>=dev-lang/python-2.7.5-r2:2.7[xml(+)] dev-lang/python:3.7[xml(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
+dev-python/setuptools	>=dev-lang/python-2.7.5-r2:2.7[xml(+)] dev-lang/python:3.7[xml(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/typing	>=dev-lang/python-2.7.5-r2:2.7 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),-python_single_target_python2_7(-)]
 dev-util/cmake	app-crypt/rhash >=app-arch/libarchive-3.0.0:0/13= >=dev-libs/expat-2.0.1 >=dev-libs/jsoncpp-1.9.2-r2:0/23= >=dev-libs/libuv-1.10.0:0/1= >=net-misc/curl-7.21.5[ssl] sys-libs/zlib virtual/pkgconfig sys-libs/ncurses:0/6=
 dev-util/intltool	dev-lang/perl dev-perl/XML-Parser sys-devel/gettext
@@ -89,14 +90,14 @@ dev-util/pkgconf	!dev-util/pkgconfig !dev-util/pkg-config-lite !dev-util/pkgconf
 media-libs/freetype	>=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=app-arch/bzip2-1.0.6-r4[abi_x86_64(-)]
 net-analyzer/tcpdump	sys-libs/libcap-ng net-libs/libpcap >=dev-libs/openssl-0.9.6m:0/1.1=
 net-dns/libidn2	dev-libs/libunistring[abi_x86_64(-)]
-net-libs/gnutls	>=dev-libs/libtasn1-4.9:0/6=[abi_x86_64(-)] dev-libs/libunistring:0/2=[abi_x86_64(-)] >=dev-libs/nettle-3.4.1:0/7=[gmp,abi_x86_64(-)] >=dev-libs/gmp-5.1.3-r1:0/10.4=[abi_x86_64(-)] >=virtual/libintl-0-r1:0/0=[abi_x86_64(-)] >=net-dns/libidn2-0.16-r1:0/2=[abi_x86_64(-)]
+net-libs/gnutls	>=dev-libs/libtasn1-4.9:0/6=[abi_x86_64(-)] dev-libs/libunistring:0/2=[abi_x86_64(-)] >=dev-libs/nettle-3.4.1:0/8-6=[gmp,abi_x86_64(-)] >=dev-libs/gmp-5.1.3-r1:0/10.4=[abi_x86_64(-)] >=virtual/libintl-0-r1:0/0=[abi_x86_64(-)] >=net-dns/libidn2-0.16-r1:0/2=[abi_x86_64(-)]
 net-libs/libnsl	>=net-libs/libtirpc-1.0.2-r1[abi_x86_64(-)] !<sys-libs/glibc-2.26
 net-misc/curl	dev-libs/openssl:0/1.1=[abi_x86_64(-)] sys-libs/zlib[abi_x86_64(-)]
 net-misc/iperf	dev-libs/openssl:0/1.1=
 net-misc/iputils	!net-misc/arping dev-libs/openssl:0/1.1= sys-devel/gettext sys-libs/libcap
 net-misc/netkit-telnetd	>=sys-libs/ncurses-5.2:0/6= !net-misc/telnet-bsd
 net-misc/openssh	acct-group/sshd acct-user/sshd || ( ( >=dev-libs/openssl-1.0.1:0[-bindist] <dev-libs/openssl-1.1.0:0[-bindist] ) >=dev-libs/openssl-1.1.0g:0[-bindist] ) dev-libs/openssl:0/1.1= virtual/libcrypt:0/1= >=sys-libs/zlib-1.2.3:0/1= sys-libs/pam >=sys-auth/pambase-20081028 sys-apps/shadow
-net-misc/rsync	sys-apps/attr >=dev-libs/popt-1.5 virtual/libiconv
+net-misc/rsync	dev-libs/openssl:0/1.1= sys-apps/attr >=dev-libs/popt-1.5 virtual/libiconv
 net-misc/wget	dev-libs/libpcre2 dev-libs/openssl:0/1.1= sys-libs/zlib
 net-vpn/wireguard-tools	|| ( net-firewall/nftables net-firewall/iptables ) virtual/resolvconf !<virtual/wireguard-1
 net-wireless/crda	dev-libs/openssl:0/1.1= dev-libs/libnl:3 net-wireless/wireless-regdb
@@ -157,7 +158,7 @@ sys-fs/squashfs-tools	sys-libs/zlib sys-apps/attr app-arch/xz-utils
 sys-fs/udev-init-scripts	>=virtual/udev-217 !<sys-apps/openrc-0.14
 sys-fs/xfsprogs	>=sys-apps/util-linux-2.17.2 sys-libs/readline:0/8= !<sys-fs/xfsdump-3
 sys-kernel/genkernel	app-arch/cpio >=app-misc/pax-utils-1.2.2 app-portage/elt-patches sys-apps/sandbox sys-devel/autoconf sys-devel/autoconf-archive sys-devel/automake sys-devel/libtool virtual/pkgconfig
-sys-kernel/gentoo-sources	dev-lang/perl sys-devel/bc sys-devel/bison sys-devel/flex sys-devel/make >=sys-libs/ncurses-5.2 virtual/libelf
+sys-kernel/gentoo-sources	dev-lang/perl sys-devel/bc sys-devel/bison sys-devel/flex sys-devel/make >=sys-libs/ncurses-5.2 virtual/libelf virtual/pkgconfig
 sys-kernel/installkernel-gentoo	>=sys-apps/debianutils-4.9-r1 !<sys-apps/debianutils-4.9-r1[installkernel(+)] !sys-kernel/installkernel-systemd-boot
 sys-libs/cracklib	>=sys-libs/zlib-1.2.8-r1:0/1=[abi_x86_64(-)]
 sys-libs/e2fsprogs-libs	!sys-libs/com_err !sys-libs/ss !<sys-fs/e2fsprogs-1.41.8
@@ -174,8 +175,9 @@ sys-process/cronie	sys-libs/pam !sys-process/anacron sys-apps/debianutils >=sys-
 sys-process/procps	>=sys-libs/ncurses-5.7-r7:0/6=[unicode] sys-apps/systemd !sys-apps/coreutils[kill] !sys-apps/util-linux[kill] !<sys-apps/sysvinit-2.88-r6
 sys-process/psmisc	>=sys-libs/ncurses-5.7-r7:0/6=
 virtual/acl	>=sys-apps/acl-2.2.52-r1[abi_x86_64(-)]
+virtual/cron	|| ( sys-process/cronie sys-process/vixie-cron sys-process/bcron sys-process/dcron sys-process/fcron sys-process/systemd-cron )
 virtual/dev-manager	|| ( virtual/udev sys-apps/busybox[mdev] sys-fs/static-dev )
-virtual/editor	|| ( app-editors/nano app-editors/dav app-editors/e3 app-editors/ee app-editors/elvis app-editors/emacs:* app-editors/emact app-editors/ersatz-emacs app-editors/fe app-editors/jasspa-microemacs app-editors/jed app-editors/joe app-editors/jove app-editors/kakoune app-editors/le app-editors/levee app-editors/lpe app-editors/mg app-editors/moe app-editors/ne app-editors/neovim app-editors/ng app-editors/nvi app-editors/qemacs app-editors/teco app-editors/uemacs-pk app-editors/vile app-editors/vim app-editors/gvim app-editors/vis app-editors/xemacs app-editors/zile app-misc/mc[edit] dev-lisp/cmucl mail-client/alpine[-onlyalpine] )
+virtual/editor	|| ( app-editors/nano app-editors/dav app-editors/e3 app-editors/ee app-editors/elvis app-editors/emacs:* app-editors/emact app-editors/ersatz-emacs app-editors/fe app-editors/jasspa-microemacs app-editors/jed app-editors/joe app-editors/jove app-editors/kakoune app-editors/le app-editors/levee app-editors/lpe app-editors/mg app-editors/moe app-editors/ne app-editors/neovim app-editors/ng app-editors/qemacs app-editors/teco app-editors/uemacs-pk app-editors/vile app-editors/vim app-editors/gvim app-editors/vis app-editors/xemacs app-editors/zile app-misc/mc[edit] dev-lisp/cmucl mail-client/alpine[-onlyalpine] )
 virtual/libc	sys-libs/glibc:2.2
 virtual/libcrypt	sys-libs/glibc[crypt(+),static-libs(+)]
 virtual/libelf	>=dev-libs/elfutils-0.155-r1:0/0[abi_x86_64(-)]
