@@ -9,7 +9,6 @@ $require postfix.lst
 $require git.lst
 $require certbot.lst
 #$package net-proxy/haproxy
-$require iptables.lst
 $write /etc/hostname vpnhub
 
 /usr/lib64/libnss_wins.so

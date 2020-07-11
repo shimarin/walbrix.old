@@ -33,7 +33,6 @@ $write /etc/hostname vpnhub
 $write /etc/sysctl.d/nf_conntrack_max.conf 'net.nf_conntrack_max = 65536'
 
 # networks
-$require iptables.lst
 $require ppp.lst
 $package net-vpn/openvpn
 $package net-analyzer/traceroute

@@ -105,7 +105,6 @@ $exec "systemctl enable lvm2-lvmetad.socket"
 
 # networks
 $package net-analyzer/traceroute
-$require iptables.lst
 /usr/bin/cu
 /usr/bin/curl
 /sbin/brctl
