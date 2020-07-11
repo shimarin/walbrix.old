@@ -1,10 +1,10 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.7.7-gentoo Kernel Configuration
+# Linux/x86 5.7.8-gentoo Kernel Configuration
 #
 
 #
-# Compiler: gcc (Gentoo 9.3.0 p2) 9.3.0
+# Compiler: gcc (Gentoo 9.3.0-r1 p3) 9.3.0
 #
 CONFIG_CC_IS_GCC=y
 CONFIG_GCC_VERSION=90300

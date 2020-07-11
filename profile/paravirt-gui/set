@@ -38,3 +38,4 @@ net-misc/iperf
 dev-libs/iniparser
 app-admin/logrotate
 
+<x11-libs/gtk+-3
