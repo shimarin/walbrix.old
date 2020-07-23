@@ -69,6 +69,7 @@ export function process_package(context:Context, pkgname:string, options?:{use?:
 
   const excluded_prefixes = [
     "/run",
+    "/var/run",
     "/usr/share/man",
     "/usr/share/doc",
     "/usr/share/info",
