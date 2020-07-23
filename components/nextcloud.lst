@@ -17,7 +17,7 @@ $package dev-php/pecl-redis
 $require pecl-apcu.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1nextcloud\2/'
 
-$download https://download.nextcloud.com/server/releases/nextcloud-19.0.0.tar.bz2 /tmp/
+$download https://download.nextcloud.com/server/releases/nextcloud-19.0.1.tar.bz2 /tmp/
 $exec "tar xvf /tmp/*.tar.bz2 -C /var/www/localhost"
 $exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/nextcloud /var/www/localhost/htdocs"
 
