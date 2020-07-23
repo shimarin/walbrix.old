@@ -89,3 +89,6 @@ dev-libs/cyrus-sasl mysql
 net-vpn/pptpd -tcpd
 net-fs/nfs-utils -tcpd
 net-nds/rpcbind -tcpd
+
+net-misc/rsync xxhash
+

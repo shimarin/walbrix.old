@@ -27,6 +27,7 @@ sys-apps/kmod lzma -python
 dev-libs/libxml2 -python_targets_python2_7
 sys-libs/ncurses tinfo
 sys-fs/lvm2 -readline systemd -thin udev
+net-misc/rsync xxhash
 
 # splash
 sys-libs/zlib static-libs

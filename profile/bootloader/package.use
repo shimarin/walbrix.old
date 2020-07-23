@@ -9,7 +9,7 @@ sys-apps/systemd -acl
 app-shells/bash -net -nls
 sys-apps/busybox -static
 sys-apps/less -pcre
-net-misc/rsync -acl
+net-misc/rsync -acl xxhash
 app-arch/xz-utils -nls
 sys-apps/coreutils -acl
 sys-apps/net-tools -nls
