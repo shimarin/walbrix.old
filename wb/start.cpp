@@ -281,7 +281,6 @@ uint32_t/*domid*/ start(const char* vmname)
   std::list<PCI> pci_devices;
   load_pci_config(ini, pci_devices);
 
-  const auto INVALID_DOMID = ~0;
   XtlLoggerStdio logger(stderr, XTL_ERROR, 0);
   if (!logger) RUNTIME_ERROR("Unable to init logger");
   // else

@@ -1,11 +1,12 @@
 sys-kernel/gentoo-sources
 =sys-fs/bcache-tools-1.0.8_p20140220-r1
+=sys-apps/systemd-245.5
 
 # Xen
-=app-emulation/xen-4.13.1-r2
-=app-emulation/xen-tools-4.13.1-r2
+=app-emulation/xen-4.14.0
+=app-emulation/xen-tools-4.14.0
 =dev-util/bcc-0.14.0
-=app-emulation/xen-pvgrub-4.13.1
+=app-emulation/xen-pvgrub-4.14.0
 =dev-lang/swig-4.0.0
 
 #snort
