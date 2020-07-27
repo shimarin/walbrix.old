@@ -1,0 +1,119 @@
+#!/bin/sh
+
+# Enabling backup: lvchange --addtag=@backup-daily /dev/vgname/lvname
+BACKUP_TAG=@backup-daily
+BACKUP_ROOT=/var/backup
+BACKUP_HEAD=$BACKUP_ROOT/head
+DONE_FILE=$BACKUP_ROOT/done
+LOGFILE=/var/log/backup.log
+HOSTNAME=`hostname`
+MOUNTPOINT=/mnt
+
+tty -s || exec >$LOGFILE 2>&1
+
+if [ ! -d "$BACKUP_HEAD" ]; then
+	echo "Backup head not found: $BACKUP_HEAD"
+	exit -1
+fi
+
+# backup self
+echo "Syncing system files to $BACKUP_HEAD/$HOSTNAME ..."
+rsync -av /run/initramfs/rw/root/ $BACKUP_HEAD/$HOSTNAME
+
+# backup logical volumes
+lvs --noheadings --nameprefixes --units=g -o vg_name,vg_free,lv_name,lv_size,lv_path $BACKUP_TAG | while read line; do
+	eval $line
+	if [ -z "$LVM2_VG_NAME" -o -z "$LVM2_VG_FREE" -o -z "$LVM2_LV_NAME" -o -z "$LVM2_LV_SIZE" -o -z "$LVM2_LV_PATH" ]; then
+		echo `date` $LVM2_LV_PATH "invalid volume."
+		DONE_FILE=/dev/null
+		continue
+	fi
+	VG_FREE=`echo "$LVM2_VG_FREE" | sed 's/\.[0-9]\+g$//'`
+	if [ -z "$VG_FREE" -o "$VG_FREE" -lt 1 ]; then
+		echo "No free VG space for $LVM2_VG_NAME ."
+		DONE_FILE=/dev/null
+		continue
+	fi
+	LV_SIZE=`echo "$LVM2_LV_SIZE" | sed 's/\.[0-9]\+g$//'`
+	if [ -z "$LV_SIZE" -o "$LV_SIZE" -lt 1 ]; then
+		echo "Invalid LV size of $LVM2_LV_PATH ."
+		DONE_FILE=/dev/null
+		continue
+	fi
+
+	SNAPSHOT_SIZE_IN_GB=$((LV_SIZE / 10))
+	[ "$VG_FREE" -lt "$SNAPSHOT_SIZE_IN_GB" ] && SNAPSHOT_SIZE_IN_GB=${VG_FREE}
+	[ "$SNAPSHOT_SIZE_IN_GB" -lt 1 ] && SNAPSHOT_SIZE_IN_GB=1
+	
+	SNAPSHOT_SIZE=${SNAPSHOT_SIZE_IN_GB}g
+
+	SNAPSHOT=$LVM2_LV_PATH-snap
+	if [ -b "$SNAPSHOT" ]; then
+		echo "Snapshot $SNAPSHOT already exists."
+		DONE_FILE=/dev/null
+		continue
+	fi
+	if ! lvcreate -s -L $SNAPSHOT_SIZE -n `basename $SNAPSHOT` $LVM2_LV_PATH ; then
+		echo "Snapshot $SNAPSHOT couldn't be created."
+		DONE_FILE=/dev/null
+		continue
+	fi
+	if mountpoint -q "$MOUNTPOINT"; then
+		echo "Mountpoint $MOUNTPOINT has already been mounted."
+		DONE_FILE=/dev/null
+		break
+	fi
+	if ! mount -o ro "$SNAPSHOT" "$MOUNTPOINT"; then
+		echo "Snapshot couldn't be mounted."
+		lvremove -f "$SNAPSHOT"
+		DONE_FILE=/dev/null
+		continue
+	fi
+	echo "Snapshot size is ${SNAPSHOT_SIZE_IN_GB}GiB."
+	echo "Syncing snapshot of $LVM2_LV_PATH to $BACKUP_HEAD/$LVM2_VG_NAME/$LVM2_LV_NAME ..."
+	mkdir -p $BACKUP_HEAD/$LVM2_VG_NAME
+	rsync -av --delete $MOUNTPOINT/ $BACKUP_HEAD/$LVM2_VG_NAME/$LVM2_LV_NAME || DONE_FILE=/dev/null
+	if ! umount -f "$MOUNTPOINT"; then
+		echo "Snapshot $SNAPSHOT couldn't be unmounted."
+		DONE_FILE=/dev/null
+		break
+	fi
+	if ! lvremove -f "$SNAPSHOT"; then
+		echo "Snapshot $SNAPSHOT couldn't be removed."
+		DONE_FILE=/dev/null
+		break
+	fi
+done
+
+# backup vm subvolumes
+for i in /var/vm/\@*; do
+	[ "`findmnt -n -o FSTYPE $i`" != "btrfs" ] && continue
+	btrfs subvolume sync $i || continue
+	[ -f $i/rsync-excludes ] && RSYNC_EXCLUDES="--exclude-from=$i/rsync-excludes"
+	SNAPSHOT=$i/snapshot-$$
+	if ! btrfs subvolume snapshot -r $i $SNAPSHOT; then
+		echo "Creating snapshot $SNAPSHOT failed."
+		DONE_FILE=/dev/null
+		continue
+	fi
+	BACKUP_NAME=`basename $i`
+	echo "Syncing new files from snapshot of $i to $BACKUP_HEAD/$BACKUP_NAME ..."
+	rsync -av --ignore-existing --sparse $RSYNC_EXCLUDES $SNAPSHOT/ $BACKUP_HEAD/$BACKUP_NAME || DONE_FILE=/dev/null
+	echo "Syncing modified files from snapshot of $i to $BACKUP_HEAD/$BACKUP_NAME ..."
+	rsync -av --inplace --no-whole-file --checksum-choice=xxh64 --block-size=16384 --delete $RSYNC_EXCLUDES $SNAPSHOT/ $BACKUP_HEAD/$BACKUP_NAME || DONE_FILE=/dev/null
+	if ! btrfs subvolume delete "$SNAPSHOT"; then
+		echo "Deleting snapshot $SNAPSHOT failed."
+		DONE_FILE=/dev/null
+	fi
+done
+
+if btrfs subvolume sync "$BACKUP_HEAD"; then
+	SNAPSHOT=$BACKUP_ROOT/`LANG=C date +%a`
+	[ -d "$SNAPSHOT" ] && btrfs filesystem sync "$SNAPSHOT" && btrfs subvolume delete "$SNAPSHOT"
+	if ! btrfs subvolume snapshot -r "$BACKUP_HEAD" "$SNAPSHOT"; then
+		echo "Failed to create snapshot $SNAPSHOT"
+		DONE_FILE=/dev/null
+	fi
+fi
+
+date > $DONE_FILE

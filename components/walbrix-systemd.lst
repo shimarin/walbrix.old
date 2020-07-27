@@ -171,11 +171,7 @@ $copy resource/walbrix/openvpn.conf /etc/openvpn/client/openvpn.conf
 $require ts-node.lst
 
 # backup cron scripts
-#$mkdir /etc/wb
-#$write /etc/wb/backup "#BACKUP_ROOT=rsync://backup.local/backup"
-#$copy walbrix/backup /etc/cron.daily/backup
-#$symlink /etc/cron.weekly/backup ../cron.daily/backup
-#$symlink /etc/cron.monthly/backup ../cron.daily/backup
+$copy resource/walbrix/backup /etc/cron.daily/backup
 
 # alert cron scripts
 #$write /etc/wb/alert "#ALERT_RECIPIENT=your@email.address"
