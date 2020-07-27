@@ -33,6 +33,9 @@ $mkdir /etc/systemd/dnssd
 $exec "systemctl enable systemd-networkd"
 $exec "systemctl enable systemd-resolved"
 
+#NTP
+$sed /etc/systemd/timesyncd.conf 's/^#FallbackNTP=.*$/FallbackNTP=time.google.com ntp.nict.jp 133.243.238.163 133.243.238.164 133.243.238.243 133.243.238.244 2001:df0:232:eea0::fff3 2001:df0:232:eea0::fff4/'
+
 $write /etc/systemd/system/rc-local.service "[Unit]\nDescription=/etc/rc.local Compatibility\nConditionPathExists=/etc/rc.local\n\n[Service]\nType=forking\nExecStart=/etc/rc.local start\nTimeoutSec=0\nStandardOutput=tty\nRemainAfterExit=yes\nSysVStartPriority=99\n\n[Install]\nWantedBy=multi-user.target"
 $write /etc/rc.local "#!/bin/sh\nexit 0"
 $exec "chmod +x /etc/rc.local"
