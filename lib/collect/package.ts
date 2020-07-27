@@ -72,6 +72,7 @@ export function process_package(context:Context, pkgname:string, options?:{use?:
     "/var/run",
     "/usr/share/man",
     "/usr/share/doc",
+    "/usr/share/gtk-doc",
     "/usr/share/info",
     "/usr/include",
     "/var/cache"
