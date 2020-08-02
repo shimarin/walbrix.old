@@ -26,7 +26,6 @@ $package dev-python/six
 $package dev-python/certifi
 $package dev-python/setuptools
 $package dev-python/pip
-$package dev-python/mock
 $require google-api-python-client.lst
 
 $mkdir /etc/letsencrypt/renewal-hooks/deploy
