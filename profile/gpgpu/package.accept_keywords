@@ -24,7 +24,7 @@ sys-apps/hwids
 # Intel NEO
 =dev-util/clinfo-2.2.18.04.06
 =sys-libs/libomp-9.0.1
-=dev-util/intel-graphics-compiler-1.0.3826
+=dev-util/intel-graphics-compiler-1.0.4111
 =dev-util/spirv-llvm-translator-9.0.1.1
 =sys-devel/clang-8.0.1
 =media-libs/gmmlib-20.1.1

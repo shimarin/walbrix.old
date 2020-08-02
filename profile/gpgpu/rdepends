@@ -128,7 +128,7 @@ dev-ruby/xmlrpc	dev-lang/ruby:2.5 virtual/rubygems[ruby_targets_ruby25(-)]
 dev-util/clinfo	>=virtual/opencl-3
 dev-util/cmake	app-crypt/rhash >=app-arch/libarchive-3.0.0:0/13= >=dev-libs/expat-2.0.1 >=dev-libs/jsoncpp-1.9.2-r2:0/23= >=dev-libs/libuv-1.10.0:0/1= >=net-misc/curl-7.21.5[ssl] sys-libs/zlib virtual/pkgconfig sys-libs/ncurses:0/6=
 dev-util/glib-utils	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7] !<dev-libs/glib-2.56.2:2
-dev-util/intel-graphics-compiler	<=sys-devel/llvm-9.9999:9/9=[abi_x86_64(-)] <=dev-libs/opencl-clang-9.9999:9/9=[abi_x86_64(-)]
+dev-util/intel-graphics-compiler	<=sys-devel/llvm-10.9999:10/10=[abi_x86_64(-)] <=dev-libs/opencl-clang-10.9999:9/9=[abi_x86_64(-)]
 dev-util/intltool	dev-lang/perl dev-perl/XML-Parser sys-devel/gettext
 dev-util/itstool	dev-lang/python:3.7[xml] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7] dev-libs/libxml2[python,python_targets_python3_7(-)]
 dev-util/meson	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
