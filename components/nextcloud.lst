@@ -17,6 +17,8 @@ $package dev-php/pecl-redis
 $require pecl-apcu.lst
 $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1nextcloud\2/'
 
+$require zabbix-agent.lst
+
 $download https://download.nextcloud.com/server/releases/nextcloud-19.0.1.tar.bz2 /tmp/
 $exec "tar xvf /tmp/*.tar.bz2 -C /var/www/localhost"
 $exec "rm -rf /var/www/localhost/htdocs && mv /var/www/localhost/nextcloud /var/www/localhost/htdocs"
@@ -40,6 +42,7 @@ $sed /etc/php/apache2-php*/php.ini 's/^;default_charset.\+$/default_charset="UTF
 $write /var/spool/cron/crontabs/apache '*/15  *  *  *  * php -f /var/www/localhost/htdocs/cron.php'
 
 # libsmbclient-php
+$exec --overlay "pecl channel-update pecl.php.net"
 $exec --overlay "pecl install channel://pecl.php.net/smbclient-1.0.0"
 $set PHP_APACHE2_ETC /etc/php/apache2-php*
 $set PHP_CLI_ETC /etc/php/cli-php*
