@@ -1,10 +1,13 @@
-$package app-admin/logrotate
+$require logrotate.lst
 
 #dev-libs/apr
 #dev-libs/apr-util
 $package www-servers/apache # USE="apache2_modules_proxy_connect apache2_modules_proxy apache2_modules_proxy_http apache2_modules_proxy_ajp"
 $mkdir /var/cache/apache2
 $package app-admin/apache-tools
+
+# fix logrotate config
+$sed /etc/logrotate.d/apache2 's/\/etc\/init\.d\/apache2 reload /\/bin\/systemctl reload apache2 /'
 
 # disable SSL / enable PROXY and DAV
 $sed /etc/conf.d/apache2 's/-D SSL//'
