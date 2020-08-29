@@ -60,6 +60,7 @@ lvs --noheadings --nameprefixes --units=g -o vg_name,vg_free,lv_name,lv_size,lv_
 	fi
 	if mountpoint -q "$MOUNTPOINT"; then
 		echo "Mountpoint $MOUNTPOINT has already been mounted."
+		lvremove -f "$SNAPSHOT"
 		DONE_FILE=/dev/null
 		break
 	fi
