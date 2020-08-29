@@ -16,7 +16,7 @@ SRC_URI="${SUPER_PN}-${MY_PV}-ubuntu-18.04.tar.xz"
 
 LICENSE="AMD-GPU-PRO-EULA"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 ~x86"
 
 RESTRICT="bindist mirror fetch strip"
 
@@ -60,6 +60,7 @@ multilib_src_unpack() {
 	unpack_deb "${S}/opencl-amdgpu-pro-comgr_${MY_PV}_${deb_abi:-${ABI}}.deb"
 	unpack_deb "${S}/libdrm-amdgpu-amdgpu1_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
 	unpack_deb "${S}/libdrm2-amdgpu_${libdrm_ver}-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/libgl1-amdgpu-pro-appprofiles_${MY_PV}_all.deb"
 	popd >/dev/null || die
 }
 
@@ -80,6 +81,9 @@ multilib_src_install() {
 		> "${T}/${SUPER_PN}-pal-${ABI}.icd" || die "Failed to generate ICD file for ABI ${ABI}"
 	doins "${T}/${SUPER_PN}-orca-${ABI}.icd"
 	doins "${T}/${SUPER_PN}-pal-${ABI}.icd"
+
+	insinto "/etc/amd"
+	doins etc/amd/amdapfxx.blb
 }
 
 multilib_src_install_all() {
