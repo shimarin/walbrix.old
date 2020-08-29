@@ -7,3 +7,4 @@ dev-libs/amdgpu-pro-opencl AMD-GPU-PRO-EULA
 net-im/discord-bin all-rights-reserved
 sys-firmware/bluez-firmware bluez-firmware
 media-fonts/ipamonafont grass-ipafonts
+net-misc/dropbox CC-BY-ND-3.0 dropbox
