@@ -60,7 +60,7 @@ $package sys-power/cpupower
 #$require omronups.lst
 $require libqmi.lst
 $package net-misc/modemmanager
-#$require gpsd.lst # it still needs python2.7
+$require gpsd.lst
 $copy resource/walbrix/77-mm-docomo-l-03f.rules /lib/udev/rules.d/
 
 # storage/filesystems

@@ -1,2 +1,4 @@
 $package net-misc/pps-tools
 $package sci-geosciences/gpsd
+$package net-misc/ntp
+
