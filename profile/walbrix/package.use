@@ -74,7 +74,7 @@ net-wireless/wpa_supplicant -bindist
 
 # hardware
 x11-base/xorg-drivers -input_devices_keyboard -input_devices_libinput -input_devices_mouse -video_cards_amdgpu -video_cards_dummy -video_cards_fbdev -video_cards_intel -video_cards_nouveau -video_cards_radeon -video_cards_radeonsi -video_cards_vesa
-sci-geosciences/gpsd bluetooth ntp python usb gpsd_protocols_fury gpsd_protocols_geostar gpsd_protocols_nmea0183 gpsd_protocols_nmea2000 gpsd_protocols_passthrough -gpsd_protocols_isync -gpsd_protocols_ublox -gpsd_protocols_greis -python -python_targets_python2_7
+sci-geosciences/gpsd bluetooth ntp python usb gpsd_protocols_fury gpsd_protocols_geostar gpsd_protocols_nmea0183 gpsd_protocols_nmea2000 gpsd_protocols_passthrough -gpsd_protocols_isync -gpsd_protocols_ublox -gpsd_protocols_greis
 dev-python/pyserial -python_targets_python2_7
 net-misc/modemmanager mbim
 

@@ -9,6 +9,10 @@ sys-kernel/gentoo-sources
 =app-emulation/xen-pvgrub-4.14.0
 =dev-lang/swig-4.0.0
 
+# qemu
+=app-emulation/qemu-5.1.0
+=net-libs/libslirp-4.3.1
+
 #snort
 =net-analyzer/snort-2.9.16
 =net-analyzer/barnyard2-1.13
@@ -26,6 +30,7 @@ sys-kernel/linux-firmware
 sys-apps/hwids
 =sys-block/megacli-8.07.14-r2
 =net-misc/usbip-4.13
+=sci-geosciences/gpsd-3.20
 
 # kmscon
 =dev-libs/libtsm-4.0.1
