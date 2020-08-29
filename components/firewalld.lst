@@ -1,20 +1,8 @@
-$package net-firewall/ebtables
-$package dev-libs/gobject-introspection-common
-$package net-firewall/ipset
-#$package dev-libs/nspr
-#dev-libs/icu
-#net-libs/libnftnl
-$package dev-lang/spidermonkey
-$package dev-python/decorator
-$package dev-python/six
-$package dev-util/glib-utils
-$package net-firewall/nftables
-#dev-libs/dbus-glib
-$package dev-python/dbus-python
-#dev-libs/gobject-introspection
-$package dev-python/pygobject
-#sys-apps/systemd
-$package sys-auth/polkit
-$package dev-python/python-slip
 $package net-firewall/firewalld
+$package dev-python/decorator
+$package net-firewall/nftables
+$package net-firewall/ipset
+$require ebtables.lst
+$require python-slip.lst
+$require pygobject.lst
 

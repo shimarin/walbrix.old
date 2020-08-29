@@ -1,0 +1,7 @@
+$package dev-python/python-slip
+$package dev-python/dbus-python
+$package dev-python/six
+$package dev-lang/python-exec
+$require polkit.lst
+$require pygobject.lst
+

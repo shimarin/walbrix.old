@@ -15,7 +15,7 @@ dev-lua/luasec
 dev-db/mysql
 dev-db/mysql-init-scripts
 
-dev-python/mysql-python
+dev-python/mysqlclient
 
 dev-python/paho-mqtt
 dev-db/sqlite
@@ -70,6 +70,7 @@ dev-python/pip
 dev-python/google-api-python-client
 net-analyzer/tcpdump
 net-misc/netkit-telnetd
+net-firewall/firewalld
 
 dev-db/redis
 dev-php/pecl-redis
@@ -84,4 +85,4 @@ app-admin/tripwire
 net-misc/iperf
 net-analyzer/snort
 net-analyzer/barnyard2
-
+dev-util/trace-cmd

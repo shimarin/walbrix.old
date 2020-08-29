@@ -53,7 +53,7 @@ void MyInit::mount_rw(const std::filesystem::path& boot, const std::filesystem::
 {
   if (is_boot_partition_readonly()) {
     if (mount("/dev/xvda2", mountpoint) != 0) {
-      if (mount("rw", mountpoint, "9p", MS_RELATIME, "version=9p2000.L,posixacl,cache=mmap,msize=16384") != 0) {
+      if (mount("rw", mountpoint, "9p", MS_RELATIME, "version=9p2000.L,cache=mmap,msize=262144") != 0) {
         if (mount("tmpfs", mountpoint, "tmpfs") != 0) {
           RUNTIME_ERROR("mount /mnt/rw");
         }

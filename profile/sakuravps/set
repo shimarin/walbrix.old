@@ -74,3 +74,6 @@ dev-libs/libisoburn
 sys-auth/pam_mysql
 net-ftp/vsftpd
 net-fs/nfs-utils
+net-firewall/ipset
+net-firewall/firewalld
+app-misc/mosquitto

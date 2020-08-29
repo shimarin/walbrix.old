@@ -18,7 +18,7 @@ $copy resource/vpnhub/grub.cfg /boot/grub/grub.cfg
 
 $sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
 
-#net-firewall/firewalld
+$require firewalld.lst
 $package net-dns/dnsmasq
 
 $package app-misc/ca-certificates
@@ -43,6 +43,7 @@ $require nfs.lst
 /usr/bin/iperf3
 /usr/bin/curl
 /sbin/brctl
+$require ipset.lst
 
 # tools
 $package sys-fs/btrfs-progs
@@ -77,6 +78,9 @@ $package sys-auth/pam_mysql
 
 $package dev-python/pyinotify
 $package sys-fs/inotify-tools
+
+# mqtt
+package app-misc/mosquitto
 
 # email
 $require postfix.lst
