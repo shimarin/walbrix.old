@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.8.0-gentoo-r1 Kernel Configuration
+# Linux/x86 5.8.5-gentoo Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="x86_64-pc-linux-gnu-gcc (Gentoo 9.3.0-r1 p3) 9.3.0"
 CONFIG_CC_IS_GCC=y
@@ -3806,6 +3806,7 @@ CONFIG_SPI_SPIDEV=m
 # CONFIG_SPI_LOOPBACK_TEST is not set
 CONFIG_SPI_TLE62X0=m
 # CONFIG_SPI_SLAVE is not set
+CONFIG_SPI_DYNAMIC=y
 # CONFIG_SPMI is not set
 CONFIG_HSI=m
 CONFIG_HSI_BOARDINFO=y
