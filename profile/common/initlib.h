@@ -4,9 +4,7 @@
 #include <sys/reboot.h>
 #include <sys/mount.h>
 
-extern "C" {
-#include <iniparser.h>
-}
+#include <iniparser4/iniparser.h>
 
 #define RUNTIME_ERROR(msg) throw std::runtime_error((std::string)__FILE__ + '(' + std::to_string(__LINE__) + ") " + msg)
 #define RUNTIME_ERROR_WITH_ERRNO(msg) throw std::runtime_error((std::string)__FILE__ + '(' + std::to_string(__LINE__) + ") " + msg + ':' + strerror(errno))

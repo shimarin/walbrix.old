@@ -28,7 +28,7 @@ sbin/swapon
 sbin/switch_root
 usr
 usr/lib64
-usr/lib64/libiniparser.so.0
+usr/lib64/libiniparser4.so.1
 usr/lib64/libgcc_s.so.1
 usr/lib64/libstdc++.so.6
 usr/lib64/libxenstore.so.3.0

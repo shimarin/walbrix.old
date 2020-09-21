@@ -30,5 +30,5 @@ sbin/lvm
 sbin/vgchange
 usr
 usr/lib64
-usr/lib64/libiniparser.so.0
+usr/lib64/libiniparser4.so.1
 usr/lib64/libzstd.so.1

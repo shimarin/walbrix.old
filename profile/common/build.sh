@@ -36,14 +36,14 @@ if [ -f modules_need_to_be_rebuilt ]; then
 fi
 
 if [ -f /init.cpp ]; then
-	LIBS="-lblkid -lmount -liniparser"
+	LIBS="-lblkid -lmount -liniparser4"
 	if grep -q libxenstore.so /initramfs.lst; then
 		LIBS="$LIBS -lxenstore"
 	fi
 	g++ -std=c++2a $LIBS init.cpp initlib.cpp -o /init || exit 1
 elif [ -f /init.c ]; then
 	LIBS="-lblkid -lmount"
-	if grep -q libiniparser /initramfs.lst; then
+	if grep -q libiniparser4 /initramfs.lst; then
 		LIBS="$LIBS -liniparser"
 	fi
 	if grep -q libxenstore /initramfs.lst; then
