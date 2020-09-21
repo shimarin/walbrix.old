@@ -42,6 +42,10 @@ sci-geosciences/gpsd ntp python usb gpsd_protocols_fury gpsd_protocols_geostar g
 sys-apps/systemd -acl
 
 dev-python/setuptools -python_targets_python2_7
+dev-python/pycparser -python_targets_python2_7
+dev-python/ply -python_targets_python2_7
+dev-python/six -python_targets_python2_7
+dev-python/pyparsing -python_targets_python2_7
 dev-util/meson -python_targets_python2_7
 dev-python/certifi -python_targets_python2_7
 dev-libs/libxml2 -python_targets_python2_7
