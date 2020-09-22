@@ -14,9 +14,7 @@
 
 #include <libsmartcols/libsmartcols.h>
 
-extern "C" {
-#include <iniparser.h>
-}
+#include <iniparser4/iniparser.h>
 
 extern "C" {
 #include <libxl.h>
