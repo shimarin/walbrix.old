@@ -15,7 +15,7 @@ app-arch/tar	virtual/acl
 app-arch/unzip	app-arch/bzip2
 app-arch/xz-utils	!<app-arch/lzma-4.63 !<app-arch/p7zip-4.57 !<app-i18n/man-pages-de-2.16
 app-arch/zstd	app-arch/xz-utils
-app-crypt/gnupg	!app-crypt/dirmngr >=dev-libs/libassuan-2.5.0 >=dev-libs/libgcrypt-1.7.3 >=dev-libs/libgpg-error-1.28 >=dev-libs/libksba-1.3.4 >=dev-libs/npth-1.2 >=net-misc/curl-7.10 app-arch/bzip2 sys-libs/readline:0/8= >=net-libs/gnutls-3.0:0/30= sys-libs/zlib app-crypt/pinentry virtual/libintl
+app-crypt/gnupg	>=dev-libs/libassuan-2.5.0 >=dev-libs/libgcrypt-1.7.3 >=dev-libs/libgpg-error-1.28 >=dev-libs/libksba-1.3.4 >=dev-libs/npth-1.2 >=net-misc/curl-7.10 app-arch/bzip2 sys-libs/readline:0/8= >=net-libs/gnutls-3.0:0/30= sys-libs/zlib app-crypt/pinentry virtual/libintl
 app-crypt/gpgme	>=app-crypt/gnupg-2 >=dev-libs/libassuan-2.5.3:0/0= >=dev-libs/libgpg-error-1.29:0/0=
 app-crypt/libb2	|| ( >=sys-devel/gcc-4.2:*[openmp] sys-devel/clang-runtime:*[openmp] )
 app-crypt/pinentry	app-eselect/eselect-pinentry >=dev-libs/libassuan-2.1 >=dev-libs/libgcrypt-1.6.3 >=dev-libs/libgpg-error-1.17 sys-libs/ncurses:0/6=
@@ -62,7 +62,7 @@ dev-libs/libpcre2	app-arch/bzip2 sys-libs/readline:0/8= sys-libs/zlib
 dev-libs/libusb	>=virtual/libudev-208:0/1=[abi_x86_64(-)]
 dev-libs/libxml2	>=sys-libs/zlib-1.2.8-r1:0/1=[abi_x86_64(-)] >=dev-lang/python-2.7.5-r2:2.7[xml] dev-lang/python:3.7[xml] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] sys-libs/readline:0/8=
 dev-libs/libxslt	>=dev-libs/libxml2-2.9.10:2[abi_x86_64(-)] >=dev-libs/libgcrypt-1.5.3:0/20=[abi_x86_64(-)]
-dev-libs/mpc	>=dev-libs/gmp-5.0.0:0/10.4=[abi_x86_64(-)] >=dev-libs/mpfr-3.0.0:0/6=[abi_x86_64(-)]
+dev-libs/mpc	>=dev-libs/gmp-5.0.0:0/10.4=[abi_x86_64(-)] >=dev-libs/mpfr-4.1.0:0/6=[abi_x86_64(-)]
 dev-libs/mpfr	>=dev-libs/gmp-5.0.0[abi_x86_64(-)]
 dev-libs/nettle	>=dev-libs/gmp-6.1:0/10.4=[abi_x86_64(-)]
 dev-libs/openssl	>=app-misc/c_rehash-1.7-r1 >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] !<net-misc/openssh-8.0_p1-r3
@@ -80,10 +80,10 @@ dev-perl/YAML-Tiny	virtual/perl-Carp virtual/perl-Exporter virtual/perl-Scalar-L
 dev-python/certifi	app-misc/ca-certificates >=dev-lang/python-2.7.5-r2:2.7 dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/cython	>=dev-lang/python-2.7.5-r2:2.7[threads(+)] dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/lxml	>=dev-libs/libxml2-2.9.5 >=dev-libs/libxslt-1.1.28 >=dev-lang/python-2.7.5-r2:2.7 dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
-dev-python/m2crypto	dev-libs/openssl:0/1.1= dev-python/typing[python_targets_python2_7(-),-python_single_target_python2_7(-)] >=dev-lang/python-2.7.5-r2:2.7[threads(+)] dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
+dev-python/m2crypto	dev-libs/openssl:0/1.1= dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/pymountboot	>=sys-apps/util-linux-2.20 dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
 dev-python/setuptools	>=dev-lang/python-2.7.5-r2:2.7[xml(+)] dev-lang/python:3.7[xml(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
-dev-python/typing	>=dev-lang/python-2.7.5-r2:2.7 >=dev-lang/python-exec-2:2/2=[python_targets_python2_7(-),-python_single_target_python2_7(-)]
+dev-python/setuptools_scm	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-util/cmake	app-crypt/rhash >=app-arch/libarchive-3.3.3:0/13= >=dev-libs/expat-2.0.1 >=dev-libs/jsoncpp-1.9.2-r2:0/24= >=dev-libs/libuv-1.10.0:0/1= >=net-misc/curl-7.21.5[ssl] sys-libs/zlib virtual/pkgconfig sys-libs/ncurses:0/6=
 dev-util/intltool	dev-lang/perl dev-perl/XML-Parser sys-devel/gettext
 dev-util/meson	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
@@ -119,7 +119,7 @@ sys-apps/help2man	dev-lang/perl dev-perl/Locale-gettext
 sys-apps/hwids	virtual/udev
 sys-apps/iproute2	!net-misc/arpd dev-libs/libbsd >=net-firewall/iptables-1.4.20:0/1.8.3= sys-libs/db:5.3/5.3=
 sys-apps/kbd	app-arch/gzip !app-misc/vlock sys-libs/pam
-sys-apps/kmod	!sys-apps/module-init-tools !sys-apps/modutils !<sys-apps/openrc-0.13.8 !<sys-apps/systemd-216-r3 >=sys-libs/zlib-1.2.6
+sys-apps/kmod	!sys-apps/module-init-tools !sys-apps/modutils !<sys-apps/openrc-0.13.8 !<sys-apps/systemd-216-r3 >=app-arch/xz-utils-5.0.4-r1 >=sys-libs/zlib-1.2.6
 sys-apps/less	>=app-misc/editor-wrapper-3 >=sys-libs/ncurses-5.2:0/6=
 sys-apps/lshw	sys-apps/hwids
 sys-apps/man-db	!sys-apps/man >=dev-libs/libpipeline-1.5.0 sys-apps/groff sys-libs/gdbm:0/6= sys-libs/libseccomp sys-libs/zlib acct-group/man acct-user/man
@@ -127,7 +127,7 @@ sys-apps/man-pages	virtual/man !<sys-apps/keyutils-1.5.9-r4 !<dev-libs/libbsd-0.
 sys-apps/man-pages-posix	virtual/man !<sys-apps/man-pages-3
 sys-apps/net-tools	!sys-apps/coreutils[hostname] !<sys-apps/openrc-0.9.9.3
 sys-apps/pciutils	sys-apps/kmod >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=virtual/libudev-208[abi_x86_64(-)] sys-apps/hwids
-sys-apps/portage	app-arch/zstd >=app-arch/tar-1.27 dev-lang/python-exec:2 >=sys-apps/sed-4.0.5 app-shells/bash:0[readline] >=app-admin/eselect-1.2 >=app-portage/gemato-14.4-r1[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=app-crypt/openpgp-keys-gentoo-release-20180706 >=app-crypt/gnupg-2.2.4-r2[ssl(-)] >=sys-apps/sandbox-2.2 sys-apps/util-linux >=app-misc/pax-utils-0.1.17 >=sys-apps/install-xattr-0.3 !<app-admin/logrotate-3.8.0 !<app-portage/gentoolkit-0.4.6 !<app-portage/repoman-2.3.10 dev-lang/python:3.7[bzip2(+),threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
+sys-apps/portage	app-arch/zstd >=app-arch/tar-1.27 dev-lang/python-exec:2 >=sys-apps/findutils-4.4 >=sys-apps/sed-4.0.5 app-shells/bash:0[readline] >=app-admin/eselect-1.2 >=app-portage/gemato-14.4-r1[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=app-crypt/openpgp-keys-gentoo-release-20180706 >=app-crypt/gnupg-2.2.4-r2[ssl(-)] >=sys-apps/sandbox-2.2 sys-apps/util-linux >=app-misc/pax-utils-0.1.17 >=sys-apps/install-xattr-0.3 !<app-admin/logrotate-3.8.0 !<app-portage/gentoolkit-0.4.6 !<app-portage/repoman-2.3.10 !~app-portage/repoman-3.0.0 dev-lang/python:3.7[bzip2(+),threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] virtual/tmpfiles
 sys-apps/sed	virtual/libintl
 sys-apps/shadow	sys-apps/acl:0/0= virtual/libintl sys-libs/pam:0/0= sys-apps/attr:0/0= >=sys-auth/pambase-20150213 !sys-apps/util-linux[su(-)]
 sys-apps/systemd	>=sys-apps/util-linux-2.30:0/0=[abi_x86_64(-)] sys-libs/libcap:0/0=[abi_x86_64(-)] >=dev-libs/libgcrypt-1.4.5:0/20=[abi_x86_64(-)] >=sys-apps/kmod-15:0/0= >=app-arch/lz4-0_p131:0/r132=[abi_x86_64(-)] sys-libs/pam:0/0=[abi_x86_64(-)] dev-libs/libpcre2 >=sys-libs/libseccomp-2.3.3:0/0= acct-group/adm acct-group/wheel acct-group/kmem acct-group/tty acct-group/utmp acct-group/audio acct-group/cdrom acct-group/dialout acct-group/disk acct-group/input acct-group/kvm acct-group/render acct-group/tape acct-group/video acct-group/systemd-journal acct-user/systemd-journal-remote acct-user/systemd-coredump acct-user/systemd-network acct-user/systemd-resolve acct-user/systemd-timesync >=sys-apps/baselayout-2.2 !sys-apps/sysvinit !net-dns/openresolv || ( sys-apps/util-linux[kill(-)] sys-process/procps[kill(+)] sys-apps/coreutils[kill(-)] ) !sys-auth/nss-myhostname !sys-fs/eudev !sys-fs/udev
@@ -144,7 +144,7 @@ sys-devel/automake	dev-lang/perl >=sys-devel/automake-wrapper-11 >=sys-devel/aut
 sys-devel/bc	>=sys-libs/readline-4.1:0/8= >=sys-libs/ncurses-5.2:0/6=
 sys-devel/binutils	>=sys-devel/binutils-config-3 sys-libs/zlib
 sys-devel/binutils-config	sys-apps/gentoo-functions
-sys-devel/bison	>=sys-devel/m4-1.4.16
+sys-devel/bison	>=sys-devel/m4-1.4.16 >=sys-devel/gettext-0.21
 sys-devel/flex	sys-devel/m4
 sys-devel/gcc	sys-libs/zlib virtual/libintl virtual/libiconv >=dev-libs/gmp-4.3.2:0/10.4= >=dev-libs/mpfr-2.4.2:0/6= >=dev-libs/mpc-0.8.1:0/3=
 sys-devel/gcc-config	>=sys-apps/gentoo-functions-0.10
