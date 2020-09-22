@@ -18,13 +18,7 @@
 #include <sys/sysmacros.h>
 
 #ifdef INIFILE
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include <iniparser.h>
-#ifdef __cplusplus
-}
-#endif
+#include <iniparser4/iniparser.h>
 #endif
 
 struct partition_struct {

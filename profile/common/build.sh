@@ -44,7 +44,7 @@ if [ -f /init.cpp ]; then
 elif [ -f /init.c ]; then
 	LIBS="-lblkid -lmount"
 	if grep -q libiniparser4 /initramfs.lst; then
-		LIBS="$LIBS -liniparser"
+		LIBS="$LIBS -liniparser4"
 	fi
 	if grep -q libxenstore /initramfs.lst; then
 		LIBS="$LIBS -lxenstore"
