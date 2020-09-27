@@ -1,4 +1,4 @@
-$package net-analyzer/barnyard2
+$package net-analyzer/barnyard2 --use=mysql
 #net-libs/daq
 #dev-libs/libdnet
 $package net-analyzer/snort
