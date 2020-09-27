@@ -28,6 +28,8 @@ dev-libs/libxml2 -python_targets_python2_7
 sys-libs/ncurses tinfo
 sys-fs/lvm2 -readline systemd -thin udev
 net-misc/rsync xxhash
+net-analyzer/barnyard2 mysql
+dev-db/mysql -perl -server
 
 # splash
 sys-libs/zlib static-libs
