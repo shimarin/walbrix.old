@@ -1,11 +1,6 @@
 $require urllib3.lst
+$package dev-python/certifi
 $package dev-python/chardet
+$package dev-python/idna
 $package dev-python/requests
-$package dev-python/py
-$package dev-python/ipaddress
-$package dev-python/ply
-#$package dev-python/pytest
-$require cryptography.lst
-$require pyopenssl.lst
-$package dev-python/ndg-httpsclient
 

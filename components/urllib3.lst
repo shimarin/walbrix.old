@@ -1,9 +1,5 @@
-$require python27.lst
+$require python3.lst
+$require cryptography.lst
 $package dev-python/PySocks
-$package dev-python/certifi
-$package dev-python/six
-$package dev-python/pyopenssl
-$package dev-python/backports-ssl-match-hostname
-$package dev-python/ndg-httpsclient
-$package dev-python/pyasn1
+$require pyopenssl.lst
 $package dev-python/urllib3

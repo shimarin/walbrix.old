@@ -1,0 +1,2 @@
+$package dev-python/httplib2
+$package dev-python/google-auth-httplib2

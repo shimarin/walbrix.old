@@ -1,9 +1,4 @@
-$require python27.lst
+$require python3.lst
 $require cffi.lst
-$package dev-python/idna
-$package dev-python/pyasn1
-$package dev-python/enum34
 $package dev-python/six
-$package dev-python/ipaddress
-$package dev-python/asn1crypto
 $package dev-python/cryptography

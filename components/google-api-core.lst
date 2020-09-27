@@ -1,0 +1,6 @@
+$require requests.lst
+$package dev-python/protobuf-python
+$package dev-python/googleapis-common-protos
+$require google-auth.lst
+$package dev-python/pytz
+

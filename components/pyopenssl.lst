@@ -1,3 +1,4 @@
+$require cryptography.lst
 $package dev-python/pyopenssl
 $package dev-python/six
 

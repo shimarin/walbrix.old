@@ -1,5 +1,5 @@
 $require cryptography.lst
-$package dev-python/requests
-$package dev-python/requests-toolbelt
+$require requests-toolbelt.lst
+$package dev-python/josepy
 $package app-crypt/acme
 

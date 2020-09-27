@@ -1,0 +1,5 @@
+$package dev-python/namespace-google
+$package dev-python/six
+$require pyasn1-modules.lst
+$package dev-python/rsa
+$package dev-python/cachetools
