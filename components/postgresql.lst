@@ -1,11 +1,11 @@
 $set PGSQL_VERSION 12
+$set PGSQL_REVISION 4
 #app-eselect/eselect-postgresql
-$package dev-db/postgresql-$(PGSQL_VERSION).1 --exclude='^/usr/share/postgresql-.+/man/'
+$package dev-db/postgresql --exclude='^/usr/share/postgresql-.+/man/'
 
-$exec "ln -sf /usr/lib64/postgresql-$(PGSQL_VERSION)/bin/* /usr/bin/"
+$exec "ln -sf /usr/lib64/postgresql-*/bin/* /usr/bin/"
 
-$copy postgresql/operate.sh /operate.sh
-$exec "/operate.sh initdb && rm /operate.sh" # you may need to increase shmmni from 4k to 16k
-$symlink /etc/runlevels/default/postgresql-$(PGSQL_VERSION) /etc/init.d/postgresql-$(PGSQL_VERSION)
+$copy resource/postgresql/operate.sh /tmp/operate.sh
+$exec "/tmp/operate.sh initdb" # you may need to increase shmmni from 4k to 16k
+$exec "systemctl enable postgresql-${PGSQL_VERSION}"
 
-$sed /etc/conf.d/postgresql-$(PGSQL_VERSION) 's/^#PGOPTS="-N 512 -B 1024"$/PGOPTS="-i -N 512 -B 1024"/'
