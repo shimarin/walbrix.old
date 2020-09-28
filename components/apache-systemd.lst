@@ -12,6 +12,7 @@ $sed /etc/logrotate.d/apache2 's/\/etc\/init\.d\/apache2 reload /\/bin\/systemct
 # disable SSL / enable PROXY and DAV
 $sed /etc/conf.d/apache2 's/-D SSL//'
 $sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D PROXY -D DAV"/'
+$sed /lib/systemd/system/apache2.service 's/^NoNewPrivileges=true$/NoNewPrivileges=false/'
 $exec "systemctl enable apache2"
 
 $mkdir /var/www/localhost/htdocs

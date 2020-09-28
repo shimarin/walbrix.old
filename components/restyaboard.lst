@@ -1,0 +1,31 @@
+$require base-systemd.lst
+
+$mkdir /boot/grub
+$write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
+
+$require php7.lst
+$require postgresql.lst
+$require postfix.lst
+$require samba.lst
+$package sys-fs/btrfs-progs
+$require xfsprogs.lst
+$package net-misc/rsync
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1restyaboard\2/'
+
+$require zabbix-agent.lst
+$package dev-util/trace-cmd
+
+$download https://github.com/RestyaPlatform/board/releases/download/v0.6.9/board-v0.6.9.zip /tmp/
+$exec "cd /var/www/localhost/htdocs && unzip /tmp/board-v*.zip && chown -R apache.apache /var/www/localhost"
+$copy resource/restyaboard/htaccess /var/www/localhost/htdocs/.htaccess
+$exec "/tmp/operate.sh createdb restyaboard restya"
+$exec "/tmp/operate.sh exec restyaboard restya '\i /var/www/localhost/htdocs/sql/restyaboard_with_empty_data.sql'"
+
+$sed /etc/php/apache2-php*/php.ini 's/^upload_max_filesize.\+$/upload_max_filesize = 512M/'
+$sed /etc/php/apache2-php*/php.ini 's/^post_max_size.\+$/post_max_size = 768M/'
+$sed /etc/php/apache2-php*/php.ini 's/^memory_limit.\+$/memory_limit=512M/'
+$sed /etc/php/cli-php*/php.ini 's/^memory_limit.\+$/memory_limit=512M/'
+$sed /etc/php/apache2-php*/php.ini 's/^;mbstring.func_overload.\+$/mbstring.func_overload=0/'
+$sed /etc/php/apache2-php*/php.ini 's/^;always_populate_raw_post_data.\+$/always_populate_raw_post_data=-1/'
+$sed /etc/php/apache2-php*/php.ini 's/^;default_charset.\+$/default_charset="UTF-8"/'
+

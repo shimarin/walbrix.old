@@ -1,0 +1,4 @@
+{
+	"profile":"paravirt-systemd",
+	"main_lstfile":"components/restyaboard.lst"
+}
