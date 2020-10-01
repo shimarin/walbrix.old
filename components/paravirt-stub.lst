@@ -1,8 +1,20 @@
-$kernel /boot/kernel
-/boot/kernel
-/boot/initramfs
-/lib/modules
-$dir /lib/modules/$KERNEL_VERSION
+$require base-systemd.lst
 
 $mkdir /boot/grub
 $write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
+
+$package sys-fs/btrfs-progs
+$require xfsprogs.lst
+$package net-misc/rsync
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1stub\2/'
+
+$require debootstrap.lst
+$require rpm.lst
+$require requests.lst
+
+$sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
+
+$copy resource/stub/getrpm.py /root/
+$copy resource/stub/centos7.sh /root/
+
+$exec "touch /no-persistent-rw"

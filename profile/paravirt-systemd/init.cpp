@@ -39,7 +39,7 @@ std::optional<std::filesystem::path> MyInit::get_ini_path(const std::filesystem:
 void MyInit::mount_system(const std::filesystem::path& boot, const std::filesystem::path& mountpoint)
 {
   if (is_boot_partition_readonly()) {
-    if (bind_mount(boot, mountpoint) != 0) RUNTIME_ERROR("mount --bind /mnt/boot /mnt/systdm");
+    if (bind_mount(boot, mountpoint) != 0) RUNTIME_ERROR("mount --bind /mnt/boot /mnt/system");
   } else {
     if (mount_loop(boot / "system.img", mountpoint, "auto", MS_RDONLY) != 0) {
       if (mount_loop(boot / "system", mountpoint, "auto", MS_RDONLY) != 0) {
@@ -52,8 +52,9 @@ void MyInit::mount_system(const std::filesystem::path& boot, const std::filesyst
 void MyInit::mount_rw(const std::filesystem::path& boot, const std::filesystem::path& mountpoint)
 {
   if (is_boot_partition_readonly()) {
-    if (mount("/dev/xvda2", mountpoint) != 0) {
-      if (mount("rw", mountpoint, "9p", MS_RELATIME, "version=9p2000.L,cache=mmap,msize=262144") != 0) {
+    auto no_persistent_rw = is_file(boot / "no-persistent-rw");
+    if (no_persistent_rw || mount("/dev/xvda2", mountpoint) != 0) {
+      if (no_persistent_rw || mount("rw", mountpoint, "9p", MS_RELATIME, "version=9p2000.L,cache=mmap,msize=262144") != 0) {
         if (mount("tmpfs", mountpoint, "tmpfs") != 0) {
           RUNTIME_ERROR("mount /mnt/rw");
         }

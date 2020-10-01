@@ -1,0 +1,10 @@
+$package app-arch/libarchive
+#sys-libs/db
+#sys-libs/zlib
+$package app-arch/bzip2
+#dev-libs/popt
+$package app-crypt/gnupg
+#dev-libs/elfutils
+$package dev-lang/perl
+$package dev-libs/nss
+$package app-arch/rpm

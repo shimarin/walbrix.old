@@ -1,5 +1,4 @@
 sys-kernel/gentoo-sources
-=app-emulation/xen-tools-4.13.1
 =net-misc/ndppd-0.2.5
 =dev-python/zeroconf-0.24.4
 =dev-python/ifaddr-0.1.6

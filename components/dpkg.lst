@@ -1,0 +1,6 @@
+$package dev-lang/perl
+$package app-arch/bzip2
+$package app-arch/xz-utils
+#sys-libs/zlib
+$package  app-arch/dpkg
+

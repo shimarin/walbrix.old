@@ -1,3 +1,5 @@
-$package dev-perl/TimeDate
-$package app-arch/dpkg
-$package dev-util/debootstrap
+$require dpkg.lst
+$package sys-devel/binutils
+$package net-misc/wget
+$package dev-util/debootstrap  
+
