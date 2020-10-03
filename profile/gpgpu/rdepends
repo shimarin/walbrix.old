@@ -94,7 +94,7 @@ dev-libs/popt	>=virtual/libintl-0-r1[abi_x86_64(-)]
 dev-libs/rocclr	>=dev-libs/rocm-comgr-3.8.0 >=dev-libs/rocr-runtime-3.8.0
 dev-libs/rocm-comgr	>=dev-libs/rocm-device-libs-3.8.0 >=sys-devel/llvm-roc-3.8.0:0/0=
 dev-libs/rocm-device-libs	>=sys-devel/llvm-roc-3.8.0:0/0=
-dev-libs/rocm-opencl-runtime	>=dev-libs/rocr-runtime-3.7.0 >=dev-libs/rocclr-3.7.0 >=dev-libs/rocm-comgr-3.7.0 >=dev-libs/rocm-device-libs-3.7.0 >=virtual/opencl-3 media-libs/mesa
+dev-libs/rocm-opencl-runtime	>=dev-libs/rocr-runtime-3.8.0 >=dev-libs/rocclr-3.8.0 >=dev-libs/rocm-comgr-3.8.0 >=dev-libs/rocm-device-libs-3.8.0 >=virtual/opencl-3 media-libs/mesa
 dev-libs/rocr-runtime	sys-process/numactl dev-libs/elfutils:0/0=
 dev-libs/roct-thunk-interface	sys-process/numactl
 dev-ml/findlib	>=dev-lang/ocaml-4.02.3-r1:0/4.09.0=[ocamlopt]
@@ -115,7 +115,7 @@ dev-python/certifi	app-misc/ca-certificates dev-lang/python:3.7 >=dev-lang/pytho
 dev-python/cffi	dev-libs/libffi:0/7= dev-python/pycparser[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/chardet	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/cryptography	>=dev-libs/openssl-1.0.2o-r6:0/1.1= >=dev-python/six-1.4.1[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/cffi-1.8:0/1.14.0=[-python_single_target_python3_6(-),python_targets_python3_7(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
-dev-python/cython	dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python2_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
+dev-python/cython	dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/docutils	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/idna	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/imagesize	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
@@ -172,7 +172,7 @@ dev-util/meson	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_
 dev-util/opencl-headers	!app-eselect/eselect-opencl
 dev-util/pkgconf	!dev-util/pkgconfig !dev-util/pkg-config-lite !dev-util/pkgconfig-openbsd[pkg-config]
 dev-util/ragel	~dev-util/colm-0.13.0.5
-dev-util/rocminfo	>=dev-libs/rocr-runtime-3.7.0
+dev-util/rocminfo	>=dev-libs/rocr-runtime-3.8.0
 dev-util/spirv-llvm-translator	sys-devel/clang:9/9=[abi_x86_64(-)]
 dev-vcs/git	dev-libs/openssl:0/1.1= sys-libs/zlib dev-libs/libpcre2[jit(+)] net-misc/curl dev-libs/expat virtual/libiconv
 mail-mta/nullmailer	virtual/logger sys-apps/shadow net-libs/gnutls:0/30= !mail-mta/courier !mail-mta/esmtp !mail-mta/exim !mail-mta/mini-qmail !mail-mta/msmtp[mta(+)] !mail-mta/netqmail !mail-mta/opensmtpd[mta(+)] !mail-mta/postfix !mail-mta/qmail-ldap !mail-mta/sendmail !mail-mta/ssmtp[mta(+)]
@@ -284,6 +284,7 @@ sys-libs/gdbm	sys-libs/readline:0/8=[abi_x86_64(-)]
 sys-libs/glibc	!<net-misc/openssh-8.1_p1-r2 sys-apps/gentoo-functions >=net-dns/libidn2-2.3.0
 sys-libs/libcap	>=sys-apps/attr-2.4.47-r1[abi_x86_64(-)]
 sys-libs/ncurses	!<=sys-libs/ncurses-5.9-r4:5 !<sys-libs/slang-2.3.2_pre23 !<x11-terms/rxvt-unicode-9.06-r3 !<x11-terms/st-0.6-r1
+sys-libs/ncurses-compat	!<sys-libs/ncurses-6:0 !sys-libs/ncurses:5
 sys-libs/pam	virtual/libcrypt:0/1=[abi_x86_64(-)] >=virtual/libintl-0-r1[abi_x86_64(-)] >=sys-libs/db-4.8.30-r1:5.3/5.3=[abi_x86_64(-)] >=sys-libs/cracklib-2.9.1-r1[abi_x86_64(-)] sys-libs/libcap
 sys-libs/readline	>=sys-libs/ncurses-5.9-r3:0/6=[unicode,abi_x86_64(-)]
 sys-libs/timezone-data	virtual/libintl !sys-libs/glibc[vanilla(+)]

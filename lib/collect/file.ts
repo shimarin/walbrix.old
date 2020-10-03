@@ -76,11 +76,9 @@ function get_elf_deps(context:Context,filename:string, no_cache:boolean):string[
   if (!deps) {
     try {
       deps = child_process.execSync(`chroot ${context.srcdir} ldd ${filename}`,{encoding:"utf-8"}).split("\n")
-      .map(_ => {
-        return _.trim().replace(/\s\(0x[0-9a-f]+\)$/, "").replace(/^.+?\s=>\s/,"");
-      }).filter(_ => {
-        return _.indexOf('/') === 0;
-      });
+      .filter(_ => _.indexOf(": no version information available ") < 0)
+      .map(_ => _.trim().replace(/\s\(0x[0-9a-f]+\)$/, "").replace(/^.+?\s=>\s/,""))
+      .filter(_ => _.indexOf('/') === 0);
     }
     catch (somethingwrong) {
       deps = [];
