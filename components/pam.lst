@@ -1,3 +1,4 @@
 $require shadow.lst
 $package sys-auth/pambase
+$package sys-auth/passwdqc
 $package sys-libs/pam
