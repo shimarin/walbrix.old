@@ -51,11 +51,10 @@ app-misc/screen	>=sys-libs/ncurses-5.2:0/6= sys-libs/pam acct-group/utmp virtual
 app-misc/tmux	dev-libs/libevent:0/2.1-7= sys-libs/ncurses:0/6=
 app-portage/elt-patches	sys-apps/gentoo-functions
 app-portage/gemato	>=app-crypt/gnupg-2.2.20-r1 dev-python/requests[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
-app-portage/gentoolkit	sys-apps/portage[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)] sys-apps/gawk sys-apps/gentoo-functions dev-lang/python:3.7[xml(+),threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
+app-portage/gentoolkit	sys-apps/portage[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] sys-apps/gawk sys-apps/gentoo-functions dev-lang/python:3.7[xml(+),threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 app-portage/portage-utils	|| ( >=sys-devel/gcc-4.2:*[openmp] sys-devel/clang-runtime:*[openmp] ) app-crypt/libb2:0/0= dev-libs/openssl:0/1.1= sys-libs/zlib:0/1= app-crypt/gpgme:1/11= || ( >=sys-devel/gcc-4.2:*[openmp] sys-devel/clang-runtime:*[openmp] ) dev-libs/openssl:0/1.1=
 app-shells/bash	>=sys-libs/ncurses-5.2-r2:0/6= virtual/libintl >=sys-libs/readline-8.0:0/8=
 app-text/build-docbook-catalog	|| ( sys-apps/util-linux app-misc/getopt ) !<app-text/docbook-xsl-stylesheets-1.73.1 dev-libs/libxml2
-app-text/docbook-xml-dtd	>=app-text/docbook-xsl-stylesheets-1.65 >=app-text/build-docbook-catalog-1.2 >=app-text/sgml-common-0.6.3-r7
 app-text/docbook-xml-dtd	>=app-text/docbook-xsl-stylesheets-1.65 >=app-text/build-docbook-catalog-1.2 >=app-text/sgml-common-0.6.3-r7
 app-text/docbook-xml-dtd	>=app-text/docbook-xsl-stylesheets-1.65 >=app-text/build-docbook-catalog-1.2 >=app-text/sgml-common-0.6.3-r7
 app-text/docbook-xml-dtd	>=app-text/docbook-xsl-stylesheets-1.65 >=app-text/build-docbook-catalog-1.2 >=app-text/sgml-common-0.6.3-r7
@@ -67,6 +66,7 @@ app-text/xmlto	>=app-text/docbook-xsl-stylesheets-1.62.0-r1 app-text/docbook-xml
 dev-db/sqlite	sys-libs/zlib:0/1=[abi_x86_64(-)] sys-libs/readline:0/8=[abi_x86_64(-)]
 dev-lang/perl	sys-libs/db:5.3/5.3= >=sys-libs/gdbm-1.8.3:0/6= app-arch/bzip2 sys-libs/zlib
 dev-lang/python	app-arch/bzip2:0/1= app-arch/xz-utils:0/0= dev-libs/libffi:0/7= sys-apps/util-linux:0/0= >=sys-libs/zlib-1.1.3:0/1= virtual/libcrypt:0/1= virtual/libintl sys-libs/gdbm:0/6=[berkdb] >=sys-libs/ncurses-5.2:0/6= >=sys-libs/readline-4.1:0/8= >=dev-db/sqlite-3.3.8:3/3= dev-libs/openssl:0/1.1= >=dev-libs/expat-2.1:0/0= app-misc/mime-types
+dev-lang/python-exec	!<=dev-lang/python-2.7.18-r3:2.7
 dev-lang/swig	dev-libs/libpcre
 dev-lang/tcl	>=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)]
 dev-libs/elfutils	>=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=app-arch/bzip2-1.0.6-r4[abi_x86_64(-)] !dev-libs/libelf
@@ -258,7 +258,7 @@ sys-apps/man-pages	virtual/man !<sys-apps/keyutils-1.5.9-r4 !<dev-libs/libbsd-0.
 sys-apps/man-pages-posix	virtual/man !<sys-apps/man-pages-3
 sys-apps/net-tools	!sys-apps/coreutils[hostname] !<sys-apps/openrc-0.9.9.3
 sys-apps/pciutils	sys-apps/kmod >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=virtual/libudev-208[abi_x86_64(-)] sys-apps/hwids
-sys-apps/portage	app-arch/zstd >=app-arch/tar-1.27 dev-lang/python-exec:2 >=sys-apps/findutils-4.4 >=sys-apps/sed-4.0.5 app-shells/bash:0[readline] >=app-admin/eselect-1.2 >=app-portage/gemato-14.4-r1[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=app-crypt/openpgp-keys-gentoo-release-20180706 >=app-crypt/gnupg-2.2.4-r2[ssl(-)] >=sys-apps/sandbox-2.2 sys-apps/util-linux >=app-misc/pax-utils-0.1.17 >=sys-apps/install-xattr-0.3 !<app-admin/logrotate-3.8.0 !<app-portage/gentoolkit-0.4.6 !<app-portage/repoman-2.3.10 !~app-portage/repoman-3.0.0 dev-lang/python:3.7[bzip2(+),threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] virtual/tmpfiles
+sys-apps/portage	app-arch/zstd >=app-arch/tar-1.27 dev-lang/python-exec:2 >=sys-apps/findutils-4.4 >=sys-apps/sed-4.0.5 app-shells/bash:0[readline] >=app-admin/eselect-1.2 >=app-portage/gemato-14.5[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=app-crypt/openpgp-keys-gentoo-release-20180706 >=app-crypt/gnupg-2.2.4-r2[ssl(-)] >=sys-apps/sandbox-2.2 sys-apps/util-linux >=app-misc/pax-utils-0.1.17 >=sys-apps/install-xattr-0.3 !<app-admin/logrotate-3.8.0 !<app-portage/gentoolkit-0.4.6 !<app-portage/repoman-2.3.10 !~app-portage/repoman-3.0.0 dev-lang/python:3.7[bzip2(+),threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] virtual/tmpfiles
 sys-apps/rescan-scsi-bus	>=sys-apps/sg3_utils-1.24 <sys-apps/sg3_utils-1.44 app-admin/killproc app-shells/bash sys-apps/kmod[tools]
 sys-apps/sed	virtual/acl virtual/libintl
 sys-apps/shadow	sys-apps/acl:0/0= virtual/libintl sys-libs/pam:0/0= sys-apps/attr:0/0= >=sys-auth/pambase-20150213 !sys-apps/util-linux[su(-)]
@@ -268,7 +268,8 @@ sys-apps/texinfo	>=sys-libs/ncurses-5.2-r2:0/6= dev-lang/perl virtual/libintl
 sys-apps/usb_modeswitch	virtual/udev virtual/libusb:1 dev-lang/jimtcl
 sys-apps/usbutils	virtual/libusb:1/1= virtual/libudev:0/1= sys-apps/hwids
 sys-apps/util-linux	virtual/libcrypt:0/1= sys-libs/zlib:0/1= >=sys-libs/ncurses-5.2-r2:0/6=[unicode] virtual/libintl[abi_x86_64(-)] sys-libs/pam sys-libs/readline:0/8= sys-apps/systemd virtual/libudev:0/1= !>=app-admin/sysklogd-2.0[logger] !net-wireless/rfkill !<app-shells/bash-completion-2.7-r1
-sys-auth/pambase	>=sys-libs/pam-1.1.3 sys-libs/pam[cracklib(+)] >=sys-libs/pam-1.1.3 sys-apps/systemd[pam]
+sys-auth/pambase	>=sys-libs/pam-1.4.0 >=sys-auth/passwdqc-1.4.0-r1 >=sys-libs/pam-1.4.0 sys-apps/systemd[pam]
+sys-auth/passwdqc	sys-libs/pam
 sys-block/megacli	sys-libs/ncurses-compat:5
 sys-block/nbd	>=dev-libs/glib-2.26.0 sys-libs/zlib
 sys-block/open-iscsi	sys-block/open-isns:0/0= sys-kernel/linux-headers sys-fs/lsscsi sys-apps/util-linux
@@ -314,7 +315,6 @@ sys-kernel/gentoo-sources	dev-lang/perl sys-devel/bc sys-devel/bison sys-devel/f
 sys-kernel/installkernel-gentoo	>=sys-apps/debianutils-4.9-r1 !<sys-apps/debianutils-4.9-r1[installkernel(+)] !sys-kernel/installkernel-systemd-boot
 sys-kernel/linux-firmware	!sys-firmware/alsa-firmware[alsa_cards_ca0132] !net-dialup/ueagle-atm !net-dialup/ueagle4-atm !sys-block/qla-fc-firmware !sys-firmware/iwl1000-ucode !sys-firmware/iwl6005-ucode !sys-firmware/iwl6030-ucode !sys-firmware/iwl6050-ucode !sys-firmware/iwl3160-ucode !sys-firmware/iwl7260-ucode !sys-firmware/iwl3160-7260-bt-ucode
 sys-libs/binutils-libs	sys-libs/zlib[abi_x86_64(-)] >=sys-devel/binutils-config-5
-sys-libs/cracklib	>=sys-libs/zlib-1.2.8-r1:0/1=[abi_x86_64(-)]
 sys-libs/e2fsprogs-libs	!sys-libs/com_err !sys-libs/ss !<sys-fs/e2fsprogs-1.41.8
 sys-libs/efivar	dev-libs/popt
 sys-libs/gdbm	sys-libs/readline:0/8=[abi_x86_64(-)]
@@ -323,7 +323,7 @@ sys-libs/ldb	dev-libs/libbsd[abi_x86_64(-)] dev-libs/popt[abi_x86_64(-)] >=dev-u
 sys-libs/libcap	>=sys-apps/attr-2.4.47-r1[abi_x86_64(-)]
 sys-libs/ncurses	!<=sys-libs/ncurses-5.9-r4:5 !<sys-libs/slang-2.3.2_pre23 !<x11-terms/rxvt-unicode-9.06-r3 !<x11-terms/st-0.6-r1
 sys-libs/ncurses-compat	!<sys-libs/ncurses-6:0 !sys-libs/ncurses:5
-sys-libs/pam	virtual/libcrypt:0/1=[abi_x86_64(-)] >=virtual/libintl-0-r1[abi_x86_64(-)] >=sys-libs/db-4.8.30-r1:5.3/5.3=[abi_x86_64(-)] >=sys-libs/cracklib-2.9.1-r1[abi_x86_64(-)] sys-libs/libcap
+sys-libs/pam	virtual/libcrypt:0/1=[abi_x86_64(-)] >=virtual/libintl-0-r1[abi_x86_64(-)] >=sys-libs/db-4.8.30-r1:5.3/5.3=[abi_x86_64(-)] sys-libs/libcap
 sys-libs/readline	>=sys-libs/ncurses-5.9-r3:0/6=[unicode,abi_x86_64(-)]
 sys-libs/talloc	dev-libs/libbsd[abi_x86_64(-)] dev-lang/python:3.7[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7] !!<sys-libs/talloc-2.0.5
 sys-libs/tdb	dev-libs/libbsd[abi_x86_64(-)]
@@ -383,7 +383,7 @@ virtual/tmpfiles	|| ( sys-apps/opentmpfiles sys-apps/systemd )
 virtual/ttf-fonts	|| ( media-fonts/liberation-fonts media-fonts/source-pro media-fonts/dejavu media-fonts/croscorefonts media-fonts/droid media-fonts/freefont media-fonts/corefonts )
 virtual/udev	>=sys-apps/systemd-217:0
 virtual/yacc	|| ( sys-devel/bison dev-util/byacc dev-util/yacc )
-x11-base/xcb-proto	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
+x11-base/xcb-proto	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 x11-libs/cairo	>=dev-libs/lzo-2.06-r1[abi_x86_64(-)] >=media-libs/fontconfig-2.10.92[abi_x86_64(-)] >=media-libs/freetype-2.5.0.1:2[abi_x86_64(-)] >=media-libs/libpng-1.6.10:0/16=[abi_x86_64(-)] sys-libs/binutils-libs:0/2.34=[abi_x86_64(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=x11-libs/pixman-0.32.4[abi_x86_64(-)] >=dev-libs/glib-2.34.3:2[abi_x86_64(-)]
 x11-libs/libX11	>=x11-libs/libxcb-1.11.1[abi_x86_64(-)] !<x11-base/xorg-proto-2019.2
 x11-libs/libXau	x11-base/xorg-proto
