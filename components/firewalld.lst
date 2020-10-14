@@ -1,8 +1,7 @@
 $package net-firewall/firewalld
 $package dev-python/decorator
-$package net-firewall/nftables
-$package net-firewall/ipset
-$require ebtables.lst
+$require nftables.lst
+#$package net-firewall/ipset
+#$require ebtables.lst
 $require python-slip.lst
-$require pygobject.lst
 

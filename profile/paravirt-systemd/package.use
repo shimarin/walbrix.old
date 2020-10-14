@@ -131,13 +131,12 @@ net-misc/rsync xxhash
 dev-util/trace-cmd -audit
 
 #firewalld
+net-firewall/firewalld
 net-firewall/nftables xtables
+net-firewall/iptables nftables
 dev-python/python-slip dbus
-dev-python/decorator -python_targets_python2_7
-dev-python/dbus-python -python_targets_python2_7
-dev-python/pycairo -python_targets_python2_7
 dev-python/pygobject -python_targets_python2_7 -cairo
-
+dev-libs/glib dbus
 
 #rpm
 app-arch/rpm lua caps

@@ -50,6 +50,7 @@ $exec --overlay "g++ -std=c++2a -shared -fPIC -o /usr/lib64/openvpn/plugins/open
 $sed /lib/systemd/system/openvpn-server\@.service 's/^CapabilityBoundingSet=.*$/\0 CAP_KILL/'
 
 $require firewalld.lst
+$package net-dns/bind-tools
 $package net-dns/dnsmasq
 $require ndppd.lst
 $require zabbix-agent.lst

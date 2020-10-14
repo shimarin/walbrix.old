@@ -64,6 +64,7 @@ net-fs/samba
 net-fs/cifs-utils
 net-vpn/wireguard-tools
 net-dns/dnsmasq
+net-dns/bind-tools
 
 app-crypt/certbot
 dev-python/pip

@@ -1,0 +1,4 @@
+$package dev-libs/glib
+$package sys-apps/dbus
+$package dev-python/dbus-python
+

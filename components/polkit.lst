@@ -1,3 +1,4 @@
 $package sys-auth/polkit
 $package dev-lang/spidermonkey
+$exec "mkdir /var/lib/polkit-1"
 

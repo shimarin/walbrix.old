@@ -251,12 +251,14 @@ dev-python/zope-interface	dev-python/namespace-zope[python_targets_python3_7(-),
 dev-util/cmake	>=app-arch/libarchive-3.3.3:0/13= app-crypt/rhash >=dev-libs/expat-2.0.1 >=dev-libs/jsoncpp-1.9.2-r2:0/24= >=dev-libs/libuv-1.10.0:0/1= >=net-misc/curl-7.21.5[ssl] sys-libs/zlib virtual/pkgconfig sys-libs/ncurses:0/6=
 dev-util/debootstrap	app-arch/dpkg net-misc/wget sys-devel/binutils
 dev-util/desktop-file-utils	>=dev-libs/glib-2.12:2
+dev-util/gdbus-codegen	dev-lang/python:3.7[xml] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7] dev-lang/python:3.7[xml] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7]
 dev-util/glib-utils	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7] !<dev-libs/glib-2.56.2:2
 dev-util/intltool	dev-lang/perl dev-perl/XML-Parser sys-devel/gettext
 dev-util/itstool	dev-lang/python:3.7[xml] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7] dev-libs/libxml2[python,python_targets_python3_7(-)]
 dev-util/meson	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-util/pkgconf	!dev-util/pkgconfig !dev-util/pkg-config-lite !dev-util/pkgconfig-openbsd[pkg-config]
 dev-vcs/git	dev-libs/openssl:0/1.1= sys-libs/zlib dev-libs/libpcre2[jit(+)] net-misc/curl dev-libs/expat virtual/libiconv
+gnome-base/dconf	>=dev-libs/glib-2.44.0:2 sys-apps/dbus
 mail-mta/postfix	>=dev-libs/libpcre-3.4 dev-lang/perl >=sys-libs/db-3.2:* dev-libs/icu:0/67.1= dev-db/mysql-connector-c:0/21= sys-libs/pam >=dev-libs/cyrus-sasl-2 dev-libs/openssl:0/1.1= acct-group/postfix acct-group/postdrop acct-user/postfix net-mail/mailbase !mail-mta/courier !mail-mta/esmtp !mail-mta/exim !mail-mta/mini-qmail !mail-mta/msmtp[mta] !mail-mta/netqmail !mail-mta/nullmailer !mail-mta/qmail-ldap !mail-mta/sendmail !mail-mta/opensmtpd !mail-mta/ssmtp[mta] !net-mail/fastforward
 media-fonts/urw-fonts	!media-fonts/gnu-gs-fonts-std !media-fonts/gnu-gs-fonts-other
 media-gfx/imagemagick	dev-libs/libltdl:0 app-arch/bzip2 sys-libs/zlib:0/1=
@@ -281,12 +283,13 @@ net-analyzer/snort	>=net-libs/libpcap-1.3.0 >=net-libs/daq-2.0.2 >=dev-libs/libp
 net-analyzer/tcpdump	sys-libs/libcap-ng net-libs/libpcap >=dev-libs/openssl-0.9.6m:0/1.1=
 net-analyzer/zabbix	net-misc/curl dev-libs/libxml2 dev-db/mysql-connector-c sys-libs/openipmi sys-libs/zlib dev-libs/libevent sys-libs/zlib net-analyzer/net-snmp net-libs/libssh2 dev-libs/openssl:0/1.1=[-bindist] virtual/mysql net-analyzer/fping[suid] app-admin/webapp-config dev-libs/libevent dev-libs/libpcre net-analyzer/fping[suid] app-admin/webapp-config dev-lang/php:*[bcmath,ctype,sockets,gd,truetype,xml,session,xmlreader,xmlwriter,nls,sysvipc,unicode] media-libs/gd[png] virtual/httpd-php:* dev-lang/php[mysqli]
 net-dns/avahi	acct-user/avahi acct-group/avahi acct-group/netdev dev-libs/libdaemon dev-libs/libevent:0/2.1-7=[abi_x86_64(-)] dev-libs/expat dev-libs/glib:2[abi_x86_64(-)] sys-libs/gdbm:0/6=[abi_x86_64(-)] sys-apps/dbus[abi_x86_64(-)] sys-libs/libcap
+net-dns/bind-tools	dev-libs/libuv:0/1= sys-libs/libcap dev-libs/openssl:0/1.1= sys-libs/readline:0/8=
 net-dns/dnsmasq	acct-group/dnsmasq acct-user/dnsmasq sys-devel/gettext
 net-dns/libidn2	dev-libs/libunistring[abi_x86_64(-)]
 net-firewall/ebtables	>=app-eselect/eselect-iptables-20200508 dev-lang/perl net-misc/ethertypes
 net-firewall/firewalld	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7] !!net-firewall/gshield net-firewall/nftables net-firewall/iptables[ipv6] net-firewall/ebtables net-firewall/ipset net-firewall/nftables[xtables(+)] || ( >=sys-apps/openrc-0.11.5 sys-apps/systemd ) dev-python/dbus-python[python_targets_python3_7(-)] dev-python/decorator[python_targets_python3_7(-)] >=dev-python/python-slip-0.2.7[dbus,python_targets_python3_7(-)] dev-python/pygobject:3[python_targets_python3_7(-)]
 net-firewall/ipset	>=net-firewall/iptables-1.4.7 net-libs/libmnl
-net-firewall/iptables	>=app-eselect/eselect-iptables-20200508 !<net-firewall/ebtables-2.0.11-r1 !<net-firewall/arptables-0.0.5-r1
+net-firewall/iptables	>=net-libs/libmnl-1.0:0/0.2.0= >=net-libs/libnftnl-1.0.5:0/11= net-misc/ethertypes
 net-firewall/nftables	>=net-libs/libmnl-1.0.4:0/0.2.0= dev-libs/gmp:0/10.4= sys-libs/readline:0/8= >=net-libs/libnftnl-1.1.7:0/11= >=net-firewall/iptables-1.6.1
 net-fs/cifs-utils	!net-fs/mount-cifs sys-apps/keyutils:0/1.9= sys-libs/pam
 net-fs/nfs-utils	>=dev-db/sqlite-3.3 dev-libs/libxml2 net-libs/libtirpc:0/3= >=net-nds/rpcbind-0.2.4 sys-libs/e2fsprogs-libs sys-apps/util-linux dev-libs/libevent:0/2.1-7= >=sys-apps/keyutils-1.5.9:0/1.9= sys-apps/util-linux !net-libs/libnfsidmap !net-nds/portmap !<sys-apps/openrc-0.13.9
@@ -326,7 +329,7 @@ sys-apps/gentoo-systemd-integration	>=sys-apps/systemd-207 !sys-fs/eudev !sys-fs
 sys-apps/grep	>=dev-libs/libpcre-7.8-r1 virtual/libintl virtual/libiconv
 sys-apps/help2man	dev-lang/perl dev-perl/Locale-gettext
 sys-apps/hwids	virtual/udev
-sys-apps/iproute2	!net-misc/arpd dev-libs/libbsd net-libs/libmnl >=net-firewall/iptables-1.4.20:0/1.8.3= sys-libs/db:5.3/5.3=
+sys-apps/iproute2	!net-misc/arpd dev-libs/libbsd net-libs/libmnl >=net-firewall/iptables-1.4.20:0/12= sys-libs/db:5.3/5.3=
 sys-apps/kbd	app-arch/gzip !app-misc/vlock sys-libs/pam
 sys-apps/kmod	!sys-apps/module-init-tools !sys-apps/modutils !<sys-apps/openrc-0.13.8 !<sys-apps/systemd-216-r3 >=app-arch/xz-utils-5.0.4-r1 >=sys-libs/zlib-1.2.6
 sys-apps/less	>=app-misc/editor-wrapper-3 >=sys-libs/ncurses-5.2:0/6= dev-libs/libpcre2
