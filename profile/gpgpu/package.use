@@ -1,5 +1,6 @@
 sys-kernel/gentoo-sources symlink
 virtual/linux-sources firmware
+sys-auth/pambase -passwdqc
 #sys-apps/util-linux static-libs
 #app-admin/sudo -sendmail pam
 #sys-apps/kmod lzma

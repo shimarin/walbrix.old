@@ -1,5 +1,6 @@
 sys-kernel/gentoo-sources symlink
 sys-kernel/genkernel -firmware
+sys-auth/pambase -passwdqc
 app-editors/vim minimal
 dev-vcs/git -perl -gpg
 app-emulation/docker -device-mapper
