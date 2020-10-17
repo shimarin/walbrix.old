@@ -90,7 +90,7 @@ void MyInit::mount_rw(const std::filesystem::path& boot,
   }
 
   std::cout << "Mounting RW layer..." << std::endl;
-  enable_lvm();
+  //enable_lvm();
   btrfs_scan();
   bool rw_layer_mounted = mount_loop(datafile, mountpoint, "btrfs", MS_RELATIME, "compress=zstd") == 0;
   if (!rw_layer_mounted) {
