@@ -12,6 +12,7 @@ net-wireless/wireless-tools
 net-wireless/wpa_supplicant
 net-wireless/iw
 net-wireless/hostapd
+net-misc/networkmanager
 sys-fs/btrfs-progs
 sys-fs/compsize
 dev-util/strace

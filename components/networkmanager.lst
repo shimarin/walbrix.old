@@ -1,0 +1,16 @@
+$package net-misc/networkmanager
+#dev-libs/glib
+#net-libs/libndp
+#net-misc/curl
+#net-misc/iputils
+#sys-apps/util-linux
+#sys-libs/readline
+$require gobject-introspection.lst
+$require modemmanager.lst
+$package net-misc/mobile-broadband-provider-info
+#dev-libs/newt
+$package dev-libs/nss
+$require ppp.lst
+#sys-apps/systemd
+$require wpa_supplicant.lst
+

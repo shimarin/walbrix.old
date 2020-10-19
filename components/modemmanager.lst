@@ -1,0 +1,8 @@
+$package net-misc/modemmanager
+#dev-libs/glib
+#dev-libs/libgudev
+$require gobject-introspection.lst
+#net-libs/libmbim
+#net-libs/libqmi
+#sys-apps/systemd
+

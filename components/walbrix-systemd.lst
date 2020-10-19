@@ -61,7 +61,7 @@ $package sys-power/cpupower
 #$require nut.lst
 #$require omronups.lst
 $require libqmi.lst
-$package net-misc/modemmanager
+$require networkmanager.lst
 $require gpsd.lst
 $copy resource/walbrix/77-mm-docomo-l-03f.rules /lib/udev/rules.d/
 

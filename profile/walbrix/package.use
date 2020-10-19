@@ -62,6 +62,7 @@ dev-vcs/git -perl -gpg -python
 # networks
 net-analyzer/net-snmp -python
 net-dns/avahi -introspection dbus
+net-wireless/wpa_supplicant dbus
 net-dns/dnsmasq dhcp-tools script
 
 # misc
