@@ -72,7 +72,7 @@ std::filesystem::path init()
       "etc/OpenCL/vendors/amdocl64.icd",
       "usr/lib64/libdrm.so.2",
       "usr/lib64/libdrm_amdgpu.so.1",
-      "usr/lib64/libamd_comgr.so",
+      "usr/lib64/libamd_comgr.so.1",
       NULL
     };
 
