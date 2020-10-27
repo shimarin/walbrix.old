@@ -13,9 +13,9 @@ $package sys-apps/dtc
 
 /var/lib/xen
 /var/log/xen
-#$symlink /usr/lib/xen/boot ../../libexec/xen/boot
-#$sed /etc/init.d/xendomains 's/\(xl shutdown .*-w \)/\1-F /'
-#$sed /etc/init.d/xenconsoled 's/\(xl shutdown .*-w \)/\1-F /'
+
+$sed /etc/xen/scripts/vif-bridge 's/^handle_iptable$/#\0/'
+$write /etc/sysctl.d/52-disable-bridge-nf-call.conf 'net.bridge.bridge-nf-call-ip6tables = 0\nnet.bridge.bridge-nf-call-iptables = 0\nnet.bridge.bridge-nf-call-arptables = 0'
 
 $exec "systemctl enable xen-init-dom0"
 $exec "systemctl enable xen-watchdog"
