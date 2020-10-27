@@ -7,6 +7,7 @@ $package dosfstools
 $package parted
 $require grub-i386-pc.lst
 $package sys-fs/mtools
+$require xfsprogs.lst
 
 $package app-emulation/qemu-guest-agent
 
@@ -80,7 +81,7 @@ $package dev-python/pyinotify
 $package sys-fs/inotify-tools
 
 # mqtt
-package app-misc/mosquitto
+$package app-misc/mosquitto
 
 # email
 $require postfix.lst
