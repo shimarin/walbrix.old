@@ -1,3 +1,2 @@
->=sys-kernel/gentoo-sources-5.8
 >=dev-db/mysql-8
-
+>=net-firewall/iptables-1.8
