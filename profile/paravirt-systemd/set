@@ -87,6 +87,7 @@ net-misc/iperf
 net-analyzer/snort
 net-analyzer/barnyard2
 dev-util/trace-cmd
+net-dialup/rp-pppoe
 
 dev-util/debootstrap
 app-arch/rpm
