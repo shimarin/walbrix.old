@@ -1,2 +1,3 @@
 <dev-lang/python-3
 >=dev-lang/python-3.8
+>=sys-kernel/gentoo-sources-5.9 # nvidia does not support linux 5.9+ yet
