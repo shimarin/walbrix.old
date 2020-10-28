@@ -4,7 +4,6 @@ sys-apps/hwids
 =sys-boot/grub-2.04-r1
 =net-vpn/wireguard-tools-1.0.20200319
 =dev-util/clinfo-2.2.18.04.06-r1
-=x11-drivers/nvidia-drivers-455.28
 
 # AMD rocm
 =virtual/opencl-3-r1
