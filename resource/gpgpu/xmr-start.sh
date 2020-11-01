@@ -16,6 +16,7 @@ wrmsr -a 0xc0011020 0
 echo 3 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
 
 while true; do
-        ./xmr-stak-rx --currency monero -o $XMR_POOL -u $XMR_ADDR.$WORKER_NAME -p x --noNVIDIA --noAMD --noTest
-        [ $? -lt 128 ] && break
+	#./xmr-stak-rx --currency monero -o $XMR_POOL -u $XMR_ADDR.$WORKER_NAME -p x --noNVIDIA --noAMD --noTest
+	./xmrig -u $XMR_ADDR.$WORKER_NAME -p x -o $XMR_POOL --coin=monero --randomx-1gb-pages
+	[ $? -lt 128 ] && break
 done
