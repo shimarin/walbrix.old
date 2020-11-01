@@ -268,7 +268,10 @@ uint32_t/*domid*/ start(const char* vmname)
   // load disks
   VmIniFile ini(vm_config.name);
   std::list<Disk> disks;
-  load_disk_config(ini, disks);
+  if (load_disk_config(ini, disks) < 1) {
+    std::cerr << "Prevent to run VM without disk" << std::endl;
+    return 0;
+  }
 
   // load 9ps
   std::list<P9> p9s;
