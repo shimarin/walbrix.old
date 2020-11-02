@@ -127,6 +127,7 @@ dev-lua/luasocket	>=dev-lang/lua-5.1.5-r2:0[abi_x86_64(-)]
 dev-perl/Locale-gettext	sys-devel/gettext dev-lang/perl:0/5.30=
 dev-perl/MIME-Charset	>=virtual/perl-Encode-1.980.0 dev-lang/perl:0/5.30=
 dev-perl/Module-Build	>=virtual/perl-CPAN-Meta-2.142.60 virtual/perl-Data-Dumper >=virtual/perl-ExtUtils-CBuilder-0.270.0 virtual/perl-ExtUtils-Install virtual/perl-ExtUtils-Manifest virtual/perl-ExtUtils-MakeMaker >=virtual/perl-ExtUtils-ParseXS-2.210.0 >=virtual/perl-File-Spec-0.820.0 virtual/perl-Getopt-Long >=virtual/perl-Module-Metadata-1.0.2 >=virtual/perl-Perl-OSType-1 >=virtual/perl-Test-Harness-3.290.0 virtual/perl-Text-ParseWords >=virtual/perl-podlators-2.1.0 >=virtual/perl-version-0.870.0 dev-lang/perl:0/5.30=
+dev-perl/Parse-Yapp	!<net-fs/samba-4.10.6 dev-lang/perl:0/5.30=
 dev-perl/SGMLSpm	dev-lang/perl:0/5.30=
 dev-perl/TermReadKey	dev-lang/perl:0/5.30=
 dev-perl/Text-CharWidth	dev-lang/perl:0/5.30=[-build(-)]
@@ -283,7 +284,7 @@ net-firewall/iptables	>=net-libs/libmnl-1.0:0/0.2.0= >=net-libs/libnftnl-1.0.5:0
 net-firewall/nftables	>=net-libs/libmnl-1.0.4:0/0.2.0= dev-libs/gmp:0/10.4= sys-libs/readline:0/8= >=net-libs/libnftnl-1.1.7:0/11= >=net-firewall/iptables-1.6.1
 net-fs/cifs-utils	!net-fs/mount-cifs sys-apps/keyutils:0/1.9= sys-libs/pam
 net-fs/nfs-utils	>=dev-db/sqlite-3.3 dev-libs/libxml2 net-libs/libtirpc:0/3= >=net-nds/rpcbind-0.2.4 sys-libs/e2fsprogs-libs sys-apps/util-linux dev-libs/libevent:0/2.1-7= >=sys-apps/keyutils-1.5.9:0/1.9= sys-apps/util-linux !net-libs/libnfsidmap !net-nds/portmap !<sys-apps/openrc-0.13.9
-net-fs/samba	>=app-arch/libarchive-3.1.2[abi_x86_64(-)] dev-lang/perl:0/5.30= dev-libs/libbsd[abi_x86_64(-)] dev-libs/libtasn1[abi_x86_64(-)] dev-libs/popt[abi_x86_64(-)] >=net-libs/gnutls-3.2.0[abi_x86_64(-)] net-libs/libnsl:0/2=[abi_x86_64(-)] sys-libs/e2fsprogs-libs[abi_x86_64(-)] >=sys-libs/ldb-2.0.12[ldap(+),python_single_target_python3_7(-),abi_x86_64(-)] <sys-libs/ldb-2.1.0[ldap(+),python_single_target_python3_7(-),abi_x86_64(-)] sys-libs/libcap sys-libs/ncurses:0/6= sys-libs/readline:0/8= >=sys-libs/talloc-2.2.0[python_single_target_python3_7(-),abi_x86_64(-)] >=sys-libs/tdb-1.4.2[python_single_target_python3_7(-),abi_x86_64(-)] >=sys-libs/tevent-0.10.0[python_single_target_python3_7(-),abi_x86_64(-)] sys-libs/zlib[abi_x86_64(-)] virtual/libiconv sys-libs/pam virtual/acl dev-python/subunit[python_targets_python3_7(-),abi_x86_64(-)] net-nds/openldap[abi_x86_64(-)] >=app-crypt/mit-krb5-1.15.1[abi_x86_64(-)] sys-apps/systemd:0/2= net-dns/avahi[dbus] net-fs/cifs-utils !dev-perl/Parse-Yapp
+net-fs/samba	>=app-arch/libarchive-3.1.2[abi_x86_64(-)] dev-lang/perl:0/5.30= dev-libs/icu:0/67.1=[abi_x86_64(-)] dev-libs/libbsd[abi_x86_64(-)] dev-libs/libtasn1[abi_x86_64(-)] dev-libs/popt[abi_x86_64(-)] dev-perl/Parse-Yapp >=net-libs/gnutls-3.4.7[abi_x86_64(-)] net-libs/libnsl:0/2=[abi_x86_64(-)] sys-libs/e2fsprogs-libs[abi_x86_64(-)] >=sys-libs/ldb-2.1.4[ldap(+),python_single_target_python3_7(-),abi_x86_64(-)] <sys-libs/ldb-2.2.0[ldap(+),python_single_target_python3_7(-),abi_x86_64(-)] sys-libs/libcap[abi_x86_64(-)] sys-libs/liburing[abi_x86_64(-)] sys-libs/ncurses:0/6= sys-libs/readline:0/8= >=sys-libs/talloc-2.3.1[python_single_target_python3_7(-),abi_x86_64(-)] >=sys-libs/tdb-1.4.3[python_single_target_python3_7(-),abi_x86_64(-)] >=sys-libs/tevent-0.10.2[python_single_target_python3_7(-),abi_x86_64(-)] sys-libs/zlib[abi_x86_64(-)] virtual/libiconv sys-libs/pam virtual/acl dev-python/subunit[python_targets_python3_7(-),abi_x86_64(-)] net-nds/openldap[abi_x86_64(-)] >=app-crypt/mit-krb5-1.15.1[abi_x86_64(-)] sys-apps/systemd:0/2= net-dns/avahi[dbus] net-fs/cifs-utils
 net-libs/c-client	dev-libs/openssl:0/1.1= !net-mail/uw-imap
 net-libs/daq	>=net-libs/libpcap-1.0.0 >=net-libs/libpcap-1.0.0
 net-libs/gnutls	>=dev-libs/libtasn1-4.9:0/6=[abi_x86_64(-)] dev-libs/libunistring:0/2=[abi_x86_64(-)] >=dev-libs/nettle-3.4.1:0/8-6=[gmp,abi_x86_64(-)] >=dev-libs/gmp-5.1.3-r1:0/10.4=[abi_x86_64(-)] >=virtual/libintl-0-r1:0/0=[abi_x86_64(-)] >=net-dns/libidn2-0.16-r1:0/2=[abi_x86_64(-)]
@@ -302,6 +303,7 @@ net-misc/iputils	dev-libs/openssl:0/1.1= sys-devel/gettext sys-libs/libcap
 net-misc/netkit-telnetd	>=sys-libs/ncurses-5.2:0/6= !net-misc/telnet-bsd
 net-misc/openssh	acct-group/sshd acct-user/sshd || ( ( >=dev-libs/openssl-1.0.1:0[-bindist] <dev-libs/openssl-1.1.0:0[-bindist] ) >=dev-libs/openssl-1.1.0g:0[-bindist] ) dev-libs/openssl:0/1.1= virtual/libcrypt:0/1= >=sys-libs/zlib-1.2.3:0/1= sys-libs/pam >=sys-auth/pambase-20081028 sys-apps/shadow
 net-misc/rsync	virtual/acl dev-libs/openssl:0/1.1= sys-apps/attr dev-libs/xxhash >=dev-libs/popt-1.5 virtual/libiconv
+net-misc/socat	dev-libs/openssl:0/1.1= sys-libs/readline:0/8= sys-apps/tcp-wrappers
 net-misc/wget	dev-libs/libpcre2 dev-libs/openssl:0/1.1= sys-libs/zlib
 net-nds/openldap	>=dev-libs/openssl-1.0.1h-r2:0/1.1=[abi_x86_64(-)] sys-devel/libtool sys-libs/e2fsprogs-libs >=dev-db/lmdb-0.9.18:0/0.9.23= dev-libs/openssl:0/1.1= <sys-libs/db-6.0:5.3/5.3= || ( sys-libs/db:5.3 sys-libs/db:5.1 sys-libs/db:4.8 sys-libs/db:4.7 sys-libs/db:4.6 sys-libs/db:4.5 sys-libs/db:4.4 )
 net-nds/rpcbind	>=net-libs/libtirpc-0.2.3:0/3= sys-apps/systemd:0/2=
@@ -368,7 +370,7 @@ sys-kernel/installkernel-gentoo	>=sys-apps/debianutils-4.9-r1 !<sys-apps/debianu
 sys-libs/e2fsprogs-libs	!sys-libs/com_err !sys-libs/ss !<sys-fs/e2fsprogs-1.41.8
 sys-libs/gdbm	sys-libs/readline:0/8=[abi_x86_64(-)]
 sys-libs/glibc	!<net-misc/openssh-8.1_p1-r2 app-arch/gzip sys-apps/grep virtual/awk sys-apps/gentoo-functions >=net-dns/libidn2-2.3.0
-sys-libs/ldb	dev-libs/libbsd[abi_x86_64(-)] dev-libs/popt[abi_x86_64(-)] >=dev-util/cmocka-1.1.3[abi_x86_64(-)] >=sys-libs/talloc-2.2.0[abi_x86_64(-)] >=sys-libs/tdb-1.4.2[abi_x86_64(-)] >=sys-libs/tevent-0.10.0[abi_x86_64(-)] net-nds/openldap >=dev-db/lmdb-0.9.16[abi_x86_64(-)]
+sys-libs/ldb	dev-libs/libbsd[abi_x86_64(-)] dev-libs/popt[abi_x86_64(-)] >=dev-util/cmocka-1.1.3[abi_x86_64(-)] >=sys-libs/talloc-2.3.1[abi_x86_64(-)] >=sys-libs/tdb-1.4.3[abi_x86_64(-)] >=sys-libs/tevent-0.10.2[abi_x86_64(-)] net-nds/openldap >=dev-db/lmdb-0.9.16[abi_x86_64(-)]
 sys-libs/libcap	>=sys-apps/attr-2.4.47-r1[abi_x86_64(-)]
 sys-libs/ncurses	!<=sys-libs/ncurses-5.9-r4:5 !<sys-libs/slang-2.3.2_pre23 !<x11-terms/rxvt-unicode-9.06-r3 !<x11-terms/st-0.6-r1
 sys-libs/openipmi	dev-libs/glib:2 sys-libs/gdbm:0/6= sys-libs/ncurses:0/6= sys-libs/readline:0/8= dev-libs/openssl:0/1.1= net-analyzer/net-snmp
@@ -431,8 +433,8 @@ virtual/pkgconfig	|| ( >=dev-util/pkgconf-1.3.7[pkg-config] >=dev-util/pkgconfig
 virtual/resolvconf	|| ( net-dns/openresolv >=sys-apps/systemd-239-r1[resolvconf] )
 virtual/service-manager	|| ( sys-apps/openrc sys-apps/systemd sys-process/runit virtual/daemontools )
 virtual/ssh	|| ( net-misc/openssh net-misc/dropbear )
-virtual/tmpfiles	|| ( sys-apps/opentmpfiles sys-apps/systemd )
-virtual/udev	>=sys-apps/systemd-217:0
+virtual/tmpfiles	|| ( sys-apps/opentmpfiles sys-apps/systemd sys-apps/systemd-tmpfiles )
+virtual/udev	|| ( >=sys-fs/eudev-2.1.1 >=sys-fs/udev-217 >=sys-apps/systemd-217 )
 virtual/yacc	|| ( sys-devel/bison dev-util/byacc dev-util/yacc )
 www-apache/mod_authnz_external	=www-servers/apache-2.4*
 www-apache/mod_extract_forwarded	www-servers/apache[apache2_modules_proxy_connect] =www-servers/apache-2.4*

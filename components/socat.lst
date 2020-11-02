@@ -1,0 +1,5 @@
+$package net-misc/socat
+#dev-libs/openssl
+#sys-libs/readline
+$package sys-apps/tcp-wrappers
+

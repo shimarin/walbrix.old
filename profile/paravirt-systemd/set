@@ -92,3 +92,5 @@ net-dialup/rp-pppoe
 dev-util/debootstrap
 app-arch/rpm
 
+net-misc/socat
+

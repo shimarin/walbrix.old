@@ -128,6 +128,7 @@ $require ssmtp.lst
 $require smbclient.lst
 $package net-analyzer/net-snmp
 /usr/bin/iperf3
+$require socat.lst
 
 $write /etc/systemd/network/49-xenbr0.netdev "[NetDev]\nName=xenbr0\nKind=bridge"
 $write /etc/systemd/network/50-eth0.network "[Match]\nName=eth0\n[Network]\nBridge=xenbr0"

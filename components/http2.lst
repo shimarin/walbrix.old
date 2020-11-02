@@ -57,6 +57,7 @@ $require rp-pppoe.lst
 $require zabbix-agent.lst
 $require snort.lst
 /usr/bin/iperf3
+$require socat.lst
 
 $sed /etc/sysctl.conf 's/^net\.ipv4\.ip_forward\s*=.\+/#\0/'
 $write /etc/sysctl.d/90-ip-forwarding.conf 'net.ipv4.ip_forward=1\nnet.ipv6.conf.default.forwarding=1\nnet.ipv6.conf.all.forwarding=1'

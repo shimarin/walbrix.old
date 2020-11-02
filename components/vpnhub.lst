@@ -45,6 +45,7 @@ $require nfs.lst
 /usr/bin/curl
 /sbin/brctl
 $require ipset.lst
+$require socat.lst
 
 # tools
 $package sys-fs/btrfs-progs

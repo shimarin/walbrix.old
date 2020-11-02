@@ -103,3 +103,5 @@ sys-block/zram-init
 app-admin/ansible
 app-admin/logrotate
 
+net-misc/socat
+
