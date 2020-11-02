@@ -2,7 +2,6 @@ $package dev-python/pytz
 $package dev-python/configargparse
 $package dev-python/configobj
 $package dev-python/distro
-$package dev-python/future
 $package dev-python/chardet
 $require zope-interface.lst
 $package dev-python/parsedatetime

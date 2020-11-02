@@ -100,7 +100,6 @@ dev-python/zope-component -python_targets_python2_7
 dev-python/zope-interface -python_targets_python2_7
 dev-python/namespace-zope -python_targets_python2_7
 dev-python/zope-event -python_targets_python2_7
-dev-python/future -python_targets_python2_7
 dev-python/requests-toolbelt -python_targets_python2_7
 dev-python/parsedatetime -python_targets_python2_7
 dev-python/funcsigs -python_targets_python2_7
