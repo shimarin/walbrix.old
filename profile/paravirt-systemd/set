@@ -34,6 +34,7 @@ dev-python/matplotlib
 dev-python/pillow
 
 app-misc/mosquitto
+app-misc/screen
 
 sys-apps/usbutils
 

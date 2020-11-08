@@ -1,7 +1,7 @@
 $require base-systemd.lst
 
 $mkdir /boot/grub
-$write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
+$write /boot/grub/grub.cfg 'linux /boot/kernel console=hvc0\ninitrd /boot/initramfs\nboot'
 
 $package sys-fs/btrfs-progs
 $require xfsprogs.lst
