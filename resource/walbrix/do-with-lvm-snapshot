@@ -1,0 +1,63 @@
+#!/bin/sh
+if [ "$#" -le 1 ] ; then
+  echo "Usage: $0 LV cmd args.." 1>&2
+  exit 1
+fi
+
+eval `lvs --noheadings --nameprefixes --units=g -o vg_name,vg_free,lv_name,lv_size,lv_path $1` || exit $?
+if [ -z "$LVM2_VG_NAME" -o -z "$LVM2_VG_FREE" -o -z "$LVM2_LV_NAME" -o -z "$LVM2_LV_SIZE" -o -z "$LVM2_LV_PATH" ]; then
+	echo $LVM2_LV_PATH "invalid volume."
+	exit 1
+fi
+VG_FREE=`echo "$LVM2_VG_FREE" | sed 's/\.[0-9]\+g$//'`
+if [ -z "$VG_FREE" -o "$VG_FREE" -lt 1 ]; then
+	echo "No free VG space for $LVM2_VG_NAME ."
+	exit 1
+fi
+LV_SIZE=`echo "$LVM2_LV_SIZE" | sed 's/\.[0-9]\+g$//'`
+if [ -z "$LV_SIZE" -o "$LV_SIZE" -lt 1 ]; then
+	echo "Invalid LV size of $LVM2_LV_PATH ."
+	exit 1
+fi
+
+SNAPSHOT_SIZE_IN_GB=$((LV_SIZE / 10))
+[ "$VG_FREE" -lt "$SNAPSHOT_SIZE_IN_GB" ] && SNAPSHOT_SIZE_IN_GB=${VG_FREE}
+[ "$SNAPSHOT_SIZE_IN_GB" -lt 1 ] && SNAPSHOT_SIZE_IN_GB=1
+	
+SNAPSHOT_SIZE=${SNAPSHOT_SIZE_IN_GB}g
+
+SNAPSHOT="$LVM2_LV_PATH"-snap-$$
+if [ -b "$SNAPSHOT" ]; then
+	echo "Snapshot $SNAPSHOT already exists."
+	exit 1
+fi
+lvcreate -s -L $SNAPSHOT_SIZE -n `basename $SNAPSHOT` $LVM2_LV_PATH || exit $?
+
+MOUNTPOINT=$(mktemp -d)
+trap 'mountpoint -q $MOUNTPOINT && umount $MOUNTPOINT; rmdir $MOUNTPOINT' EXIT
+
+if ! mount -o ro "$SNAPSHOT" "$MOUNTPOINT"; then
+	echo "Snapshot couldn't be mounted."
+	lvremove -f "$SNAPSHOT"
+	exit 1
+fi
+echo "Snapshot size is ${SNAPSHOT_SIZE_IN_GB}GiB."
+
+pushd "$MOUNTPOINT"
+shift
+$@
+STATUS=$?
+popd
+
+if ! umount -f "$MOUNTPOINT"; then
+	echo "Unmounting snapshot failed."
+	exit 1
+fi
+
+if ! lvremove -f "$SNAPSHOT"; then
+	echo "Removing snapshot failed."
+	exit 1
+fi
+
+exit $STATUS
+

@@ -201,6 +201,7 @@ $copy resource/walbrix/installer.target /lib/systemd/system/
 $copy resource/install-system-image /usr/sbin/
 $copy resource/make-bootx64-iso /usr/sbin/
 $copy resource/btrfs/expand-rw-layer /usr/sbin/
+$copy resource/walbrix/do-with-lvm-snapshot /usr/sbin/
 
 # wb
 /usr/lib64/libgflags.so
