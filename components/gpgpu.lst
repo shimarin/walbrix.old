@@ -95,10 +95,9 @@ $package ocl-icd
 /usr/share/libdrm/amdgpu.ids
 /usr/sbin/wrmsr
 $require ts-node.lst
+$package media-video/motion
 
 $require timezone-jp.lst
-
-
 
 $mkdir /root/xmr
 $mkdir /root/eth

@@ -62,3 +62,6 @@ dev-python/m2crypto -python_targets_python2_7
 dev-python/mako -python_targets_python2_7
 dev-python/markupsafe -python_targets_python2_7
 app-portage/gentoolkit -python_targets_python2_7
+
+media-video/motion ffmpeg v4l webp
+

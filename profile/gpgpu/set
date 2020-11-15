@@ -65,3 +65,5 @@ sys-fs/mtools
 dev-libs/libisoburn
 app-admin/logrotate
 
+media-video/motion
+
