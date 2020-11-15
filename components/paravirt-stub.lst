@@ -11,10 +11,12 @@ $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1stub\2/'
 $require debootstrap.lst
 $require rpm.lst
 $require requests.lst
+/usr/bin/xen-detect
 
 $sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
 
 $copy resource/stub/getrpm.py /root/
 $copy resource/stub/centos7.sh /root/
+$copy resource/stub/ubuntu2004.sh /root/
 
 $exec "touch /no-persistent-rw"
