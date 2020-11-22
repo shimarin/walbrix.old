@@ -23,7 +23,7 @@ RESTRICT="bindist mirror fetch strip"
 BDEPEND="dev-util/patchelf"
 COMMON=">=virtual/opencl-3"
 DEPEND="${COMMON}"
-RDEPEND="${COMMON} dev-libs/libedit"
+RDEPEND="${COMMON} dev-libs/libedit x11-libs/libdrm[video_cards_amdgpu,video_cards_radeon]"
 
 QA_PREBUILT="/opt/amdgpu/lib*/*"
 
@@ -42,7 +42,7 @@ src_unpack() {
 	local ids_ver="1.0.0"
 	local patchlevel=$(ver_cut 3)
 	cd "${S}" || die
-	unpack_deb "${S}/libdrm-amdgpu-common_${ids_ver}-${patchlevel}_all.deb"
+	#unpack_deb "${S}/libdrm-amdgpu-common_${ids_ver}-${patchlevel}_all.deb"
 	multilib_parallel_foreach_abi multilib_src_unpack
 }
 
@@ -75,12 +75,12 @@ multilib_src_unpack() {
 	unpack_deb "${S}/llvm-amdgpu-runtime_10.0-${patchlevel}_amd64.deb"
 	unpack_deb "${S}/llvm-amdgpu_10.0-${patchlevel}_amd64.deb"
 	unpack_deb "${S}/comgr-amdgpu-pro_1.7.0-${patchlevel}_${deb_abi:-${ABI}}.deb"
-	unpack_deb "${S}/libdrm-amdgpu-amdgpu1_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
-	unpack_deb "${S}/libdrm-amdgpu-radeon1_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
-	unpack_deb "${S}/libdrm-amdgpu-common_1.0.0-${patchlevel}_all.deb"
-	unpack_deb "${S}/libdrm-amdgpu-utils_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
-	unpack_deb "${S}/libdrm2-amdgpu_${libdrm_ver}-${patchlevel}_amd64.deb"
-	unpack_deb "${S}/clinfo-amdgpu-pro_${MY_PV}_amd64.deb"
+	#unpack_deb "${S}/libdrm-amdgpu-amdgpu1_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
+	#unpack_deb "${S}/libdrm-amdgpu-radeon1_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
+	#unpack_deb "${S}/libdrm-amdgpu-common_1.0.0-${patchlevel}_all.deb"
+	#unpack_deb "${S}/libdrm-amdgpu-utils_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
+	#unpack_deb "${S}/libdrm2-amdgpu_${libdrm_ver}-${patchlevel}_amd64.deb"
+	#unpack_deb "${S}/clinfo-amdgpu-pro_${MY_PV}_amd64.deb"
 	unpack_deb "${S}/libgl1-amdgpu-pro-appprofiles_${MY_PV}_all.deb"
 	popd >/dev/null || die
 }
@@ -113,7 +113,7 @@ multilib_src_install() {
 
 multilib_src_install_all() {
 	insinto "/opt/amdgpu"
-	doins -r opt/amdgpu/share
+	#doins -r opt/amdgpu/share
 }
 
 pkg_postinst() {

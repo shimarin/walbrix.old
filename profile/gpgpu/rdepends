@@ -66,13 +66,14 @@ dev-lang/python-exec	!<=dev-lang/python-2.7.18-r3:2.7
 dev-lang/ruby	sys-libs/db:5.3/5.3= sys-libs/gdbm:0/6= dev-libs/openssl:0/1.1= dev-libs/libyaml dev-libs/libffi:0/7= sys-libs/readline:0/8= sys-libs/zlib >=app-eselect/eselect-ruby-20171225
 dev-lang/ruby	sys-libs/db:5.3/5.3= sys-libs/gdbm:0/6= dev-libs/openssl:0/1.1= dev-libs/libyaml dev-libs/libffi:0/7= sys-libs/readline:0/8= sys-libs/zlib >=app-eselect/eselect-ruby-20181225
 dev-lang/swig	dev-libs/libpcre
-dev-libs/amdgpu-pro-opencl	>=virtual/opencl-3 !media-libs/mesa[opencl]
+dev-libs/amdgpu-pro-opencl	>=virtual/opencl-3 dev-libs/libedit
 dev-libs/amdgpu-pro-opencl-legacy	>=virtual/opencl-3 !media-libs/mesa[opencl]
 dev-libs/boost	!app-admin/eselect-boost !dev-libs/boost-numpy app-arch/bzip2:0/1=[abi_x86_64(-)] virtual/libiconv[abi_x86_64(-)] sys-libs/zlib:0/1=[abi_x86_64(-)]
 dev-libs/elfutils	>=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=app-arch/bzip2-1.0.6-r4[abi_x86_64(-)] !dev-libs/libelf
 dev-libs/glib	!<dev-util/gdbus-codegen-2.64.5 >=virtual/libiconv-0-r1[abi_x86_64(-)] >=dev-libs/libpcre-8.31:3[abi_x86_64(-)] >=dev-libs/libffi-3.0.13-r1:0/7=[abi_x86_64(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=virtual/libintl-0-r2[abi_x86_64(-)] >=sys-apps/util-linux-2.23[abi_x86_64(-)] virtual/libelf:0/1=
 dev-libs/intel-neo	>=virtual/opencl-3 >=dev-util/intel-graphics-compiler-1.0.3826 >=media-libs/gmmlib-20.1.1
 dev-libs/libassuan	>=dev-libs/libgpg-error-1.8
+dev-libs/libedit	>=sys-libs/ncurses-5.9-r3[abi_x86_64(-)]
 dev-libs/libevent	>=dev-libs/openssl-1.0.1h-r2:0/1.1=[abi_x86_64(-)] !<=dev-libs/9libs-1.0
 dev-libs/libgcrypt	>=dev-libs/libgpg-error-1.25[abi_x86_64(-)]
 dev-libs/libgpg-error	>=virtual/libintl-0-r1[abi_x86_64(-)]

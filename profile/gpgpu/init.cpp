@@ -70,9 +70,9 @@ std::filesystem::path init()
     };
     const char* whiteout_for_rocm[] = {
       "etc/OpenCL/vendors/amdocl64.icd",
-      "usr/lib64/libdrm.so.2",
-      "usr/lib64/libdrm_amdgpu.so.1",
-      "usr/lib64/libamd_comgr.so.1",
+//      "usr/lib64/libdrm.so.2",
+//      "usr/lib64/libdrm_amdgpu.so.1",
+//      "usr/lib64/libamd_comgr.so.1",
       NULL
     };
 
