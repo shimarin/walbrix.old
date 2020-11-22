@@ -12,27 +12,26 @@ MY_PV=$(ver_rs 2 '-')
 
 DESCRIPTION="Proprietary OpenCL implementation for AMD GPUs"
 HOMEPAGE="https://www.amd.com/en/support/kb/release-notes/rn-amdgpu-unified-navi-linux"
-SRC_URI="${SUPER_PN}-${MY_PV}-ubuntu-18.04.tar.xz"
+SRC_URI="${SUPER_PN}-${MY_PV}-ubuntu-20.04.tar.xz"
 
 LICENSE="AMD-GPU-PRO-EULA"
 SLOT="0"
-KEYWORDS="amd64 ~x86"
+KEYWORDS="amd64"
 
 RESTRICT="bindist mirror fetch strip"
 
 BDEPEND="dev-util/patchelf"
 COMMON=">=virtual/opencl-3"
 DEPEND="${COMMON}"
-RDEPEND="${COMMON}
-	!media-libs/mesa[opencl]" # Bug #686790
+RDEPEND="${COMMON} dev-libs/libedit"
 
 QA_PREBUILT="/opt/amdgpu/lib*/*"
 
-S="${WORKDIR}/${SUPER_PN}-${MY_PV}-ubuntu-18.04"
+S="${WORKDIR}/${SUPER_PN}-${MY_PV}-ubuntu-20.04"
 
 pkg_nofetch() {
 	local pkgver=$(ver_cut 1-2)
-	einfo "Please download Radeon Software for Linux version ${pkgver} for Ubuntu 18.04 from"
+	einfo "Please download Radeon Software for Linux version ${pkgver} for Ubuntu 20.04 from"
 	einfo "    ${HOMEPAGE}"
 	einfo "The archive should then be placed into your distfiles directory."
 }
@@ -55,11 +54,33 @@ multilib_src_unpack() {
 
 	mkdir -p "${BUILD_DIR}" || die
 	pushd "${BUILD_DIR}" >/dev/null || die
-	unpack_deb "${S}/opencl-amdgpu-pro-icd_${MY_PV}_${deb_abi:-${ABI}}.deb"
+	unpack_deb "${S}/amdgpu-core_${MY_PV}_all.deb"
+	unpack_deb "${S}/amdgpu-lib_${MY_PV}_amd64.deb"
+	unpack_deb "${S}/amdgpu-pro-core_${MY_PV}_all.deb"
+	unpack_deb "${S}/amdgpu-pro-rocr-opencl_${MY_PV}_amd64.deb"
+	unpack_deb "${S}/amdgpu-pro_${MY_PV}_amd64.deb"
+	unpack_deb "${S}/amdgpu_${MY_PV}_amd64.deb"
 	unpack_deb "${S}/opencl-orca-amdgpu-pro-icd_${MY_PV}_${deb_abi:-${ABI}}.deb"
-	unpack_deb "${S}/opencl-amdgpu-pro-comgr_${MY_PV}_${deb_abi:-${ABI}}.deb"
+	unpack_deb "${S}/opencl-rocr-amdgpu-pro_${MY_PV}_${deb_abi:-${ABI}}.deb"
+	unpack_deb "${S}/rocm-device-libs-amdgpu-pro_1.0.0-${patchlevel}_${deb_abi:-${ABI}}.deb"
+	unpack_deb "${S}/hip-rocr-amdgpu-pro_${MY_PV}_amd64.deb"
+	unpack_deb "${S}/hsa-runtime-rocr-amdgpu_1.2.0-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/hsakmt-roct-amdgpu_1.0.9-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/ocl-icd-libopencl1-amdgpu-pro_${MY_PV}_amd64.deb"
+	unpack_deb "${S}/libllvm-amdgpu-pro-rocm_11.0-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/libllvm10.0-amdgpu_10.0-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/llvm-amdgpu-10.0-runtime_10.0-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/llvm-amdgpu-10.0_10.0-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/llvm-amdgpu-pro-rocm-dev_11.0-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/llvm-amdgpu-runtime_10.0-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/llvm-amdgpu_10.0-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/comgr-amdgpu-pro_1.7.0-${patchlevel}_${deb_abi:-${ABI}}.deb"
 	unpack_deb "${S}/libdrm-amdgpu-amdgpu1_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
+	unpack_deb "${S}/libdrm-amdgpu-radeon1_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
+	unpack_deb "${S}/libdrm-amdgpu-common_1.0.0-${patchlevel}_all.deb"
+	unpack_deb "${S}/libdrm-amdgpu-utils_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
 	unpack_deb "${S}/libdrm2-amdgpu_${libdrm_ver}-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/clinfo-amdgpu-pro_${MY_PV}_amd64.deb"
 	unpack_deb "${S}/libgl1-amdgpu-pro-appprofiles_${MY_PV}_all.deb"
 	popd >/dev/null || die
 }
@@ -71,8 +92,12 @@ multilib_src_install() {
 
 	into "/opt/amdgpu"
 	patchelf --set-rpath '$ORIGIN' "opt/${SUPER_PN}/lib/${dir_abi}"/libamdocl-orca${short_abi}.so || die "Failed to fix library rpath"
-	dolib.so "opt/${SUPER_PN}/lib/${dir_abi}"/*
-	dolib.so "opt/amdgpu/lib/${dir_abi}"/*
+	patchelf --set-rpath '$ORIGIN' "opt/${SUPER_PN}/lib/${dir_abi}"/libamdocl${short_abi}.so || die "Failed to fix library rpath"
+	dolib.so "opt/${SUPER_PN}/lib/${dir_abi}"/lib*.so "opt/${SUPER_PN}/lib/${dir_abi}"/lib*.so.*
+	dolib.so "opt/amdgpu/lib/${dir_abi}"/llvm-*/lib/lib*.so "opt/amdgpu/lib/${dir_abi}"/llvm-*/lib/lib*.so.*
+	rm -f "opt/amdgpu/lib/${dir_abi}"/libLLVM-*.so "opt/amdgpu/lib/${dir_abi}"/libLTO.so.* "opt/amdgpu/lib/${dir_abi}"/libRemarks.so.*
+	dolib.so "opt/amdgpu/lib/${dir_abi}"/lib*.so.*
+	ln -sf libedit.so.0 /$(get_libdir)/libedit.so.2 || die "Cannot create symlink for libedit"
 
 	insinto /etc/OpenCL/vendors
 	echo "/opt/amdgpu/$(get_libdir)/libamdocl-orca${short_abi}.so" \
