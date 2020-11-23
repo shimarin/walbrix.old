@@ -3,3 +3,4 @@ sys-kernel/gentoo-sources
 =sys-auth/polkit-0.116-r1
 =net-vpn/wireguard-tools-1.0.20200319
 =net-firewall/ipset-7.6-r1
+=net-firewall/firewalld-0.7.3-r1
