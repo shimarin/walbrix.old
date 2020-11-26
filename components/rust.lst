@@ -4,5 +4,6 @@ $package dev-util/ninja
 $package net-libs/libssh2
 $package sys-devel/llvm
 $package dev-lang/rust
-$Package dev-util/cargo
-
+$package dev-util/cargo
+#dev-libs/libgit2
+#net-libs/http-parser
