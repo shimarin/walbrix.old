@@ -1,4 +1,3 @@
-$package dev-python/pytz
 $package dev-python/configargparse
 $package dev-python/configobj
 $package dev-python/distro

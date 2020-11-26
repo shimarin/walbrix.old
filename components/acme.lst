@@ -1,5 +1,7 @@
 $require cryptography.lst
 $require requests-toolbelt.lst
 $package dev-python/josepy
+$package dev-python/pyrfc3339
+$package dev-python/pytz # for pyrfc3339
 $package app-crypt/acme
 
