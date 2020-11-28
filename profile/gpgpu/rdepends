@@ -66,9 +66,9 @@ dev-lang/python-exec	!<=dev-lang/python-2.7.18-r3:2.7
 dev-lang/ruby	sys-libs/db:5.3/5.3= sys-libs/gdbm:0/6= dev-libs/openssl:0/1.1= dev-libs/libyaml dev-libs/libffi:0/7= sys-libs/readline:0/8= sys-libs/zlib >=app-eselect/eselect-ruby-20171225
 dev-lang/ruby	sys-libs/db:5.3/5.3= sys-libs/gdbm:0/6= dev-libs/openssl:0/1.1= dev-libs/libyaml dev-libs/libffi:0/7= sys-libs/readline:0/8= sys-libs/zlib >=app-eselect/eselect-ruby-20181225
 dev-lang/swig	dev-libs/libpcre
-dev-libs/amdgpu-pro-opencl	>=virtual/opencl-3 dev-libs/libedit
+dev-libs/amdgpu-pro-opencl	>=virtual/opencl-3 dev-libs/libedit x11-libs/libdrm[video_cards_amdgpu,video_cards_radeon]
 dev-libs/amdgpu-pro-opencl-legacy	>=virtual/opencl-3 !media-libs/mesa[opencl]
-dev-libs/boost	!app-admin/eselect-boost !dev-libs/boost-numpy app-arch/bzip2:0/1=[abi_x86_64(-)] virtual/libiconv[abi_x86_64(-)] sys-libs/zlib:0/1=[abi_x86_64(-)]
+dev-libs/boost	!app-admin/eselect-boost !dev-libs/boost-numpy !<dev-libs/leatherman-1.12.0-r1 app-arch/bzip2:0/1=[abi_x86_64(-)] virtual/libiconv[abi_x86_64(-)] sys-libs/zlib:0/1=[abi_x86_64(-)]
 dev-libs/elfutils	>=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=app-arch/bzip2-1.0.6-r4[abi_x86_64(-)] !dev-libs/libelf
 dev-libs/glib	!<dev-util/gdbus-codegen-2.64.5 >=virtual/libiconv-0-r1[abi_x86_64(-)] >=dev-libs/libpcre-8.31:3[abi_x86_64(-)] >=dev-libs/libffi-3.0.13-r1:0/7=[abi_x86_64(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=virtual/libintl-0-r2[abi_x86_64(-)] >=sys-apps/util-linux-2.23[abi_x86_64(-)] virtual/libelf:0/1=
 dev-libs/intel-neo	>=virtual/opencl-3 >=dev-util/intel-graphics-compiler-1.0.3826 >=media-libs/gmmlib-20.1.1
@@ -155,6 +155,7 @@ dev-util/intel-graphics-compiler	<=sys-devel/llvm-10.9999:10/10=[abi_x86_64(-)] 
 dev-util/intltool	dev-lang/perl dev-perl/XML-Parser sys-devel/gettext
 dev-util/itstool	dev-lang/python:3.7[xml] >=dev-lang/python-exec-2:2/2=[python_targets_python3_7] dev-libs/libxml2[python,python_targets_python3_7(-)]
 dev-util/meson	dev-lang/python:3.7 >=dev-lang/python-exec-2:2/2=[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_7(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
+dev-util/nvidia-cuda-toolkit	<sys-devel/gcc-10[cxx] >=x11-drivers/nvidia-drivers-450.51.06[X,uvm]
 dev-util/opencl-headers	!app-eselect/eselect-opencl
 dev-util/pkgconf	!dev-util/pkgconfig !dev-util/pkg-config-lite !dev-util/pkgconfig-openbsd[pkg-config]
 dev-util/ragel	~dev-util/colm-0.13.0.5
@@ -267,7 +268,7 @@ sys-fs/xfsprogs	>=sys-apps/util-linux-2.17.2 sys-libs/readline:0/8= !<sys-fs/xfs
 sys-kernel/genkernel	app-arch/cpio >=app-misc/pax-utils-1.2.2 app-portage/elt-patches dev-util/gperf sys-apps/sandbox sys-devel/autoconf sys-devel/autoconf-archive sys-devel/automake sys-devel/libtool virtual/pkgconfig sys-kernel/linux-firmware
 sys-kernel/gentoo-sources	dev-lang/perl sys-devel/bc sys-devel/bison sys-devel/flex sys-devel/make >=sys-libs/ncurses-5.2 virtual/libelf virtual/pkgconfig
 sys-kernel/installkernel-gentoo	>=sys-apps/debianutils-4.9-r1 !<sys-apps/debianutils-4.9-r1[installkernel(+)] !sys-kernel/installkernel-systemd-boot
-sys-kernel/linux-firmware	!sys-firmware/alsa-firmware[alsa_cards_ca0132] !net-dialup/ueagle-atm !net-dialup/ueagle4-atm !sys-block/qla-fc-firmware !sys-firmware/iwl1000-ucode !sys-firmware/iwl6005-ucode !sys-firmware/iwl6030-ucode !sys-firmware/iwl6050-ucode !sys-firmware/iwl3160-ucode !sys-firmware/iwl7260-ucode !sys-firmware/iwl3160-7260-bt-ucode
+sys-kernel/linux-firmware	!sys-firmware/alsa-firmware[alsa_cards_ca0132] !net-dialup/ueagle-atm !net-dialup/ueagle4-atm !sys-block/qla-fc-firmware !sys-firmware/iwl1000-ucode !sys-firmware/iwl6005-ucode !sys-firmware/iwl6030-ucode !sys-firmware/iwl6050-ucode !sys-firmware/iwl3160-ucode !sys-firmware/iwl7260-ucode !sys-firmware/iwl3160-7260-bt-ucode !sys-firmware/raspberrypi-wifi-ucode
 sys-libs/binutils-libs	sys-libs/zlib[abi_x86_64(-)] >=sys-devel/binutils-config-5
 sys-libs/e2fsprogs-libs	!sys-libs/com_err !sys-libs/ss !<sys-fs/e2fsprogs-1.41.8
 sys-libs/efivar	dev-libs/popt
