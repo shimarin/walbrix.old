@@ -48,6 +48,7 @@ sys-fs/xfsprogs
 sys-process/cronie
 sys-process/lsof
 x11-drivers/nvidia-drivers
+dev-util/nvidia-cuda-toolkit
 x11-libs/libdrm
 
 # AMD Drivers

@@ -73,6 +73,8 @@ $require intel-neo.lst
 
 # drivers
 $package nvidia-drivers
+$exec --overlay "cp -L /opt/cuda/targets/x86_64-linux/lib/libnvrtc.so.11.0 /usr/lib64/"
+$exec --overlay "cp -L /opt/cuda/targets/x86_64-linux/lib/libnvrtc-builtins.so /usr/lib64/"
 $package amdgpu-pro-opencl
 $package amdgpu-pro-opencl-legacy
 $package dev-libs/rocm-opencl-runtime

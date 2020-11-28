@@ -31,3 +31,6 @@ sys-apps/hwids
 =sys-devel/clang-runtime-9.0.1
 =dev-libs/intel-neo-20.16.16582
 
+# nvidia
+=dev-util/nvidia-cuda-toolkit-11.0.3
+
