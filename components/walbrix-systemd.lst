@@ -131,8 +131,9 @@ $package net-analyzer/net-snmp
 $require socat.lst
 
 $write /etc/systemd/network/49-xenbr0.netdev "[NetDev]\nName=xenbr0\nKind=bridge"
-$write /etc/systemd/network/50-eth0.network "[Match]\nName=eth0\n[Network]\nBridge=xenbr0"
-$write /etc/systemd/network/52-xenbr0.network "[Match]\nName=xenbr0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes"
+$del /etc/systemd/network/50-eth0.network
+$write /etc/systemd/network/50-eth.network '[Match]\nName=eth*\n[Network]\nBridge=xenbr0\n[Link]\nRequiredForOnline=no'
+$write /etc/systemd/network/52-xenbr0.network "[Match]\nName=xenbr0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes\n[Link]\nRequiredForOnline=degraded-carrier"
 
 # complementary PPP configs
 $mkdir /etc/ppp/chatscripts
