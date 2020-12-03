@@ -1,4 +1,4 @@
-$require python3.lst
+$require python.lst
 $require cffi.lst
 $package dev-python/six
 $package dev-python/cryptography

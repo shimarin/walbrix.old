@@ -1,5 +1,5 @@
 $require base-systemd.lst
-$require python3.lst
+$require python.lst
 
 $dir /lib/firmware
 $require kbd-minimal.lst

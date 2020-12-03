@@ -1,7 +1,7 @@
 $require base-systemd.lst
 $require kbd-minimal.lst
 
-$require python3.lst
+$require python.lst
 
 $package dosfstools
 $package parted

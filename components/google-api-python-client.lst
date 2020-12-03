@@ -1,4 +1,4 @@
-$require python3.lst
+$require python.lst
 $package dev-python/httplib2
 $package dev-python/simplejson
 $package dev-python/uritemplate

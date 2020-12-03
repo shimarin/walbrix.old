@@ -1,4 +1,4 @@
-$require python3.lst
+$require python.lst
 $require cryptography.lst
 $package dev-python/PySocks
 $require pyopenssl.lst

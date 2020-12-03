@@ -75,6 +75,8 @@ emerge @preserved-rebuild
 emerge --depclean
 [ -x /usr/bin/eclean-kernel ] && eclean-kernel -n 1
 
+eselect python update && eselect python cleanup
+
 etc-update --automode -5
 
 if [ -f rdepends ]; then

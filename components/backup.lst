@@ -8,7 +8,7 @@ $write /etc/samba/smb.conf '[global]\nmap to guest = Bad User\nunix charset = ut
 $require cron-systemd.lst
 $require nfs.lst
 $write /etc/exports '#/var/lib/backup/head *(ro,no_subtree_check)'
-$require python3.lst
+$require python.lst
 $package sys-fs/btrfs-progs
 $package net-misc/rsync
 $mkdir /var/lib/backup
