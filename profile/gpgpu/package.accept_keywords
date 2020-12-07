@@ -32,6 +32,6 @@ sys-apps/hwids
 =dev-libs/intel-neo-20.16.16582
 
 # nvidia
-=x11-drivers/nvidia-drivers-455.45.01
+=x11-drivers/nvidia-drivers-455.45.01-r1
 =dev-util/nvidia-cuda-toolkit-11.0.3
 
