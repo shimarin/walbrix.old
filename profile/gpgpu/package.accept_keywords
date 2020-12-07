@@ -8,15 +8,15 @@ sys-apps/hwids
 
 # AMD rocm
 =virtual/opencl-3-r1
-=dev-libs/rocm-opencl-runtime-3.9.0
-=dev-libs/rocm-device-libs-3.9.0-r1
-=dev-libs/rocm-comgr-3.9.0
-=dev-libs/rocr-runtime-3.9.0
-=dev-util/rocminfo-3.9.0
-=dev-util/rocm-cmake-3.9.0
-=dev-libs/roct-thunk-interface-3.9.0
-=sys-devel/llvm-roc-3.9.0
-=dev-libs/rocclr-3.9.0
+=dev-libs/rocm-opencl-runtime-3.10.0
+=dev-libs/rocm-device-libs-3.10.0
+=dev-libs/rocm-comgr-3.10.0
+=dev-libs/rocr-runtime-3.10.0
+=dev-libs/roct-thunk-interface-3.10.0
+=dev-libs/rocclr-3.10.0
+=dev-util/rocminfo-3.10.0
+=dev-util/rocm-cmake-3.10.0
+=sys-devel/llvm-roc-3.10.0
 
 # Intel NEO
 =dev-util/clinfo-2.2.18.04.06
@@ -32,5 +32,6 @@ sys-apps/hwids
 =dev-libs/intel-neo-20.16.16582
 
 # nvidia
+=x11-drivers/nvidia-drivers-455.45.01
 =dev-util/nvidia-cuda-toolkit-11.0.3
 
