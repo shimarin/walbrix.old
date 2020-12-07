@@ -1,2 +1,4 @@
+<dev-lang/python-3.8
+>=dev-lang/python-3.9
 >=dev-db/mysql-8
 >=net-firewall/iptables-1.8
