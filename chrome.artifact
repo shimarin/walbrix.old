@@ -1,4 +1,4 @@
 {
-	"profile":"paravirt-gui",
+	"profile":"paravirt",
 	"main_lstfile":"components/chrome.lst"
 }

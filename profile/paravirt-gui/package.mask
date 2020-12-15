@@ -1,3 +1,0 @@
->=dev-lang/python-3.8
-#>=sys-libs/readline-8
->=dev-db/mysql-8

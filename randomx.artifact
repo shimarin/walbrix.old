@@ -1,4 +1,4 @@
 {
-	"profile":"paravirt-systemd",
+	"profile":"paravirt",
 	"main_lstfile":"components/randomx.lst"
 }

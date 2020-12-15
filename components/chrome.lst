@@ -14,7 +14,6 @@ $require timezone-jp.lst
 $require sudo.lst
 
 # Chrome
-$package media-fonts/liberation-fonts
 $package x11-themes/hicolor-icon-theme
 $package x11-base/xcb-proto
 $package app-text/qpdf
@@ -29,10 +28,9 @@ $package x11-misc/shared-mime-info #gdk-pixbuf needs this
 $exec "update-mime-database /usr/share/mime"
 $package media-libs/fontconfig
 $package app-text/poppler
-$package app-text/mupdf
 $package net-print/cups
 $package net-print/cups-filters
-$package x11-libs/gtk+-3.24.20
+$package x11-libs/gtk+
 $package x11-libs/pango
 $package dev-libs/atk
 $package dev-libs/glib
@@ -58,15 +56,14 @@ $package dev-libs/libinput
 $package x11-base/xorg-server
 $package x11-apps/xrandr
 $package x11-apps/xinput
+$package x11-misc/compose-tables
 $package x11-drivers/xf86-video-dummy
 $package x11-drivers/xf86-video-fbdev
 $package x11-drivers/xf86-input-libinput
-$package x11-drivers/xf86-input-joystick
 
 $mkdir /etc/X11/X11
 $write /etc/X11/X11/Xwrapper.config 'allowed_users = anybody'
 
-#$package x11-wm/fvwm
 $package x11-wm/wm2
 $write /etc/X11/Sessions/wm2 "/usr/bin/wm2"
 $exec "chmod +x /etc/X11/Sessions/wm2"
@@ -85,6 +82,7 @@ $package x11-terms/sakura
 $symlink /usr/bin/xterm sakura
 
 # font
+$package media-fonts/dejavu
 $package media-fonts/noto-cjk
 #$package media-fonts/noto
 
@@ -103,8 +101,8 @@ $package net-misc/tigervnc
 $copy resource/gui/xorg.conf /etc/X11/xorg.conf
 
 # gtk/gdk
-/usr/lib64/libgtk-x11-2.0.so.0
-/usr/lib64/libgdk-x11-2.0.so.0
+#/usr/lib64/libgtk-x11-2.0.so.0
+#/usr/lib64/libgdk-x11-2.0.so.0
 
 # misc
 $require openvpn.lst
