@@ -77,19 +77,6 @@ sci-geosciences/gpsd bluetooth ntp python usb gpsd_protocols_fury gpsd_protocols
 dev-python/pyserial
 net-misc/modemmanager mbim
 
-# omit ruby 2.4
-dev-lang/ruby -rdoc
-dev-ruby/json -ruby_targets_ruby24
-dev-ruby/minitest -ruby_targets_ruby24
-dev-ruby/power_assert -ruby_targets_ruby24
-dev-ruby/test-unit -ruby_targets_ruby24
-dev-ruby/net-telnet -ruby_targets_ruby24
-dev-ruby/rubygems -ruby_targets_ruby24
-dev-ruby/rake -ruby_targets_ruby24
-dev-ruby/did_you_mean -ruby_targets_ruby24
-dev-ruby/xmlrpc -ruby_targets_ruby24
-virtual/rubygems -ruby_targets_ruby24
-
 # kmscon
 media-libs/libglvnd X
 
