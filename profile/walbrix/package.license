@@ -4,3 +4,4 @@ net-analyzer/fping fping
 sys-block/megacli LSI
 sys-firmware/bluez-firmware bluez-firmware
 media-gfx/splash-themes-gentoo freedist
+net-analyzer/nmap NPSL
