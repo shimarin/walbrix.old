@@ -35,7 +35,7 @@ app-crypt/libb2	|| ( >=sys-devel/gcc-4.2:*[openmp] sys-devel/clang-runtime:*[ope
 app-crypt/pinentry	app-eselect/eselect-pinentry >=dev-libs/libassuan-2.1 >=dev-libs/libgcrypt-1.6.3 >=dev-libs/libgpg-error-1.17 sys-libs/ncurses:0/6=
 app-crypt/rhash	dev-libs/openssl:0/1.1=[abi_x86_64(-)]
 app-editors/bvi	sys-libs/ncurses:0/6=
-app-editors/nano	>=sys-libs/ncurses-5.9-r1:0/6=[unicode] sys-libs/ncurses:0/6= sys-apps/file virtual/libintl
+app-editors/nano	>=sys-libs/ncurses-5.9-r1:0/6=[unicode] sys-libs/ncurses:0/6= virtual/libintl
 app-editors/vim	>=app-eselect/eselect-vi-1.1 >=sys-libs/ncurses-5.2-r2:0/6= virtual/libintl sys-apps/acl
 app-emulation/qemu	>=dev-libs/glib-2.0 sys-libs/zlib sys-apps/attr dev-libs/libxml2 >=x11-libs/pixman-0.28.0 dev-libs/libaio app-arch/bzip2 sys-libs/libcap-ng >=net-misc/curl-7.15.4 >=sys-apps/dtc-1.5.0 virtual/jpeg:0/0= sys-libs/ncurses:0/6=[unicode] sys-libs/ncurses:0/6= media-libs/libpng:0/16= net-libs/libslirp sys-libs/libcap app-emulation/xen-tools:0/4.14= ~sys-firmware/edk2-ovmf-201905[binary] ~sys-firmware/ipxe-1.0.0_p20190728[binary] ~sys-firmware/seabios-1.12.0[binary,seavgabios] ~sys-firmware/sgabios-0.1_pre8[binary] acct-group/kvm sys-libs/libcap
 app-emulation/xen-pvgrub	dev-lang/python:3.8[xml,threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_8] >=app-emulation/xen-tools-4.14.0
@@ -135,7 +135,7 @@ dev-python/pexpect	>=dev-python/ptyprocess-0.5[python_targets_python3_8(-),-pyth
 dev-python/ply	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/ptyprocess	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/pyasn1	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
-dev-python/pycairo	>=x11-libs/cairo-1.13.1[svg] dev-lang/python:3.8[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
+dev-python/pycairo	>=x11-libs/cairo-1.15.10[svg] dev-lang/python:3.8[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/pycparser	dev-python/ply:0/3.11=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/pygments	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/pygobject	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-libs/glib-2.48:2 >=dev-libs/gobject-introspection-1.54:0/0= dev-libs/libffi:0/7= >=dev-python/pycairo-1.11.1[python_targets_python3_8(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] x11-libs/cairo[glib]
@@ -173,7 +173,7 @@ media-libs/harfbuzz	x11-libs/cairo:0/0= >=dev-libs/glib-2.38:2[abi_x86_64(-)] >=
 media-libs/libglvnd	!media-libs/mesa[-libglvnd(+)] x11-libs/libX11[abi_x86_64(-)] x11-libs/libXext[abi_x86_64(-)]
 media-libs/libjpeg-turbo	!media-libs/jpeg:0 !media-libs/jpeg:62
 media-libs/libpng	>=sys-libs/zlib-1.2.8-r1:0/1=[abi_x86_64(-)]
-media-libs/mesa	!app-eselect/eselect-mesa >=dev-libs/expat-2.1.0-r3:0/0=[abi_x86_64(-)] >=media-libs/libglvnd-1.3.2[X,abi_x86_64(-)] >=sys-libs/zlib-1.2.8[abi_x86_64(-)] virtual/libelf:0/1=[abi_x86_64(-)] virtual/libelf:0/1=[abi_x86_64(-)] >=x11-libs/libdrm-2.4.100[video_cards_nouveau,abi_x86_64(-)] >=x11-libs/libdrm-2.4.100[video_cards_intel] >=x11-libs/libX11-1.6.2:0/0=[abi_x86_64(-)] >=x11-libs/libxshmfence-1.1:0/0=[abi_x86_64(-)] >=x11-libs/libXdamage-1.1.4-r1:0/0=[abi_x86_64(-)] >=x11-libs/libXext-1.3.2:0/0=[abi_x86_64(-)] >=x11-libs/libXxf86vm-1.1.3:0/0=[abi_x86_64(-)] >=x11-libs/libxcb-1.13:0/1.12=[abi_x86_64(-)] x11-libs/libXfixes:0/0=[abi_x86_64(-)] app-arch/zstd:0/1=[abi_x86_64(-)] >=x11-libs/libdrm-2.4.100[video_cards_radeon] >=x11-libs/libdrm-2.4.100[video_cards_radeon] >=x11-libs/libdrm-2.4.100[video_cards_amdgpu] || ( sys-devel/llvm:10[abi_x86_64(-),llvm_targets_AMDGPU(-)] sys-devel/llvm:9[abi_x86_64(-),llvm_targets_AMDGPU(-)] ) <sys-devel/llvm-11:10/10=[abi_x86_64(-),llvm_targets_AMDGPU(-)]
+media-libs/mesa	>=dev-libs/expat-2.1.0-r3:0/0=[abi_x86_64(-)] >=media-libs/libglvnd-1.3.2[X,abi_x86_64(-)] >=sys-libs/zlib-1.2.8[abi_x86_64(-)] virtual/libelf:0/1=[abi_x86_64(-)] virtual/libelf:0/1=[abi_x86_64(-)] >=x11-libs/libdrm-2.4.100[video_cards_nouveau,abi_x86_64(-)] >=x11-libs/libdrm-2.4.100[video_cards_intel] >=x11-libs/libX11-1.6.2:0/0=[abi_x86_64(-)] >=x11-libs/libxshmfence-1.1:0/0=[abi_x86_64(-)] >=x11-libs/libXdamage-1.1.4-r1:0/0=[abi_x86_64(-)] >=x11-libs/libXext-1.3.2:0/0=[abi_x86_64(-)] >=x11-libs/libXxf86vm-1.1.3:0/0=[abi_x86_64(-)] >=x11-libs/libxcb-1.13:0/1.12=[abi_x86_64(-)] x11-libs/libXfixes:0/0=[abi_x86_64(-)] app-arch/zstd:0/1=[abi_x86_64(-)] >=x11-libs/libdrm-2.4.100[video_cards_radeon] >=x11-libs/libdrm-2.4.100[video_cards_radeon] >=x11-libs/libdrm-2.4.100[video_cards_amdgpu] || ( sys-devel/llvm:11[abi_x86_64(-),llvm_targets_AMDGPU(-)] sys-devel/llvm:10[abi_x86_64(-),llvm_targets_AMDGPU(-)] sys-devel/llvm:9[abi_x86_64(-),llvm_targets_AMDGPU(-)] ) <sys-devel/llvm-12:11/11=[abi_x86_64(-),llvm_targets_AMDGPU(-)]
 net-analyzer/fping	sys-libs/libcap
 net-analyzer/net-snmp	app-arch/bzip2 >=dev-libs/openssl-0.9.6d:0/1.1= >=sys-apps/tcp-wrappers-7.6 >=sys-libs/zlib-1.1.4
 net-analyzer/netcat	dev-libs/libmix
@@ -324,7 +324,7 @@ sys-libs/tdb	dev-libs/libbsd[abi_x86_64(-)]
 sys-libs/tevent	dev-libs/libbsd[abi_x86_64(-)] >=sys-libs/talloc-2.3.1[abi_x86_64(-)]
 sys-libs/timezone-data	virtual/libintl !sys-libs/glibc[vanilla(+)]
 sys-libs/zlib	!<dev-libs/libxml2-2.7.7
-sys-power/cpupower	sys-apps/pciutils !<sys-apps/linux-misc-apps-3.6-r2 !sys-power/cpufrequtils
+sys-power/cpupower	sys-apps/pciutils
 sys-power/nut	dev-libs/libltdl:* net-libs/libnsl virtual/udev >=dev-libs/openssl-1:0/1.1= sys-apps/tcp-wrappers virtual/libusb:0/0=
 sys-process/cronie	sys-libs/pam !sys-process/anacron !sys-process/systemd-cron sys-apps/debianutils >=sys-process/cronbase-0.3.2 !sys-process/vixie-cron !sys-process/bcron !sys-process/dcron !sys-process/fcron
 sys-process/procps	>=sys-libs/ncurses-5.7-r7:0/6=[unicode] sys-apps/systemd[abi_x86_64(-)] !sys-apps/coreutils[kill] !sys-apps/util-linux[kill] !<app-i18n/man-pages-de-2.12-r1 !<app-i18n/man-pages-pl-0.7-r1
@@ -365,6 +365,7 @@ virtual/perl-JSON-PP	|| ( =dev-lang/perl-5.30* ~perl-core/JSON-PP-4.20.0 ) dev-l
 virtual/perl-Module-Metadata	|| ( =dev-lang/perl-5.30* ~perl-core/Module-Metadata-1.0.36 ) dev-lang/perl:0/5.30= !<perl-core/Module-Metadata-1.0.36 !>perl-core/Module-Metadata-1.0.36-r999
 virtual/perl-Parse-CPAN-Meta	|| ( =dev-lang/perl-5.32* =dev-lang/perl-5.30* ~perl-core/Parse-CPAN-Meta-2.150.10 ) dev-lang/perl:0/5.30= !<perl-core/Parse-CPAN-Meta-2.150.10 !>perl-core/Parse-CPAN-Meta-2.150.10-r999
 virtual/perl-Perl-OSType	|| ( =dev-lang/perl-5.32* =dev-lang/perl-5.30* ~perl-core/Perl-OSType-1.10.0 ) dev-lang/perl:0/5.30= !<perl-core/Perl-OSType-1.10.0 !>perl-core/Perl-OSType-1.10.0-r999
+virtual/perl-Pod-Parser	|| ( ~dev-perl/Pod-Parser-1.630.0 =dev-lang/perl-5.30* ) dev-lang/perl:0/5.30= !perl-core/Pod-Parser
 virtual/perl-Scalar-List-Utils	|| ( =dev-lang/perl-5.30* ~perl-core/Scalar-List-Utils-1.500.0 ) dev-lang/perl:0/5.30= !<perl-core/Scalar-List-Utils-1.500.0 !>perl-core/Scalar-List-Utils-1.500.0-r999
 virtual/perl-Test-Harness	|| ( =dev-lang/perl-5.32* =dev-lang/perl-5.30* ~perl-core/Test-Harness-3.420.0 ) dev-lang/perl:0/5.30= !<perl-core/Test-Harness-3.420.0 !>perl-core/Test-Harness-3.420.0-r999
 virtual/perl-Text-ParseWords	|| ( =dev-lang/perl-5.32* =dev-lang/perl-5.30* ~perl-core/Text-ParseWords-3.300.0 ) dev-lang/perl:0/5.30= !<perl-core/Text-ParseWords-3.300.0 !>perl-core/Text-ParseWords-3.300.0-r999
@@ -380,8 +381,7 @@ virtual/udev	|| ( >=sys-fs/eudev-2.1.1 >=sys-fs/udev-217 >=sys-apps/systemd-217 
 virtual/yacc	|| ( sys-devel/bison dev-util/byacc dev-util/yacc )
 x11-base/xcb-proto	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 x11-libs/cairo	>=dev-libs/lzo-2.06-r1[abi_x86_64(-)] >=media-libs/fontconfig-2.10.92[abi_x86_64(-)] >=media-libs/freetype-2.5.0.1:2[abi_x86_64(-)] >=media-libs/libpng-1.6.10:0/16=[abi_x86_64(-)] sys-libs/binutils-libs:0/2.34=[abi_x86_64(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=x11-libs/pixman-0.32.4[abi_x86_64(-)] >=dev-libs/glib-2.34.3:2[abi_x86_64(-)]
-x11-libs/libX11	>=x11-libs/libxcb-1.11.1[abi_x86_64(-)] !<x11-base/xorg-proto-2019.2
-x11-libs/libXau	x11-base/xorg-proto
+x11-libs/libX11	>=x11-libs/libxcb-1.11.1[abi_x86_64(-)] !<x11-base/xorg-proto-2019.2 x11-misc/compose-tables
 x11-libs/libXdamage	>=x11-libs/libX11-1.6.2[abi_x86_64(-)] >=x11-libs/libXfixes-5.0.1[abi_x86_64(-)]
 x11-libs/libXdmcp	dev-libs/libbsd
 x11-libs/libXext	>=x11-libs/libX11-1.6.2:0/0=[abi_x86_64(-)]
@@ -392,5 +392,7 @@ x11-libs/libXxf86vm	x11-base/xorg-proto >=x11-libs/libX11-1.6.2[abi_x86_64(-)] >
 x11-libs/libdrm	>=x11-libs/libpciaccess-0.13.1-r1:0/0=[abi_x86_64(-)]
 x11-libs/libpciaccess	>=sys-libs/zlib-1.2.8-r1:0/1=[abi_x86_64(-)] sys-apps/hwids
 x11-libs/libxcb	>=x11-libs/libXau-1.0.7-r1[abi_x86_64(-)] >=x11-libs/libXdmcp-1.1.1-r1[abi_x86_64(-)]
+x11-libs/libxkbcommon	dev-libs/libxml2[abi_x86_64(-)] x11-misc/compose-tables
 x11-libs/pango	>=media-libs/harfbuzz-1.4.2:0/0.9.18=[glib(+),truetype(+),abi_x86_64(-)] >=dev-libs/glib-2.50.2:2[abi_x86_64(-)] >=media-libs/fontconfig-2.12.92:1.0/1.0=[abi_x86_64(-)] >=media-libs/freetype-2.5.0.1:2/2=[abi_x86_64(-)] >=x11-libs/cairo-1.12.14-r4:0/0=[abi_x86_64(-)] >=dev-libs/fribidi-0.19.7[abi_x86_64(-)] >=dev-libs/gobject-introspection-0.9.5:0/0=
+x11-misc/compose-tables	!<x11-libs/libX11-1.7.0
 x11-misc/shared-mime-info	dev-libs/glib:2 dev-libs/libxml2
