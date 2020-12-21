@@ -12,6 +12,7 @@ $exec "systemctl enable zram_swap"
 $sed /lib/systemd/system/systemd-udev-trigger.service 's/^ExecStart=/ExecStart=-/g'
 $require timezone-jp.lst
 $require sudo.lst
+$write /etc/sysctl.d/nr_hugepages.conf 'vm.nr_hugepages=1280'
 
 # Chrome
 $package x11-themes/hicolor-icon-theme
@@ -39,6 +40,8 @@ $package x11-themes/adwaita-icon-theme
 $package dev-libs/nss
 $package sys-apps/dbus
 $package www-client/google-chrome
+$sed /opt/google/chrome/google-chrome 's/^exec.*\$@"$/\0 --user-data-dir --test-type --no-sandbox/'
+$require gedit.lst
 
 # X11
 $package x11-misc/xbitmaps
@@ -65,15 +68,20 @@ $mkdir /etc/X11/X11
 $write /etc/X11/X11/Xwrapper.config 'allowed_users = anybody'
 
 $package x11-wm/wm2
+$require fluxbox.lst
 $write /etc/X11/Sessions/wm2 "/usr/bin/wm2"
 $exec "chmod +x /etc/X11/Sessions/wm2"
-$write /etc/env.d/50xesssion 'XSESSION="wm2"'
+$write /etc/env.d/50xesssion 'XSESSION="fluxbox"'
+$copy resource/gui/fluxbox-menu /usr/share/fluxbox/menu
 $exec --overlay "env-update"
 $package x11-apps/xsetroot
 $package x11-apps/sessreg
 $package x11-apps/xconsole
 $package x11-apps/xsm
 $package x11-apps/xdm
+
+$write /etc/systemd/system/display.service '[Unit]\nDescription=display\nAfter=After=network.target\n\n[Service]\nExecStart=/usr/bin/startx\nExecStop=/bin/kill ${MAINPID}\nWorkingDirectory=/root\nRestart=always\nEnvironment="XSESSION=fluxbox"\nEnvironment="HOME=/root"\nEnvironment="SHELL=/bin/bash"\n\n[Install]\nWantedBy=multi-user.target'
+$exec 'systemctl enable display'
 
 # sakura
 $package dev-util/glib-utils

@@ -1,0 +1,8 @@
+#dev-libs/libpeas
+#gui-libs/tepl
+#x11-libs/libX11
+$require gtksourceview.lst
+$package x11-themes/adwaita-icon-theme
+$require gvfs.lst
+$package app-editors/gedit
+

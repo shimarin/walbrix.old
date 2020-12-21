@@ -103,10 +103,12 @@ x11-apps/xrandr
 x11-apps/xinput
 x11-apps/xdm
 x11-wm/wm2
+x11-wm/fluxbox
 media-fonts/noto
 app-i18n/mozc
 app-i18n/fcitx-configtool
 net-misc/freerdp
 net-misc/tigervnc
 www-client/google-chrome
+app-editors/gedit
 

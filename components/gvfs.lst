@@ -1,0 +1,9 @@
+#sys-apps/dbus
+#app-crypt/gcr
+#dev-libs/libxml2
+#net-libs/libsoup
+#dev-libs/libgudev
+$package gnome-base/gsettings-desktop-schemas
+$package gnome-base/gvfs
+$require glib.lst
+

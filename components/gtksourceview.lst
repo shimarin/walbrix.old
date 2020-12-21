@@ -1,0 +1,7 @@
+#x11-libs/gtk+
+#dev-libs/libxml2
+#dev-libs/fribidi
+$require glib.lst
+$require gobject-introspection.lst
+$package x11-libs/gtksourceview
+

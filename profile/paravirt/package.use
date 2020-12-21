@@ -81,3 +81,5 @@ net-misc/freerdp X jpeg server -ffmpeg
 net-misc/tigervnc server
 x11-libs/libxkbcommon X
 dev-libs/libpcre2 pcre16
+media-libs/freetype png
+app-editors/gedit -python

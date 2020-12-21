@@ -1,0 +1,4 @@
+#dev-libs/libpcre
+#dev-libs/libffi
+#sys-libs/zlib
+$package dev-libs/glib
