@@ -37,7 +37,7 @@ media-libs/libjpeg-turbo static-libs
 virtual/jpeg static-libs
 app-arch/bzip2 static-libs
 media-libs/libpng static-libs
-media-libs/freetype static-libs
+media-libs/freetype static-libs png
 media-gfx/splashutils fbcondecor
 
 # xen
@@ -65,6 +65,7 @@ net-dns/dnsmasq dhcp-tools script
 media-sound/mpg123 alsa
 net-fs/s3fs openssl
 dev-python/netaddr -cli
+sys-fs/squashfs-tools lzma
 
 # assume EC algorythms are safe
 dev-libs/openssl -bindist
