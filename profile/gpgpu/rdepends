@@ -71,7 +71,7 @@ dev-libs/amdgpu-pro-opencl-legacy	>=virtual/opencl-3 !media-libs/mesa[opencl]
 dev-libs/boost	!app-admin/eselect-boost !dev-libs/boost-numpy !<dev-libs/leatherman-1.12.0-r1 app-arch/bzip2:0/1=[abi_x86_64(-)] virtual/libiconv[abi_x86_64(-)] sys-libs/zlib:0/1=[abi_x86_64(-)]
 dev-libs/elfutils	>=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=app-arch/bzip2-1.0.6-r4[abi_x86_64(-)] !dev-libs/libelf
 dev-libs/glib	!<dev-util/gdbus-codegen-2.64.5 >=virtual/libiconv-0-r1[abi_x86_64(-)] >=dev-libs/libpcre-8.31:3[abi_x86_64(-)] >=dev-libs/libffi-3.0.13-r1:0/7=[abi_x86_64(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=virtual/libintl-0-r2[abi_x86_64(-)] >=sys-apps/util-linux-2.23[abi_x86_64(-)] virtual/libelf:0/1=
-dev-libs/intel-neo	>=virtual/opencl-3 >=dev-util/intel-graphics-compiler-1.0.3826 >=media-libs/gmmlib-20.1.1
+dev-libs/intel-neo	>=virtual/opencl-3 >=dev-util/intel-graphics-compiler-1.0.4944 >=media-libs/gmmlib-20.2.5
 dev-libs/libassuan	>=dev-libs/libgpg-error-1.8
 dev-libs/libedit	>=sys-libs/ncurses-5.9-r3[abi_x86_64(-)]
 dev-libs/libevent	>=dev-libs/openssl-1.0.1h-r2:0/1.1=[abi_x86_64(-)] !<=dev-libs/9libs-1.0
@@ -91,14 +91,14 @@ dev-libs/mpc	>=dev-libs/gmp-5.0.0:0/10.4=[abi_x86_64(-)] >=dev-libs/mpfr-4.1.0:0
 dev-libs/mpfr	>=dev-libs/gmp-5.0.0[abi_x86_64(-)]
 dev-libs/nettle	>=dev-libs/gmp-6.1:0/10.4=[abi_x86_64(-)]
 dev-libs/ocl-icd	dev-util/opencl-headers !app-eselect/eselect-opencl !dev-libs/opencl-icd-loader
-dev-libs/opencl-clang	~sys-devel/clang-10.0.1:10/10=[static-analyzer,abi_x86_64(-)] sys-devel/llvm:10/10=[abi_x86_64(-)] dev-util/spirv-llvm-translator:10/10=[abi_x86_64(-)]
+dev-libs/opencl-clang	~sys-devel/clang-10.0.1:10/10=[static-analyzer,abi_x86_64(-)] sys-devel/llvm:10/10=[abi_x86_64(-)] >=dev-util/spirv-llvm-translator-10.0.0_p20200909:10/10=[abi_x86_64(-)]
 dev-libs/openssl	>=app-misc/c_rehash-1.7-r1 >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] !<net-misc/openssh-8.0_p1-r3
 dev-libs/openssl-compat	>=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] !=dev-libs/openssl-1.0.2*:0 !dev-libs/openssl:1.0.0
 dev-libs/popt	>=virtual/libintl-0-r1[abi_x86_64(-)]
-dev-libs/rocclr	>=dev-libs/rocm-comgr-3.10.0 >=dev-libs/rocr-runtime-3.10.0
-dev-libs/rocm-comgr	>=dev-libs/rocm-device-libs-3.10.0 >=sys-devel/llvm-roc-3.10.0:0/0=
-dev-libs/rocm-device-libs	>=sys-devel/llvm-roc-3.10.0:0/0=
-dev-libs/rocm-opencl-runtime	>=dev-libs/rocr-runtime-3.10.0 >=dev-libs/rocclr-3.10.0 >=dev-libs/rocm-comgr-3.10.0 >=dev-libs/rocm-device-libs-3.10.0 >=virtual/opencl-3 media-libs/mesa
+dev-libs/rocclr	>=dev-libs/rocm-comgr-4.0.0 >=dev-libs/rocr-runtime-4.0.0
+dev-libs/rocm-comgr	>=dev-libs/rocm-device-libs-4.0.0 >=sys-devel/llvm-roc-4.0.0:0/0=
+dev-libs/rocm-device-libs	>=sys-devel/llvm-roc-4.0.0:0/0=
+dev-libs/rocm-opencl-runtime	>=dev-libs/rocr-runtime-4.0.0 >=dev-libs/rocclr-4.0.0 >=dev-libs/rocm-comgr-4.0.0 >=dev-libs/rocm-device-libs-4.0.0 >=virtual/opencl-3 media-libs/mesa
 dev-libs/rocr-runtime	sys-process/numactl dev-libs/elfutils:0/0=
 dev-libs/roct-thunk-interface	sys-process/numactl
 dev-ml/findlib	>=dev-lang/ocaml-4.02.3-r1:0/4.09.0=[ocamlopt]
@@ -151,7 +151,7 @@ dev-ruby/xmlrpc	dev-lang/ruby:2.5 dev-lang/ruby:2.6 virtual/rubygems[ruby_target
 dev-util/clinfo	>=virtual/opencl-3
 dev-util/cmake	>=app-arch/libarchive-3.3.3:0/13= app-crypt/rhash >=dev-libs/expat-2.0.1 >=dev-libs/jsoncpp-1.9.2-r2:0/24= >=dev-libs/libuv-1.10.0:0/1= >=net-misc/curl-7.21.5[ssl] sys-libs/zlib virtual/pkgconfig sys-libs/ncurses:0/6=
 dev-util/glib-utils	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8] !<dev-libs/glib-2.56.2:2
-dev-util/intel-graphics-compiler	<=sys-devel/llvm-10.9999:10/10=[abi_x86_64(-)] <=dev-libs/opencl-clang-10.9999:10/10=[abi_x86_64(-)]
+dev-util/intel-graphics-compiler	<=sys-devel/llvm-10.9999:10/10=[abi_x86_64(-)] <=dev-libs/opencl-clang-10.9999:10/10=[abi_x86_64(-)] >=dev-libs/opencl-clang-10.0.0.2:10/10=[abi_x86_64(-)]
 dev-util/intltool	dev-lang/perl dev-perl/XML-Parser sys-devel/gettext
 dev-util/itstool	dev-lang/python:3.8[xml] >=dev-lang/python-exec-2:2/2=[python_targets_python3_8] dev-libs/libxml2[python,python_targets_python3_8(-)]
 dev-util/meson	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_8(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
@@ -159,11 +159,11 @@ dev-util/nvidia-cuda-toolkit	<sys-devel/gcc-10[cxx] >=x11-drivers/nvidia-drivers
 dev-util/opencl-headers	!app-eselect/eselect-opencl
 dev-util/pkgconf	!dev-util/pkgconfig !dev-util/pkg-config-lite !dev-util/pkgconfig-openbsd[pkg-config]
 dev-util/ragel	~dev-util/colm-0.13.0.5
-dev-util/rocminfo	>=dev-libs/rocr-runtime-3.10.0
+dev-util/rocminfo	>=dev-libs/rocr-runtime-4.0.0
 dev-util/spirv-llvm-translator	sys-devel/clang:10/10=[abi_x86_64(-)]
 dev-vcs/git	dev-libs/openssl:0/1.1= sys-libs/zlib dev-libs/libpcre2[jit(+)] net-misc/curl dev-libs/expat virtual/libiconv
 mail-mta/nullmailer	virtual/logger sys-apps/shadow net-libs/gnutls:0/30= !mail-mta/courier !mail-mta/esmtp !mail-mta/exim !mail-mta/mini-qmail !mail-mta/msmtp[mta(+)] !mail-mta/netqmail !mail-mta/opensmtpd[mta(+)] !mail-mta/postfix !mail-mta/qmail-ldap !mail-mta/sendmail !mail-mta/ssmtp[mta(+)]
-media-libs/freetype	>=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=app-arch/bzip2-1.0.6-r4[abi_x86_64(-)]
+media-libs/freetype	>=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=app-arch/bzip2-1.0.6-r4[abi_x86_64(-)] >=media-libs/libpng-1.2.51:0/16=[abi_x86_64(-)]
 media-libs/libepoxy	media-libs/mesa[egl,abi_x86_64(-)]
 media-libs/libglvnd	!media-libs/mesa[-libglvnd(+)] x11-libs/libX11[abi_x86_64(-)] x11-libs/libXext[abi_x86_64(-)]
 media-libs/libjpeg-turbo	!media-libs/jpeg:0 !media-libs/jpeg:62
@@ -262,7 +262,7 @@ sys-fs/fuse	>=sys-fs/fuse-common-3.3.0-r1
 sys-fs/fuse-common	!<sys-fs/fuse-2.9.7-r1:0
 sys-fs/lvm2	dev-libs/libaio dev-libs/libaio sys-libs/readline:0/8= >=sys-apps/systemd-205:0/2= >=virtual/libudev-208:0/1= >=sys-apps/baselayout-2.2 !<sys-apps/openrc-0.11 !<sys-fs/cryptsetup-1.1.2 !!sys-fs/lvm-user >=sys-apps/util-linux-2.16 >=sys-block/thin-provisioning-tools-0.3.0
 sys-fs/ntfs3g	>=sys-fs/fuse-2.8.0:0
-sys-fs/squashfs-tools	sys-libs/zlib sys-apps/attr app-arch/xz-utils
+sys-fs/squashfs-tools	sys-libs/zlib sys-apps/attr
 sys-fs/udev-init-scripts	>=virtual/udev-217 !<sys-apps/openrc-0.14
 sys-fs/xfsprogs	>=sys-apps/util-linux-2.17.2 sys-libs/readline:0/8= !<sys-fs/xfsdump-3
 sys-kernel/genkernel	app-arch/cpio >=app-misc/pax-utils-1.2.2 app-portage/elt-patches dev-util/gperf sys-apps/sandbox sys-devel/autoconf sys-devel/autoconf-archive sys-devel/automake sys-devel/libtool virtual/pkgconfig sys-kernel/linux-firmware

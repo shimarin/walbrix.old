@@ -42,26 +42,5 @@ sci-geosciences/gpsd ntp python usb gpsd_protocols_fury gpsd_protocols_geostar g
 # to force rebuild systemd
 sys-apps/systemd -acl
 
-dev-python/setuptools -python_targets_python2_7
-dev-python/pycparser -python_targets_python2_7
-dev-python/ply -python_targets_python2_7
-dev-python/six -python_targets_python2_7
-dev-python/pyparsing -python_targets_python2_7
-dev-util/meson -python_targets_python2_7
-dev-python/certifi -python_targets_python2_7
-dev-libs/libxml2 -python_targets_python2_7
-dev-python/subunit -python_targets_python2_7
-sys-devel/clang -python_single_target_python2_7
-dev-python/pyyaml -python_targets_python2_7
-app-portage/repoman -python_targets_python2_7
-dev-python/cython -python_targets_python2_7
-dev-python/lxml -python_targets_python2_7
-app-portage/gemato -python_targets_python2_7
-sys-apps/portage -python_targets_python2_7
-dev-python/m2crypto -python_targets_python2_7
-dev-python/mako -python_targets_python2_7
-dev-python/markupsafe -python_targets_python2_7
-app-portage/gentoolkit -python_targets_python2_7
-
 media-video/motion ffmpeg v4l webp
 

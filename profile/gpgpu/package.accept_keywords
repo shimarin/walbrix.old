@@ -8,28 +8,22 @@ sys-apps/hwids
 
 # AMD rocm
 =virtual/opencl-3-r1
-=dev-libs/rocm-opencl-runtime-3.10.0
-=dev-libs/rocm-device-libs-3.10.0
-=dev-libs/rocm-comgr-3.10.0
-=dev-libs/rocr-runtime-3.10.0
-=dev-libs/roct-thunk-interface-3.10.0
-=dev-libs/rocclr-3.10.0
-=dev-util/rocminfo-3.10.0
-=dev-util/rocm-cmake-3.10.0
-=sys-devel/llvm-roc-3.10.0
+=dev-libs/rocm-opencl-runtime-4.0.0
+=dev-libs/rocm-device-libs-4.0.0
+=dev-libs/rocm-comgr-4.0.0
+=dev-libs/rocr-runtime-4.0.0
+=dev-libs/roct-thunk-interface-4.0.0
+=dev-libs/rocclr-4.0.0
+=dev-util/rocminfo-4.0.0
+=dev-util/rocm-cmake-4.0.0
+=sys-devel/llvm-roc-4.0.0
 
 # Intel NEO
-=dev-util/clinfo-2.2.18.04.06
-=sys-libs/libomp-9.0.1
-=dev-util/intel-graphics-compiler-1.0.4111
-=dev-util/spirv-llvm-translator-9.0.1.1
-=sys-devel/clang-8.0.1
-=media-libs/gmmlib-20.1.1
-=dev-libs/opencl-clang-9.0.1
-=sys-libs/compiler-rt-sanitizers-9.0.1
-=sys-libs/compiler-rt-9.0.1
-=sys-devel/clang-runtime-9.0.1
-=dev-libs/intel-neo-20.16.16582
+=dev-util/intel-graphics-compiler-1.0.4944
+=dev-libs/intel-neo-20.37.17906
+=media-libs/gmmlib-20.3.2
+=dev-libs/opencl-clang-10.0.0.2-r1
+=dev-util/spirv-llvm-translator-10.0.0_p20200909
 
 # nvidia
 =x11-drivers/nvidia-drivers-455.45.01-r1

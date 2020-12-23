@@ -1,8 +1,8 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.10.1-gentoo Kernel Configuration
+# Linux/x86 5.10.2-gentoo Kernel Configuration
 #
-CONFIG_CC_VERSION_TEXT="x86_64-pc-linux-gnu-gcc (Gentoo 9.3.0-r1 p3) 9.3.0"
+CONFIG_CC_VERSION_TEXT="x86_64-pc-linux-gnu-gcc (Gentoo 9.3.0-r2 p4) 9.3.0"
 CONFIG_CC_IS_GCC=y
 CONFIG_GCC_VERSION=90300
 CONFIG_LD_VERSION=234000000
@@ -6167,7 +6167,6 @@ CONFIG_USB_FTDI_ELAN=m
 CONFIG_USB_APPLEDISPLAY=m
 # CONFIG_APPLE_MFI_FASTCHARGE is not set
 CONFIG_USB_SISUSBVGA=m
-CONFIG_USB_SISUSBVGA_CON=y
 # CONFIG_USB_LD is not set
 CONFIG_USB_TRANCEVIBRATOR=m
 CONFIG_USB_IOWARRIOR=m
