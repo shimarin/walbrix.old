@@ -24,6 +24,7 @@ $require logrotate.lst
 $require cron-systemd.lst
 $package net-misc/openssh
 $sed /etc/ssh/sshd_config 's/^#PermitRootLogin prohibit-password$/PermitRootLogin yes/'
+$mkdir /var/empty
 $mkdir /root/.ssh --mode=700
 $touch /root/.ssh/authorized_keys
 $exec "systemctl enable sshd"
