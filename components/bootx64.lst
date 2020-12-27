@@ -33,7 +33,7 @@ $write --append /boot/grub/grub.cfg 'initrd /boot/initramfs\nboot'
 
 $sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
 
-$require wireless-tools.lst
+$require hostapd.lst
 
 /usr/bin/iperf3
 

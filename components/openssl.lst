@@ -1,3 +1,2 @@
 $package app-misc/c_rehash
 $package dev-libs/openssl
-$package dev-libs/openssl-compat

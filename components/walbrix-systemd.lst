@@ -21,14 +21,14 @@ $sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
 
 $sed /etc/ssh/sshd_config 's/^#StrictModes\s.\+$/StrictModes no/'
 
-$require wireless-tools.lst
+$require hostapd.lst
 $write /etc/hostapd/hostapd.conf 'interface=wlan0\nbridge=xenbr0\n#driver=nl80211\nhw_mode=g\nssid=walbrix-ap\nwpa_passphrase=secret\nwpa=2\n#channel=11\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=CCMP'
 $copy resource/walbrix/hostapd@.service /lib/systemd/system/hostapd@.service
 
 $package app-misc/ca-certificates
 $package app-misc/mime-types
 $package app-misc/pax-utils
-$require openssl.lst
+$package dev-libs/openssl-compat
 #$package sys-apps/haveged
 
 $write /etc/hostname WBFREE01
