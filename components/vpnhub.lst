@@ -25,7 +25,7 @@ $package net-dns/dnsmasq
 $package app-misc/ca-certificates
 $package app-misc/mime-types
 $package app-misc/pax-utils
-$package dev-libs/openssl
+$package dev-libs/openssl-compat
 $package net-misc/wget
 $package app-crypt/easy-rsa
 
