@@ -1,0 +1,5 @@
+sys-kernel/gentoo-sources
+sys-kernel/linux-firmware
+sys-apps/hwids
+=media-fonts/ricty-3.2.0-r2
+=media-fonts/mix-mplus-ipa-20130617-r1

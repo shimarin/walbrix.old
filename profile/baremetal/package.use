@@ -1,0 +1,27 @@
+sys-kernel/gentoo-sources symlink
+virtual/linux-sources firmware
+#sys-apps/util-linux static-libs
+#app-admin/sudo -sendmail pam
+sys-auth/pambase -passwdqc
+#sys-apps/kmod lzma
+dev-vcs/git -perl -gpg
+net-dns/avahi -introspection dbus
+#sys-libs/ncurses tinfo
+app-emulation/docker -device-mapper
+sys-boot/grub device-mapper grub_platforms_efi-64 grub_platforms_pc
+
+# misc
+sci-geosciences/gpsd ntp python usb gpsd_protocols_fury gpsd_protocols_geostar gpsd_protocols_nmea0183 gpsd_protocols_nmea2000 gpsd_protocols_passthrough
+
+# nmbd
+#net-fs/samba -acl -pam -system-mitkrb5
+#sys-libs/ldb -ldap -python
+#sys-libs/talloc -python
+
+# for systemd
+sys-apps/systemd cgroup-hybrid
+
+# graphics
+media-libs/mesa -X video_cards_i915 video_cards_i965 wayland
+media-libs/libsdl2 -X gles2 alsa kms cpu_flags_x86_3dnow
+
