@@ -52,5 +52,10 @@ sys-power/acpid
 sys-process/cronie
 sys-process/lsof
 media-libs/libsdl2
+media-libs/sdl2-image
+media-libs/sdl2-mixer
+media-libs/sdl2-ttf
+media-sound/alsa-utils
 dev-libs/iniparser
 app-admin/logrotate
+

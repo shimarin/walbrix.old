@@ -1,0 +1,16 @@
+$package x11-libs/libdrm
+$package media-libs/libglvnd
+#dev-python/mako
+$package media-libs/mesa
+$package media-libs/libsdl2
+#media-libs/libjpeg-turbo
+#media-libs/libwebp
+#media-libs/libpng
+$package media-libs/sdl2-image
+#media-libs/libogg
+#media-sound/mpg123
+#media-libs/libvorbis
+$require alsa.lst
+$package media-libs/sdl2-mixer
+$package media-libs/sdl2-ttf
+

@@ -24,4 +24,6 @@ sys-apps/systemd cgroup-hybrid
 # graphics
 media-libs/mesa -X video_cards_i915 video_cards_i965 wayland
 media-libs/libsdl2 -X gles2 alsa kms cpu_flags_x86_3dnow
-
+media-libs/sdl2-image jpeg png webp
+media-libs/sdl2-mixer mp3 vorbis
+media-sound/mpg123 alsa

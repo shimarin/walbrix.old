@@ -1,4 +1,5 @@
+$package media-libs/alsa-topology-conf
+$package media-libs/alsa-ucm-conf
 $package media-libs/alsa-lib
-/usr/bin/amixer
-$copy walbrix/asound.conf /etc/asound.conf
+$package media-sound/alsa-utils
 
