@@ -1,0 +1,5 @@
+$require ruby.lst
+$package dev-libs/libxslt
+$package dev-ruby/nokogiri
+
+

@@ -14,6 +14,7 @@ x11-libs/libva X
 www-servers/nginx aio luajit http2 nginx_modules_http_auth_pam nginx_modules_http_cache_purge nginx_modules_http_lua nginx_modules_http_spdy nginx_modules_http_realip nginx_modules_http_mp4 nginx_modules_http_flv nginx_modules_http_stub_status nginx_modules_mail_smtp nginx_modules_mail_pop3 nginx_modules_mail_imap nginx_modules_http_gunzip nginx_modules_http_image_filter nginx_modules_http_push_stream nginx_modules_http_security nginx_modules_http_upload_progress nginx_modules_http_upstream_check nginx_modules_http_vhost_traffic_status nginx_modules_stream_access nginx_modules_stream_limit_conn nginx_modules_stream_realip nginx_modules_stream_return nginx_modules_stream_upstream_least_conn
 media-libs/gd png jpeg
 media-libs/libv4l jpeg
+media-tv/v4l-utils -bpf
 
 dev-python/pillow jpeg jpeg2k truetype webp
 dev-lang/python sqlite
@@ -35,7 +36,7 @@ app-eselect/eselect-php fpm apache2
 dev-php/pecl-redis -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
 dev-php/pecl-imagick -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
 dev-php/pecl-apcu -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
-media-gfx/imagemagick -openmp # pecl-imagick hates openmp
+media-gfx/imagemagick -openmp jpeg png svg xml tiff truetype webp # pecl-imagick hates openmp
 www-servers/apache apache2_modules_http2 apache2_modules_proxy apache2_modules_proxy_connect
 www-apache/mod_extract_forwarded mod-proxy
 mail-mta/postfix mysql sasl
@@ -83,3 +84,109 @@ x11-libs/libxkbcommon X
 dev-libs/libpcre2 pcre16
 media-libs/freetype png
 app-editors/gedit -python
+
+dev-ruby/rdoc -ruby_targets_ruby25
+dev-ruby/racc -ruby_targets_ruby25
+dev-ruby/json -ruby_targets_ruby25
+dev-ruby/kpeg -ruby_targets_ruby25
+dev-ruby/bundler -ruby_targets_ruby25
+dev-ruby/xmlrpc -ruby_targets_ruby25
+dev-ruby/test-unit -ruby_targets_ruby25
+dev-ruby/rake -ruby_targets_ruby25
+dev-ruby/power_assert -ruby_targets_ruby25
+dev-ruby/net-telnet -ruby_targets_ruby25
+dev-ruby/minitest -ruby_targets_ruby25
+dev-ruby/did_you_mean -ruby_targets_ruby25
+virtual/rubygems -ruby_targets_ruby25
+dev-ruby/rubygems -ruby_targets_ruby25
+virtual/ruby-ssl -ruby_targets_ruby25
+dev-ruby/rails -ruby_targets_ruby25
+dev-ruby/coffee-rails -ruby_targets_ruby25
+dev-ruby/coffee-script -ruby_targets_ruby25
+dev-ruby/execjs -ruby_targets_ruby25
+dev-ruby/uglifier -ruby_targets_ruby25
+dev-ruby/sass-rails -ruby_targets_ruby25
+dev-ruby/coffee-script-source -ruby_targets_ruby25
+dev-ruby/tilt -ruby_targets_ruby25
+dev-ruby/sprockets -ruby_targets_ruby25
+dev-ruby/rack -ruby_targets_ruby25
+dev-ruby/concurrent-ruby -ruby_targets_ruby25
+dev-ruby/sass -ruby_targets_ruby25
+dev-ruby/listen -ruby_targets_ruby25
+dev-ruby/rb-inotify -ruby_targets_ruby25
+dev-ruby/ffi -ruby_targets_ruby25
+dev-ruby/jquery-rails -ruby_targets_ruby25
+dev-ruby/rails-dom-testing -ruby_targets_ruby25
+dev-ruby/nokogiri -ruby_targets_ruby25
+dev-ruby/rexical -ruby_targets_ruby25
+dev-ruby/pkg-config -ruby_targets_ruby25
+dev-ruby/thor -ruby_targets_ruby25
+dev-ruby/sprockets-rails -ruby_targets_ruby25
+dev-ruby/railties -ruby_targets_ruby25
+dev-ruby/method_source -ruby_targets_ruby25
+dev-ruby/activesupport -ruby_targets_ruby25
+dev-ruby/tzinfo -ruby_targets_ruby25
+dev-ruby/thread_safe -ruby_targets_ruby25
+dev-ruby/i18n -ruby_targets_ruby25
+dev-ruby/activestorage -ruby_targets_ruby25
+dev-ruby/marcel -ruby_targets_ruby25
+dev-ruby/mimemagic -ruby_targets_ruby25
+dev-ruby/activerecord -ruby_targets_ruby25
+dev-ruby/arel -ruby_targets_ruby25
+dev-ruby/activemodel -ruby_targets_ruby25
+dev-ruby/activejob -ruby_targets_ruby25
+dev-ruby/globalid -ruby_targets_ruby25
+dev-ruby/actionview -ruby_targets_ruby25
+dev-ruby/rails-html-sanitizer -ruby_targets_ruby25
+dev-ruby/loofah -ruby_targets_ruby25
+dev-ruby/crass -ruby_targets_ruby25
+dev-ruby/erubi -ruby_targets_ruby25
+dev-ruby/builder -ruby_targets_ruby25
+dev-ruby/actionpack -ruby_targets_ruby25
+dev-ruby/rack-test -ruby_targets_ruby25
+dev-ruby/actionmailer -ruby_targets_ruby25
+dev-ruby/mail -ruby_targets_ruby25
+dev-ruby/mini_mime -ruby_targets_ruby25
+dev-ruby/actioncable -ruby_targets_ruby25
+dev-ruby/websocket-driver -ruby_targets_ruby25
+dev-ruby/websocket-extensions -ruby_targets_ruby25
+dev-ruby/nio4r -ruby_targets_ruby25
+dev-ruby/mysql2 mysql -ruby_targets_ruby25
+www-apache/passenger apache2 -ruby_targets_ruby25
+dev-ruby/rmagick -ruby_targets_ruby25
+dev-ruby/zeitwerk -ruby_targets_ruby25
+dev-ruby/actiontext -ruby_targets_ruby25
+dev-ruby/actionmailbox -ruby_targets_ruby25
+dev-ruby/xpath -ruby_targets_ruby25
+dev-ruby/regexp_parser -ruby_targets_ruby25
+dev-ruby/public_suffix -ruby_targets_ruby25
+dev-ruby/htmlentities -ruby_targets_ruby25
+dev-ruby/docile -ruby_targets_ruby25
+dev-ruby/css_parser -ruby_targets_ruby25
+dev-ruby/addressable -ruby_targets_ruby25
+dev-ruby/childprocess -ruby_targets_ruby25
+dev-ruby/capybara -ruby_targets_ruby25
+dev-ruby/ast -ruby_targets_ruby25
+dev-ruby/parser -ruby_targets_ruby25
+dev-ruby/cliver -ruby_targets_ruby25
+dev-ruby/parallel -ruby_targets_ruby25
+dev-ruby/mocha -ruby_targets_ruby25
+dev-ruby/mini_magick -ruby_targets_ruby25
+dev-ruby/ruby-openid -ruby_targets_ruby25
+dev-ruby/redcarpet -ruby_targets_ruby25
+dev-ruby/rbpdf-font -ruby_targets_ruby25
+dev-ruby/rbpdf -ruby_targets_ruby25
+dev-ruby/rainbow -ruby_targets_ruby25
+dev-ruby/rack-openid -ruby_targets_ruby25
+dev-ruby/yard -ruby_targets_ruby25
+dev-ruby/unicode-display_width -ruby_targets_ruby25
+dev-ruby/simplecov-html -ruby_targets_ruby25
+dev-ruby/simplecov -ruby_targets_ruby25
+dev-ruby/selenium-webdriver -ruby_targets_ruby25
+dev-ruby/rubyzip -ruby_targets_ruby25
+dev-ruby/ruby-progressbar -ruby_targets_ruby25
+dev-ruby/rouge -ruby_targets_ruby25
+dev-ruby/roadie-rails -ruby_targets_ruby25
+dev-ruby/roadie -ruby_targets_ruby25
+dev-ruby/request_store -ruby_targets_ruby25
+dev-ruby/actionpack-xml_parser -ruby_targets_ruby25

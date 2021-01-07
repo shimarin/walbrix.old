@@ -1,0 +1,21 @@
+#dev-libs/libyaml
+#dev-util/colm
+#dev-util/ragel
+$package dev-lang/ruby
+$package dev-ruby/rubygems
+$package dev-ruby/net-telnet
+$package dev-ruby/xmlrpc
+$package dev-ruby/power_assert
+$package dev-ruby/did_you_mean
+$package dev-ruby/minitest
+$package dev-ruby/test-unit
+$package dev-ruby/rake
+$package dev-ruby/json
+$package dev-ruby/kpeg
+$package dev-ruby/racc
+$package dev-ruby/rdoc
+$package dev-ruby/bundler
+/usr/bin/ruby
+/usr/bin/erb
+/usr/bin/irb
+

@@ -1,4 +1,6 @@
 >=dev-lang/python-3.9
+<dev-lang/ruby-2.6
+<dev-ruby/public_suffix-4
 >=dev-db/mysql-8
 >=dev-lang/php-7.4
 <dev-lang/php-7.3
