@@ -89,6 +89,7 @@ app-text/docbook-xml-dtd	>=app-text/docbook-xsl-stylesheets-1.65 >=app-text/buil
 app-text/docbook-xml-dtd	>=app-text/docbook-xsl-stylesheets-1.65 >=app-text/build-docbook-catalog-1.2 >=app-text/sgml-common-0.6.3-r7
 app-text/docbook-xsl-stylesheets	>=app-text/build-docbook-catalog-1.1
 app-text/enchant	>=dev-libs/glib-2.6:2 >=app-text/hunspell-1.2.1:0/1.7=
+app-text/ghostscript-gpl	app-text/libpaper media-libs/fontconfig >=media-libs/freetype-2.4.9:2/2= >=media-libs/jbig2dec-0.19:0/0.19= >=media-libs/lcms-2.6:2 >=media-libs/libpng-1.6.2:0/16= >=media-libs/openjpeg-2.1.0:2/7= >=media-libs/tiff-4.0.1:0/0= >=sys-libs/zlib-1.2.7 virtual/jpeg:0 net-dns/libidn:0/12= app-text/poppler-data >=media-fonts/urw-fonts-2.4.9
 app-text/hunspell	sys-libs/ncurses:0/6= sys-libs/readline:0/8=
 app-text/mupdf	dev-libs/gumbo media-libs/freetype:2/2= media-libs/harfbuzz:0/0.9.18=[truetype] media-libs/jbig2dec:0/0.19= media-libs/libpng:0/16= >=media-libs/openjpeg-2.1:2/7= virtual/jpeg >=dev-lang/mujs-1.0.7:0/1.0.9= >=dev-libs/openssl-1.1:0/1.1=
 app-text/opensp	net-libs/libnsl:0/2=
@@ -178,7 +179,7 @@ dev-php/pecl-apcu	dev-lang/php:7.3
 dev-php/pecl-imagick	>=media-gfx/imagemagick-6.2.4:0/7.0.10-37=[-openmp] dev-lang/php:7.3
 dev-php/pecl-redis	!dev-php/pecl-redis:7 dev-lang/php:7.3[json,session]
 dev-python/PySocks	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
-dev-python/asn1crypto	dev-lang/python:3.8[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-)]
+dev-python/asn1crypto	dev-lang/python:3.8[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/attrs	dev-python/zope-interface[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/automat	>=dev-python/attrs-19.2.0[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-python/six[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/bcrypt	>=dev-python/cffi-1.1:0/1.14.0=[-python_single_target_python3_6(-),-python_single_target_python3_7(-),python_targets_python3_8(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/six-1.4.1[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_6(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
@@ -285,12 +286,14 @@ dev-ruby/activemodel	~dev-ruby/activesupport-6.0.3.4:*[ruby_targets_ruby26(-)] d
 dev-ruby/activerecord	~dev-ruby/activesupport-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/activemodel-6.0.3.4[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/activestorage	~dev-ruby/actionpack-6.0.3.4:*[ruby_targets_ruby26(-)] ~dev-ruby/activerecord-6.0.3.4:*[ruby_targets_ruby26(-)] >=dev-ruby/marcel-0.3.1[ruby_targets_ruby26(-)] =dev-ruby/marcel-0.3*[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/activesupport	>=dev-ruby/concurrent-ruby-1.0.2:1[ruby_targets_ruby26(-)] dev-ruby/i18n:1[ruby_targets_ruby26(-)] >=dev-ruby/tzinfo-1.1:1[ruby_targets_ruby26(-)] >=dev-ruby/minitest-5.1:5[ruby_targets_ruby26(-)] >=dev-ruby/zeitwerk-2.2:2[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
-dev-ruby/addressable	>=dev-ruby/public_suffix-2.0.2:*[ruby_targets_ruby26(-)] <dev-ruby/public_suffix-4:*[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/addressable	|| ( dev-ruby/public_suffix:4[ruby_targets_ruby26(-)] dev-ruby/public_suffix:3[ruby_targets_ruby26(-)] ) dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/arel	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/ast	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/builder	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/bundler	virtual/rubygems[ruby_targets_ruby26(-)] dev-vcs/git !<dev-ruby/bundler-1.17.3-r1:0 dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/capybara	dev-ruby/addressable[ruby_targets_ruby26(-)] >=dev-ruby/mini_mime-0.1.3[ruby_targets_ruby26(-)] >=dev-ruby/nokogiri-1.8:0[ruby_targets_ruby26(-)] >=dev-ruby/rack-1.6.0:*[ruby_targets_ruby26(-)] >=dev-ruby/rack-test-0.6.3:*[ruby_targets_ruby26(-)] >=dev-ruby/regexp_parser-1.5:1[ruby_targets_ruby26(-)] >=dev-ruby/xpath-3.2:3[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/childprocess	>=dev-ruby/ffi-1.0.11[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/cliver	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/concurrent-ruby	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/crass	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/css_parser	dev-ruby/addressable[ruby_targets_ruby26(-)] virtual/ruby-ssl[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
@@ -308,38 +311,59 @@ dev-ruby/mail	>=dev-ruby/mini_mime-0.1.1[ruby_targets_ruby26(-)] dev-lang/ruby:2
 dev-ruby/marcel	>=dev-ruby/mimemagic-0.3.2:0[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/method_source	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/mimemagic	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/mini_magick	media-gfx/imagemagick dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/mini_mime	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/minitest	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/mocha	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/mysql2	dev-db/mysql-connector-c:0/21= dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/net-telnet	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/nio4r	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/nokogiri	>=dev-libs/libxml2-2.9.10:2/2= >=dev-libs/libxslt-1.1.34 virtual/libiconv dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/parallel	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/parser	=dev-ruby/ast-2.4*[ruby_targets_ruby26(-)] >=dev-ruby/ast-2.4.1[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/pkg-config	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/power_assert	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/public_suffix	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/racc	virtual/ruby-ssl[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/rack	virtual/ruby-ssl[ruby_targets_ruby26(-)] !<dev-ruby/rack-1.6.4-r2:1.6 !!<dev-ruby/rack-2.0.8-r1:2.0 !!<dev-ruby/rack-2.1.1-r1:2.1 dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/rack-openid	>=dev-ruby/ruby-openid-2.1.8[ruby_targets_ruby26(-)] >=dev-ruby/rack-1.1.0:*[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/rack-test	>=dev-ruby/rack-1.0:*[ruby_targets_ruby26(-)] <dev-ruby/rack-3:*[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/rails	~dev-ruby/actioncable-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/actionmailbox-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/actionmailer-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/actionpack-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/actiontext-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/actionview-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/activejob-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/activemodel-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/activerecord-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/activestorage-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/activesupport-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/railties-6.0.3.4[ruby_targets_ruby26(-)] >=dev-ruby/bundler-1.3:*[ruby_targets_ruby26(-)] >=dev-ruby/sprockets-rails-2.0.0:*[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/rails-dom-testing	>=dev-ruby/activesupport-4.2.0:*[ruby_targets_ruby26(-)] >=dev-ruby/nokogiri-1.6[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/rails-html-sanitizer	>=dev-ruby/loofah-2.3:0[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/railties	>=app-eselect/eselect-rails-0.24 ~dev-ruby/activesupport-6.0.3.4[ruby_targets_ruby26(-)] ~dev-ruby/actionpack-6.0.3.4[ruby_targets_ruby26(-)] || ( dev-ruby/thor:1[ruby_targets_ruby26(-)] >=dev-ruby/thor-0.18.1:0[ruby_targets_ruby26(-)] ) >=dev-ruby/rake-0.8.7[ruby_targets_ruby26(-)] dev-ruby/method_source[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/rainbow	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/rake	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/rbpdf	dev-ruby/actionview[ruby_targets_ruby26(-)] dev-ruby/htmlentities[ruby_targets_ruby26(-)] =dev-ruby/rbpdf-font-1.19*[ruby_targets_ruby26(-)] || ( dev-ruby/mini_magick[ruby_targets_ruby26(-)] dev-ruby/rmagick[ruby_targets_ruby26(-)] ) dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/rbpdf-font	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/rdoc	>=app-eselect/eselect-ruby-20181225 dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/redcarpet	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/regexp_parser	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/request_store	>=dev-ruby/rack-1.4:*[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/rexical	!!app-admin/rex dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/rmagick	>=media-gfx/imagemagick-6.9.0:0/7.0.10-37= dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/roadie	>=dev-ruby/nokogiri-1.8:0[ruby_targets_ruby26(-)] >=dev-ruby/css_parser-1.4.5[ruby_targets_ruby26(-)] =dev-ruby/css_parser-1*[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/roadie-rails	>=dev-ruby/roadie-3.1[ruby_targets_ruby26(-)] || ( dev-ruby/railties:6.0[ruby_targets_ruby26(-)] dev-ruby/railties:5.2[ruby_targets_ruby26(-)] ) dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/rouge	dev-ruby/redcarpet[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/ruby-openid	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/ruby-progressbar	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/rubygems	dev-lang/ruby:2.6
-dev-ruby/sprockets	dev-ruby/concurrent-ruby:1[ruby_targets_ruby26(-)] >=dev-ruby/rack-1:*[ruby_targets_ruby26(-)] <dev-ruby/rack-3:*[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/rubyzip	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/selenium-webdriver	>=dev-ruby/childprocess-0.5:2[ruby_targets_ruby26(-)] >=dev-ruby/rubyzip-1.2.2:*[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/simplecov	dev-ruby/simplecov-html:0.12[ruby_targets_ruby26(-)] >=dev-ruby/docile-1.1:0[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/simplecov-html	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/sprockets	dev-ruby/concurrent-ruby:1[ruby_targets_ruby26(-)] >=dev-ruby/rack-1:*[ruby_targets_ruby26(-)] <dev-ruby/rack-3:*[ruby_targets_ruby26(-)] !!<dev-ruby/sprockets-3.7.2-r1:3[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/sprockets-rails	>=dev-ruby/actionpack-4.0:*[ruby_targets_ruby26(-)] >=dev-ruby/activesupport-4.0:*[ruby_targets_ruby26(-)] >=dev-ruby/sprockets-3.0.0:*[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/test-unit	dev-ruby/power_assert[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/thor	!!<dev-ruby/thor-0.20.3-r1:0 dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/thread_safe	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/tzinfo	sys-libs/timezone-data >=dev-ruby/thread_safe-0.1:0[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/unicode-display_width	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/websocket-driver	>=dev-ruby/websocket-extensions-0.1.0[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/websocket-extensions	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/xmlrpc	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/xpath	>=dev-ruby/nokogiri-1.8:0[ruby_targets_ruby26(-)] dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
+dev-ruby/yard	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-ruby/zeitwerk	dev-lang/ruby:2.6 virtual/rubygems[ruby_targets_ruby26(-)]
 dev-util/cmake	>=app-arch/libarchive-3.3.3:0/13= app-crypt/rhash >=dev-libs/expat-2.0.1 >=dev-libs/jsoncpp-1.9.2-r2:0/24= >=dev-libs/libuv-1.10.0:0/1= >=net-misc/curl-7.21.5[ssl] sys-libs/zlib virtual/pkgconfig sys-libs/ncurses:0/6=
 dev-util/debootstrap	app-arch/dpkg net-misc/wget sys-devel/binutils
@@ -363,7 +387,8 @@ kde-frameworks/extra-cmake-modules	app-arch/libarchive[bzip2]
 mail-mta/postfix	acct-group/postfix acct-group/postdrop acct-user/postfix >=dev-libs/libpcre-3.4 dev-lang/perl >=sys-libs/db-3.2:* dev-libs/icu:0/67.1= dev-db/mysql-connector-c:0/21= sys-libs/pam >=dev-libs/cyrus-sasl-2 dev-libs/openssl:0/1.1= net-mail/mailbase !mail-mta/courier !mail-mta/esmtp !mail-mta/exim !mail-mta/mini-qmail !mail-mta/msmtp[mta] !mail-mta/netqmail !mail-mta/nullmailer !mail-mta/qmail-ldap !mail-mta/sendmail !mail-mta/opensmtpd !mail-mta/ssmtp[mta] !net-mail/fastforward
 media-fonts/noto	media-fonts/noto-cjk
 media-fonts/urw-fonts	!media-fonts/gnu-gs-fonts-std !media-fonts/gnu-gs-fonts-other
-media-gfx/imagemagick	dev-libs/libltdl:0 app-arch/bzip2 sys-libs/zlib:0/1=
+media-gfx/imagemagick	dev-libs/libltdl:0 app-arch/bzip2 virtual/jpeg:0 media-libs/libpng:0/16= app-text/ghostscript-gpl gnome-base/librsvg media-gfx/potrace media-libs/tiff:0/0= media-fonts/urw-fonts >=media-libs/freetype-2 media-libs/libwebp:0/7= dev-libs/libxml2:2/2= sys-libs/zlib:0/1=
+media-gfx/potrace	sys-libs/zlib:0/1=
 media-libs/alsa-lib	media-libs/alsa-topology-conf media-libs/alsa-ucm-conf
 media-libs/alsa-topology-conf	!<media-libs/alsa-lib-1.2.1
 media-libs/alsa-ucm-conf	!<media-libs/alsa-lib-1.2.1
@@ -402,6 +427,7 @@ net-dialup/rp-pppoe	net-dialup/ppp:0/2.4.8=
 net-dns/avahi	acct-user/avahi acct-group/avahi acct-group/netdev dev-libs/libdaemon dev-libs/libevent:0/2.1-7=[abi_x86_64(-)] dev-libs/expat dev-libs/glib:2[abi_x86_64(-)] sys-libs/gdbm:0/6=[abi_x86_64(-)] sys-apps/dbus[abi_x86_64(-)] sys-libs/libcap
 net-dns/bind-tools	dev-libs/libuv:0/1= sys-libs/libcap dev-libs/openssl:0/1.1= sys-libs/readline:0/8=
 net-dns/dnsmasq	acct-group/dnsmasq acct-user/dnsmasq sys-devel/gettext
+net-dns/libidn	>=virtual/libintl-0-r1[abi_x86_64(-)]
 net-dns/libidn2	dev-libs/libunistring[abi_x86_64(-)]
 net-firewall/ebtables	>=app-eselect/eselect-iptables-20200508 dev-lang/perl net-misc/ethertypes
 net-firewall/firewalld	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8] !!net-firewall/gshield net-firewall/nftables net-firewall/iptables[ipv6] net-firewall/ebtables net-firewall/ipset net-firewall/nftables[xtables(+)] || ( >=sys-apps/openrc-0.11.5 sys-apps/systemd ) dev-python/dbus-python[python_targets_python3_8(-)] dev-python/decorator[python_targets_python3_8(-)] >=dev-python/python-slip-0.2.7[dbus,python_targets_python3_8(-)] dev-python/pygobject:3[python_targets_python3_8(-)]

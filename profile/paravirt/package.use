@@ -36,7 +36,7 @@ app-eselect/eselect-php fpm apache2
 dev-php/pecl-redis -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
 dev-php/pecl-imagick -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
 dev-php/pecl-apcu -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
-media-gfx/imagemagick -openmp jpeg png svg xml tiff truetype webp # pecl-imagick hates openmp
+media-gfx/imagemagick -openmp postscript jpeg png svg xml tiff truetype webp # pecl-imagick hates openmp
 www-servers/apache apache2_modules_http2 apache2_modules_proxy apache2_modules_proxy_connect
 www-apache/mod_extract_forwarded mod-proxy
 mail-mta/postfix mysql sasl

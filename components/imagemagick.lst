@@ -2,4 +2,6 @@
 #media-libs/tiff
 $package media-fonts/urw-fonts
 #media-libs/openjpeg
-$package media-gfx/imagemagick # USE="perl jpeg jpeg2k png truetype webp"
+$package app-text/ghostscript-gpl
+$package media-gfx/imagemagick --use="jpeg png truetype webp postscript"
+$sed /etc/ImageMagick-7/policy.xml 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/'
