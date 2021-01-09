@@ -53,6 +53,7 @@ sys-kernel/gentoo-sources
 =dev-ruby/rmagick-4.1.2
 =dev-ruby/method_source-1.0.0
 =dev-ruby/thor-1.0.1
+=www-apache/passenger-6.0.7
 
 #redmine
 =dev-ruby/public_suffix-4.0.6
