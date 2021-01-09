@@ -1,11 +1,9 @@
 #!/bin/sh
 mkfs.xfs -f -m crc=0 /dev/xvda2 || exit 1
 mount /dev/xvda2 /mnt || exit 1
-./getrpm.py > packages || exit 1
-wget -nc -i packages
 mkdir -p /mnt/etc/dracut.conf.d
 echo 'add_drivers+="xen-blkfront"' > /mnt/etc/dracut.conf.d/xen.conf
-rpm -ivh --root=/mnt *.rpm
+rpmbootstrap --base=http://ftp.iij.ad.jp/pub/linux/centos/7/os/x86_64/ /mnt
 echo -e 'DEVICE="eth0"\nBOOTPROTO=dhcp\nONBOOT=yes\nTYPE="Ethernet"' > /mnt/etc/sysconfig/network-scripts/ifcfg-eth0
 echo -e 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4' > /mnt/etc/resolv.conf
 sed -i 's/^\(root:\)[^:]*\(:.*\)$/\1\2/' /mnt/etc/shadow

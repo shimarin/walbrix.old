@@ -1,11 +1,12 @@
 #!/usr/bin/python3
+import os,subprocess,glob,shutil
+import argparse,platform
 import xml.etree.ElementTree as ET,gzip
 import requests
 
-BASE_URL="http://ftp.iij.ad.jp/pub/linux/centos/"
-OS_VER="7"
-ARCH="x86_64"
-INSTALL=["basesystem", "yum", "strace", "vim-minimal", "less", "kernel", "tar", "dhclient", "openssh-server", "openssh-clients", "avahi"]
+BASE_URL="http://ftp.iij.ad.jp/pub/linux/centos/8-stream/BaseOS/x86_64/os/"
+INSTALL=["yum", "passwd", "vim-minimal", "strace", "less", "kernel", "tar", "openssh-server", "openssh-clients", "avahi"]
+OPTIONAL=["dhclient"]
 
 packages = {}
 providers = {}
@@ -22,22 +23,34 @@ def install(package):
         #else
         install(providers[require][0])
 
-if __name__ == "__main__":
-    r = requests.get(BASE_URL + "%s/os/%s/repodata/repomd.xml" % (OS_VER,ARCH))
+def main(base, arch, keep_rpm, target_dir):
+    if not base.endswith('/'):
+        base += '/'
+    
+    if not os.path.isdir(target_dir):
+        raise Exception("%s is not a directory." % target_dir)
+
+    rpm_dir = os.path.join(target_dir, ".rpms")
+
+    os.makedirs(rpm_dir, exist_ok=True)
+
+    repmod_xml = "%srepodata/repomd.xml" % (base)
+    print(repmod_xml)
+    r = requests.get(repmod_xml)
     if r.status_code != 200: exit(1)
     #else
 
     primary = ET.fromstring(r.content).find("{http://linux.duke.edu/metadata/repo}data[@type='primary']/{http://linux.duke.edu/metadata/repo}location").attrib["href"]
 
-    r = requests.get(BASE_URL + "%s/os/%s/%s" % (OS_VER,ARCH,primary))
+    r = requests.get("%s/%s" % (base,primary))
     if r.status_code != 200: exit(1)
 
     for package in ET.fromstring(gzip.decompress(r.content)).findall("{http://linux.duke.edu/metadata/common}package[@type='rpm']"):
-        arch = package.find("{http://linux.duke.edu/metadata/common}arch").text
-        if arch not in [ARCH, "noarch"]: continue
+        pkg_arch = package.find("{http://linux.duke.edu/metadata/common}arch").text
+        if pkg_arch not in [arch, "noarch"]: continue
         p = {
             "name": package.find("{http://linux.duke.edu/metadata/common}name").text,
-            "arch": package.find("{http://linux.duke.edu/metadata/common}arch").text,
+            "arch": pkg_arch,
             "location": package.find("{http://linux.duke.edu/metadata/common}location").attrib["href"],
             "requires": []
         }
@@ -65,7 +78,55 @@ if __name__ == "__main__":
 
     for package in INSTALL:
         install(packages[package])
+    
+    for package in OPTIONAL:
+        if package in packages: install(packages[package])
 
     for rpm in rpms:
-        print(BASE_URL + "%s/os/%s/%s" % (OS_VER, ARCH, rpm))
+        subprocess.run(["wget", "-N", "--directory-prefix=%s" % rpm_dir, "%s/%s" % (base, rpm)], check=True)
+
+    proc = os.path.join(target_dir, "proc")
+    sys = os.path.join(target_dir, "sys")
+    dev = os.path.join(target_dir, "dev")
+    run = os.path.join(target_dir, "run")
+    etc = os.path.join(target_dir, "etc")
+
+    os.makedirs(proc, exist_ok=True)
+    os.makedirs(sys, exist_ok=True)
+    os.makedirs(dev, exist_ok=True)
+    os.makedirs(run, exist_ok=True)
+    os.makedirs(etc, exist_ok=True)
+
+    with open(os.path.join(etc, "fstab"), "w") as f:
+        pass
+
+    subprocess.run(["mount", "-t", "proc", "proc", proc], check=True)
+    try:
+        subprocess.run(["mount", "-t", "sysfs", "sysfs", sys], check=True)
+        try:
+            subprocess.run(["mount", "-o", "bind", "/dev", dev], check=True)
+            try:
+                subprocess.run(["mount", "-t", "tmpfs", "tmpfs", run], check=True)
+                try:
+                    subprocess.run(["rpm", "-Uvh", "--root=%s" % os.path.abspath(target_dir)] + glob.glob(os.path.join(rpm_dir, "*")))
+                finally:
+                    subprocess.run(["umount", run])
+            finally:
+                subprocess.run(["umount", dev])
+        finally:
+            subprocess.run(["umount", sys])
+    finally:
+        subprocess.run(["umount", proc])
     
+    if not keep_rpm:
+        shutil.rmtree(rpm_dir)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--base", default=BASE_URL, help="Base URL contains repodata/ subdirectory")
+    parser.add_argument("--arch", default=platform.machine())
+    parser.add_argument("--keep-rpm", action="store_true")
+    parser.add_argument("target_dir")
+    args = parser.parse_args()
+    main(args.base, args.arch, args.keep_rpm, args.target_dir)
+    print("Done.")
