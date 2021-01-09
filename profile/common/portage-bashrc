@@ -8,10 +8,6 @@ case "${CATEGORY}/${PN}" in
 		getent group tcpdump || groupadd -g 104 tcpdump
 		getent passwd tcpdump || useradd -c "" -d /dev/null -M -u 104 -g tcpdump -s /sbin/nologin tcpdump
 		;;
-	net-analyzer/zabbix)
-		getent group zabbix || groupadd -g 105 zabbix
-		getent passwd zabbix || useradd -c "" -d /var/lib/zabbix/home -M -u 105 -g zabbix -s /sbin/nologin zabbix
-		;;
 	net-analyzer/snort)
 		getent group snort || groupadd -g 106 snort
 		getent passwd snort || useradd -c "" -d /dev/null -M -u 106 -g snort -s /sbin/nologin snort
