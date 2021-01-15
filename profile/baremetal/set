@@ -58,4 +58,5 @@ media-libs/sdl2-ttf
 media-sound/alsa-utils
 dev-libs/iniparser
 app-admin/logrotate
+media-fonts/terminus-font
 
