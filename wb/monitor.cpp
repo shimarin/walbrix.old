@@ -1,9 +1,7 @@
 #include <iostream>
-#include <gflags/gflags.h>
+#include <argparse/argparse.hpp>
 
 #include "wb.h"
-
-DECLARE_bool(daemon);
 
 class LibXlEvent {
   libxl_ctx *ctx;
@@ -54,21 +52,29 @@ static void process_sigterm(int sig)
   }
 }
 
-int monitor(int argc, char* argv[])
+int monitor(const std::vector<std::string>& args)
 {
-  if (argc < 3) {
-    std::cout << "Usage: wb monitor [--daemon] domid" << std::endl;
+  argparse::ArgumentParser program(args[0]);
+  program.add_argument("--daemon").help("Daemonize").default_value(false).implicit_value(true);
+  program.add_argument("domid").help("Domain ID").action([](const std::string& value) { return std::stoi(value); });
+
+  try {
+    program.parse_args(args);
+  }
+  catch (const std::runtime_error& err) {
+    std::cout << err.what() << std::endl;
+    std::cout << program;
     return 1;
   }
-  //else
-  int _domid = atoi(argv[2]);
+
+  int _domid = program.get<int>("domid");
   if (_domid < 1) {
     std::cerr << "Invalid domid" << std::endl;
     return 1;
   }
   domid = (uint32_t)_domid;
   //else
-  if (FLAGS_daemon) {
+  if (program.get<bool>("--daemon")) {
     daemon(0, 0);
   }
 
@@ -109,7 +115,7 @@ int monitor(int argc, char* argv[])
         libxl_evdisable_domain_death(ctx, deathw);
         libxl_domain_destroy(ctx, domid, 0);
         event.discard_all_outstanding_events();
-        execl("/proc/self/exe", argv[0], "start", domname.c_str(), NULL);
+        execl("/proc/self/exe", args[0].c_str(), "start", domname.c_str(), NULL);
         return 1;
       case LIBXL_SHUTDOWN_REASON_SUSPEND:
         continue;

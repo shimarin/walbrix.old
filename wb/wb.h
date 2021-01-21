@@ -427,9 +427,9 @@ bool is_block(const std::string& path);
 bool is_dir(const std::string& path);
 
 void exec_linux_console();
-int ui(bool login = false);
-int install(int argc, char* argv[]);
+int ui_old(bool login = false);
+int install(const std::vector<std::string>&);
 int installer();
 int list(std::map<std::string,VM>& vms);
-int start(int argc, char* argv[]);
-int monitor(int argc, char* argv[]);
+int start(const std::vector<std::string>& args);
+int monitor(const std::vector<std::string>& args);

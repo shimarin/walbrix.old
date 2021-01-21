@@ -96,7 +96,7 @@ void TbAbstractWindow::draw(TbAbstractWindow& dst, int16_t x, int16_t y, bool bo
   }
 }
 
-int ui(bool login/* = false*/)
+int ui_old(bool login/* = false*/)
 {
   /* TODO: remove after -
   utsname uname_buf;

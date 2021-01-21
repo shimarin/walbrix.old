@@ -10,6 +10,8 @@ extern "C" {
 #include <libxlutil.h>
 }
 
+#include <argparse/argparse.hpp>
+
 #include "wb.h"
 
 class LibXlDomainConfig {
@@ -431,13 +433,21 @@ uint32_t/*domid*/ start(const char* vmname)
   return domid;
 }
 
-int start(int argc, char* argv[])
+int start(const std::vector<std::string>& args)
 {
-  if (argc < 3) {
-    std::cout << "Usage: wb start vmname|@all" << std::endl;
+  argparse::ArgumentParser program(args[0]);
+  program.add_argument("vmname").help("VM name(@all to all autostart VMs)");
+
+  try {
+    program.parse_args(args);
+  }
+  catch (const std::runtime_error& err) {
+    std::cout << err.what() << std::endl;
+    std::cout << program;
     return 1;
   }
-  //else
+
+  auto vmname = program.get<std::string>("vmname");
 
   // evacuate from systemd's user session
   auto cgroup = std::filesystem::path("/sys/fs/cgroup/system.slice/xenstored.service");
@@ -446,8 +456,7 @@ int start(int argc, char* argv[])
     f << getpid();
   }
 
-  const char* vmname = argv[2];
-  if (strcmp(vmname, "@all") == 0) {
+  if (vmname ==  "@all") {
     std::map<std::string, VM> vms;
     list(vms);
     for (const auto& vm : vms) {
@@ -456,6 +465,6 @@ int start(int argc, char* argv[])
     return 0;
   }
   //else
-  uint32_t domid = start(vmname);
+  uint32_t domid = start(vmname.c_str());
   return domid > 0? 0 : 1;
 }

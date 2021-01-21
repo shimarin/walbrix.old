@@ -1,5 +1,3 @@
-//#define STRIP_FLAG_HELP 1
-#include <gflags/gflags.h>
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -18,10 +16,9 @@ extern "C" {
 #include <xenstore.h>
 }
 
-#include "wb.h"
+#include <argparse/argparse.hpp>
 
-DEFINE_bool(daemon, false, "Daemonize");
-DEFINE_bool(force, false, "Force operation");
+#include "wb.h"
 
 bool is_file(const std::string& path)
 {
@@ -158,7 +155,7 @@ int list(std::map<std::string,VM>& vms)
   return vms.size();
 }
 
-int list(int argc, char* argv[])
+int list(const std::vector<std::string>&)
 {
   std::map<std::string, VM> vms;
   list(vms);
@@ -181,9 +178,9 @@ int list(int argc, char* argv[])
   return 0;
 }
 
-int ui(int argc, char* argv[])
+int ui(const std::vector<std::string>& args)
 {
-  return ui(false);
+  return ui_old(false);
 }
 
 void exec_linux_console()
@@ -203,7 +200,7 @@ bool is_installer()
   return false;
 }
 
-int login(int argc, char* argv[])
+int login(const std::vector<std::string>&)
 {
   ExternalProcess process;
   if (is_installer()) {
@@ -239,20 +236,29 @@ int login(int argc, char* argv[])
 
   if (rc == PAM_ABORT || rc == PAM_MAXTRIES) return -1;
 
-  if (ui(true) == 9) {
+  if (ui_old(true) == 9) {
     exec_linux_console();
   }
   //else
   return 0;
 }
 
-int stop(int argc, char* argv[])
+int stop(const std::vector<std::string>& args)
 {
-  if (argc < 3) {
-    std::cout << "Usage: wb stop [--force] vmname" << std::endl;
+  argparse::ArgumentParser program(args[0]);
+  program.add_argument("--force").help("Force stop VM").default_value(false).implicit_value(true);
+  program.add_argument("vmname").help("VM name");
+
+  try {
+    program.parse_args(args);
+  }
+  catch (const std::runtime_error& err) {
+    std::cout << err.what() << std::endl;
+    std::cout << program;
     return 1;
   }
-  const char* vmname = argv[2];
+
+  std::string vmname = program.get<std::string>("vmname");
 
   std::map<std::string, VM> vms;
   list(vms);
@@ -267,34 +273,55 @@ int stop(int argc, char* argv[])
     return 1;
   }
 
-  if (FLAGS_force) {
-    execl("/usr/sbin/xl", "/usr/sbin/xl", "destroy", vmname, NULL);
+  if (program.get<bool>("--force")) {
+    execl("/usr/sbin/xl", "/usr/sbin/xl", "destroy", vmname.c_str(), NULL);
   } else {
-    execl("/usr/sbin/xl", "/usr/sbin/xl", "shutdown", vmname, NULL);
+    execl("/usr/sbin/xl", "/usr/sbin/xl", "shutdown", vmname.c_str(), NULL);
   }
   return 0;
 }
 
-int console(int argc, char* argv[])
+int console(const std::vector<std::string>& args)
 {
-  const char* vmname = argv[2];
+  argparse::ArgumentParser program(args[0]);
+  program.add_argument("vmname").help("VM name");
+
+  try {
+    program.parse_args(args);
+  }
+  catch (const std::runtime_error& err) {
+    std::cout << err.what() << std::endl;
+    std::cout << program;
+    return 1;
+  }
+
+  std::string vmname = program.get<std::string>("vmname");
+
   execl("/usr/bin/tmux", "/usr/bin/tmux",
     "set-window-option", "-g", "status-right", " ", ";",
     "set-window-option", "-g", "window-status-current-format", "終了するには Ctrl+]を押してください", ";",
-    "new", "-s", vmname, "xl", "console", vmname,
+    "new", "-s", vmname.c_str(), "xl", "console", vmname.c_str(),
     NULL);
   return 0;
 }
 
-int setkb(int argc, char* argv[])
+int setkb(const std::vector<std::string>& args)
 {
-  if (argc < 3) {
-    std::cout << "Usage: wb setkb <keymap>" << std::endl;
+  argparse::ArgumentParser program(args[0]);
+  program.add_argument("keymap").help("Keymap name");
+
+  try {
+    program.parse_args(args);
+  }
+  catch (const std::runtime_error& err) {
+    std::cout << err.what() << std::endl;
+    std::cout << program;
     return 1;
   }
-  const char* keymap = argv[2];
+
+  std::string keymap = program.get<std::string>("keymap");
   ExternalProcess process;
-  int rst = process.fork_exec_wait("/usr/bin/localectl", "/usr/bin/localectl", "set-keymap", keymap, NULL);
+  int rst = process.fork_exec_wait("/usr/bin/localectl", "/usr/bin/localectl", "set-keymap", keymap.c_str(), NULL);
   if (rst != 0) {
     std::cerr << (std::string)process << std::endl;
     return rst;
@@ -328,7 +355,7 @@ public:
 #define GRUB_MODULES "loopback", "xfs", "fat", "ntfs", "ntfscomp", "ext2", "part_gpt", "part_msdos", "normal", "linux", "echo", "all_video", "serial", "test", "probe", "multiboot", "multiboot2", "search", "iso9660", "gzio", "lvm", "chain", "configfile", "cpuid", "minicmd", "gfxterm", "font", "terminal", "ata", "squash4", "videoinfo", "videotest", "png", "gfxterm_background", "sleep"
 #define EFI_GRUB_MODULES GRUB_MODULES ,"efi_gop", "efi_uga"
 #define BIOS_GRUB_MODULES GRUB_MODULES ,"biosdisk"
-int iso9660(int argc, char* argv[])
+int iso9660(const std::vector<std::string>&)
 {
   std::filesystem::path run_initramfs_boot("/run/initramfs/boot");
   auto output_file = run_initramfs_boot / "system.iso";
@@ -399,7 +426,7 @@ int iso9660(int argc, char* argv[])
   return 0;
 }
 
-int burn(int argc, char* argv[])
+int burn(const std::vector<std::string>&)
 {
   std::filesystem::path isofile("/run/initramfs/boot/system.iso");
   if (!is_file(isofile)) {
@@ -411,7 +438,7 @@ int burn(int argc, char* argv[])
   return 0;
 }
 
-int fbinfo(int argc, char* argv[])
+int fbinfo(const std::vector<std::string>&)
 {
   int fd = open("/dev/fb0", O_RDONLY);
   if (fd < 0) {
@@ -436,7 +463,7 @@ int fbinfo(int argc, char* argv[])
   return 0;
 }
 
-int license(int argc, char* argv[]) {
+int license(const std::vector<std::string>&) {
   std::cout << "Open Source License" << std::endl;
   std::cout << "[termbox https://github.com/nsf/termbox]" << std::endl;
   std::cout << "Copyright (C) 2010-2013 nsf <no.smile.face@gmail.com>\n\
@@ -461,27 +488,62 @@ THE SOFTWARE." << std::endl;
   return 0;
 }
 
-struct Command { const char* name; int (*func)(int, char**); } commands [] = {
-  {"list", list},
-  {"start", start},
-  {"monitor", monitor},
-  {"stop", stop},
-  {"console", console},
-  {"login", login},
-  {"setkb", setkb},
-  {"ui", ui},
-  {"install", install},
-  {"iso9660", iso9660},
-  {"burn", burn},
-  {"fbinfo", fbinfo},
-  {"license", license},
-  {NULL, NULL}
+static const std::map<std::string,std::pair<int (*)(const std::vector<std::string>&),std::string> > subcommands {
+  {"list", {list, "Show VM list"}},
+  {"start", {start, "Start VM"}},
+  {"monitor", {monitor, ""}},
+  {"stop", {stop, "Stop VM"}},
+  {"console", {console, "Enter VM console"}},
+  {"login", {login, ""}},
+  {"setkb", {setkb, ""}},
+  {"ui", {ui, ""}},
+  {"install", {install, ""}},
+  {"iso9660", {iso9660, ""}},
+  {"burn", {burn, ""}},
+  {"fbinfo", {fbinfo, ""}},
+  {"license", {license, ""}}
 };
+
+void show_subcommands()
+{
+    for (auto i = subcommands.cbegin(); i != subcommands.cend(); i++) {
+        std::cout << i->first << '\t' << i->second.second << std::endl;
+    }
+}
 
 int main(int argc, char* argv[])
 {
-  setlocale( LC_ALL, "ja_JP.utf8"); // TODO: read /etc/locale.conf
+    setlocale( LC_ALL, "ja_JP.utf8"); // TODO: read /etc/locale.conf
 
+    if (argc < 2) {
+        std::cout << "Subcommand not specified. Valid subcommands are:" << std::endl;
+        show_subcommands();
+        return 1;
+    }
+
+    std::string subcommand(argv[1]);
+
+    if (!subcommands.contains(subcommand)) {
+        std::cout << "Invalid subcommand '" << subcommand << "'. Valid subcommands are:" << std::endl;
+        show_subcommands();
+        return 1;
+    }
+
+    std::vector<std::string> args;
+
+    args.push_back(std::string(argv[0]) + ' ' + subcommand);
+    for (int i = 2; i < argc; i++) {
+        args.push_back(argv[i]);
+    }
+
+    return subcommands.at(subcommand).first(args);
+}
+
+
+
+
+
+/*
   gflags::SetUsageMessage("Walbrix command line tool");
   gflags::SetVersionString("0.1");
   gflags::ParseCommandLineFlags(&argc, &argv, true);
@@ -511,3 +573,4 @@ int main(int argc, char* argv[])
   std::cerr << "No such subcommand as '" << subcommand << "'" << std::endl;
   return 1;
 }
+*/

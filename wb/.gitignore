@@ -1,4 +1,6 @@
-/target/
-Cargo.lock
 wb
+wbc
+walbrixd
 *.o
+.gitignore
+.vscode

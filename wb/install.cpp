@@ -184,7 +184,7 @@ public:
   }
   const char* c_str() { return ((const std::filesystem::path&)*this).c_str(); }
   std::filesystem::path operator /(const char* filename) {
-    return ((std::filesystem::path)*this) /= filename;
+    return ((std::filesystem::path)*this) / filename;
   }
 };
 
@@ -440,7 +440,7 @@ int install(bool reboot_after_done = false)
   return rst;
 }
 
-int install(int argc, char* argv[]) noexcept(false)
+int install(const std::vector<std::string>&) noexcept(false)
 {
   return install(false);
 }
