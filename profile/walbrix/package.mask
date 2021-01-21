@@ -3,4 +3,3 @@
 <app-emulation/xen-4.14
 <app-emulation/xen-tools-4.14
 <app-emulation/xen-pvgrub-4.14
->=net-firewall/iptables-1.8

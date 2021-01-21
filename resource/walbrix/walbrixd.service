@@ -1,0 +1,11 @@
+[Unit]
+Description=Walbrix daemon
+
+[Service]
+ExecStart=-/usr/sbin/walbrixd --bridge br0
+Restart = always
+KillMode=mixed
+BusName = com.walbrix.Walbrix
+
+[Install]
+WantedBy=multi-user.target

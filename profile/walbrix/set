@@ -92,8 +92,14 @@ net-vpn/openvpn
 dev-vcs/git
 net-libs/nodejs
 sys-apps/kmscon
+dev-libs/libvterm
+media-libs/libsdl2
+media-libs/sdl2-image
+media-libs/sdl2-mixer
+media-libs/sdl2-ttf
 media-fonts/vlgothic
-dev-cpp/gflags
+media-sound/alsa-utils
+dev-cpp/argparse
 dev-cpp/picojson
 dev-cpp/pstreams
 app-misc/tmux

@@ -48,9 +48,11 @@ sys-cluster/drbd-utils xen
 app-emulation/qemu aio bzip2 curl fdt filecaps -gtk jpeg ncurses nls virtfs -oss pin-upstream-blobs png -pulseaudio -python -seccomp -usb -vhost-net vnc xattr xen -xfs -xkb -qemu_softmmu_targets_i386 -qemu_user_targets_i386
 
 # wbui
-media-libs/libsdl alsa fbcon
-media-libs/sdl-image jpeg png webp
-media-libs/sdl-mixer vorbis
+media-libs/mesa X -wayland classic dri3 egl gallium gles2 llvm -vulkan -zstd
+media-libs/libsdl2 -X gles2 alsa kms cpu_flags_x86_3dnow
+media-libs/libglvnd X # for kmscon
+media-libs/sdl2-image jpeg png webp
+media-libs/sdl2-mixer mp3 vorbis
 
 # dev
 dev-vcs/git -perl -gpg -python
@@ -77,9 +79,6 @@ x11-base/xorg-drivers -input_devices_keyboard -input_devices_libinput -input_dev
 sci-geosciences/gpsd bluetooth ntp python usb gpsd_protocols_fury gpsd_protocols_geostar gpsd_protocols_nmea0183 gpsd_protocols_nmea2000 gpsd_protocols_passthrough -gpsd_protocols_isync -gpsd_protocols_ublox -gpsd_protocols_greis
 dev-python/pyserial
 net-misc/modemmanager mbim
-
-# kmscon
-media-libs/libglvnd X
 
 # strip python dependency
 app-misc/pax-utils -python

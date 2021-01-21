@@ -205,8 +205,16 @@ $copy resource/btrfs/expand-rw-layer /usr/sbin/
 $copy resource/walbrix/do-with-lvm-snapshot /usr/sbin/
 
 # wb
-/usr/lib64/libgflags.so
+$package dev-libs/icu
+$require libsdl2.lst
+$copy resource/walbrix/walbrixd.service /lib/systemd/system/
+$sed /lib/systemd/system/walbrixd.service 's/br0/xenbr0/'
+$exec 'systemctl enable walbrixd'
+$copy resource/walbrix/walbrixd.conf /etc/dbus-1/system.d/
 /usr/lib64/libiniparser4.so.1
+/usr/lib64/libvterm.so.0
+/usr/share/fonts/vlgothic/VL-Gothic-Regular.ttf
+/usr/share/fonts/vlgothic/VL-PGothic-Regular.ttf
 
 $copy wb/. /tmp/
 $exec --overlay "cd /tmp && make clean && make && make install"
