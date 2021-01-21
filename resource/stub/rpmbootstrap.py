@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET,gzip
 import requests
 
 BASE_URL="http://ftp.iij.ad.jp/pub/linux/centos/8-stream/BaseOS/x86_64/os/"
-INSTALL=["yum", "passwd", "vim-minimal", "strace", "less", "kernel", "tar", "openssh-server", "openssh-clients", "avahi"]
+INSTALL=["yum", "passwd", "vim-minimal", "strace", "less", "kernel", "tar", "openssh-server", "openssh-clients", "avahi", "NetworkManager"]
 OPTIONAL=["dhclient"]
 
 packages = {}
