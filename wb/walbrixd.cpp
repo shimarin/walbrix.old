@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/un.h>
+#include <sys/utsname.h>
 #include <stdexcept>
 #include <iostream>
 #include <string>
@@ -56,6 +57,7 @@ std::pair<pid_t, int> createSubprocessWithPty(int rows, int cols, const char* pr
     //else
 
     if (!pid) {
+        // remove all signal handlers
         struct sigaction sig_action;
         sig_action.sa_handler = SIG_DFL;
         sig_action.sa_flags = 0;
@@ -64,6 +66,12 @@ std::pair<pid_t, int> createSubprocessWithPty(int rows, int cols, const char* pr
         for (int i = 0 ; i < NSIG ; i++) {
             sigaction(i, &sig_action, NULL);
         }
+
+        // unblock SIGTERM
+        sigset_t set;
+        sigemptyset(&set);
+        sigaddset(&set, SIGTERM);
+        sigprocmask(SIG_UNBLOCK, &set, NULL);
 
         setenv("TERM", TERM, 1);
         char ** argv = new char *[args.size() + 2];
@@ -99,23 +107,44 @@ static int method_start(sd_bus_message *m, void *userdata, sd_bus_error *ret_err
     auto vmpath = vmroot / name;
     auto systempath = vmpath / "system";
     auto fspath = vmpath / "fs";
-    if (!std::filesystem::exists(vmpath) || (!std::filesystem::exists(systempath) && !std::filesystem::exists(fspath))) {
+    auto disk0path = vmpath / "disk0";
+
+    if (!std::filesystem::exists(vmpath) || (!std::filesystem::exists(systempath) && !std::filesystem::exists(fspath) && ! std::filesystem::exists(disk0path))) {
         sd_bus_error_set_const(ret_error, "net.poettering.NotExists", "VM not exists.");
         return -EINVAL;
     }
 
-    std::vector<std::string> args = {"-b", std::string("--network-bridge=") + config->bridge, std::string("--machine=") + name, "--register=no"};
-    if (std::filesystem::exists(systempath)) {
-        std::filesystem::create_directories(fspath);
-        args.push_back("-i");
-        args.push_back(systempath);
-        args.push_back(std::string("--overlay=+/:") + fspath.string() + ":/");
-    } else {
-        args.push_back("-D");
-        args.push_back(fspath);
+    std::string program = "systemd-nspawn";
+    std::vector<std::string> args;
+
+    if (std::filesystem::exists(disk0path)) { // Treat as full virtual
+        auto cdrompath = vmpath / "cdrom.iso";
+        struct utsname name;
+        if (uname(&name) < 0) throw std::runtime_error("uname() failed");
+        program = std::string("qemu-system-") + name.machine;
+        args = { "-netdev", "bridge,br=" + config->bridge + ",id=net0", "-device", "virtio-net-pci,netdev=net0", "-monitor", "stdio",
+            "-drive", "file=" + disk0path.string() + ",media=disk", "-rtc", "base=utc,clock=rt", "-m", "1024" };
+        if (std::filesystem::exists(cdrompath)) {
+            args.push_back("-cdrom");
+            args.push_back(cdrompath);
+        }
+        if (std::filesystem::exists("/dev/kvm")) {
+            args.push_back("-enable-kvm");
+        }
+    } else { // otherwise a container
+        args = {"-b", std::string("--network-bridge=") + config->bridge, std::string("--machine=") + name, "--register=no"};
+        if (std::filesystem::exists(systempath)) {
+            std::filesystem::create_directories(fspath);
+            args.push_back("-i");
+            args.push_back(systempath);
+            args.push_back(std::string("--overlay=+/:") + fspath.string() + ":/");
+        } else {
+            args.push_back("-D");
+            args.push_back(fspath);
+        }
     }
 
-    auto vm = createSubprocessWithPty(24, 80, "systemd-nspawn", args);
+    auto vm = createSubprocessWithPty(24, 80, program.c_str(), args);
 
     make_nonblocking(vm.second);
 
