@@ -9,7 +9,7 @@ sys-kernel/gentoo-sources
 =net-analyzer/snort-2.9.16
 =net-analyzer/barnyard2-1.13
 =net-firewall/firewalld-0.7.3-r1
-=net-firewall/iptables-1.6.2-r2
+=app-arch/rpm-4.16.0
 
 #gui
 =x11-terms/sakura-3.7.1
