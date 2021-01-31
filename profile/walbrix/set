@@ -111,3 +111,6 @@ app-admin/logrotate
 
 net-misc/socat
 
+app-arch/rpm
+dev-util/debootstrap
+

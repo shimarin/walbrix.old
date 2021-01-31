@@ -24,7 +24,9 @@ app-admin/perl-cleaner	app-shells/bash dev-lang/perl || ( ( sys-apps/portage app
 app-admin/sudo	sys-libs/zlib:0/1= sys-libs/pam dev-libs/openssl:0/1.1= >=app-misc/editor-wrapper-3 virtual/editor sys-auth/pambase virtual/tmpfiles
 app-admin/sysstat	virtual/libintl
 app-admin/testdisk	sys-apps/util-linux sys-fs/e2fsprogs sys-libs/ncurses:0/6= sys-fs/ntfs3g sys-libs/zlib
+app-arch/dpkg	>=dev-lang/perl-5.14.2:0/5.30= app-arch/bzip2 app-arch/xz-utils >=sys-libs/zlib-1.1.4
 app-arch/libarchive	virtual/acl[abi_x86_64(-)] app-arch/bzip2[abi_x86_64(-)] dev-libs/libxml2[abi_x86_64(-)] virtual/libiconv[abi_x86_64(-)] sys-apps/attr[abi_x86_64(-)] dev-libs/openssl:0/1.1=[abi_x86_64(-)] app-arch/xz-utils[threads,abi_x86_64(-)] sys-libs/zlib[abi_x86_64(-)]
+app-arch/rpm	!app-arch/rpm5 app-arch/libarchive >=sys-libs/db-4.5:* >=sys-libs/zlib-1.2.3-r1 >=app-arch/bzip2-1.0.1 >=dev-libs/popt-1.7 >=app-crypt/gnupg-1.2 dev-libs/elfutils virtual/libintl >=dev-lang/perl-5.8.8 dev-libs/nss virtual/libintl >=dev-lang/lua-5.1.0:0/0=[deprecated] virtual/acl >=sys-libs/libcap-2.0 dev-lang/perl:0/5.30=
 app-arch/rpm2targz	app-arch/cpio app-arch/zstd
 app-arch/tar	virtual/acl
 app-arch/unzip	app-arch/bzip2
@@ -47,6 +49,7 @@ app-eselect/eselect-iptables	app-admin/eselect
 app-eselect/eselect-lib-bin-symlink	app-admin/eselect
 app-eselect/eselect-mpg123	>=app-eselect/eselect-lib-bin-symlink-0.1.1 !<media-sound/mpg123-1.14.4-r1
 app-eselect/eselect-pinentry	>=app-eselect/eselect-lib-bin-symlink-0.1.1
+app-eselect/eselect-python	>=app-admin/eselect-1.2.3 >=dev-lang/python-exec-2.4.2
 app-eselect/eselect-vi	app-admin/eselect
 app-misc/c_rehash	!<dev-libs/openssl-1.0.2d-r1:0
 app-misc/ca-certificates	app-misc/c_rehash sys-apps/debianutils
@@ -58,7 +61,7 @@ app-portage/gemato	>=app-crypt/gnupg-2.2.20-r1 dev-python/requests[python_target
 app-portage/gentoolkit	sys-apps/portage[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] sys-apps/gawk sys-apps/gentoo-functions dev-lang/python:3.8[xml(+),threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 app-portage/portage-utils	|| ( >=sys-devel/gcc-4.2:*[openmp] sys-devel/clang-runtime:*[openmp] ) app-crypt/libb2:0/0= dev-libs/openssl:0/1.1= sys-libs/zlib:0/1= app-crypt/gpgme:1/11= || ( >=sys-devel/gcc-4.2:*[openmp] sys-devel/clang-runtime:*[openmp] ) dev-libs/openssl:0/1.1=
 app-shells/bash	>=sys-libs/ncurses-5.2-r2:0/6= virtual/libintl >=sys-libs/readline-8.0:0/8=
-app-text/build-docbook-catalog	|| ( sys-apps/util-linux app-misc/getopt ) !<app-text/docbook-xsl-stylesheets-1.73.1 dev-libs/libxml2
+app-text/build-docbook-catalog	dev-libs/libxml2 || ( sys-apps/util-linux app-misc/getopt ) !<app-text/docbook-xsl-stylesheets-1.73.1
 app-text/docbook-xml-dtd	>=app-text/docbook-xsl-stylesheets-1.65 >=app-text/build-docbook-catalog-1.2 >=app-text/sgml-common-0.6.3-r7
 app-text/docbook-xml-dtd	>=app-text/docbook-xsl-stylesheets-1.65 >=app-text/build-docbook-catalog-1.2 >=app-text/sgml-common-0.6.3-r7
 app-text/docbook-xml-dtd	>=app-text/docbook-xsl-stylesheets-1.65 >=app-text/build-docbook-catalog-1.2 >=app-text/sgml-common-0.6.3-r7
@@ -68,6 +71,7 @@ app-text/opensp	net-libs/libnsl:0/2=
 app-text/po4a	app-text/opensp dev-libs/libxslt dev-perl/Locale-gettext dev-perl/SGMLSpm dev-perl/TermReadKey dev-perl/Text-WrapI18N dev-perl/Unicode-LineBreak dev-perl/YAML-Tiny sys-devel/gettext virtual/perl-Pod-Parser dev-lang/perl:0/5.30=
 app-text/xmlto	>=app-text/docbook-xsl-stylesheets-1.62.0-r1 app-text/docbook-xml-dtd:4.2 app-shells/bash:0 dev-libs/libxslt sys-apps/sed >=sys-apps/coreutils-6.10-r1 || ( sys-apps/util-linux app-misc/getopt ) sys-apps/which
 dev-db/sqlite	sys-libs/zlib:0/1=[abi_x86_64(-)] sys-libs/readline:0/8=[abi_x86_64(-)]
+dev-lang/lua	>=sys-libs/readline-6.2_p5-r1:0/8=[abi_x86_64(-)]
 dev-lang/perl	sys-libs/db:5.3/5.3= >=sys-libs/gdbm-1.8.3:0/6= app-arch/bzip2 sys-libs/zlib
 dev-lang/python	app-arch/bzip2:0/1= app-arch/xz-utils:0/0= dev-libs/libffi:0/7= sys-apps/util-linux:0/0= >=sys-libs/zlib-1.1.3:0/1= virtual/libcrypt:0/1= virtual/libintl sys-libs/gdbm:0/6=[berkdb] >=sys-libs/ncurses-5.2:0/6= >=sys-libs/readline-4.1:0/8= >=dev-db/sqlite-3.3.8:3/3= dev-libs/openssl:0/1.1= >=dev-libs/expat-2.1:0/0= app-misc/mime-types
 dev-lang/python-exec	!<=dev-lang/python-2.7.18-r3:2.7
@@ -163,6 +167,7 @@ dev-python/traceback2	dev-python/linecache2[python_targets_python3_8(-),-python_
 dev-python/unittest2	dev-python/linecache2[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/six-1.4[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-python/traceback2[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/setuptools-42.0.2[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-python/urllib3	>=dev-python/PySocks-1.5.8[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] <dev-python/PySocks-2.0[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-python/certifi[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/cryptography-1.3.4[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/pyopenssl-0.14[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] >=dev-python/idna-2.0.0[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)] dev-lang/python:3.8[ssl(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_pypy3(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
 dev-util/cmake	>=app-arch/libarchive-3.3.3:0/13= app-crypt/rhash >=dev-libs/expat-2.0.1 >=dev-libs/jsoncpp-1.9.2-r2:0/24= >=dev-libs/libuv-1.10.0:0/1= >=net-misc/curl-7.21.5[ssl] sys-libs/zlib virtual/pkgconfig sys-libs/ncurses:0/6=
+dev-util/debootstrap	app-arch/dpkg net-misc/wget sys-devel/binutils
 dev-util/desktop-file-utils	>=dev-libs/glib-2.12:2
 dev-util/gdbus-codegen	dev-lang/python:3.8[xml] >=dev-lang/python-exec-2:2/2=[python_targets_python3_8] dev-lang/python:3.8[xml] >=dev-lang/python-exec-2:2/2=[python_targets_python3_8]
 dev-util/glib-utils	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8] !<dev-libs/glib-2.56.2:2
@@ -340,7 +345,7 @@ sys-libs/readline	>=sys-libs/ncurses-5.9-r3:0/6=[unicode,abi_x86_64(-)]
 sys-libs/slang	sys-libs/ncurses:0/6= >=dev-libs/libpcre-8.33-r1[abi_x86_64(-)] >=sys-libs/readline-6.2_p5-r1:0/8=[abi_x86_64(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)]
 sys-libs/talloc	dev-libs/libbsd[abi_x86_64(-)] dev-lang/python:3.8[threads(+)] >=dev-lang/python-exec-2:2/2=[python_targets_python3_8] !!<sys-libs/talloc-2.0.5
 sys-libs/tdb	dev-libs/libbsd[abi_x86_64(-)]
-sys-libs/tevent	dev-libs/libbsd[abi_x86_64(-)] >=sys-libs/talloc-2.3.1[python_single_target_python3_8(-),abi_x86_64(-)]
+sys-libs/tevent	dev-libs/libbsd[abi_x86_64(-)] >=sys-libs/talloc-2.3.1[abi_x86_64(-)]
 sys-libs/timezone-data	virtual/libintl !sys-libs/glibc[vanilla(+)]
 sys-libs/zlib	!<dev-libs/libxml2-2.7.7
 sys-power/cpupower	sys-apps/pciutils
@@ -370,7 +375,7 @@ virtual/pager	|| ( sys-apps/less sys-apps/most sys-apps/util-linux[ncurses] app-
 virtual/perl-CPAN-Meta	|| ( =dev-lang/perl-5.32* =dev-lang/perl-5.30* ~perl-core/CPAN-Meta-2.150.10 ) dev-lang/perl:0/5.30= !<perl-core/CPAN-Meta-2.150.10 !>perl-core/CPAN-Meta-2.150.10-r999 >=virtual/perl-CPAN-Meta-YAML-0.11.0 >=virtual/perl-JSON-PP-2.271.30 >=virtual/perl-Parse-CPAN-Meta-1.441.400
 virtual/perl-CPAN-Meta-YAML	|| ( =dev-lang/perl-5.32* =dev-lang/perl-5.30* ~perl-core/CPAN-Meta-YAML-0.18.0 ) dev-lang/perl:0/5.30= !<perl-core/CPAN-Meta-YAML-0.18.0 !>perl-core/CPAN-Meta-YAML-0.18.0-r999
 virtual/perl-Carp	|| ( =dev-lang/perl-5.32* =dev-lang/perl-5.30* ~perl-core/Carp-1.500.0 ) dev-lang/perl:0/5.30= !<perl-core/Carp-1.500.0 !>perl-core/Carp-1.500.0-r999
-virtual/perl-Data-Dumper	|| ( =dev-lang/perl-5.32* =dev-lang/perl-5.30* ~perl-core/Data-Dumper-2.174.0 ) dev-lang/perl:0/5.30= !<perl-core/Data-Dumper-2.174.0 !>perl-core/Data-Dumper-2.174.0-r999
+virtual/perl-Data-Dumper	|| ( =dev-lang/perl-5.32.0* =dev-lang/perl-5.30* ~perl-core/Data-Dumper-2.174.0 ) dev-lang/perl:0/5.30= !<perl-core/Data-Dumper-2.174.0 !>perl-core/Data-Dumper-2.174.0-r999
 virtual/perl-Encode	|| ( =dev-lang/perl-5.30* ~perl-core/Encode-3.10.0 ) dev-lang/perl:0/5.30= !<perl-core/Encode-3.10.0 !>perl-core/Encode-3.10.0-r999
 virtual/perl-Exporter	|| ( =dev-lang/perl-5.30* ~perl-core/Exporter-5.730.0 ) dev-lang/perl:0/5.30= !<perl-core/Exporter-5.730.0 !>perl-core/Exporter-5.730.0-r999
 virtual/perl-ExtUtils-CBuilder	|| ( =dev-lang/perl-5.30* ~perl-core/ExtUtils-CBuilder-0.280.231 ) dev-lang/perl:0/5.30= !<perl-core/ExtUtils-CBuilder-0.280.231 !>perl-core/ExtUtils-CBuilder-0.280.231-r999
@@ -400,7 +405,7 @@ virtual/ttf-fonts	|| ( media-fonts/liberation-fonts media-fonts/source-pro media
 virtual/udev	|| ( >=sys-fs/eudev-2.1.1 >=sys-fs/udev-217 >=sys-apps/systemd-217 )
 virtual/yacc	|| ( sys-devel/bison dev-util/byacc dev-util/yacc )
 x11-base/xcb-proto	dev-lang/python:3.8 >=dev-lang/python-exec-2:2/2=[python_targets_python3_8(-),-python_single_target_python3_7(-),-python_single_target_python3_8(-),-python_single_target_python3_9(-)]
-x11-libs/cairo	>=dev-libs/lzo-2.06-r1[abi_x86_64(-)] >=media-libs/fontconfig-2.10.92[abi_x86_64(-)] >=media-libs/freetype-2.5.0.1:2[png,abi_x86_64(-)] >=media-libs/libpng-1.6.10:0/16=[abi_x86_64(-)] sys-libs/binutils-libs:0/2.34=[abi_x86_64(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=x11-libs/pixman-0.32.4[abi_x86_64(-)] >=dev-libs/glib-2.34.3:2[abi_x86_64(-)]
+x11-libs/cairo	>=dev-libs/lzo-2.06-r1[abi_x86_64(-)] >=media-libs/fontconfig-2.10.92[abi_x86_64(-)] >=media-libs/freetype-2.5.0.1:2[png,abi_x86_64(-)] >=media-libs/libpng-1.6.10:0/16=[abi_x86_64(-)] sys-libs/binutils-libs:0/2.35.1=[abi_x86_64(-)] >=sys-libs/zlib-1.2.8-r1[abi_x86_64(-)] >=x11-libs/pixman-0.32.4[abi_x86_64(-)] >=dev-libs/glib-2.34.3:2[abi_x86_64(-)]
 x11-libs/libX11	>=x11-libs/libxcb-1.11.1[abi_x86_64(-)] !<x11-base/xorg-proto-2019.2 x11-misc/compose-tables
 x11-libs/libXdamage	>=x11-libs/libX11-1.6.2[abi_x86_64(-)] >=x11-libs/libXfixes-5.0.1[abi_x86_64(-)]
 x11-libs/libXdmcp	dev-libs/libbsd

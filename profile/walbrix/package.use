@@ -68,6 +68,7 @@ media-sound/mpg123 alsa
 net-fs/s3fs openssl
 dev-python/netaddr -cli
 sys-fs/squashfs-tools lzma
+app-arch/rpm lua caps
 
 # assume EC algorythms are safe
 dev-libs/openssl -bindist
