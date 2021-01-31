@@ -7,12 +7,26 @@
 
 #include <argparse/argparse.hpp>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-
 #include "walbrixd.h"
 #include "terminal.h"
+
+#include "wbc.h"
+#include "status.h" 
+#include "shutdown.h"
+
+bool process_event(std::function<bool(const SDL_Event&)> func) {
+    SDL_Event ev;
+    while (SDL_PollEvent(&ev)) {
+        if (ev.type == SDL_QUIT) throw std::runtime_error("Terminated");
+        if (!func(ev)) return false;
+    }
+    return true;
+};
+
+std::shared_ptr<SDL_Surface> create_transparent_surface(int w, int h)
+{
+    return std::shared_ptr<SDL_Surface>(SDL_CreateRGBSurface(0, w, h, 32,0xff, 0xff00, 0xff0000, 0xff000000), SDL_FreeSurface);
+}
 
 int console(const char* vmname);
 int console(const std::vector<std::string>& args);
@@ -88,66 +102,20 @@ int list(const std::vector<std::string>& args)
     return 0;
 }
 
-bool title(SDL_Renderer* renderer, int width, int height, const char* font_file, const std::filesystem::path& theme_dir)
+bool auth(UIContext& uicontext)
 {
-    auto surface = IMG_Load((theme_dir / "title_background.png").c_str());
-    auto title_background = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-
-    surface = IMG_Load((theme_dir / "title.png").c_str());
-    auto title = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect title_rect = { (width - surface->w) / 2, height * 1 / 3, surface->w, surface->h };
-    SDL_FreeSurface(surface);
-
-    TTF_Font* font = TTF_OpenFont(font_file, 48);
-
-    surface = TTF_RenderUTF8_Blended(font, "開始するにはEnterを押してください", (SDL_Color){255, 255, 255, 255});
-    SDL_Rect title_message_rect = { (width - surface->w) / 2, height * 3 / 4, surface->w, surface->h };
-    auto title_message = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-
-    surface = TTF_RenderUTF8_Blended(font, "Copyright© 2009-2021 Walbrix Corporation", (SDL_Color){0, 0, 0, 0});
-    SDL_Rect copyright_rect = { (width - surface->w) / 2, height - surface->h - 20, surface->w, surface->h };
-    auto copyright = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-
-    static const double pi = 3.141592653589793; // std::numbers::pi in C++20
-
-    while (true) {
-        SDL_RenderCopy(renderer, title_background, NULL, NULL);
-        SDL_RenderCopy(renderer, title, NULL, &title_rect);
-        SDL_RenderCopy(renderer, copyright, NULL, &copyright_rect);
-        SDL_Event ev;
-        while(SDL_PollEvent(&ev)) {
-            if (ev.type == SDL_QUIT) throw std::runtime_error("Terminated");
-            if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_RETURN) {
-                goto next;
-            }
-        }
-
-        Uint8 alpha = std::abs(std::sin((SDL_GetTicks() % 4000 * pi * 2 / 4000))) * 255;
-        SDL_SetTextureAlphaMod(title_message, alpha);
-        SDL_RenderCopy(renderer, title_message, NULL, &title_message_rect);
-
-        SDL_RenderPresent(renderer);
-    }
-
-next:;
     bool rst = true;
 
+    auto font_def = std::make_pair(uicontext.FONT_PROPOTIONAL, 40);
+    auto font = uicontext.registry.fonts(font_def);
+
     struct Env {
-        int width, height;
-        SDL_Renderer* renderer;
-        SDL_Texture* title_background;
-        SDL_Texture* title;
-        SDL_Texture* copyright;
-        SDL_Rect& title_rect;
-        SDL_Rect& copyright_rect;
+        UIContext& uicontext;
         TTF_Font* font;
         int result = 0;
         bool cancelled = false;
     } env = {
-        width, height, renderer, title_background, title, copyright, title_rect, copyright_rect, font
+        uicontext, font
     };
     struct pam_conv conv = {
         [](int num_msg, const struct pam_message** msg, struct pam_response** resp, void* appdata_ptr) {
@@ -159,58 +127,76 @@ next:;
             for (int i = 0; i < num_msg; i++) {
                 aresp[i].resp_retcode = 0;
                 if (msg[i]->msg_style == PAM_PROMPT_ECHO_OFF || msg[i]->msg_style == PAM_PROMPT_ECHO_ON) {
-                    std::string password;//("coarse8Gleam_Grin");
+                    std::string password;
+                    struct TextureAndRect {
+                        SDL_Texture* texture = NULL;
+                        SDL_Rect rect;
+                        void operator()() { if (texture) SDL_DestroyTexture(texture); texture = NULL; }
+                        ~TextureAndRect() { (*this)(); }
+                        operator bool() { return (texture != NULL); }
+                        const TextureAndRect& operator()(SDL_Renderer* renderer,SDL_Surface* surface) {
+                            if (texture) SDL_DestroyTexture(texture);
+                            texture = SDL_CreateTextureFromSurface(renderer, surface);
+                            rect.w = surface->w;
+                            rect.h = surface->h;
+                            return *this;
+                        }
+                        const SDL_Rect& operator()(int x, int y) { rect.x = x; rect.y = y; return rect; }
+                        int operator()(SDL_Renderer* renderer) { if (texture) return SDL_RenderCopy(renderer, texture, NULL, &rect); else return -1; }
+                    } password_texture, message_texture;
                     while (true) {
-                        SDL_RenderCopy(env.renderer, env.title_background, NULL, NULL);
-                        SDL_RenderCopy(env.renderer, env.title, NULL, &env.title_rect);
-                        SDL_RenderCopy(env.renderer, env.copyright, NULL, &env.copyright_rect);
-                        std::string message(msg[i]->msg);
-                        message += ' ';
-                        for (int i = 0; i < password.length(); i++) message += '*';
-                        auto surface = TTF_RenderUTF8_Blended(env.font, message.c_str(), (SDL_Color){0, 0, 0, 0});
-                        auto password_texture = SDL_CreateTextureFromSurface(env.renderer, surface);
-                        SDL_Rect password_rect = { 0, env.height * 3 / 5, surface->w, surface->h };
-                        SDL_FreeSurface(surface);
-                        SDL_RenderCopy(env.renderer, password_texture, NULL, &password_rect);
+                        env.uicontext.render();
+                        if (!password_texture) {
+                            std::string message(msg[i]->msg);
+                            message += ' ';
+                            for (int i = 0; i < password.length(); i++) message += '*';
+                            auto surface = TTF_RenderUTF8_Blended(env.font, message.c_str(), (SDL_Color){0, 0, 0, 0});
+                            password_texture(env.uicontext.renderer, surface);
+                            password_texture(0, env.uicontext.height * 3 / 5);
+                            SDL_FreeSurface(surface);
+                        }
+                        password_texture(env.uicontext.renderer);
 
-                        SDL_Event ev;
-                        while(SDL_PollEvent(&ev)) {
+                        if (!process_event([&env,&password,&password_texture](auto ev) {
                             if (ev.type == SDL_QUIT) throw std::runtime_error("Terminated");
                             if (ev.type == SDL_TEXTINPUT) {
                                 for (int i = 0; i < strlen(ev.text.text); i++) {
                                     if (password.length() < 32) password += (char)ev.text.text[i];
                                 }
+                                if (password_texture) password_texture();
                             } else if (ev.type == SDL_KEYDOWN) {
                                 if (ev.key.keysym.sym == SDLK_RETURN || ev.key.keysym.sym == SDLK_KP_ENTER) {
-                                    SDL_RenderPresent(env.renderer);
-                                    goto out;
+                                    SDL_RenderPresent(env.uicontext.renderer);
+                                    return false;
                                 } else if (ev.key.keysym.sym == SDLK_BACKSPACE) {
-                                    if (password.length() > 0) password.pop_back();
+                                    if (password.length() > 0) {
+                                        password.pop_back();
+                                        if (password_texture) password_texture();
+                                    }
                                 } else if (ev.key.keysym.sym == SDLK_ESCAPE) {
                                     env.cancelled = true;
-                                    SDL_RenderPresent(env.renderer);
-                                    goto out;
+                                    SDL_RenderPresent(env.uicontext.renderer);
+                                    return false;
                                 }
                             }
-                        }
+                            return true;
+                        })) break;
 
-                        if (env.result == PAM_PERM_DENIED) {
-                            surface = TTF_RenderUTF8_Blended(env.font, "パスワードが正しくありません", (SDL_Color){255, 0, 0, 0});
-                            auto message_texture = SDL_CreateTextureFromSurface(env.renderer, surface);
-                            SDL_Rect message_rect = { 0, password_rect.y + password_rect.h, surface->w, surface->h };
+                        if (env.result == PAM_PERM_DENIED && !message_texture) {
+                            auto surface = TTF_RenderUTF8_Blended(env.font, "パスワードが正しくありません", (SDL_Color){255, 0, 0, 0});
+                            message_texture(env.uicontext.renderer, surface);
+                            message_texture(0, password_texture.rect.y + password_texture.rect.h);
                             SDL_FreeSurface(surface);
-                            SDL_RenderCopy(env.renderer, message_texture, NULL, &message_rect);
                         }
+                        message_texture(env.uicontext.renderer);
 
-                        password_rect.x = password_rect.w;
-                        password_rect.w = 4;
+                        auto caret_rect = (SDL_Rect){password_texture.rect.w, password_texture.rect.y, 4, password_texture.rect.h};
                         Uint8 alpha = std::abs(std::sin((SDL_GetTicks() % 2000 * pi * 2 / 2000))) * 255;
-                        SDL_SetRenderDrawColor(env.renderer, 0, 0, 0, alpha);
-                        SDL_SetRenderDrawBlendMode(env.renderer, SDL_BLENDMODE_BLEND);
-                        SDL_RenderFillRect(env.renderer, &password_rect);
-                        SDL_RenderPresent(env.renderer);
+                        SDL_SetRenderDrawColor(env.uicontext.renderer, 0, 0, 0, alpha);
+                        SDL_SetRenderDrawBlendMode(env.uicontext.renderer, SDL_BLENDMODE_BLEND);
+                        SDL_RenderFillRect(env.uicontext.renderer, &caret_rect);
+                        SDL_RenderPresent(env.uicontext.renderer);
                     }
-                    out:;
                     aresp[i].resp = strdup(password.c_str());
                 }
             }
@@ -226,40 +212,59 @@ next:;
     } while (env.result != PAM_SUCCESS && env.result != PAM_ABORT && env.result != PAM_MAXTRIES && !env.cancelled);
     pam_end(pamh, env.result);
 
-    if (env.result == PAM_ABORT || env.result == PAM_MAXTRIES || env.cancelled) rst = false;
+    uicontext.registry.fonts.discard(font_def);
 
-    TTF_CloseFont(font);
-    SDL_DestroyTexture(title_background);
-    SDL_DestroyTexture(title);
-    SDL_DestroyTexture(title_message);
-    SDL_DestroyTexture(copyright);
+    return (env.result != PAM_ABORT && env.result != PAM_MAXTRIES && !env.cancelled);
+}
+
+bool title(UIContext& uicontext)
+{
+    auto title_background = std::get<0>(uicontext.create_texture_from_transient_surface("title_background.png"));
+    auto title = uicontext.create_texture_from_transient_surface("title.png");
+    SDL_Rect title_rect = { (uicontext.width - std::get<1>(title)) / 2, uicontext.height * 1 / 3, std::get<1>(title), std::get<2>(title) };
+
+    auto font = std::make_pair(uicontext.FONT_PROPOTIONAL, 48);
+
+    auto title_message = uicontext.render_font_as_texture(font, "開始するにはEnterを押してください", {255, 255, 255, 255});
+    SDL_Rect title_message_rect = { (uicontext.width - std::get<1>(title_message)) / 2, uicontext.height * 3 / 4, std::get<1>(title_message), std::get<2>(title_message) };
+
+    auto copyright = uicontext.render_font_as_texture(font, "Copyright© 2009-2021 Walbrix Corporation", {0, 0, 0, 0});
+    SDL_Rect copyright_rect = { (uicontext.width - std::get<1>(copyright)) / 2, uicontext.height - std::get<2>(copyright) - 20, std::get<1>(copyright), std::get<2>(copyright) };
+    uicontext.registry.fonts.discard(font);
+
+    uicontext.push_render_func(
+        [title_background,title,title_rect,copyright,copyright_rect](SDL_Renderer* renderer, bool) {
+            SDL_RenderCopy(renderer, title_background.get(), NULL, NULL);
+            SDL_RenderCopy(renderer, std::get<0>(title).get(), NULL, &title_rect);
+            SDL_RenderCopy(renderer, std::get<0>(copyright).get(), NULL, &copyright_rect);
+            return true;            
+        }
+    );
+
+    uicontext.push_render_func(
+        [&title_message,&title_message_rect](SDL_Renderer* renderer,bool) {
+            Uint8 alpha = std::abs(std::sin((SDL_GetTicks() % 4000 * pi * 2 / 4000))) * 255;
+            SDL_SetTextureAlphaMod(std::get<0>(title_message).get(), alpha);
+            SDL_RenderCopy(renderer, std::get<0>(title_message).get(), NULL, &title_message_rect);
+            return true;
+        }
+    );
+
+    while (process_event([](auto ev) { return !(ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_RETURN); })) {
+        uicontext.render();
+        SDL_RenderPresent(uicontext.renderer);
+    }
+
+    uicontext.pop_render_func();
+    bool rst = auth(uicontext);
+
+    uicontext.pop_render_func();
     return rst;
 }
 
-void local_console(SDL_Renderer* renderer, int width, int height, const char* font_file, const std::filesystem::path& theme_dir, 
-    const char* prog, const std::vector<std::string>& args = {})
+int local_console(UIContext& uicontext, const char* prog, const std::vector<std::string>& args = {})
 {
-    auto surface = IMG_Load((theme_dir / "background.png").c_str());
-    auto background = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-    surface = IMG_Load((theme_dir / "header.png").c_str());
-    auto header = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect header_rect = { 0, 0, surface->w, surface->h };
-    SDL_FreeSurface(surface);
-    surface = IMG_Load((theme_dir / "header_logo.png").c_str());
-    auto header_logo = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect header_logo_rect = { 0, 0, surface->w, surface->h };
-    SDL_FreeSurface(surface);
-    surface = IMG_Load((theme_dir / "footer.png").c_str());
-    auto footer = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect footer_rect = { 0, height - surface->h, surface->w, surface->h };
-    SDL_FreeSurface(surface);
-    surface = IMG_Load((theme_dir / "mainmenu_panel.png").c_str());
-    auto mainmenu_panel = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_Rect mainmenu_panel_rect = { 0, header_rect.h, surface->w, surface->h };
-    SDL_FreeSurface(surface);
-
-    const int rows = 30, cols = 100;
+    const int rows = 32, cols = 80;
 
     int fd;
     struct winsize win = { (unsigned short)rows, (unsigned short)cols, 0, 0 };
@@ -280,98 +285,271 @@ void local_console(SDL_Renderer* renderer, int width, int height, const char* fo
     }
     //else 
 
-    TTF_Font* font = TTF_OpenFont(font_file, 16);
+    struct AutoClose {
+        int fd;
+        AutoClose(int _fd) : fd(_fd) {;}
+        ~AutoClose() { close(fd); }
+    } autoclose_fd(fd);
+
+    auto font = uicontext.registry.fonts({uicontext.FONT_FIXED, 16});
     Terminal terminal(fd, rows, cols, font);
-    SDL_Rect terminal_rect = { (width - 800) / 2, (height - 600) / 2, 800, 600 };
+    SDL_Rect terminal_rect = { 
+        uicontext.mainmenu_width, uicontext.header_height, 
+        uicontext.width - uicontext.mainmenu_width, uicontext.height - uicontext.header_height - uicontext.footer_height
+    };
+
+    uicontext.push_render_func([&terminal,&terminal_rect](auto renderer, bool) {
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderFillRect(renderer, &terminal_rect);
+        terminal.render(renderer, terminal_rect);
+        return true;
+    });
 
     int status;
     while (pid != waitpid(pid, &status, WNOHANG)) {
-        SDL_RenderCopy(renderer, background, NULL, NULL);
-        SDL_RenderCopy(renderer, header, NULL, &header_rect);
-        SDL_RenderCopy(renderer, header_logo, NULL, &header_logo_rect);
-        SDL_RenderCopy(renderer, footer, NULL, &footer_rect);
-        SDL_RenderCopy(renderer, mainmenu_panel, NULL, &mainmenu_panel_rect);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderFillRect(renderer, &terminal_rect);
-        SDL_Event ev;
-        while(SDL_PollEvent(&ev)) {
-            if (ev.type == SDL_QUIT) throw std::runtime_error("Terminated");
-            //else
-            terminal.processEvent(ev);
-        }
+        uicontext.render();
 
+        process_event([&terminal](auto ev) { terminal.processEvent(ev); return true; });
         if (!terminal.processInput()) break; // EOF detected
 
-        terminal.render(renderer, terminal_rect);
-        SDL_RenderPresent(renderer);
+        SDL_RenderPresent(uicontext.renderer);
     }
+    uicontext.pop_render_func();
 
-out:;
-    TTF_CloseFont(font);
-    close(fd);
-
-    SDL_DestroyTexture(background);
-    SDL_DestroyTexture(header);
-    SDL_DestroyTexture(header_logo);
-    SDL_DestroyTexture(footer);
-    SDL_DestroyTexture(mainmenu_panel);
+    return status;
 }
 
-int ui(bool login)
+void fallback_to_agetty(const char* tty)
+{
+    std::cout << "Graphics device is not available. Falling back to text console." << std::endl;
+    execl("/sbin/agetty", "/sbin/agetty", "-o", "-p -- \\u", "--noclear", tty, getenv("TERM"), NULL);
+}
+
+void ui(UIContext& uicontext)
+{
+    if (uicontext.tty) {
+        while (!title(uicontext)) { ; }
+    }
+
+    auto background = std::get<0>(uicontext.create_texture_from_transient_surface("background.png"));
+
+    auto header = uicontext.create_texture_from_transient_surface("header.png");
+    uicontext.header_height = std::get<2>(header);
+
+    auto header_logo = uicontext.create_texture_from_transient_surface("header_logo.png");
+
+    auto footer = uicontext.create_texture_from_transient_surface("footer.png");
+    uicontext.footer_height = std::get<2>(footer);
+
+    auto mainmenu_panel = uicontext.create_texture_from_transient_surface("mainmenu_panel.png");
+    uicontext.mainmenu_width = std::get<1>(mainmenu_panel);
+
+    auto create_mainmenu_item_texture = [&uicontext](const char* icon_name, const char* text) {
+        auto font = uicontext.registry.fonts({uicontext.FONT_PROPOTIONAL, 32});
+        auto icon = uicontext.registry.surfaces.transient(icon_name);
+        auto surface0 = std::shared_ptr<SDL_Surface>(SDL_CreateRGBSurface(0, uicontext.mainmenu_width, uicontext.mainmenu_item_height, 32,0xff, 0xff00, 0xff0000, 0xff000000), SDL_FreeSurface);
+        auto surface1 = std::shared_ptr<SDL_Surface>(TTF_RenderUTF8_Blended(font, text, {0, 0, 0, 0}), SDL_FreeSurface);
+        //auto surface2 = std::shared_ptr<SDL_Surface>(TTF_RenderUTF8_Blended(font, text, {255, 255, 255, 255}), SDL_FreeSurface);
+        {
+            SDL_Rect rect = { (uicontext.mainmenu_item_height - icon->w) / 2, (surface0->h - icon->h) / 2, icon->w, icon->h };
+            SDL_BlitSurface(icon.get(), NULL, surface0.get(), &rect);
+        }
+        SDL_Rect rect = { uicontext.mainmenu_item_height, (surface0->h - surface1->h) / 2, surface1->w, surface1->h };
+        SDL_BlitSurface(surface1.get(), NULL, surface0.get(), &rect);
+        //rect.x += 2;
+        //rect.y += 2;
+        //SDL_BlitSurface(surface2.get(), NULL, surface0.get(), &rect);
+        return std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(uicontext.renderer, surface0.get()), SDL_DestroyTexture);
+    };
+
+    Status status(uicontext);
+    Shutdown shutdown(uicontext);
+
+    struct MainMenuItem {
+        std::string name;
+        int y;
+        std::shared_ptr<SDL_Texture> texture;
+        std::function<void()> draw;
+        std::function<void()> on_select;
+        std::function<void()> on_deselect;
+        std::function<bool()> on_enter;
+    };
+
+    std::vector<MainMenuItem> menuitems;
+
+    int y = uicontext.mainmenu_item_height;
+    menuitems.push_back({"status", y, create_mainmenu_item_texture("icon_status.png", "情報"), 
+        [&status](){status.draw();},[&status]() {status.on_select();}, [&status](){status.on_deselect();}, NULL });
+    y += uicontext.mainmenu_item_height;
+    menuitems.push_back({"console", y, create_mainmenu_item_texture("icon_console.png", "Linuxコンソール"), [](){},[]() {}, [](){}, [&uicontext](){
+        if (uicontext.tty && geteuid() == 0) {
+            local_console(uicontext, "/bin/login", {"-p", "-f", "root"});
+        } else {
+            local_console(uicontext, "bash");
+        }
+        return true; // continue with main menu
+    } });
+    y = 580;
+    if (uicontext.tty) {
+        menuitems.push_back({"shutdown", y, create_mainmenu_item_texture("icon_shutdown.png", "シャットダウン"),
+        [&shutdown](){shutdown.draw();},[&shutdown]() {shutdown.on_select();}, [&shutdown](){shutdown.on_deselect();}, [&shutdown](){return shutdown.on_enter();}});
+        y += uicontext.mainmenu_item_height;
+    }
+    menuitems.push_back({"back", y, create_mainmenu_item_texture("icon_back.png", uicontext.tty? "タイトルへ戻る" : "終了"), 
+        [](){},[]() {}, [](){}, [](){return false;}});
+
+    auto cursor1 = std::get<0>(uicontext.create_texture_from_transient_surface("mainmenu_cursor1.png"));
+    auto cursor2 = std::get<0>(uicontext.create_texture_from_transient_surface("mainmenu_cursor2.png"));
+
+    int selected = 0;
+    menuitems[selected].on_select();
+
+    uicontext.push_render_func([&uicontext,&background,&header,&header_logo,&footer,&mainmenu_panel,
+        &menuitems,&cursor1,&cursor2,&selected](auto renderer, bool focus) {
+        SDL_RenderCopy(renderer, background.get(), NULL, NULL);
+        SDL_Rect header_rect = { 0, 0, std::get<1>(header), uicontext.header_height };
+        SDL_RenderCopy(renderer, std::get<0>(header).get(), NULL, &header_rect);
+        SDL_Rect header_logo_rect = { 0, 0, std::get<1>(header_logo), std::get<2>(header_logo) };
+        SDL_RenderCopy(renderer, std::get<0>(header_logo).get(), NULL, &header_logo_rect);
+        SDL_Rect footer_rect = { 0, uicontext.height - std::get<2>(footer), std::get<1>(footer), uicontext.footer_height };
+        SDL_RenderCopy(renderer, std::get<0>(footer).get(), NULL, &footer_rect);
+        SDL_Rect mainmenu_panel_rect = { 0, header_rect.h, uicontext.mainmenu_width, std::get<2>(mainmenu_panel) };
+        SDL_RenderCopy(renderer, std::get<0>(mainmenu_panel).get(), NULL, &mainmenu_panel_rect);
+
+        SDL_Rect rect = {0, uicontext.header_height, uicontext.mainmenu_width, uicontext.mainmenu_item_height};
+        for (auto i = menuitems.begin(); i != menuitems.end(); i++) {
+            rect.y = i->y;
+            if (selected == std::distance(menuitems.begin(), i)) {
+                auto cursor = (focus && i->on_enter)? cursor1.get() : cursor2.get();
+                if (focus) {
+                    Uint8 alpha = std::abs(std::sin((SDL_GetTicks() % 4000 * pi * 2 / 4000))) * 127 + 128;
+                    SDL_SetTextureAlphaMod(cursor, alpha);
+                }
+                SDL_RenderCopy(renderer, cursor, NULL, &rect);
+            }
+            SDL_RenderCopy(renderer, i->texture.get(), NULL, &rect);
+        }
+
+        return true;
+    });
+
+    while (true) {
+        uicontext.render();
+        menuitems[selected].draw();
+    
+        if (!process_event([&uicontext,&menuitems,&selected](auto ev) {
+            if (ev.type == SDL_KEYDOWN) {
+                if (ev.key.keysym.sym == SDLK_UP && selected > 0) {
+                    if (menuitems[selected].on_deselect) menuitems[selected].on_deselect();
+                    selected -= 1;
+                    if (menuitems[selected].on_select) menuitems[selected].on_select();
+                } else if (ev.key.keysym.sym == SDLK_DOWN && selected < menuitems.size() - 1) {
+                    if (menuitems[selected].on_deselect) menuitems[selected].on_deselect();
+                    selected += 1;
+                    if (menuitems[selected].on_select) menuitems[selected].on_select();
+                } else if ((ev.key.keysym.sym == SDLK_RETURN || ev.key.keysym.sym == SDLK_KP_ENTER) && menuitems[selected].on_enter) {
+                    if (!menuitems[selected].on_enter()) return false;
+                }
+            }
+            return true;
+        })) break;
+        SDL_RenderPresent(uicontext.renderer);
+    }
+
+
+    uicontext.pop_render_func();
+}
+
+int ui(const char* tty = NULL)
 {
     const int width = 1024, height = 768;
-    const char* font_file = "/usr/share/fonts/vlgothic/VL-Gothic-Regular.ttf";
 
     std::filesystem::path theme_dir1("/usr/share/wb/themes/default");
     std::filesystem::path theme_dir2("./default_theme");
 
     const auto& theme_dir = std::filesystem::exists(theme_dir1)? theme_dir1 : theme_dir2;
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS) < 0) {
         std::cerr << SDL_GetError() << std::endl;
-    	return 1;
+        if (tty) fallback_to_agetty(tty);
+        //else
+        return 1;
     }
     if (TTF_Init() < 0) {
         std::cerr << "TTF_Init: " << TTF_GetError() << std::endl;
+        if (tty) fallback_to_agetty(tty);
+        //else
+        SDL_Quit();
         return 1;
     }
 
-    SDL_Window* window = SDL_CreateWindow("term",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,width,height,SDL_WINDOW_SHOWN);
-    if (window == NULL) {
-        std::cerr << "SDL_CreateWindow: " << SDL_GetError() << std::endl;
-    	return 1;
-    }
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
-    if (renderer == NULL) {
-        std::cerr << "SDL_CreateRenderer: " << SDL_GetError() << std::endl;
-    	return 1;
-    }
+    int rst = 0;
 
-    try {
-        if (login) {
-            while (!title(renderer, width, height, font_file, theme_dir)) { ; }
-            local_console(renderer, width, height, font_file, theme_dir, "bash", {"--login"});
-        } else {
-            local_console(renderer, width, height, font_file, theme_dir, "bash");
+    {
+        std::shared_ptr<SDL_Window> window(SDL_CreateWindow("term",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,width,height,SDL_WINDOW_SHOWN), SDL_DestroyWindow);
+        if (!window) {
+            std::cerr << "SDL_CreateWindow: " << SDL_GetError() << std::endl;
+            if (tty) fallback_to_agetty(tty);
+            //else
+            rst = 1;
+            goto out;
+        }
+        std::shared_ptr<SDL_Renderer> renderer(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_PRESENTVSYNC), SDL_DestroyRenderer);
+        if (!renderer) {
+            std::cerr << "SDL_CreateRenderer: " << SDL_GetError() << std::endl;
+            if (tty) fallback_to_agetty(tty);
+            rst = 1;
+            goto out;
+        }
+
+        UIContext uicontext(renderer.get(), theme_dir, tty);
+
+        try {
+            ui(uicontext);
+        }
+        catch (const PerformShutdown& e) {
+            rst = 114514;
+        }
+        catch (const PerformReboot& e) {
+            rst = 114515;
+        }
+        catch (const std::exception& e) {
+            std::cerr << e.what() << std::endl;
+            rst = 1;
         }
     }
-    catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
-    }
 
+out:;
     TTF_Quit();
     SDL_Quit();
-    return 0;
+
+    if (rst == 114514) {
+        if (geteuid() == 0) execl("/sbin/poweroff", "/sbin/poweroff", NULL);
+        else std::cout << "Shutdown performed" << std::endl;
+    } else if (rst = 114515) {
+        if (geteuid() == 0) execl("/sbin/reboot", "/sbin/reboot", NULL);
+        else std::cout << "Reboot performed" << std::endl;
+    }
+
+    return rst;
 }
 
 int login(const std::vector<std::string>& args)
 {
-    return ui(true);
-}
+    argparse::ArgumentParser program(args[0]);
+    program.add_argument("tty").help("TTY name");
+    try {
+        program.parse_args(args);
+    }
+    catch (const std::runtime_error& err) {
+        std::cout << err.what() << std::endl;
+        std::cout << program;
+        return 1;
+    }
+    
+    auto tty = program.get<std::string>("tty");
 
-int ui(const std::vector<std::string>& args)
-{
-    return ui(false);
+    return ui(tty.c_str());
 }
 
 static const std::map<std::string,std::pair<int (*)(const std::vector<std::string>&),std::string> > subcommands {
@@ -380,7 +558,7 @@ static const std::map<std::string,std::pair<int (*)(const std::vector<std::strin
   {"stop", {stop, "Stop VM"}},
   {"list", {list, "List VM"}},
   {"login", {login, "Show title screen(executed by systemd)"}},
-  {"ui", {ui, "Run graphical interface"}},
+  {"ui", {[](auto args){ return ui(); }, "Run graphical interface"}},
 };
 
 void show_subcommands()
