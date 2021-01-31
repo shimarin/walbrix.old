@@ -526,7 +526,7 @@ out:;
     if (rst == 114514) {
         if (geteuid() == 0) execl("/sbin/poweroff", "/sbin/poweroff", NULL);
         else std::cout << "Shutdown performed" << std::endl;
-    } else if (rst = 114515) {
+    } else if (rst == 114515) {
         if (geteuid() == 0) execl("/sbin/reboot", "/sbin/reboot", NULL);
         else std::cout << "Reboot performed" << std::endl;
     }
