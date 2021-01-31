@@ -1,121 +1,118 @@
-$require system.lst
-$require portage-configs.lst
-$require kernel.lst
+$require base-systemd.lst
+
+$dir /lib/firmware
+$require kbd-minimal.lst
+
+$package dosfstools
+$package parted
 $require grub.lst
-$require xen.lst
-$require zram-init.lst
 
-# splash
-$require splashutils.lst
-/etc/splash/natural_gentoo
+$mkdir /boot/grub
+$copy resource/walbrix/grub-noxen.cfg /boot/grub/grub.cfg
+$copy resource/walbrix/background.png /boot/grub/
 
-$require install.lst  # defines softlevel 'rescue' and 'install'
+# hwids
+/bin/sed
+/usr/sbin/lspci
+/usr/share/misc/pci.ids.gz
+/usr/share/misc/usb.ids.gz
 
-# boot
-$package sys-apps/kexec-tools
-$write /etc/fstab 'overlay\t/\toverlay\tdefaults\t0 0\n'
-$write /etc/resolv.conf 'search local\nnameserver 8.8.8.8\nnameserver 8.8.4.4'
-$sed /etc/shadow 's/^root:\*:/root::/' # Empty root password
-$sed /etc/inittab 's/\/sbin\/agetty 38400 tty1 linux/\/usr\/sbin\/wbgetty 38400 --noclear tty1 linux/'
-$write /etc/conf.d/splash 'SPLASH_EFFECTS=""'
-$sed /etc/conf.d/hostname 's/^hostname=".\+"/hostname="WBFREE01"/' # set default hostname
+$sed /boot/grub/grub.cfg "s/__VERSION__/$WALBRIX_VERSION/g"
 
-$symlink /etc/init.d/net.eth0 net.lo
-$symlink /etc/runlevels/default/net.eth0 /etc/init.d/net.eth0
+$sed /etc/ssh/sshd_config 's/^#StrictModes\s.\+$/StrictModes no/'
 
-# extend nf_conntrack capacity
-$write --append /etc/sysctl.conf 'net.nf_conntrack_max = 65536'
+$require hostapd.lst
+$write /etc/hostapd/hostapd.conf 'interface=wlan0\nbridge=xenbr0\n#driver=nl80211\nhw_mode=g\nssid=walbrix-ap\nwpa_passphrase=secret\nwpa=2\n#channel=11\nwpa_key_mgmt=WPA-PSK\nwpa_pairwise=CCMP'
+$copy resource/walbrix/hostapd@.service /lib/systemd/system/hostapd@.service
 
-# modify initramfs
-$mkdir /tmp/initramfs/etc/splash/wb/images
-$copy walbrix/init /tmp/initramfs/init.walbrix
-$copy splash/640x480.cfg /tmp/initramfs/etc/splash/wb/640x480.cfg
-$copy splash/background-640x480.png /tmp/initramfs/etc/splash/wb/images/background-640x480.png
-$copy splash/verbose-640x480.png /tmp/initramfs/etc/splash/wb/images/verbose-640x480.png
-$exec --overlay 'cp -av /usr/share/splashutils/initrd.splash /tmp/initramfs/etc/'
-$exec 'cd /tmp/initramfs && cat /boot/initramfs | cpio -idm && mv /tmp/initramfs/init /tmp/initramfs/init.gentoo && mv /tmp/initramfs/init.walbrix /tmp/initramfs/init && (find .|cpio -o -H newc) > /boot/initramfs'
-$deltree /tmp/initramfs
+$package app-misc/ca-certificates
+$package app-misc/mime-types
+$package app-misc/pax-utils
+$package dev-libs/openssl-compat
+#$package sys-apps/haveged
 
-# wbui
-$require wbui-deps.lst
+$write /etc/hostname WBFREE01
 
-# openvpn
-$copy walbrix/ca.crt /etc/openvpn/ca.crt
-$copy walbrix/openvpn.conf /etc/openvpn/openvpn.conf
+# tools
+$package screen
+$require sudo.lst
+/usr/bin/ftp
+/usr/bin/stress
+$package app-editors/bvi
+$package app-admin/sysstat
+$package app-crypt/chntpw
+$package sys-process/lsof
+#$require ansible.lst
 
-# system services
-$require cron.lst
-$require sysklogd.lst
+# hardware
+/etc/udev/hwdb.bin
+/usr/bin/beep
+#/usr/bin/cpuid2cpuflags
+$package usbutils
+$package lm-sensors
+$package lshw
+$package sys-apps/dmidecode
+$package sys-apps/smartmontools
+$require usb_modeswitch.lst
+$require bluez.lst
+$package sys-block/megacli
+#$copy walbrix/arcconf /opt/bin/arcconf
+$package sys-power/cpupower
+#$require nut.lst
+#$require omronups.lst
+$require libqmi.lst
+$require networkmanager.lst
+$require gpsd.lst
+$copy resource/walbrix/77-mm-docomo-l-03f.rules /lib/udev/rules.d/
 
-# use eth0 as the default network bridge
-$sed /etc/xen/xl.conf 's/^#vif.default.bridge="xenbr0"$/vif.default.bridge=""/'
-
-# setup network-bridge
-$copy walbrix/network-bridge /etc/xen/scripts/network-bridge
-$copy walbrix/conf-net /etc/conf.d/net
-$mkdir /etc/wpa_supplicant
-$copy walbrix/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
-$copy walbrix/network-multi-bridge /etc/xen/scripts/network-multi-bridge
-$copy walbrix/network-bridge.init /etc/init.d/network-bridge
-$symlink /etc/runlevels/default/network-bridge /etc/init.d/network-bridge
-
-# Walbrix-style domain autostarting
-$copy walbrix/wbdomains /etc/init.d/wbdomains
-$symlink /etc/runlevels/default/wbdomains /etc/init.d/wbdomains
-
-# prevent to get profile layer unmounted
-$write /etc/conf.d/localmount 'no_umounts="/.overlay/boot|/.overlay/profile"'
-# to get profile layer properly ro-remounted
-$sed /etc/init.d/mount-ro 's/do_unmount "umount -r"/do_unmount "mount -o remount,ro"/'
-
-# backup cron scripts
-$mkdir /etc/wb
-$write /etc/wb/backup "#BACKUP_ROOT=rsync://backup.local/backup"
-$copy walbrix/backup /etc/cron.daily/backup
-$symlink /etc/cron.weekly/backup ../cron.daily/backup
-$symlink /etc/cron.monthly/backup ../cron.daily/backup
-
-# alert cron scripts
-$write /etc/wb/alert "#ALERT_RECIPIENT=your@email.address"
-$copy walbrix/megaraid_alert /etc/cron.hourly/megaraid-alert
-
-# storage and filesystems
-$require mdadm.lst
+# storage/filesystems
+/usr/bin/lsscsi
 $require nfs.lst
 $package sys-fs/multipath-tools
+$require xfsprogs.lst
 $package sys-fs/btrfs-progs
-$require exfat.lst
+$package sys-fs/e2fsprogs
+/usr/bin/compsize
+$package sys-fs/squashfs-tools
+$package sys-fs/exfat-utils
 $package net-fs/cifs-utils --use="-acl -ads -caps"
-$package sys-fs/xfsdump
+#$package sys-fs/xfsdump
 $require ntfs3g.lst
 $require cryptsetup.lst
 $package sys-block/nbd
 $require sg3_utils.lst
-$package sys-apps/haveged
 $package sys-apps/hdparm
 $require ddrescue.lst
 $package sys-fs/safecopy
 $package app-admin/testdisk --use="ntfs"
 $package sys-apps/gptfdisk
 $package app-backup/fsarchiver
-$require s3cmd.lst
-$require s3fs.lst
+#$require s3fs.lst
 $package sys-apps/cciss_vol_status
 $require drbd.lst
-#$patch /etc/xen/scripts/block-drbd xen/block-drbd.patch
-$package sys-apps/smartmontools
-/usr/bin/lsscsi
+$require open-iscsi.lst
+$package sys-fs/bcache-tools
+
+# MDADM
+$package sys-fs/mdadm
+$exec "systemctl enable mdmonitor"
+
+# LVM
+#$package sys-block/thin-provisioning-tools
+$package sys-fs/lvm2
+$sed /etc/lvm/lvm.conf 's/snapshot_autoextend_threshold = 100/snapshot_autoextend_threshold = 80/'
+$sed /etc/lvm/lvm.conf 's/use_lvmetad = 0/use_lvmetad = 1/'
+$exec "systemctl enable lvm2-lvmetad.socket"
 
 # networks
-$require openssh.lst
-#sys-libs/libseccomp # needed by bind-tools
+$package net-analyzer/traceroute
+/usr/bin/cu
+/usr/bin/curl
+/sbin/brctl
 $package net-dns/bind-tools
-$require nss-mdns.lst
-$require nss-myhostname.lst
 $package net-analyzer/traceroute
 $require rp-pppoe.lst
-$require wireless-tools.lst
-$require tcpdump.lst
+$package net-misc/wget
 $require nmap.lst
 $package net-analyzer/netcat
 $package net-firewall/ipset
@@ -123,78 +120,110 @@ $package net-misc/wakeonlan
 $package net-misc/ifenslave
 $package net-misc/vconfig
 $package net-misc/whois
-$package net-misc/wol
 $package sys-apps/ethtool
-$require snort.lst
-$package net-misc/dhcp
+$package net-analyzer/snort
 $package net-dns/dnsmasq
 $require ssmtp.lst
 $require smbclient.lst
-$require cu.lst
-$package www-servers/nginx
 $package net-analyzer/net-snmp
 /usr/bin/iperf3
+$require socat.lst
+
+$write /etc/systemd/network/49-br0.netdev "[NetDev]\nName=br0\nKind=bridge"
+$del /etc/systemd/network/50-eth0.network
+$write /etc/systemd/network/50-eth.network '[Match]\nName=eth*\n[Network]\nBridge=br0\n[Link]\nRequiredForOnline=no'
+$write /etc/systemd/network/52-xenbr0.network "[Match]\nName=br0\n[Network]\nDHCP=yes\nMulticastDNS=yes\nLLMNR=yes\n[Link]\nRequiredForOnline=degraded-carrier"
 
 # complementary PPP configs
-$mkdir /etc/chatscripts
-$copy ppp/chatscript-3g /etc/chatscripts/3g
-$copy ppp/pap-secrets /etc/ppp/pap-secrets
+$mkdir /etc/ppp/chatscripts
+$copy resource/ppp/chatscript-3g /etc/ppp/chatscripts/3g
 $mkdir /etc/ppp/peers
-$copy ppp/peer-mineo-d /etc/ppp/peers/mineo-d
-$copy ppp/peer-mineo-a /etc/ppp/peers/mineo-a
-$copy ppp/peer-interlink /etc/ppp/peers/interlink
-$copy ppp/peer-soracom-air /etc/ppp/peers/soracom-air
-$copy ppp/ip-up.route.sh /etc/ppp/ip-up.d/route.sh
-$copy ppp/ip-down.route.sh /etc/ppp/ip-down.d/route.sh
+$copy resource/ppp/peer-mineo-d /etc/ppp/peers/mineo-d
+$copy resource/ppp/peer-mineo-a /etc/ppp/peers/mineo-a
+$copy resource/ppp/peer-interlink /etc/ppp/peers/interlink
+$copy resource/ppp/peer-soracom-air /etc/ppp/peers/soracom-air
+$copy resource/ppp/ip-up.route.sh /etc/ppp/ip-up.d/route.sh
+$copy resource/ppp/ip-down.route.sh /etc/ppp/ip-down.d/route.sh
+$copy resource/ppp/connect-ppp /usr/sbin/
+$copy resource/ppp/modem-candidates /etc/ppp/modem-candidates
+$write /lib/systemd/system/ppp@.service '[Unit]\nDescription=PPP link to %I\nBefore=network.target\n\n[Service]\nRestart=on-failure\nRestartSec=180s\nExecStart=/usr/sbin/connect-ppp %I\n\n[Install]\nWantedBy=multi-user.target'
 
-# tools
-$require binutils.lst
-$require vim.lst
-$require sudo.lst
-/usr/bin/ftp
-/usr/bin/strace
-/usr/bin/stress
-/usr/bin/telnet
-$package app-misc/screen
-$package app-editors/bvi
-$package app-admin/sysstat
-$package app-crypt/chntpw
-$package sys-process/lsof
-$require mysqldump.lst
-$require ansible.lst
-$package media-gfx/qrencode
+# wireless
+$package net-wireless/wpa_supplicant
+$sed /lib/systemd/system/wpa_supplicant@.service 's/-i%I$/-i%I -Dnl80211,wext/'
+$write /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 'network={\nscan_ssid=1\nssid="YOUR-SSID"\npsk="YOUR-KEY"\npriority=1\n}'
 
-# hardware
-/etc/udev/hwdb.bin
-/usr/bin/beep
-/usr/bin/cpuid2cpuflags
-$require usb_modeswitch.lst
-$package sys-apps/usbutils
-$require bluez.lst
-$package sys-apps/lm-sensors
-$package sys-block/megacli
-$copy walbrix/arcconf /opt/bin/arcconf
-$package sys-power/cpupower
-$package sys-apps/lshw
-$require nut.lst
-$require omronups.lst
-$require libqmi.lst
-$require gpsd.lst
-$copy walbrix/99-docomo-l-03f.rules /etc/udev/rules.d/99-docomo-l-03f.rules
+# extend nf_conntrack capacity
+$write --append /etc/sysctl.conf 'net.nf_conntrack_max = 65536'
 
-# for some raspi-like IoT purposes
-$package dev-python/pyusb
-/usr/lib/libjansson.so.4
+$require timezone-jp.lst
+$write /etc/locale.conf "LANG=ja_JP.utf8"
+$write /etc/vconsole.conf "KEYMAP=jp106"
+$mkdir /etc/X11/xorg.conf.d
+$write /etc/X11/xorg.conf.d/00-keyboard.conf 'Section "InputClass"\n\tIdentifier "system-keyboard"\n\tMatchIsKeyboard "on"\n\tOption "XkbLayout" "jp"\n\tOption "XkbModel" "jp106"\n\tOption "XkbOptions" "terminate:ctrl_alt_bksp"\nEndSection'
 
-# Python3 compat
-$package dev-python/future
+# VPN
+$require openvpn.lst
+$copy resource/walbrix/ca.crt /etc/openvpn/client/ca.crt
+$copy resource/walbrix/openvpn.conf /etc/openvpn/client/openvpn.conf
 
-# node.js
-$require ts-node.lst
+# backup cron scripts
+$copy resource/walbrix/backup /etc/cron.daily/backup
 
-# arch specific
-$require walbrix-$(ARCH).lst
+# alert cron scripts
+#$write /etc/wb/alert "#ALERT_RECIPIENT=your@email.address"
+#$copy walbrix/megaraid_alert /etc/cron.hourly/megaraid-alert
+
+# system services
+$require zabbix-agent.lst
+$require zabbix-proxy.lst
+$package dev-vcs/git
+$package sys-block/zram-init
+$exec "systemctl enable zram_swap"
+
+$mkdir /etc/systemd/system/getty@tty1.service.d
+$write /etc/systemd/system/getty@tty1.service.d/walbrix.conf '[Service]\nExecStart=\nExecStart=/usr/sbin/wbc login %I\nRestart=always'
+$copy resource/walbrix/installer.target /lib/systemd/system/
+
+$copy resource/install-system-image /usr/sbin/
+$copy resource/make-bootx64-iso /usr/sbin/
+$copy resource/btrfs/expand-rw-layer /usr/sbin/
+$copy resource/walbrix/do-with-lvm-snapshot /usr/sbin/
+
+# wb
+$package dev-libs/icu
+$require libsdl2.lst
+/usr/lib64/libiniparser4.so.1
+/usr/lib64/libvterm.so.0
+/usr/share/fonts/vlgothic/VL-Gothic-Regular.ttf
+/usr/share/fonts/vlgothic/VL-PGothic-Regular.ttf
+
+$copy wb/. /tmp/
+$exec --overlay "cd /tmp && make clean && make && make install"
+$exec 'systemctl enable walbrixd'
+$exec 'rm -f /usr/sbin/wb'
+/usr/bin/make
+$package app-misc/tmux
+
+# self-build
+$mkdir /var/db/repos/gentoo
+$package sys-fs/mtools
+/usr/bin/xorriso
+
+# to build deb/rpm based distro
+$require debootstrap.lst
+$require rpm.lst
+$require requests.lst
+$copy resource/walbrix/rpmbootstrap.py /usr/sbin/rpmbootstrap
+
+# services preferred by installer env
+$sed /lib/systemd/system/systemd-networkd.service 's/^WantedBy=multi-user.target$/WantedBy=multi-user.target installer.target/'
+$sed /lib/systemd/system/systemd-resolved.service 's/^WantedBy=multi-user.target$/WantedBy=multi-user.target installer.target/'
+$sed /lib/systemd/system/sshd.service 's/^WantedBy=multi-user.target$/WantedBy=multi-user.target installer.target/'
+$exec "systemctl enable systemd-networkd systemd-resolved sshd"
+$sed /lib/systemd/system/openvpn-client@.service 's/^WantedBy=multi-user.target$/WantedBy=multi-user.target installer.target/'
+$sed /lib/systemd/system/zabbix-agentd.service 's/^WantedBy=multi-user.target$/WantedBy=multi-user.target installer.target/'
 
 $exec --overlay "env-update"
-$deltree /var/lib/portage
-$require renamelib-$(ARCH).lst
+$exec ldconfig
+$touch /done
