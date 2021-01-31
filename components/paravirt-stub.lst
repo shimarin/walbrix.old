@@ -15,7 +15,7 @@ $require requests.lst
 
 $sed /etc/ssh/sshd_config 's/^#PermitEmptyPasswords no$/PermitEmptyPasswords yes/'
 
-$copy resource/stub/rpmbootstrap.py /usr/sbin/rpmbootstrap
+$copy resource/walbrix/rpmbootstrap.py /usr/sbin/rpmbootstrap
 $copy resource/stub/centos6.sh /root/
 $copy resource/stub/centos7.sh /root/
 $copy resource/stub/ubuntu2004.sh /root/
