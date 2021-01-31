@@ -132,7 +132,8 @@ static int method_start(sd_bus_message *m, void *userdata, sd_bus_error *ret_err
             args.push_back("-enable-kvm");
         }
     } else { // otherwise a container
-        args = {"-b", std::string("--network-bridge=") + config->bridge, std::string("--machine=") + name, "--register=no"};
+        args = {"-b", std::string("--network-bridge=") + config->bridge, std::string("--machine=") + name, "--register=no",
+            "--capability=CAP_SYS_MODULE", "--bind-ro=/lib/modules", "--bind-ro=/sys/module" };
         if (std::filesystem::exists(systempath)) {
             std::filesystem::create_directories(fspath);
             args.push_back("-i");
