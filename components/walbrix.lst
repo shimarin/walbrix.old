@@ -203,6 +203,8 @@ $exec --overlay "cd /tmp && make clean && make && make install"
 $exec 'systemctl enable walbrixd'
 $exec 'rm -f /usr/sbin/wb'
 /usr/bin/make
+$write /etc/issue '\nWelcome to Walbrix (\\n).\n\nGraphical interface has been disabled due to disconnected monitor during boot.\nPress Ctrl-D to try getting it back.\n'
+
 $package app-misc/tmux
 
 # self-build
