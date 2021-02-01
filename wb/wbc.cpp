@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <pty.h>
 #include <sys/wait.h>
+#include <sys/xattr.h>
 
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
@@ -100,6 +101,49 @@ int list(const std::vector<std::string>& args)
     );
 
     return 0;
+}
+
+int autostart(const std::vector<std::string>& args)
+{
+    argparse::ArgumentParser program(args[0]);
+    program.add_argument("vmname").help("VM name");
+    program.add_argument("action").help("'on' or 'off'").default_value(std::string("show"));
+    try {
+        program.parse_args(args);
+    }
+    catch (const std::runtime_error& err) {
+        std::cout << err.what() << std::endl;
+        std::cout << program;
+        return 1;
+    }
+
+    auto vmname = program.get<std::string>("vmname");
+    auto action = program.get<std::string>("action");
+
+    auto rst = with_vmdir<int>(vmname, [&action](auto vmdir) {
+        if (action == "show") {
+            char c;
+            bool on = (getxattr(vmdir.path().c_str(), WALBRIX_XATTR_AUTOSTART, &c, sizeof(c)) >= 0);
+            std::cout << "autostart is " << (on? "on" : "off") << std::endl;
+        } else if (action == "on") {
+            if (setxattr(vmdir.path().c_str(), WALBRIX_XATTR_AUTOSTART, "", 0, 0) < 0)
+                throw std::runtime_error(strerror(errno));
+        } else if (action == "off") {
+            if (removexattr(vmdir.path().c_str(), WALBRIX_XATTR_AUTOSTART) < 0 && errno != ENODATA)
+                throw std::runtime_error(strerror(errno));
+        } else {
+            std::cerr << "Invalid action specified." << std::endl;
+            return -1;
+        }
+        return 0;
+    });
+
+    if (!rst) {
+        std::cerr << "VM not found." << std::endl;
+        return -1;
+    }
+    //else
+    return rst.value();
 }
 
 bool auth(UIContext& uicontext)
@@ -556,6 +600,7 @@ static const std::map<std::string,std::pair<int (*)(const std::vector<std::strin
   {"console", {console, "Enter VM console"}},
   {"start", {start, "Start VM"}},
   {"stop", {stop, "Stop VM"}},
+  {"autostart", {autostart, "Enable/Disable autostart"}},
   {"list", {list, "List VM"}},
   {"login", {login, "Show title screen(executed by systemd)"}},
   {"ui", {[](auto args){ return ui(); }, "Run graphical interface"}},

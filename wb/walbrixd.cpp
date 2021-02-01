@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/un.h>
 #include <sys/utsname.h>
+#include <sys/xattr.h>
 #include <stdexcept>
 #include <iostream>
 #include <string>
@@ -86,33 +87,31 @@ std::pair<pid_t, int> createSubprocessWithPty(int rows, int cols, const char* pr
     return { pid, fd };
 }
 
-static int method_start(sd_bus_message *m, void *userdata, sd_bus_error *ret_error) {
-    const char* name;
-    const Config* config = (const Config*)userdata;
+class AlreadyRunning : public std::runtime_error {
+public:
+    AlreadyRunning(const std::string& what) : std::runtime_error(what) {;}
+};
+class NotExists : public std::runtime_error {
+public:
+    NotExists(const std::string& what) : std::runtime_error(what) {;}
+};
 
-    /* Read the parameters */
-    auto r = sd_bus_message_read(m, "s", &name);
-    if (r < 0) {
-        fprintf(stderr, "Failed to parse parameters: %s\n", strerror(-r));
-        return r;
-    }
-
+static pid_t start(const Config& config, const std::string& name)
+{
     if (vms.count(name) && kill(vms.at(name).pid, 0) == 0) {
-        sd_bus_error_set_const(ret_error, "net.poettering.AlreadyRunning", "VM is already running.");
-        return -EINVAL;
+        throw AlreadyRunning("VM is already running.");
     }
     //else
 
-    std::filesystem::path vmroot("/var/vm");
-    auto vmpath = vmroot / name;
+    auto vmpath = WALBRIX_VM_ROOT / name;
     auto systempath = vmpath / "system";
     auto fspath = vmpath / "fs";
     auto disk0path = vmpath / "disk0";
 
     if (!std::filesystem::exists(vmpath) || (!std::filesystem::exists(systempath) && !std::filesystem::exists(fspath) && ! std::filesystem::exists(disk0path))) {
-        sd_bus_error_set_const(ret_error, "net.poettering.NotExists", "VM not exists.");
-        return -EINVAL;
+        throw NotExists("VM not exists.");
     }
+    //else
 
     std::string program = "systemd-nspawn";
     std::vector<std::string> args;
@@ -122,7 +121,7 @@ static int method_start(sd_bus_message *m, void *userdata, sd_bus_error *ret_err
         struct utsname name;
         if (uname(&name) < 0) throw std::runtime_error("uname() failed");
         program = std::string("qemu-system-") + name.machine;
-        args = { "-netdev", "bridge,br=" + config->bridge + ",id=net0", "-device", "virtio-net-pci,netdev=net0", "-monitor", "stdio",
+        args = { "-netdev", "bridge,br=" + config.bridge + ",id=net0", "-device", "virtio-net-pci,netdev=net0", "-monitor", "stdio",
             "-drive", "file=" + disk0path.string() + ",media=disk", "-rtc", "base=utc,clock=rt", "-m", "1024" };
         if (std::filesystem::exists(cdrompath)) {
             args.push_back("-cdrom");
@@ -132,7 +131,7 @@ static int method_start(sd_bus_message *m, void *userdata, sd_bus_error *ret_err
             args.push_back("-enable-kvm");
         }
     } else { // otherwise a container
-        args = {"-b", std::string("--network-bridge=") + config->bridge, std::string("--machine=") + name, "--register=no",
+        args = {"-b", std::string("--network-bridge=") + config.bridge, std::string("--machine=") + name, "--register=no",
             "--capability=CAP_SYS_MODULE", "--bind-ro=/lib/modules", "--bind-ro=/sys/module" };
         if (std::filesystem::exists(systempath)) {
             std::filesystem::create_directories(fspath);
@@ -182,8 +181,33 @@ static int method_start(sd_bus_message *m, void *userdata, sd_bus_error *ret_err
 
     std::cout << name << " started. PID=" << vm.first << "," << " fd=" << vm.second << " sock=" << sock << std::endl;
 
-    /* Reply with the response */
-    return sd_bus_reply_method_return(m, "u", vm.first);
+    return vm.first;
+}
+
+static int method_start(sd_bus_message *m, void *userdata, sd_bus_error *ret_error) {
+    const char* name;
+    const Config* config = (const Config*)userdata;
+
+    /* Read the parameters */
+    auto r = sd_bus_message_read(m, "s", &name);
+    if (r < 0) {
+        fprintf(stderr, "Failed to parse parameters: %s\n", strerror(-r));
+        return r;
+    }
+
+    try {
+        auto pid = start(*config, name);
+        /* Reply with the response */
+        return sd_bus_reply_method_return(m, "u", pid);
+    }
+    catch (const AlreadyRunning& e) {
+        sd_bus_error_set_const(ret_error, "com.walbrix.AlreadyRunning", "VM is already running.");
+        return -EINVAL;
+    }
+    catch (const NotExists& e) {
+        sd_bus_error_set_const(ret_error, "com.walbrix.NotExists", "VM not exists.");
+        return -EINVAL;
+    }
 }
 
 static int method_stop(sd_bus_message *m, void *userdata, sd_bus_error *ret_error) {
@@ -197,13 +221,13 @@ static int method_stop(sd_bus_message *m, void *userdata, sd_bus_error *ret_erro
     }
 
     if (!vms.count(name)) {
-        sd_bus_error_set_const(ret_error, "net.poettering.NotRunning", "VM is not running.");
+        sd_bus_error_set_const(ret_error, "con.walbrix.NotRunning", "VM is not running.");
         return -EINVAL;
     }
 
     if (kill(vms.at(name).pid, 0) < 0 && errno == ESRCH) {
         vms.erase(name);        
-        sd_bus_error_set_const(ret_error, "net.poettering.Vanished", "VM is vanished.");
+        sd_bus_error_set_const(ret_error, "com.walbrix.Vanished", "VM is vanished.");
     }
 
     std::cout << "Stopping " << name << std::endl;
@@ -218,6 +242,7 @@ static int method_list(sd_bus_message *m, void *userdata, sd_bus_error *ret_erro
     const Config* config = (const Config*)userdata;
 
     sd_bus_message *reply;
+
     auto r = sd_bus_message_new_method_return(m, &reply);
     if (r < 0) {
         std::cerr << "Failed to create reply message." << std::endl;
@@ -356,6 +381,19 @@ void process_io(Vm& vm, const Config& config)
     }
 }
 
+static void process_autostart(const Config& config)
+{
+    for_each_vmdir([&config](auto name, auto dir){
+        char c;
+        if (getxattr(dir.path().c_str(), WALBRIX_XATTR_AUTOSTART, &c, sizeof(c)) < 0) return;
+        try {
+            start(config, name);
+        }
+        catch (const AlreadyRunning&) {}
+        catch (const NotExists&) {}
+    });
+}
+
 int main(int argc, char *argv[])
 {
     argparse::ArgumentParser program(argv[0]);
@@ -411,6 +449,10 @@ int main(int argc, char *argv[])
         if (config.verbose) {
             std::cout << getpid() << std::endl;
         }
+
+        std::cout << "Processing autostart..." << std::endl;
+        process_autostart(config);
+        std::cout << "Autostart done." << std::endl;
 
         bool exit_flag = false;
 
