@@ -54,6 +54,7 @@ public:
 class UIContext {
     std::list<std::function<bool(SDL_Renderer*,bool)> > render_funcs;
 public:
+    bool installer = false;
     int width, height;
 
     int mainmenu_width;
@@ -75,7 +76,7 @@ public:
     SDL_Renderer* renderer;
     const std::filesystem::path resource_path;
 
-    UIContext(SDL_Renderer* _renderer, const std::filesystem::path& _resource_path, const char* _tty = NULL) : renderer(_renderer), resource_path(_resource_path), registry(_renderer, _resource_path), tty(_tty) {
+    UIContext(SDL_Renderer* _renderer, const std::filesystem::path& _resource_path, const char* _tty = NULL, bool _installer = false) : renderer(_renderer), resource_path(_resource_path), registry(_renderer, _resource_path), tty(_tty), installer(_installer) {
         SDL_GetRendererOutputSize(renderer, &width, &height);
     }
 

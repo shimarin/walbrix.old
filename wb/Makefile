@@ -11,7 +11,7 @@ all: wb wbc walbrixd
 wb: wb.o start.o monitor.o ui.o install.o termbox.o
 	g++ -std=c++2a -o $@ -lxenlight -lxentoollog -lxenstore -lpam -lpam_misc -liniparser4 -lsmartcols -lmount -lxlutil -lblkid $^
 
-wbc: wbc.o console.o terminal.o uicontext.o status.o shutdown.o
+wbc: wbc.o console.o terminal.o uicontext.o status.o shutdown.o installer.o messagebox.o -lblkid -lmount
 	g++ -std=c++2a -o $@ -lutil -licuuc -lSDL2 -lSDL2_image -lSDL2_ttf -lvterm -lpam $^
 
 walbrixd: walbrixd.o

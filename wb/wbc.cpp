@@ -6,27 +6,22 @@
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
 
+#include <fstream>
+
 #include <argparse/argparse.hpp>
 
 #include "walbrixd.h"
 #include "terminal.h"
+#include "sdlplusplus.h"
 
 #include "wbc.h"
 #include "status.h" 
 #include "shutdown.h"
-
-bool process_event(std::function<bool(const SDL_Event&)> func) {
-    SDL_Event ev;
-    while (SDL_PollEvent(&ev)) {
-        if (ev.type == SDL_QUIT) throw std::runtime_error("Terminated");
-        if (!func(ev)) return false;
-    }
-    return true;
-};
+#include "installer.h"
 
 std::shared_ptr<SDL_Surface> create_transparent_surface(int w, int h)
 {
-    return std::shared_ptr<SDL_Surface>(SDL_CreateRGBSurface(0, w, h, 32,0xff, 0xff00, 0xff0000, 0xff000000), SDL_FreeSurface);
+    return make_shared(SDL_CreateRGBSurface(0, w, h, 32,0xff, 0xff00, 0xff0000, 0xff000000));
 }
 
 int console(const char* vmname);
@@ -202,7 +197,6 @@ bool auth(UIContext& uicontext)
                         password_texture(env.uicontext.renderer);
 
                         if (!process_event([&env,&password,&password_texture](auto ev) {
-                            if (ev.type == SDL_QUIT) throw std::runtime_error("Terminated");
                             if (ev.type == SDL_TEXTINPUT) {
                                 for (int i = 0; i < strlen(ev.text.text); i++) {
                                     if (password.length() < 32) password += (char)ev.text.text[i];
@@ -371,7 +365,7 @@ void fallback_to_agetty(const char* tty)
 
 void ui(UIContext& uicontext)
 {
-    if (uicontext.tty) {
+    if (uicontext.tty && !uicontext.installer) {
         while (!title(uicontext)) { ; }
     }
 
@@ -408,6 +402,7 @@ void ui(UIContext& uicontext)
 
     Status status(uicontext);
     Shutdown shutdown(uicontext);
+    Installer installer(uicontext);
 
     struct MainMenuItem {
         std::string name;
@@ -422,6 +417,11 @@ void ui(UIContext& uicontext)
     std::vector<MainMenuItem> menuitems;
 
     int y = uicontext.mainmenu_item_height;
+    if (uicontext.installer) {
+        menuitems.push_back({"install", y, create_mainmenu_item_texture("icon_install.png", "インストール"), 
+            [&installer](){installer.draw();},[&installer](){installer.on_select();}, [&installer](){installer.on_deselect();}, [&installer](){return installer.on_enter();} });
+        y += uicontext.mainmenu_item_height;
+    }
     menuitems.push_back({"status", y, create_mainmenu_item_texture("icon_status.png", "情報"), 
         [&status](){status.draw();},[&status]() {status.on_select();}, [&status](){status.on_deselect();}, NULL });
     y += uicontext.mainmenu_item_height;
@@ -439,8 +439,10 @@ void ui(UIContext& uicontext)
         [&shutdown](){shutdown.draw();},[&shutdown]() {shutdown.on_select();}, [&shutdown](){shutdown.on_deselect();}, [&shutdown](){return shutdown.on_enter();}});
         y += uicontext.mainmenu_item_height;
     }
-    menuitems.push_back({"back", y, create_mainmenu_item_texture("icon_back.png", uicontext.tty? "タイトルへ戻る" : "終了"), 
-        [](){},[]() {}, [](){}, [](){return false;}});
+    if (!(uicontext.tty) || !uicontext.installer) {
+        menuitems.push_back({"back", y, create_mainmenu_item_texture("icon_back.png", uicontext.tty? "タイトルへ戻る" : "終了"), 
+            [](){},[]() {}, [](){}, [](){return false;}});
+    }
 
     auto cursor1 = std::get<0>(uicontext.create_texture_from_transient_surface("mainmenu_cursor1.png"));
     auto cursor2 = std::get<0>(uicontext.create_texture_from_transient_surface("mainmenu_cursor2.png"));
@@ -504,8 +506,12 @@ void ui(UIContext& uicontext)
     uicontext.pop_render_func();
 }
 
-int ui(const char* tty = NULL)
+int ui(const char* tty = NULL, bool installer = false)
 {
+    if (installer && geteuid() != 0) {
+        std::cout << "Warning: Running installer without root privilege." << std::endl;
+    }
+
     const int width = 1024, height = 768;
 
     std::filesystem::path theme_dir1("/usr/share/wb/themes/default");
@@ -530,7 +536,7 @@ int ui(const char* tty = NULL)
     int rst = 0;
 
     {
-        std::shared_ptr<SDL_Window> window(SDL_CreateWindow("term",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,width,height,SDL_WINDOW_SHOWN), SDL_DestroyWindow);
+        auto window = make_shared(SDL_CreateWindow("walbrix",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,width,height,SDL_WINDOW_SHOWN));
         if (!window) {
             std::cerr << "SDL_CreateWindow: " << SDL_GetError() << std::endl;
             if (tty) fallback_to_agetty(tty);
@@ -538,7 +544,7 @@ int ui(const char* tty = NULL)
             rst = 1;
             goto out;
         }
-        std::shared_ptr<SDL_Renderer> renderer(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_PRESENTVSYNC), SDL_DestroyRenderer);
+        auto renderer = make_shared(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_PRESENTVSYNC));
         if (!renderer) {
             std::cerr << "SDL_CreateRenderer: " << SDL_GetError() << std::endl;
             if (tty) fallback_to_agetty(tty);
@@ -546,7 +552,7 @@ int ui(const char* tty = NULL)
             goto out;
         }
 
-        UIContext uicontext(renderer.get(), theme_dir, tty);
+        UIContext uicontext(renderer.get(), theme_dir, tty, installer);
 
         try {
             ui(uicontext);
@@ -578,6 +584,17 @@ out:;
     return rst;
 }
 
+bool is_installer()
+{
+  std::ifstream cmdline("/proc/cmdline");
+  while (!cmdline.eof()) {
+    std::string arg;
+    cmdline >> arg;
+    if (arg == "systemd.unit=installer.target") return true;
+  }
+  return false;
+}
+
 int login(const std::vector<std::string>& args)
 {
     argparse::ArgumentParser program(args[0]);
@@ -593,7 +610,7 @@ int login(const std::vector<std::string>& args)
     
     auto tty = program.get<std::string>("tty");
 
-    return ui(tty.c_str());
+    return ui(tty.c_str(), is_installer());
 }
 
 static const std::map<std::string,std::pair<int (*)(const std::vector<std::string>&),std::string> > subcommands {
@@ -604,6 +621,7 @@ static const std::map<std::string,std::pair<int (*)(const std::vector<std::strin
   {"list", {list, "List VM"}},
   {"login", {login, "Show title screen(executed by systemd)"}},
   {"ui", {[](auto args){ return ui(); }, "Run graphical interface"}},
+  {"installer", {[](auto args){ return ui(NULL, true); }, "Run graphical installer"}},
 };
 
 void show_subcommands()
@@ -613,8 +631,28 @@ void show_subcommands()
     }
 }
 
+#ifdef __VSCODE_ACTIVE_FILE__
+int messagebox_main();
+
+int debug_main(int argc, char* argv[])
+{
+    if (std::string(__VSCODE_ACTIVE_FILE__) == "messagebox.cpp") {
+        return messagebox_main();
+    }
+    if (std::string(__VSCODE_ACTIVE_FILE__) == "installer.cpp") {
+        return ui(NULL, true);
+    }
+    //else
+    std::cout << "No debug main for " << __VSCODE_ACTIVE_FILE__ << std::endl;
+    return 0;
+}
+#endif
+
 int main(int argc, char* argv[])
 {
+#ifdef __VSCODE_ACTIVE_FILE__
+    return debug_main(argc, argv);
+#endif
     setlocale( LC_ALL, "ja_JP.utf8"); // TODO: read /etc/locale.conf
 
     if (argc < 2) {
