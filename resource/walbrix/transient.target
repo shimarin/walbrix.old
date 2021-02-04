@@ -1,7 +1,6 @@
 [Unit]
-Description=Installer Mode
+Description=Transient Mode
 Requires=basic.target dbus.service getty.target systemd-ask-password-wall.path systemd-logind.service systemd-user-sessions.service
 Conflicts=rescue.service rescue.target
-Wants=installer.service
-After=basic.target rescue.service rescue.target installer.service
+After=basic.target rescue.service rescue.target
 AllowIsolate=yes

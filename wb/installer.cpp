@@ -315,11 +315,11 @@ static void do_install(const std::filesystem::path& disk, uint64_t size, uint16_
         exec_command("grub-mkimage", {"-p", "/boot/grub", "-o", (efi_boot / "bootx64.efi").string(), "-O", "x86_64-efi", 
             "xfs","fat","part_gpt","part_msdos","normal","linux","echo","all_video","test","multiboot","multiboot2","search","sleep","iso9660","gzio",
             "lvm","chain","configfile","cpuid","minicmd","gfxterm_background","png","font","terminal","squash4","loopback","videoinfo","videotest",
-            "blocklist","probe","efi_gop","efi_uga"});
+            "blocklist","probe","efi_gop","efi_uga", "keystatus"});
         if (bios_compatible) {
             std::cout << "ブートローダー(BIOS)をインストールします" << std::endl;
             exec_command("grub-install", {"--target=i386-pc", "--recheck", std::string("--boot-directory=") + (mnt / "boot").string(),
-                "--modules=xfs fat part_msdos normal linux echo all_video test multiboot multiboot2 search sleep gzio lvm chain configfile cpuid minicmd font terminal squash4 loopback videoinfo videotest blocklist probe gfxterm_background png",
+                "--modules=xfs fat part_msdos normal linux echo all_video test multiboot multiboot2 search sleep gzio lvm chain configfile cpuid minicmd font terminal squash4 loopback videoinfo videotest blocklist probe gfxterm_background png keystatus",
                 disk.string()});
         } else {
             std::cout << "BIOSで扱えないタイプのディスクなのでこのシステムはUEFI専用となります" << std::endl;
@@ -449,7 +449,7 @@ static bool do_install(UIContext& uicontext, const std::filesystem::path& disk, 
     while (pid != waitpid(pid, &status, WNOHANG)) {
         uicontext.render();
 
-        process_event([&terminal](auto ev) { terminal.processEvent(ev); return true; });
+        process_event([&terminal](auto ev) { terminal.processEvent(ev); return true; } );
         if (!terminal.processInput()) break; // EOF detected
 
         SDL_RenderPresent(uicontext.renderer);

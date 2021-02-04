@@ -3,9 +3,10 @@ Description=Walbrix daemon
 
 [Service]
 ExecStart=-/usr/sbin/walbrixd --bridge br0
-Restart = always
+Restart=always
 KillMode=mixed
-BusName = com.walbrix.Walbrix
+BusName=com.walbrix.Walbrix
+TimeoutStopSec=60
 
 [Install]
 WantedBy=multi-user.target

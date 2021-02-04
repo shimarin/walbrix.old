@@ -22,18 +22,6 @@ static inline std::shared_ptr<SDL_Texture> make_shared(SDL_Texture* texture)
     return std::shared_ptr<SDL_Texture>(texture, SDL_DestroyTexture);
 }
 
-static inline bool process_event(std::function<bool(const SDL_Event&)> func, std::function<void()> on_quit = [](){ throw std::runtime_error("Terminated");}) {
-    SDL_Event ev;
-    while (SDL_PollEvent(&ev)) {
-        if (on_quit && ev.type == SDL_QUIT) {
-            on_quit();
-            return false;
-        }
-        else if (!func(ev)) return false;
-    }
-    return true;
-}
-
 static inline std::tuple<std::shared_ptr<SDL_Texture>,int,int> create_texture_from_surface(SDL_Renderer* renderer, std::function<std::shared_ptr<SDL_Surface>()> func)
 {
     auto surface = func();

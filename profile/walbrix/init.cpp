@@ -9,6 +9,7 @@
 
 class MyInit : public Init {
   bool is_installer();
+  bool is_rescue();
 protected:
   virtual void mount_boot(const Partition& boot_partition, const std::filesystem::path& mountpoint);
   virtual void mount_rw(const std::filesystem::path& boot, const std::filesystem::path& mountpoint);
@@ -16,17 +17,25 @@ protected:
   virtual std::pair<std::string,int> get_default_network_interface_name();
 };
 
-bool MyInit::is_installer()
+static bool check_target(const char* target_name)
 {
-  if (is_boot_partition_readonly()) return true;
-  //else
   std::ifstream cmdline("/proc/cmdline");
   while (!cmdline.eof()) {
     std::string arg;
     cmdline >> arg;
-    if (arg == "systemd.unit=installer.target") return true;
+    if (arg == std::string("systemd.unit=") + target_name) return true;
   }
   return false;
+}
+
+bool MyInit::is_installer()
+{
+  return is_boot_partition_readonly() || check_target("installer.target");
+}
+
+bool MyInit::is_rescue()
+{
+  return is_boot_partition_readonly() || check_target("transient.target");
 }
 
 void MyInit::mount_boot(const Partition& boot_partition,
@@ -72,7 +81,7 @@ void MyInit::mount_boot(const Partition& boot_partition,
 void MyInit::mount_rw(const std::filesystem::path& boot,
   const std::filesystem::path& mountpoint)
 {
-  if (is_installer()) {
+  if (is_installer() || is_rescue()) {
     mount_transient_rw_layer(mountpoint);
     return;
   }

@@ -313,6 +313,7 @@ int local_console(UIContext& uicontext, const char* prog, const std::vector<std:
         signal(SIGTERM, SIG_DFL);
         signal(SIGINT, SIG_DFL);
         setenv("TERM", "xterm-256color", 1);
+        setenv("LANG", "ja_JP.utf8", 1);
         char ** argv = new char *[args.size() + 2];
         argv[0] = strdup(prog);
         for (int i = 1; i <= args.size(); i++) {
@@ -357,9 +358,12 @@ int local_console(UIContext& uicontext, const char* prog, const std::vector<std:
     return status;
 }
 
-void fallback_to_agetty(const char* tty)
+void fallback_to_agetty(const char* tty, bool autologin = false)
 {
-    std::cout << "Graphics device is not available. Falling back to text console." << std::endl;
+    if (autologin) {
+        execl("/sbin/agetty", "/sbin/agetty", "-o", "-p -- \\u", "--autologin", "root", "--noclear", tty, getenv("TERM"), NULL);
+    }
+    //else
     execl("/sbin/agetty", "/sbin/agetty", "-o", "-p -- \\u", "--noclear", tty, getenv("TERM"), NULL);
 }
 
@@ -508,8 +512,12 @@ void ui(UIContext& uicontext)
 
 int ui(const char* tty = NULL, bool installer = false)
 {
+    std::fstream ftty (std::filesystem::path("/dev") / (tty? tty : "null"), std::ios::in | std::ios::out);
+    std::ostream& cout = (tty && ftty)? ftty : std::cout;
+    std::ostream& cerr = (tty && ftty)? ftty : std::cerr;
+
     if (installer && geteuid() != 0) {
-        std::cout << "Warning: Running installer without root privilege." << std::endl;
+        cout << "Warning: Running installer without root privilege." << std::endl;
     }
 
     const int width = 1024, height = 768;
@@ -519,86 +527,79 @@ int ui(const char* tty = NULL, bool installer = false)
 
     const auto& theme_dir = std::filesystem::exists(theme_dir1)? theme_dir1 : theme_dir2;
 
-    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS) < 0) {
-        std::cerr << SDL_GetError() << std::endl;
-        if (tty) fallback_to_agetty(tty);
-        //else
-        return 1;
-    }
-    if (TTF_Init() < 0) {
-        std::cerr << "TTF_Init: " << TTF_GetError() << std::endl;
-        if (tty) fallback_to_agetty(tty);
-        //else
-        SDL_Quit();
-        return 1;
-    }
+    // wait for graphics hardware drivers to be loaded(hopefully)
+    system("udevadm settle");
 
     int rst = 0;
+    std::optional<std::string> error_message;
 
-    {
+    try {
+        if (SDL_Init(SDL_INIT_VIDEO) < 0) throw UnrecoverableSDLError("SDL_Init");
+        if (TTF_Init() < 0) throw TTFError();
         auto window = make_shared(SDL_CreateWindow("walbrix",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,width,height,SDL_WINDOW_SHOWN));
-        if (!window) {
-            std::cerr << "SDL_CreateWindow: " << SDL_GetError() << std::endl;
-            if (tty) fallback_to_agetty(tty);
-            //else
-            rst = 1;
-            goto out;
-        }
+        if (!window) throw UnrecoverableSDLError("SDL_CreateWindow");
         auto renderer = make_shared(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_PRESENTVSYNC));
-        if (!renderer) {
-            std::cerr << "SDL_CreateRenderer: " << SDL_GetError() << std::endl;
-            if (tty) fallback_to_agetty(tty);
-            rst = 1;
-            goto out;
-        }
-
+        if (!renderer) throw UnrecoverableSDLError("SDL_CreateRenderer");
         UIContext uicontext(renderer.get(), theme_dir, tty, installer);
-
-        try {
-            ui(uicontext);
-        }
-        catch (const PerformShutdown& e) {
-            rst = 114514;
-        }
-        catch (const PerformReboot& e) {
-            rst = 114515;
-        }
-        catch (const std::exception& e) {
-            std::cerr << e.what() << std::endl;
+        ui(uicontext);
+    }
+    catch (const UnrecoverableSDLError& e) {
+        std::string what = e.what();
+        if ((what == "SDL_Init" || what == "SDL_CreateWindow" || what == "SDL_CreateRenderer") && tty) {
+            rst = 114516;
+        } else {
+            error_message = std::string(e.what()) + ": " + SDL_GetError();
             rst = 1;
         }
     }
+    catch (const Terminated& e) {
+        rst = 1;
+    }
+    catch (const PerformShutdown& e) {
+        rst = 114514;
+    }
+    catch (const PerformReboot& e) {
+        rst = 114515;
+    }
+    catch (const TTFError& e) {
+        rst = 1;
+    }
+    catch (const std::exception& e) {
+        error_message = e.what();
+        rst = 1;
+    }
 
-out:;
-    TTF_Quit();
+    if (TTF_WasInit()) TTF_Quit();
     SDL_Quit();
 
     if (rst == 114514) {
         if (geteuid() == 0) execl("/sbin/poweroff", "/sbin/poweroff", NULL);
-        else std::cout << "Shutdown performed" << std::endl;
+        else cout << "Shutdown performed" << std::endl;
     } else if (rst == 114515) {
         if (geteuid() == 0) execl("/sbin/reboot", "/sbin/reboot", NULL);
-        else std::cout << "Reboot performed" << std::endl;
+        else cout << "Reboot performed" << std::endl;
+    } else if (rst == 114516) {
+        cout << "Graphical interface has been disabled due to monitor disconnected during boot." << std::endl;
+        cout << "Press Ctrl-D to try getting it back." << std::endl;
+        fallback_to_agetty(tty);
+    }
+
+    if (error_message) {
+        cerr << error_message.value() << std::endl;
+        if (tty && ftty) {
+            cout << "Hit enter key" << std::endl;
+            ftty.get();
+        }
     }
 
     return rst;
-}
-
-bool is_installer()
-{
-  std::ifstream cmdline("/proc/cmdline");
-  while (!cmdline.eof()) {
-    std::string arg;
-    cmdline >> arg;
-    if (arg == "systemd.unit=installer.target") return true;
-  }
-  return false;
 }
 
 int login(const std::vector<std::string>& args)
 {
     argparse::ArgumentParser program(args[0]);
     program.add_argument("tty").help("TTY name");
+    program.add_argument("--installer").help("Installer mode").default_value(false).implicit_value(true);
     try {
         program.parse_args(args);
     }
@@ -610,7 +611,7 @@ int login(const std::vector<std::string>& args)
     
     auto tty = program.get<std::string>("tty");
 
-    return ui(tty.c_str(), is_installer());
+    return ui(tty.c_str(), program.get<bool>("--installer"));
 }
 
 static const std::map<std::string,std::pair<int (*)(const std::vector<std::string>&),std::string> > subcommands {
