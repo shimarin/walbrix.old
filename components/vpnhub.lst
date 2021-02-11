@@ -93,6 +93,8 @@ $require vsftpd.lst
 # zabbix
 $require zabbix-server.lst
 
+$package www-servers/civetweb
+
 $copy resource/vpnhub/openvpn2dnsmasq.cpp /tmp/
 $exec --overlay "g++ -std=c++2a -shared -fPIC -o /usr/lib64/openvpn/plugins/openvpn2dnsmasq.so /tmp/openvpn2dnsmasq.cpp"
 $sed /lib/systemd/system/openvpn-server\@.service 's/^CapabilityBoundingSet=.*$/\0 CAP_KILL/'
@@ -103,6 +105,8 @@ $write /etc/sysctl.d/90-ip-forwarding.conf 'net.ipv4.ip_forward=1\nnet.ipv6.conf
 $copy resource/install-system-image /usr/sbin/
 $copy resource/make-bootx64-iso	/usr/sbin/
 /usr/bin/xorriso
+
+/usr/lib64/libiniparser4.so.1
 
 $require ts-node.lst
 $require timezone-jp.lst

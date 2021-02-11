@@ -20,7 +20,7 @@ net-analyzer/zabbix curl frontend mysql proxy server snmp openipmi ssh libxml2 -
 sys-libs/openipmi snmp
 dev-lang/php apache2 bcmath truetype xmlreader gd sysvipc sockets xmlwriter mysqli fpm gd mysql xslt zip pdo pcntl sysvipc curl sqlite sharedmem tidy exif -cjk intl ldap ftp gmp imap
 app-eselect/eselect-php fpm apache2
-www-servers/apache apache2_modules_http2 apache2_modules_proxy apache2_modules_proxy_connect
+www-servers/apache apache2_modules_http2 apache2_modules_proxy apache2_modules_proxy_connect apache2_modules_proxy_http
 www-apache/mod_extract_forwarded mod-proxy
 net-analyzer/fping suid
 
@@ -40,4 +40,6 @@ net-misc/rsync xxhash
 net-firewall/nftables xtables
 dev-python/python-slip dbus
 dev-python/pygobject -cairo
+
+www-servers/civetweb cxx
 

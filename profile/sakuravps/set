@@ -79,4 +79,4 @@ net-firewall/firewalld
 app-misc/mosquitto
 
 net-misc/socat
-
+www-servers/civetweb
