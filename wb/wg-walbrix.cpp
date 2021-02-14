@@ -53,13 +53,17 @@ std::tuple<std::string,std::string,std::string,std::string,std::string,std::opti
     Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort());
     Poco::Net::HTTPRequest req(Poco::Net::HTTPRequest::HTTP_POST, uri.getPath(), Poco::Net::HTTPMessage::HTTP_1_1);
     std::string body = std::string("pubkey=");
-    Poco::URI::encode(my_pubkey, "", body);
+    Poco::URI::encode(my_pubkey, "+=/", body);
     req.setContentType("application/x-www-form-urlencoded");
     req.setContentLength(body.length());
+    //std::cout << body << std::endl;
     std::ostream& os = session.sendRequest(req);
     os << body;
     Poco::Net::HTTPResponse res;
     std::istream& rs = session.receiveResponse(res);
+    if (res.getStatus() != Poco::Net::HTTPResponse::HTTPStatus::HTTP_OK) {
+        throw std::runtime_error(std::string("HTTP error ") + std::to_string(res.getStatus()));
+    }
 
     Poco::JSON::Parser parser;
     Poco::JSON::Object::Ptr ret = parser.parse(rs).extract<Poco::JSON::Object::Ptr>();
@@ -247,11 +251,13 @@ int main(int argc, char* argv[])
     auto url = argv[1];
     int rst = 0;
     try {
-        auto const& [their_address,endpoint,pubkey,sshkey,my_address,psk] = register_peer(url, get_pubkey());
+        auto my_pubkey = get_pubkey();
+        std::cout << "Public key: " << my_pubkey << std::endl;
+        auto const& [their_address,endpoint,their_pubkey,sshkey,my_address,psk] = register_peer(url, my_pubkey);
         if (exec_command("ip", {"link", "add", interface, "type", "wireguard"}) != 0) throw std::runtime_error("ip link add");
         //else
         exec_command("wg", {"set", interface, "private-key", privkey_path.string()});
-        exec_command("wg", {"set", interface, "peer", pubkey, "endpoint", endpoint, "persistent-keepalive", "25", "allowed-ips", their_address});
+        exec_command("wg", {"set", interface, "peer", their_pubkey, "endpoint", endpoint, "persistent-keepalive", "25", "allowed-ips", their_address});
         exec_command("ip", {"link", "set", interface, "up"});
         exec_command("ip", {"-6", "address", "replace", my_address, "dev", interface});
         exec_command("ip", {"route", "replace", their_address, "dev", interface});
