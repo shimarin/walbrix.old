@@ -1,6 +1,8 @@
 wb
 wbc
 walbrixd
+wg-walbrix
 *.o
+*.bin
 .gitignore
 .vscode

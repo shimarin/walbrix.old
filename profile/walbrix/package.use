@@ -93,3 +93,4 @@ dev-libs/libnl -python
 sys-libs/libcap-ng -python
 sys-libs/ldb -ldap
 
+dev-libs/poco -mongodb

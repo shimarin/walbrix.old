@@ -1,0 +1,3 @@
+#define WG_WALBRIX_SERVICE_NAME "com.walbrix.WgWalbrix"
+#define WG_WALBRIX_OBJECT_PATH "/com/walbrix/WgWalbrix"
+#define WG_WALBRIX_INTERFACE_NAME WG_WALBRIX_SERVICE_NAME

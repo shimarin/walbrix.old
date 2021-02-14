@@ -2,9 +2,9 @@ sys-kernel/gentoo-sources
 =sys-fs/bcache-tools-1.1
 
 # Xen
-=app-emulation/xen-4.14.0-r7
-=app-emulation/xen-tools-4.14.0-r5
-=app-emulation/xen-pvgrub-4.14.0
+=app-emulation/xen-4.14.1
+=app-emulation/xen-tools-4.14.1
+=app-emulation/xen-pvgrub-4.14.1
 
 #snort
 =net-analyzer/snort-2.9.16

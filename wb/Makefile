@@ -1,6 +1,6 @@
 default: all
 
-all: wb wbc walbrixd
+all: wb wbc walbrixd wg-walbrix
 
 .cpp.o:
 	g++ -std=c++2a -c $<
@@ -17,12 +17,15 @@ wbc: wbc.o console.o terminal.o uicontext.o status.o shutdown.o installer.o mess
 walbrixd: walbrixd.o
 	g++ -std=c++2a -o $@ $^ -lsystemd -lutil
 
-install: wb wbc walbrixd walbrixd.service walbrixd.conf
-	cp -a wb wbc walbrixd /usr/sbin/
-	cp -a walbrixd.service /lib/systemd/system/
-	cp -a walbrixd.conf /etc/dbus-1/system.d/
+wg-walbrix: wg-walbrix.o
+	g++ -std=c++2a -o $@ $^ -lsystemd -lutil -lPocoNet -lPocoNetSSL -lPocoFoundation -lPocoJSON -lssl -lcrypto
+
+install: wb wbc walbrixd walbrixd.service walbrixd.conf wg-walbrix wg-walbrix.service wg-walbrix.conf
+	cp -a wb wbc walbrixd wg-walbrix /usr/sbin/
+	cp -a walbrixd.service wg-walbrix.service /lib/systemd/system/
+	cp -a walbrixd.conf wg-walbrix.conf /etc/dbus-1/system.d/
 	mkdir -p /usr/share/wb/themes/default
 	cp -a default_theme/. /usr/share/wb/themes/default/
 
 clean:
-	rm -f wb wbc walbrixd *.o *.gch
+	rm -f wb wbc walbrixd wg-walbrix *.o *.gch

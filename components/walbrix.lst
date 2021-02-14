@@ -192,6 +192,7 @@ $copy resource/walbrix/do-with-lvm-snapshot /usr/sbin/
 
 # wb
 $package dev-libs/icu
+$package dev-libs/poco
 $require libsdl2.lst
 /usr/lib64/libiniparser4.so.1
 /usr/lib64/libvterm.so.0

@@ -1,0 +1,13 @@
+[Unit]
+Description=Wireguard for Walbrix
+
+[Service]
+ExecStart=-/usr/sbin/wg-walbrix https://hub.walbrix.net/wg-walbrix/1
+Restart=always
+RestartSec=5
+KillMode=mixed
+BusName=com.walbrix.WgWalbrix
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target

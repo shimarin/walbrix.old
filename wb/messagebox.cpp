@@ -76,16 +76,15 @@ std::tuple<std::shared_ptr<SDL_Texture>,int/*width*/,int/*height*/,SDL_Rect/*con
     return make_tuple(make_shared(SDL_CreateTextureFromSurface(uicontext.renderer, window_frame.get())), window_frame->w, window_frame->h, content_rect, buttonarea_height);
 }
 
-bool messagebox_okcancel(UIContext& uicontext, const std::string& message, bool default_value = true, bool caution = false)
+bool messagebox_okcancel(UIContext& uicontext, std::function<std::shared_ptr<SDL_Surface>()> func, bool default_value/* = true*/, bool caution/* = false*/)
 {
-    auto font_def = std::make_pair(uicontext.FONT_PROPOTIONAL, 24);
     auto dialog_button = uicontext.registry.surfaces("dialog_button.png");
     auto button_gap = 32;
 
-    auto const& [window_texture,width,height,content_rect,buttonarea_height] = create_window_texture_from_surface(uicontext, [&uicontext,&font_def,&message,caution,dialog_button,button_gap]() {
+    auto const& [window_texture,width,height,content_rect,buttonarea_height] = create_window_texture_from_surface(uicontext, [&uicontext,caution,dialog_button,button_gap,func]() {
         auto caution_sign = uicontext.registry.surfaces("caution_sign.png");
 
-        auto message_surface = make_shared(TTF_RenderUTF8_Blended(uicontext.registry.fonts(font_def), message.c_str(), {0,0,0,255}));
+        auto message_surface = func();
 
         auto content_width = std::max(std::max(message_surface->w, caution_sign->w), dialog_button->w * 2 + button_gap);
         auto content_height = message_surface->h + (caution? caution_sign->h : 0);
@@ -129,8 +128,8 @@ bool messagebox_okcancel(UIContext& uicontext, const std::string& message, bool 
         SDL_BlitSurface(dialog_button_selection, NULL, surface, &rightbutton_rect);
     });
 
-    auto buttontext_texture = create_texture_from_surface(uicontext.renderer, width, height, [&uicontext,&font_def,&leftbutton_rect,&rightbutton_rect](auto surface) {
-        auto font = uicontext.registry.fonts(font_def);
+    auto buttontext_texture = create_texture_from_surface(uicontext.renderer, width, height, [&uicontext,&leftbutton_rect,&rightbutton_rect](auto surface) {
+        auto font = uicontext.registry.fonts({uicontext.FONT_PROPOTIONAL, 24});
         auto ok_surface = make_shared(TTF_RenderUTF8_Blended(font, "OK", {0,0,0,255}));
         auto cancel_surface = make_shared(TTF_RenderUTF8_Blended(font, "キャンセル", {0,0,0,255}));
         SDL_Rect ok_rect {
@@ -190,12 +189,19 @@ bool messagebox_okcancel(UIContext& uicontext, const std::string& message, bool 
     return ok;
 }
 
+bool messagebox_okcancel(UIContext& uicontext, const std::string& message, bool default_value/* = true*/, bool caution/* = false*/)
+{
+    return messagebox_okcancel(uicontext, [&uicontext,&message](){
+        return make_shared(TTF_RenderUTF8_Blended(uicontext.registry.fonts({uicontext.FONT_PROPOTIONAL, 24}), message.c_str(), {0,0,0,255}));
+    }, default_value, caution);
+}
+
 #ifdef __VSCODE_ACTIVE_FILE__
 int messagebox_main()
 {
     const auto width = 1024, height = 768;
     std::filesystem::path theme_dir("./default_theme");
-    SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS);
+    SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
 
     {
