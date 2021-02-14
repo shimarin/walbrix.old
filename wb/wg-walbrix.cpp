@@ -22,6 +22,7 @@
 #include "wg-walbrix.h"
 
 const size_t WG_KEY_LEN = 32;
+const int MTU = 1280;
 const std::string interface("wg-walbrix");
 const std::filesystem::path privkey_path("/etc/walbrix/privkey");
 
@@ -259,6 +260,7 @@ int main(int argc, char* argv[])
         exec_command("wg", {"set", interface, "private-key", privkey_path.string()});
         exec_command("wg", {"set", interface, "peer", their_pubkey, "endpoint", endpoint, "persistent-keepalive", "25", "allowed-ips", their_address});
         exec_command("ip", {"link", "set", interface, "up"});
+        exec_command("ip", {"link", "set", interface, "mtu", std::to_string(MTU)});
         exec_command("ip", {"-6", "address", "replace", my_address, "dev", interface});
         exec_command("ip", {"route", "replace", their_address, "dev", interface});
         rst = loop(std::regex_replace(their_address, std::regex("/\\d+$"), ""));
