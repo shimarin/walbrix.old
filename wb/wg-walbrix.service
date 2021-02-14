@@ -1,10 +1,12 @@
 [Unit]
 Description=Wireguard for Walbrix
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 ExecStart=-/usr/sbin/wg-walbrix https://hub.walbrix.net/wg-walbrix/1
 Restart=always
-RestartSec=5
+RestartSec=5s
 KillMode=mixed
 BusName=com.walbrix.WgWalbrix
 TimeoutStopSec=10
