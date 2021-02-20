@@ -2,7 +2,7 @@ $require logrotate.lst
 
 #dev-libs/apr
 #dev-libs/apr-util
-$package www-servers/apache # USE="apache2_modules_proxy_connect apache2_modules_proxy apache2_modules_proxy_http apache2_modules_proxy_ajp"
+$package www-servers/apache # USE="apache2_modules_proxy_connect apache2_modules_proxy apache2_modules_proxy_http apache2_modules_proxy_ajp apache2_modules_proxy_remoteip"
 $mkdir /var/cache/apache2
 $package app-admin/apache-tools
 
@@ -21,9 +21,13 @@ $mkdir /var/www/localhost/cgi-bin
 # from mime-types
 /etc/mime.types
 
-$package www-apache/mod_extract_forwarded # USE="mod_proxy"
-$sed /etc/apache2/modules.d/98_mod_extract_forwarded.conf 's/localhost/all/'
-$sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D EXTRACT_FORWARDED"/'
+#$package www-apache/mod_extract_forwarded # USE="mod_proxy"
+#$sed /etc/apache2/modules.d/98_mod_extract_forwarded.conf 's/localhost/all/'
+#$sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D EXTRACT_FORWARDED"/'
+
+# mod_remoteip
+$write /etc/apache2/modules.d/00_default_remoteip.conf 'RemoteIPHeader X-Forwarded-For\nRemoteIPTrustedProxy 127.0.0.1/8\nRemoteIPTrustedProxy 10.0.0.0/8\nRemoteIPTrustedProxy 172.16.0.0/12\nRemoteIPTrustedProxy 192.168.0.0/16\nRemoteIPTrustedProxy ::1\nRemoteIPTrustedProxy fe80::/10\nRemoteIPTrustedProxy fd00::/8'
+$sed /etc/apache2/modules.d/00_mod_log_config.conf 's/^\(LogFormat\s.\+\)%h\(.\+\)$/\1%a\2/'
 
 $package www-apache/mod_authnz_external
 $sed /etc/conf.d/apache2 's/^\(APACHE2_OPTS=.*\)\"$/\1 -D AUTHNZ_EXTERNAL"/'

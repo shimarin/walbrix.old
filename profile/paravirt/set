@@ -58,7 +58,6 @@ dev-cpp/gflags
 app-admin/logrotate
 net-analyzer/zabbix
 mail-mta/postfix
-www-apache/mod_extract_forwarded
 www-apache/mod_authnz_external
 net-misc/ndppd
 net-fs/samba
@@ -91,7 +90,6 @@ dev-util/trace-cmd
 net-dialup/rp-pppoe
 
 dev-util/debootstrap
-app-arch/rpm
 
 net-misc/socat
 net-ftp/ftp

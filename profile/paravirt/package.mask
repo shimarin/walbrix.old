@@ -5,3 +5,4 @@
 >=dev-lang/php-7.4
 <dev-lang/php-7.3
 >=dev-lang/lua-5.3
+>=dev-util/ragel-7
