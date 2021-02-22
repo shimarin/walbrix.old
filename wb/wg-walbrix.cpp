@@ -243,7 +243,7 @@ static int loop(const std::string& their_address)
     return 1;
 }
 
-int main(int argc, char* argv[])
+static int _main(int argc, char* argv[])
 {
     if (argc < 2) {
         std::cout << argv[0] << " URL" << std::endl;
@@ -277,5 +277,9 @@ int main(int argc, char* argv[])
     exec_command("ip", {"link", "del", interface});
     return rst;
 }
+
+#ifdef __MAIN_MODULE__
+int main(int argc, char* argv[]) { return _main(argc, argv); }
+#endif
 
 // g++ -std=c++2a -o wg-walbrix wg-walbrix.cpp -lPocoNet -lPocoNetSSL -lPocoFoundation -lPocoJSON

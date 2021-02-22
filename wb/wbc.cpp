@@ -65,7 +65,7 @@ int start(const std::vector<std::string>& args)
     return WEXITSTATUS(status);
 }
 
-int stop(const std::vector<std::string>& args)
+static int stop(const std::vector<std::string>& args)
 {
     argparse::ArgumentParser program(args[0]);
     program.add_argument("vmname").help("VM name");
@@ -88,7 +88,7 @@ int stop(const std::vector<std::string>& args)
     return 0;
 }
 
-int list(const std::vector<std::string>& args)
+static int list(const std::vector<std::string>& args)
 {
     execlp("busctl", "busctl", "--system", "call", 
         WALBRIXD_SERVICE_NAME, WALBRIXD_OBJECT_PATH, WALBRIXD_INTERFACE_NAME, 
@@ -595,7 +595,7 @@ int ui(const char* tty = NULL, bool installer = false)
     return rst;
 }
 
-int login(const std::vector<std::string>& args)
+static int login(const std::vector<std::string>& args)
 {
     argparse::ArgumentParser program(args[0]);
     program.add_argument("tty").help("TTY name");
@@ -625,7 +625,7 @@ static const std::map<std::string,std::pair<int (*)(const std::vector<std::strin
   {"installer", {[](auto args){ return ui(NULL, true); }, "Run graphical installer"}},
 };
 
-void show_subcommands()
+static void show_subcommands()
 {
     for (auto i = subcommands.cbegin(); i != subcommands.cend(); i++) {
         std::cout << i->first << '\t' << i->second.second << std::endl;
@@ -649,7 +649,7 @@ int debug_main(int argc, char* argv[])
 }
 #endif
 
-int main(int argc, char* argv[])
+static int _main(int argc, char* argv[])
 {
 #ifdef __VSCODE_ACTIVE_FILE__
     return debug_main(argc, argv);
@@ -679,3 +679,8 @@ int main(int argc, char* argv[])
 
     return subcommands.at(subcommand).first(args);
 }
+
+#ifdef __MAIN_MODULE__
+int main(int argc, char* argv[]) { return _main(argc, argv); }
+#endif
+

@@ -4,5 +4,4 @@ walbrixd
 wg-walbrix
 *.o
 *.bin
-.gitignore
-.vscode
+*.a

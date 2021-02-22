@@ -468,3 +468,13 @@ int start(const std::vector<std::string>& args)
   uint32_t domid = start(vmname.c_str());
   return domid > 0? 0 : 1;
 }
+
+static int _main(int,char*[])
+{
+    return 0;
+}
+
+#ifdef __MAIN_MODULE__
+int main(int argc, char* argv[]) { return _main(argc, argv); }
+#endif
+

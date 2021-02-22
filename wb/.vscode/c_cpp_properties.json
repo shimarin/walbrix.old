@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "cppStandard": "c++20",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/lib/llvm/9/bin/clang",
+            "cStandard": "c11",
+            "defines": [ "__VSCODE_ACTIVE_FILE__=\"${relativeFile}\"" ]
+        }
+    ],
+    "version": 4
+}

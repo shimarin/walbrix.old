@@ -1,24 +1,36 @@
-default: all
+rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
+OBJS=$(subst .cpp,.o,$(call rwildcard,,*.cpp)) $(subst .c,.o,$(call rwildcard,,*.c))
+BINS=$(subst .cpp,.bin,$(call rwildcard,,*.cpp))
+HEADERS=$(call rwildcard,,*.h)
+
+CXXFLAGS ?= -std=c++2a
+LIBS ?= -lxenlight -lxentoollog -lxenstore -lpam -lpam_misc -liniparser4 -lsmartcols -lmount -lxlutil -lblkid -lsystemd -lutil -lPocoNet -lPocoNetSSL -lPocoFoundation -lPocoJSON -lssl -lcrypto -licuuc -lSDL2 -lSDL2_image -lSDL2_ttf -lvterm -lpam
 
 all: wb wbc walbrixd wg-walbrix
 
-.cpp.o:
-	g++ -std=c++2a -c $<
+libproj.a: $(OBJS)
+	ar r $@ $(OBJS)
 
-.c.o:
-	gcc -c $<
+%.bin: %.cpp libproj.a
+	g++ $(CXXFLAGS) -o $@ -D__MAIN_MODULE__ $< -L . -lproj $(LIBS)
 
-wb: wb.o start.o monitor.o ui.o install.o termbox.o
-	g++ -std=c++2a -o $@ -lxenlight -lxentoollog -lxenstore -lpam -lpam_misc -liniparser4 -lsmartcols -lmount -lxlutil -lblkid $^
+%.o: %.cpp $(HEADERS)
+	g++ $(CXXFLAGS) -c $< -o $@
 
-wbc: wbc.o console.o terminal.o uicontext.o status.o shutdown.o installer.o messagebox.o -lblkid -lmount
-	g++ -std=c++2a -o $@ -lutil -licuuc -lSDL2 -lSDL2_image -lSDL2_ttf -lvterm -lpam $^
+%.o: %.c $(HEADERS)
+	gcc $(CFLAGS) -c $< -o $@
 
-walbrixd: walbrixd.o
-	g++ -std=c++2a -o $@ $^ -lsystemd -lutil
+wb: wb.cpp libproj.a
+	g++ $(CXXFLAGS) -o $@ -D__MAIN_MODULE__ wb.cpp -L . -lxenlight -lxentoollog -lxenstore -lpam -lpam_misc -liniparser4 -lsmartcols -lmount -lxlutil -lblkid -lproj
 
-wg-walbrix: wg-walbrix.o
-	g++ -std=c++2a -o $@ $^ -lsystemd -lutil -lPocoNet -lPocoNetSSL -lPocoFoundation -lPocoJSON -lssl -lcrypto
+wbc: wbc.cpp libproj.a
+	g++ $(CXXFLAGS) -o $@ -D__MAIN_MODULE__ wbc.cpp -L . -lutil -licuuc -lSDL2 -lSDL2_image -lSDL2_ttf -lvterm -lpam -lmount -lblkid -lproj
+
+walbrixd: walbrixd.cpp
+	g++ $(CXXFLAGS) -o $@ -D__MAIN_MODULE__ $^ -lsystemd -lutil
+
+wg-walbrix: wg-walbrix.cpp
+	g++ $(CXXFLAGS) -o $@ -D__MAIN_MODULE__ $^ -lsystemd -lutil -lPocoNet -lPocoNetSSL -lPocoFoundation -lPocoJSON -lssl -lcrypto
 
 install: wb wbc walbrixd walbrixd.service walbrixd.conf wg-walbrix wg-walbrix.service wg-walbrix.conf
 	cp -a wb wbc walbrixd wg-walbrix /usr/sbin/
@@ -28,4 +40,4 @@ install: wb wbc walbrixd walbrixd.service walbrixd.conf wg-walbrix wg-walbrix.se
 	cp -a default_theme/. /usr/share/wb/themes/default/
 
 clean:
-	rm -f wb wbc walbrixd wg-walbrix *.o *.gch
+	rm -f $(BINS) $(OBJS) libproj.a wb wbc walbrixd wg-walbrix

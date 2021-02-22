@@ -1,0 +1,26 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++ アクティブなファイルのビルド",
+            "command": "make",
+            "args": [
+                "CXXFLAGS=-std=c++2a -g",
+                "-j", "-f", "Makefile",
+                "${fileDirname}/${fileBasenameNoExtension}.bin"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "デバッガーによって生成されたタスクを外部Makefileを利用するよう改造したもの。"
+        }
+    ],
+    "version": "2.0.0"
+}

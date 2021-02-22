@@ -394,7 +394,7 @@ static void process_autostart(const Config& config)
     });
 }
 
-int main(int argc, char *argv[])
+static int _main(int argc, char *argv[])
 {
     argparse::ArgumentParser program(argv[0]);
 
@@ -563,3 +563,8 @@ int main(int argc, char *argv[])
 
     return status;
 }
+
+#ifdef __MAIN_MODULE__
+int main(int argc, char* argv[]) { return _main(argc, argv); }
+#endif
+

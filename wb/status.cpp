@@ -196,3 +196,13 @@ void Status::on_deselect()
 {
     content = NULL;
 }
+
+static int _main(int,char*[])
+{
+    return 0;
+}
+
+#ifdef __MAIN_MODULE__
+int main(int argc, char* argv[]) { return _main(argc, argv); }
+#endif
+

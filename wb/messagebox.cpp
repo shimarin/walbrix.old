@@ -196,8 +196,7 @@ bool messagebox_okcancel(UIContext& uicontext, const std::string& message, bool 
     }, default_value, caution);
 }
 
-#ifdef __VSCODE_ACTIVE_FILE__
-int messagebox_main()
+static int _main(int,char*[])
 {
     const auto width = 1024, height = 768;
     std::filesystem::path theme_dir("./default_theme");
@@ -212,7 +211,7 @@ int messagebox_main()
         auto font =  uicontext.registry.fonts({uicontext.FONT_PROPOTIONAL, 32});
 
         auto texture = create_texture_from_surface(uicontext.renderer, [font]() {
-            return make_shared(TTF_RenderUTF8_Blended(font, __VSCODE_ACTIVE_FILE__, {255,255,255,255}));
+            return make_shared(TTF_RenderUTF8_Blended(font, __FILE__, {255,255,255,255}));
         });
 
         uicontext.push_render_func([texture](auto renderer, bool) {
@@ -231,8 +230,11 @@ int messagebox_main()
 
     TTF_Quit();
     SDL_Quit();
-    std::cout << __VSCODE_ACTIVE_FILE__ << std::endl;
 
     return 0;
 }
+
+#ifdef __MAIN_MODULE__
+int main(int argc, char* argv[]) { return _main(argc, argv); }
 #endif
+

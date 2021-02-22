@@ -281,7 +281,7 @@ int stop(const std::vector<std::string>& args)
   return 0;
 }
 
-int console(const std::vector<std::string>& args)
+static int console(const std::vector<std::string>& args)
 {
   argparse::ArgumentParser program(args[0]);
   program.add_argument("vmname").help("VM name");
@@ -511,7 +511,7 @@ void show_subcommands()
     }
 }
 
-int main(int argc, char* argv[])
+static int _main(int argc, char* argv[])
 {
     setlocale( LC_ALL, "ja_JP.utf8"); // TODO: read /etc/locale.conf
 
@@ -539,8 +539,9 @@ int main(int argc, char* argv[])
     return subcommands.at(subcommand).first(args);
 }
 
-
-
+#ifdef __MAIN_MODULE__
+int main(int argc, char* argv[]) { return _main(argc, argv); }
+#endif
 
 
 /*
