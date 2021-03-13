@@ -12,7 +12,7 @@ static void blink(SDL_Texture* texture)
 
 void Shutdown::draw(SDL_Renderer* renderer/*=NULL*/, bool focus/* = false*/)
 {
-    if (!renderer) renderer = uicontext.renderer;
+    if (!renderer) renderer = uicontext;
     auto item_left = uicontext.mainmenu_width + (uicontext.width - uicontext.mainmenu_width - item_width) / 2;
     auto item_top = uicontext.header_height + 100;
     SDL_Rect rect {
@@ -58,8 +58,8 @@ void Shutdown::on_select()
     auto notselected = uicontext.registry.surfaces("shutdown_notselected.png");
     item_width = notselected->w;
     item_height = notselected->h;
-    textures.notselected = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(uicontext.renderer, notselected), SDL_DestroyTexture);
-    textures.selected = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(uicontext.renderer, uicontext.registry.surfaces("shutdown_selected.png")), SDL_DestroyTexture);
+    textures.notselected = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(uicontext, notselected), SDL_DestroyTexture);
+    textures.selected = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(uicontext, uicontext.registry.surfaces("shutdown_selected.png")), SDL_DestroyTexture);
 
     auto shutdown = uicontext.render_font_as_texture(font_def, "シャットダウン", {255, 255, 255, 255});
     textures.shutdown = std::get<0>(shutdown);
@@ -80,7 +80,7 @@ void Shutdown::on_deselect()
 bool Shutdown::on_enter()
 {
     selected = 0;
-    uicontext.push_render_func([this](auto renderer, bool focus) {
+    RenderFunc rf(uicontext, [this](auto renderer, bool focus) {
         draw(renderer, focus);
         return true;
     });
@@ -103,20 +103,17 @@ bool Shutdown::on_enter()
                 }
                 return true;
             })) break;
-            SDL_RenderPresent(uicontext.renderer);
+            SDL_RenderPresent(uicontext);
         }
 
         if (selected < 0) break;
         //else
         auto message = std::string("システムを") + (selected == 0? "シャットダウン" : "再起動") + "します。よろしいですか？";
         if (messagebox_okcancel(uicontext, message, false, true)) {
-            uicontext.pop_render_func();
             if (selected == 0) throw PerformShutdown();
             else throw PerformReboot();
         }
     }
-
-    uicontext.pop_render_func();
 
     return true;
 }

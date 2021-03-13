@@ -5,8 +5,7 @@
             "label": "C/C++: g++ アクティブなファイルのビルド",
             "command": "make",
             "args": [
-                "CXXFLAGS=-std=c++2a -g",
-                "-j", "-f", "Makefile",
+                "CXXFLAGS=-std=c++2a -g -DDEBUG", "-j",
                 "${fileDirname}/${fileBasenameNoExtension}.bin"
             ],
             "options": {

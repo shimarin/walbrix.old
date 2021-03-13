@@ -1,97 +1,44 @@
 #include <pty.h>
 #include <glob.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <sys/mount.h>
 #include <sys/sysmacros.h>
 
-#include <set>
+#include <iostream>
 #include <fstream>
 
 #include <libmount/libmount.h>
 #include <blkid/blkid.h>
+
+#include <argparse/argparse.hpp>
 
 #include "sdlplusplus.h"
 #include "wbc.h"
 #include "installer.h"
 #include "messagebox.h"
 #include "terminal.h"
-
-#include <pstream.h>
-#define PICOJSON_USE_INT64
-#include <picojson.h>
-
-static void for_each_blockdevice(std::function<void(
-    const std::string& name,
-    std::optional<std::string> pkname,
-    const std::string& type,
-    std::optional<std::string> model,
-    bool ro,
-    uint64_t size,
-    std::optional<std::string> tran,
-    std::optional<uint16_t> log_sec,
-    std::optional<std::filesystem::path> mountpoint)> func)
-{
-    redi::pstream in("lsblk -b -n -l -J -o NAME,MODEL,TYPE,PKNAME,RO,MOUNTPOINT,SIZE,TRAN,LOG-SEC");
-    if (in.fail()) throw std::runtime_error("Failed to execute lsblk");
-    // else
-    picojson::value v;
-    const std::string err = picojson::parse(v, in);
-    if (!err.empty()) throw std::runtime_error(err);
-    //else
-    for (auto& _d : v.get<picojson::object>()["blockdevices"].get<picojson::array>()) {
-        picojson::object& d = _d.get<picojson::object>();
-        func(
-            d["name"].get<std::string>(),
-            d["pkname"].is<std::string>()? std::optional(d["pkname"].get<std::string>()) : std::nullopt,
-            d["type"].get<std::string>(),
-            d["model"].is<std::string>()? std::optional(d["model"].get<std::string>()) : std::nullopt,
-            d["ro"].get<bool>(),
-            d["size"].get<int64_t>(),
-            d["tran"].is<std::string>()? std::optional(d["tran"].get<std::string>()) : std::nullopt,
-            d["log-sec"].is<int64_t>()? std::optional(d["log-sec"].get<int64_t>()) : std::nullopt,
-            d["mountpoint"].is<std::string>()? std::optional(std::filesystem::path(d["mountpoint"].get<std::string>())) : std::nullopt
-        );
-    }
-};
+#include "disk.h"
+#include "messages.h"
 
 void Installer::load_options()
 {
-    std::map<std::string,std::tuple<
-        std::string/*name*/,std::optional<std::string>/*model*/,uint64_t/*size*/,std::optional<std::string>/*tran*/,uint16_t/*log_sec*/>
-    > disks;
-    std::set<std::string> to_be_removed;
-    const uint64_t least_size = 1024L * 1024 * 1024 * 4;
-    for_each_blockdevice([&disks,&to_be_removed](auto name, auto pkname, auto type, auto model, auto ro, auto size, auto tran, auto log_sec, auto mountpoint) {
-        if (mountpoint) {
-            if (pkname) to_be_removed.insert(pkname.value());
-            return;
-        }
-        //else
-        if (type != "disk" || size < least_size || !log_sec) return;
-        //else
-        disks[name] = { name, model, size, tran, log_sec.value() };
-    });
-
-    for (auto n : to_be_removed) {
-        if (disks.contains(n)) disks.erase(n);
-    }
+    auto disks = get_unused_disks();
 
     auto font = uicontext.registry.fonts({uicontext.FONT_PROPOTIONAL, 32});
     auto icon = uicontext.registry.surfaces("icon_storage.png");
     int y = 0;
-    for (auto const& [_, disk] : disks) {
-        (void)_;
-        auto const& [ name, model, size, tran, log_sec ] = disk;
-        auto const& [texture,__,h] = create_texture_from_surface(uicontext.renderer, [this,font,&icon,&name,&model,size]() {
-            auto label_surface = make_shared(TTF_RenderUTF8_Blended(font, model? model.value().c_str() : (std::string("/dev/") + name).c_str(), {0,0,0,255}));
+    for (const auto& disk : disks) {
+        auto const& [texture,__,h] = create_texture_from_surface(uicontext, [this,font,&icon,&disk]() {
+            auto label_surface = make_shared(TTF_RenderUTF8_Blended(font, disk.model? disk.model.value().c_str() : (std::string("/dev/") + disk.name).c_str(), {0,0,0,255}));
             std::string capacity_str;
-            if (size > 1000L * 1000 * 1000 * 1000/*TB*/) {
+            if (disk.size > 1000L * 1000 * 1000 * 1000/*TB*/) {
                 char buf[32];
-                sprintf(buf, "%.1fTB", (double)size / 1000 / 1000 / 1000 / 1000);
+                sprintf(buf, "%.1fTB", (double)disk.size / 1000 / 1000 / 1000 / 1000);
                 capacity_str = buf;
             } else /*GB*/ {
                 char buf[32];
-                sprintf(buf, "%.1fGB", (double)size / 1000 / 1000 / 1000);
+                sprintf(buf, "%.1fGB", (double)disk.size / 1000 / 1000 / 1000);
                 capacity_str = buf;
             }
             auto capacity_surface = make_shared(TTF_RenderUTF8_Blended(font, capacity_str.c_str(), {0,0,0,255}));
@@ -116,7 +63,7 @@ void Installer::load_options()
             });
         });
         (void)__;
-        options.push_back({name, size, log_sec, texture, y, h, model? model.value() : ""});
+        options.push_back({disk.name, disk.size, disk.log_sec.value(), texture, y, h, disk.model? disk.model.value() : ""});
         y += h;
     }
 }
@@ -133,7 +80,7 @@ void Installer::on_deselect()
 
 void Installer::draw(SDL_Renderer* renderer/*=NULL*/)
 {
-    if (!renderer) renderer = uicontext.renderer;
+    if (!renderer) renderer = uicontext;
     for (auto const&[name, size, log_sec, texture, y, h, details] : options) {
         (void)size;(void)log_sec;
         SDL_Rect rect { uicontext.mainmenu_width, uicontext.header_height + y, width, h };
@@ -266,9 +213,9 @@ static std::optional<std::string> get_partition_uuid(const std::filesystem::path
   return rst;
 }
 
-static void do_install(const std::filesystem::path& disk, uint64_t size, uint16_t log_sec)
+static void do_install(const std::filesystem::path& disk, uint64_t size, uint16_t log_sec, const std::map<std::string,std::string>& grub_vars = {})
 {
-    std::cout << "LVMを停止します" << std::endl;
+    std::cout << MSG("Stopping LVM") << std::endl;
     exec_command("vgchange", {"-an"});
 
     std::vector<std::string> parted_args = {"--script", disk.string()};
@@ -280,7 +227,7 @@ static void do_install(const std::filesystem::path& disk, uint64_t size, uint16_
         parted_args.push_back("mkpart primary fat32 1MiB 8GiB");
         parted_args.push_back("mkpart primary btrfs 8GiB -1");
     } else {
-        std::cout << "警告: ディスク容量が小さいためデータ領域は作成されません" << std::endl;
+        std::cout << MSG("Warning: Data area won't be created due to too small disk") << std::endl;
         parted_args.push_back("mkpart primary fat32 1MiB -1");
     }
     parted_args.push_back("set 1 boot on");
@@ -288,28 +235,28 @@ static void do_install(const std::filesystem::path& disk, uint64_t size, uint16_
         parted_args.push_back("set 1 esp on");
     }
 
-    std::cout << "パーティションを作成しています...";
+    std::cout << MSG("Creating partisions...");
     std::flush(std::cout);
     exec_command("parted", parted_args);
     exec_command("udevadm", {"settle"});
-    std::cout << "完了" << std::endl;
+    std::cout << MSG("Done") << std::endl;
 
     auto _boot_partition = get_partition(disk, 1);
     if (!_boot_partition) {
-        std::cerr << "エラー: 起動パーティションを特定できません" << std::endl;
+        std::cerr << MSG("Error: Unable to determine boot partition") << std::endl;
         throw std::runtime_error("No boot partition");
     }
     //else
     auto boot_partition = _boot_partition.value();
 
-    std::cout << "起動パーティションをFAT32でフォーマットします" << std::endl;
+    std::cout << MSG("Formatting boot partition with FAT32") << std::endl;
     exec_command("mkfs.vfat",{"-F","32",boot_partition});
 
-    std::cout << "起動パーティションをマウントしています...";
+    std::cout << MSG("Mouning boot partition...");
     std::flush(std::cout);
-    with_tempmount<bool>(boot_partition, "vfat", MS_RELATIME, "fmask=177,dmask=077", [&disk,bios_compatible](auto mnt) {
-        std::cout << "完了" << std::endl;
-        std::cout << "ブートローダー(UEFI)をインストールします" << std::endl;
+    with_tempmount<bool>(boot_partition, "vfat", MS_RELATIME, "fmask=177,dmask=077", [&disk,&grub_vars,bios_compatible](auto mnt) {
+        std::cout << MSG("Done") << std::endl;
+        std::cout << MSG("Installing UEFI bootloader") << std::endl;
         auto efi_boot = mnt / "efi/boot";
         std::filesystem::create_directories(efi_boot);
         exec_command("grub-mkimage", {"-p", "/boot/grub", "-o", (efi_boot / "bootx64.efi").string(), "-O", "x86_64-efi", 
@@ -317,14 +264,14 @@ static void do_install(const std::filesystem::path& disk, uint64_t size, uint16_
             "lvm","chain","configfile","cpuid","minicmd","gfxterm_background","png","font","terminal","squash4","loopback","videoinfo","videotest",
             "blocklist","probe","efi_gop","efi_uga", "keystatus"});
         if (bios_compatible) {
-            std::cout << "ブートローダー(BIOS)をインストールします" << std::endl;
+            std::cout << MSG("Installing BIOS bootloader") << std::endl;
             exec_command("grub-install", {"--target=i386-pc", "--recheck", std::string("--boot-directory=") + (mnt / "boot").string(),
                 "--modules=xfs fat part_msdos normal linux echo all_video test multiboot multiboot2 search sleep gzio lvm chain configfile cpuid minicmd font terminal squash4 loopback videoinfo videotest blocklist probe gfxterm_background png keystatus",
                 disk.string()});
         } else {
-            std::cout << "BIOSで扱えないタイプのディスクなのでこのシステムはUEFI専用となります" << std::endl;
+            std::cout << MSG("This system will be UEFI-only as this disk cannot be treated by BIOS") << std::endl;
         }
-        std::cout << "ブート設定ファイルを作成します" << std::endl;
+        std::cout << MSG("Creating boot configuration file") << std::endl;
         {
             std::ofstream grubcfg(mnt / "boot/grub/grub.cfg");
             if (grubcfg.fail()) throw std::runtime_error("ofstream('/boot/grub/grub.cfg')");
@@ -334,8 +281,15 @@ static void do_install(const std::filesystem::path& disk, uint64_t size, uint16_
                 << "set root=loop\nset prefix=($root)/boot/grub\nnormal"
                 << std::endl;
         }
+        if (grub_vars.size() > 0) {
+            std::ofstream systemcfg(mnt / "system.cfg");
+            if (systemcfg.fail()) throw std::runtime_error("ofstream('/system.cfg')");
+            for (const auto& [k,v] : grub_vars) {
+                systemcfg << "set " << k << '=' << v << std::endl;
+            }
+        }
 
-        std::cout << "システムファイルをコピーします" << std::endl;
+        std::cout << MSG("Copying system file") << std::endl;
         std::filesystem::path run_initramfs_boot("/run/initramfs/boot");
         char buf[128 * 1024];
         FILE* f1 = fopen((run_initramfs_boot / "system.img").c_str(), "r");
@@ -360,36 +314,36 @@ static void do_install(const std::filesystem::path& disk, uint64_t size, uint16_
             uint8_t new_percentage = cnt * 100 / statbuf.st_size;
             if (new_percentage > percentage) {
                 percentage = new_percentage;
-                std::cout << "\rコピー中..." << (int)percentage << "%";
+                std::cout << '\r' << MSG("Copying...") << (int)percentage << "%";
                 std::flush(std::cout);
             }
         } while (r == sizeof(buf));
         std::cout << std::endl;
         fclose(f1);
         fclose(f2);
-        std::cout << "起動パーティションをアンマウントしています...";
+        std::cout << MSG("Unmounting boot partition...");
         std::flush(std::cout);
         return true;
     });
-    std::cout << "完了" << std::endl;
+    std::cout << MSG("Done") << std::endl;
     
     if (has_secondary_partition) {
-        std::cout << "データ領域を構築します" << std::endl;
+        std::cout << MSG("Constructing data area") << std::endl;
         auto secondary_partition = get_partition(disk, 2);
         if (secondary_partition) {
             auto boot_partition_uuid = get_partition_uuid(boot_partition);
             if (boot_partition_uuid) {
                 auto label = std::string("wbdata-") + boot_partition_uuid.value();
                 auto partition_name = secondary_partition.value();
-                std::cout << "データ領域用パーティション " << partition_name.string() << " をBTRFSでフォーマットしています(ラベル=" << label << ")...";
+                std::cout << MSG("Formatting partition for data area with BTRFS...");
                 std::flush(std::cout);
                 exec_command("mkfs.btrfs", {"-q", "-L", label, "-f", partition_name.string()});
-                std::cout << "完了" << std::endl;
+                std::cout << MSG("Done") << std::endl;
             } else {
-                std::cout << "警告: 起動パーティションのUUIDを取得できません。データ領域は作成されません" << std::endl;
+                std::cout << MSG("Warning: Unable to get UUID of boot partition. Data area won't be created") << std::endl;
             }
         } else {
-            std::cout << "警告: データ領域用のパーティションを特定できません。データ領域は作成されません" << std::endl;
+            std::cout << MSG("Warning: Unable to determine partition for data area. Data area won't be created") << std::endl;
         }
     }
 
@@ -438,7 +392,7 @@ static bool do_install(UIContext& uicontext, const std::filesystem::path& disk, 
         uicontext.width - uicontext.mainmenu_width, uicontext.height - uicontext.header_height - uicontext.footer_height
     };
 
-    uicontext.push_render_func([&terminal,&terminal_rect](auto renderer, bool) {
+    RenderFunc rf(uicontext, [&terminal,&terminal_rect](auto renderer, bool) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderFillRect(renderer, &terminal_rect);
         terminal.render(renderer, terminal_rect);
@@ -452,17 +406,16 @@ static bool do_install(UIContext& uicontext, const std::filesystem::path& disk, 
         process_event([&terminal](auto ev) { terminal.processEvent(ev); return true; } );
         if (!terminal.processInput()) break; // EOF detected
 
-        SDL_RenderPresent(uicontext.renderer);
+        SDL_RenderPresent(uicontext);
     }
     terminal.processInput(); // to consume last output from subprocess
 
     if (status == 0) {
-        messagebox_okcancel(uicontext, "インストールできました");
+        messagebox_ok(uicontext, "インストールが完了しました。システムを再起動します。");
     } else {
-        messagebox_okcancel(uicontext, "インストールが中断されました", true, true);
+        messagebox_ok(uicontext, "インストールが中断されました", true);
     }
 
-    uicontext.pop_render_func();
     return (status == 0);
 }
 
@@ -474,61 +427,95 @@ bool Installer::on_enter()
 
     int selected = 0;
 
-    auto cursor = create_texture_from_surface(uicontext.renderer, 1, 1, [](auto surface) { 
+    auto cursor = create_texture_from_surface(uicontext, 1, 1, [](auto surface) { 
         SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0x07, 0x8e, 0xb7));
     });
 
-    uicontext.push_render_func([this,&cursor,&selected](auto renderer, bool focus) {
-        auto const& [name, size, log_sec, texture, y, h, details] = options[selected];
-        (void)name;(void)size;(void)log_sec;(void)texture;(void)details;
-        SDL_Rect rect { uicontext.mainmenu_width, uicontext.header_height + y, width, h};
-        Uint8 alpha = focus? (std::abs(std::sin((SDL_GetTicks() % 4000 * pi * 2 / 4000))) * 127 + 128) : 255;
-        SDL_SetTextureAlphaMod(cursor.get(), alpha);
-        SDL_RenderCopy(renderer, cursor.get(), NULL, &rect);
-        draw(renderer);
-        return true;
-    });
-
-    while (true) {
-        while (process_event([this,&selected](auto ev) {
-            if (ev.type != SDL_KEYDOWN) return true;
-            //else
-            if (ev.key.keysym.sym == SDLK_UP && selected > 0) {
-                selected--;
-            } else if (ev.key.keysym.sym == SDLK_DOWN && selected < options.size() - 1) {
-                selected++;
-            } else if (ev.key.keysym.sym == SDLK_RETURN || ev.key.keysym.sym == SDLK_KP_ENTER) {
-                return false;
-            } else if (ev.key.keysym.sym == SDLK_ESCAPE) {
-                selected = -1;
-                return false;
-            }        
+    {
+        RenderFunc rf(uicontext, [this,&cursor,&selected](auto renderer, bool focus) {
+            auto const& [name, size, log_sec, texture, y, h, details] = options[selected];
+            (void)name;(void)size;(void)log_sec;(void)texture;(void)details;
+            SDL_Rect rect { uicontext.mainmenu_width, uicontext.header_height + y, width, h};
+            Uint8 alpha = focus? (std::abs(std::sin((SDL_GetTicks() % 4000 * pi * 2 / 4000))) * 127 + 128) : 255;
+            SDL_SetTextureAlphaMod(cursor.get(), alpha);
+            SDL_RenderCopy(renderer, cursor.get(), NULL, &rect);
+            draw(renderer);
             return true;
-        })) {
-            uicontext.render();
-            SDL_RenderPresent(uicontext.renderer);
-        }
-        if (selected < 0 || (selected >= 0 && messagebox_okcancel(uicontext, "インストールします", false, true))) break;
-    }
+        });
 
-    uicontext.pop_render_func();
+        while (true) {
+            while (process_event([this,&selected](auto ev) {
+                if (ev.type != SDL_KEYDOWN) return true;
+                //else
+                if (ev.key.keysym.sym == SDLK_UP && selected > 0) {
+                    selected--;
+                } else if (ev.key.keysym.sym == SDLK_DOWN && selected < options.size() - 1) {
+                    selected++;
+                } else if (ev.key.keysym.sym == SDLK_RETURN || ev.key.keysym.sym == SDLK_KP_ENTER) {
+                    return false;
+                } else if (ev.key.keysym.sym == SDLK_ESCAPE) {
+                    selected = -1;
+                    return false;
+                }        
+                return true;
+            })) {
+                uicontext.render();
+                SDL_RenderPresent(uicontext);
+            }
+            if (selected < 0 || (selected >= 0 && messagebox_okcancel(uicontext, "インストールします", false, true))) break;
+        }
+    }
 
     if (selected < 0) return true;
     //else
     auto const& [name, size, log_sec, texture, y, h, details] = options[selected];
     (void)texture,(void)y,(void)h,(void)details;
     auto const& disk = std::filesystem::path("/dev/") / name;
-    if (do_install(uicontext, disk, size, log_sec)) throw PerformReboot();
+    if (do_install(uicontext, disk, size, log_sec)) throw PerformReboot(true);
     //else
     return true;
 }
 
+int install_cmdline(const std::vector<std::string>& args)
+{
+    argparse::ArgumentParser program(args[0]);
+    program.add_argument("device_path").help("Path of disk device");
+    program.add_argument("--text-mode").help("Make text mode as default").default_value(false).implicit_value(true);
+    program.add_argument("--installer").help("Create installer").default_value(false).implicit_value(true);
+
+    try {
+        program.parse_args(args);
+    }
+    catch (const std::runtime_error& err) {
+        std::cout << err.what() << std::endl;
+        std::cout << program;
+        return 1;
+    }
+
+    auto device_path = program.get<std::string>("device_path");
+    auto text_mode = program.get<bool>("--text-mode");
+    auto installer = program.get<bool>("--installer");
+
+    std::map<std::string,std::string> grub_vars;
+    if (text_mode) grub_vars["default"] = "text";
+    if (installer) grub_vars["systemd_unit"] = "installer.target";
+
+    try {
+        auto disk = get_unused_disk(device_path);
+        do_install(device_path, disk.size, disk.log_sec.value(), grub_vars);
+    }
+    catch (const std::runtime_error& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    return 0;
+}
+
 static int _main(int,char*[])
 {
-    return 0;
+    return install_cmdline({"install", "--text-mode", "/dev/null"});
 }
 
 #ifdef __MAIN_MODULE__
 int main(int argc, char* argv[]) { return _main(argc, argv); }
 #endif
-

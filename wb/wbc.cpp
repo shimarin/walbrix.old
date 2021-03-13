@@ -190,11 +190,11 @@ bool auth(UIContext& uicontext)
                             message += ' ';
                             for (int i = 0; i < password.length(); i++) message += '*';
                             auto surface = TTF_RenderUTF8_Blended(env.font, message.c_str(), (SDL_Color){0, 0, 0, 0});
-                            password_texture(env.uicontext.renderer, surface);
+                            password_texture(env.uicontext, surface);
                             password_texture(0, env.uicontext.height * 3 / 5);
                             SDL_FreeSurface(surface);
                         }
-                        password_texture(env.uicontext.renderer);
+                        password_texture(env.uicontext);
 
                         if (!process_event([&env,&password,&password_texture](auto ev) {
                             if (ev.type == SDL_TEXTINPUT) {
@@ -204,7 +204,7 @@ bool auth(UIContext& uicontext)
                                 if (password_texture) password_texture();
                             } else if (ev.type == SDL_KEYDOWN) {
                                 if (ev.key.keysym.sym == SDLK_RETURN || ev.key.keysym.sym == SDLK_KP_ENTER) {
-                                    SDL_RenderPresent(env.uicontext.renderer);
+                                    SDL_RenderPresent(env.uicontext);
                                     return false;
                                 } else if (ev.key.keysym.sym == SDLK_BACKSPACE) {
                                     if (password.length() > 0) {
@@ -213,7 +213,7 @@ bool auth(UIContext& uicontext)
                                     }
                                 } else if (ev.key.keysym.sym == SDLK_ESCAPE) {
                                     env.cancelled = true;
-                                    SDL_RenderPresent(env.uicontext.renderer);
+                                    SDL_RenderPresent(env.uicontext);
                                     return false;
                                 }
                             }
@@ -222,18 +222,18 @@ bool auth(UIContext& uicontext)
 
                         if (env.result == PAM_PERM_DENIED && !message_texture) {
                             auto surface = TTF_RenderUTF8_Blended(env.font, "パスワードが正しくありません", (SDL_Color){255, 0, 0, 0});
-                            message_texture(env.uicontext.renderer, surface);
+                            message_texture(env.uicontext, surface);
                             message_texture(0, password_texture.rect.y + password_texture.rect.h);
                             SDL_FreeSurface(surface);
                         }
-                        message_texture(env.uicontext.renderer);
+                        message_texture(env.uicontext);
 
                         auto caret_rect = (SDL_Rect){password_texture.rect.w, password_texture.rect.y, 4, password_texture.rect.h};
                         Uint8 alpha = std::abs(std::sin((SDL_GetTicks() % 2000 * pi * 2 / 2000))) * 255;
-                        SDL_SetRenderDrawColor(env.uicontext.renderer, 0, 0, 0, alpha);
-                        SDL_SetRenderDrawBlendMode(env.uicontext.renderer, SDL_BLENDMODE_BLEND);
-                        SDL_RenderFillRect(env.uicontext.renderer, &caret_rect);
-                        SDL_RenderPresent(env.uicontext.renderer);
+                        SDL_SetRenderDrawColor(env.uicontext, 0, 0, 0, alpha);
+                        SDL_SetRenderDrawBlendMode(env.uicontext, SDL_BLENDMODE_BLEND);
+                        SDL_RenderFillRect(env.uicontext, &caret_rect);
+                        SDL_RenderPresent(env.uicontext);
                     }
                     aresp[i].resp = strdup(password.c_str());
                 }
@@ -270,8 +270,8 @@ bool title(UIContext& uicontext)
     SDL_Rect copyright_rect = { (uicontext.width - std::get<1>(copyright)) / 2, uicontext.height - std::get<2>(copyright) - 20, std::get<1>(copyright), std::get<2>(copyright) };
     uicontext.registry.fonts.discard(font);
 
-    uicontext.push_render_func(
-        [title_background,title,title_rect,copyright,copyright_rect](SDL_Renderer* renderer, bool) {
+    RenderFunc rf(uicontext,
+        [title_background,title,title_rect,copyright,copyright_rect](auto renderer, bool) {
             SDL_RenderCopy(renderer, title_background.get(), NULL, NULL);
             SDL_RenderCopy(renderer, std::get<0>(title).get(), NULL, &title_rect);
             SDL_RenderCopy(renderer, std::get<0>(copyright).get(), NULL, &copyright_rect);
@@ -279,24 +279,24 @@ bool title(UIContext& uicontext)
         }
     );
 
-    uicontext.push_render_func(
-        [&title_message,&title_message_rect](SDL_Renderer* renderer,bool) {
-            Uint8 alpha = std::abs(std::sin((SDL_GetTicks() % 4000 * pi * 2 / 4000))) * 255;
-            SDL_SetTextureAlphaMod(std::get<0>(title_message).get(), alpha);
-            SDL_RenderCopy(renderer, std::get<0>(title_message).get(), NULL, &title_message_rect);
-            return true;
-        }
-    );
+    {
+        RenderFunc rf(uicontext,
+            [&title_message,&title_message_rect](auto renderer,bool) {
+                Uint8 alpha = std::abs(std::sin((SDL_GetTicks() % 4000 * pi * 2 / 4000))) * 255;
+                SDL_SetTextureAlphaMod(std::get<0>(title_message).get(), alpha);
+                SDL_RenderCopy(renderer, std::get<0>(title_message).get(), NULL, &title_message_rect);
+                return true;
+            }
+        );
 
-    while (process_event([](auto ev) { return !(ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_RETURN); })) {
-        uicontext.render();
-        SDL_RenderPresent(uicontext.renderer);
+        while (process_event([](auto ev) { return !(ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_RETURN); })) {
+            uicontext.render();
+            SDL_RenderPresent(uicontext);
+        }
     }
 
-    uicontext.pop_render_func();
     bool rst = auth(uicontext);
 
-    uicontext.pop_render_func();
     return rst;
 }
 
@@ -337,7 +337,7 @@ int local_console(UIContext& uicontext, const char* prog, const std::vector<std:
         uicontext.width - uicontext.mainmenu_width, uicontext.height - uicontext.header_height - uicontext.footer_height
     };
 
-    uicontext.push_render_func([&terminal,&terminal_rect](auto renderer, bool) {
+    RenderFunc rf(uicontext, [&terminal,&terminal_rect](auto renderer, bool) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderFillRect(renderer, &terminal_rect);
         terminal.render(renderer, terminal_rect);
@@ -351,9 +351,8 @@ int local_console(UIContext& uicontext, const char* prog, const std::vector<std:
         process_event([&terminal](auto ev) { terminal.processEvent(ev); return true; });
         if (!terminal.processInput()) break; // EOF detected
 
-        SDL_RenderPresent(uicontext.renderer);
+        SDL_RenderPresent(uicontext);
     }
-    uicontext.pop_render_func();
 
     return status;
 }
@@ -401,7 +400,7 @@ void ui(UIContext& uicontext)
         //rect.x += 2;
         //rect.y += 2;
         //SDL_BlitSurface(surface2.get(), NULL, surface0.get(), &rect);
-        return std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(uicontext.renderer, surface0.get()), SDL_DestroyTexture);
+        return std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(uicontext, surface0.get()), SDL_DestroyTexture);
     };
 
     Status status(uicontext);
@@ -454,17 +453,17 @@ void ui(UIContext& uicontext)
     int selected = 0;
     menuitems[selected].on_select();
 
-    uicontext.push_render_func([&uicontext,&background,&header,&header_logo,&footer,&mainmenu_panel,
-        &menuitems,&cursor1,&cursor2,&selected](auto renderer, bool focus) {
-        SDL_RenderCopy(renderer, background.get(), NULL, NULL);
+    RenderFunc rf(uicontext, [&background,&header,&header_logo,&footer,&mainmenu_panel,
+        &menuitems,&cursor1,&cursor2,&selected](auto uicontext, bool focus) {
+        SDL_RenderCopy(uicontext, background.get(), NULL, NULL);
         SDL_Rect header_rect = { 0, 0, std::get<1>(header), uicontext.header_height };
-        SDL_RenderCopy(renderer, std::get<0>(header).get(), NULL, &header_rect);
+        SDL_RenderCopy(uicontext, std::get<0>(header).get(), NULL, &header_rect);
         SDL_Rect header_logo_rect = { 0, 0, std::get<1>(header_logo), std::get<2>(header_logo) };
-        SDL_RenderCopy(renderer, std::get<0>(header_logo).get(), NULL, &header_logo_rect);
+        SDL_RenderCopy(uicontext, std::get<0>(header_logo).get(), NULL, &header_logo_rect);
         SDL_Rect footer_rect = { 0, uicontext.height - std::get<2>(footer), std::get<1>(footer), uicontext.footer_height };
-        SDL_RenderCopy(renderer, std::get<0>(footer).get(), NULL, &footer_rect);
+        SDL_RenderCopy(uicontext, std::get<0>(footer).get(), NULL, &footer_rect);
         SDL_Rect mainmenu_panel_rect = { 0, header_rect.h, uicontext.mainmenu_width, std::get<2>(mainmenu_panel) };
-        SDL_RenderCopy(renderer, std::get<0>(mainmenu_panel).get(), NULL, &mainmenu_panel_rect);
+        SDL_RenderCopy(uicontext, std::get<0>(mainmenu_panel).get(), NULL, &mainmenu_panel_rect);
 
         SDL_Rect rect = {0, uicontext.header_height, uicontext.mainmenu_width, uicontext.mainmenu_item_height};
         for (auto i = menuitems.begin(); i != menuitems.end(); i++) {
@@ -475,9 +474,9 @@ void ui(UIContext& uicontext)
                     Uint8 alpha = std::abs(std::sin((SDL_GetTicks() % 4000 * pi * 2 / 4000))) * 127 + 128;
                     SDL_SetTextureAlphaMod(cursor, alpha);
                 }
-                SDL_RenderCopy(renderer, cursor, NULL, &rect);
+                SDL_RenderCopy(uicontext, cursor, NULL, &rect);
             }
-            SDL_RenderCopy(renderer, i->texture.get(), NULL, &rect);
+            SDL_RenderCopy(uicontext, i->texture.get(), NULL, &rect);
         }
 
         return true;
@@ -503,11 +502,8 @@ void ui(UIContext& uicontext)
             }
             return true;
         })) break;
-        SDL_RenderPresent(uicontext.renderer);
+        SDL_RenderPresent(uicontext);
     }
-
-
-    uicontext.pop_render_func();
 }
 
 int ui(const char* tty = NULL, bool installer = false)
@@ -528,25 +524,31 @@ int ui(const char* tty = NULL, bool installer = false)
     const auto& theme_dir = std::filesystem::exists(theme_dir1)? theme_dir1 : theme_dir2;
 
     // wait for graphics hardware drivers to be loaded(hopefully)
+    //cout << "Waiting for udev to be settled..." << std::endl;
     system("udevadm settle");
 
     int rst = 0;
     std::optional<std::string> error_message;
 
     try {
+        //cout << "Initializing SDL..." << std::endl;
         if (SDL_Init(SDL_INIT_VIDEO) < 0) throw UnrecoverableSDLError("SDL_Init");
+        //cout << "Initializing TTF subsystem..." << std::endl;
         if (TTF_Init() < 0) throw TTFError();
+        //cout << "Creating Window..." << std::endl;
         auto window = make_shared(SDL_CreateWindow("walbrix",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,width,height,SDL_WINDOW_SHOWN));
         if (!window) throw UnrecoverableSDLError("SDL_CreateWindow");
+        //cout << "Creating Renderer..." << std::endl;
         auto renderer = make_shared(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_PRESENTVSYNC));
         if (!renderer) throw UnrecoverableSDLError("SDL_CreateRenderer");
-        UIContext uicontext(renderer.get(), theme_dir, tty, installer);
+        UIContext uicontext(renderer, theme_dir, tty, installer);
+        //cout << "Invoking user interface..." << std::endl;
         ui(uicontext);
     }
     catch (const UnrecoverableSDLError& e) {
         std::string what = e.what();
         if ((what == "SDL_Init" || what == "SDL_CreateWindow" || what == "SDL_CreateRenderer") && tty) {
-            rst = 114516;
+            rst = 114518;
         } else {
             error_message = std::string(e.what()) + ": " + SDL_GetError();
             rst = 1;
@@ -557,9 +559,11 @@ int ui(const char* tty = NULL, bool installer = false)
     }
     catch (const PerformShutdown& e) {
         rst = 114514;
+        if (e.is_force()) rst++;
     }
     catch (const PerformReboot& e) {
-        rst = 114515;
+        rst = 114516;
+        if (e.is_force()) rst++;
     }
     catch (const TTFError& e) {
         rst = 1;
@@ -576,9 +580,15 @@ int ui(const char* tty = NULL, bool installer = false)
         if (geteuid() == 0) execl("/sbin/poweroff", "/sbin/poweroff", NULL);
         else cout << "Shutdown performed" << std::endl;
     } else if (rst == 114515) {
+        if (geteuid() == 0) execl("/sbin/poweroff", "/sbin/poweroff", "-f", NULL);
+        else cout << "Force shutdown performed" << std::endl;
+    } else if (rst == 114516) {
         if (geteuid() == 0) execl("/sbin/reboot", "/sbin/reboot", NULL);
         else cout << "Reboot performed" << std::endl;
-    } else if (rst == 114516) {
+    } else if (rst == 114517) {
+        if (geteuid() == 0) execl("/sbin/reboot", "/sbin/reboot", "-f", NULL);
+        else cout << "Force reboot performed" << std::endl;
+    } else if (rst == 114518) {
         cout << "Graphical interface has been disabled due to monitor disconnected during boot." << std::endl;
         cout << "Press Ctrl-D to try getting it back." << std::endl;
         fallback_to_agetty(tty);
@@ -623,6 +633,7 @@ static const std::map<std::string,std::pair<int (*)(const std::vector<std::strin
   {"login", {login, "Show title screen(executed by systemd)"}},
   {"ui", {[](auto args){ return ui(); }, "Run graphical interface"}},
   {"installer", {[](auto args){ return ui(NULL, true); }, "Run graphical installer"}},
+  {"install", {install_cmdline, "Run command line installer"}}
 };
 
 static void show_subcommands()
@@ -632,28 +643,8 @@ static void show_subcommands()
     }
 }
 
-#ifdef __VSCODE_ACTIVE_FILE__
-int messagebox_main();
-
-int debug_main(int argc, char* argv[])
-{
-    if (std::string(__VSCODE_ACTIVE_FILE__) == "messagebox.cpp") {
-        return messagebox_main();
-    }
-    if (std::string(__VSCODE_ACTIVE_FILE__) == "installer.cpp") {
-        return ui(NULL, true);
-    }
-    //else
-    std::cout << "No debug main for " << __VSCODE_ACTIVE_FILE__ << std::endl;
-    return 0;
-}
-#endif
-
 static int _main(int argc, char* argv[])
 {
-#ifdef __VSCODE_ACTIVE_FILE__
-    return debug_main(argc, argv);
-#endif
     setlocale( LC_ALL, "ja_JP.utf8"); // TODO: read /etc/locale.conf
 
     if (argc < 2) {

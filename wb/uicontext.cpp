@@ -28,7 +28,7 @@ TTF_Font* FontRegistry::load(const std::pair<std::string,uint8_t>& name)
 std::tuple<std::shared_ptr<SDL_Texture>,int,int> UIContext::create_texture_from_transient_surface(const char* name)
 {
     auto surface = registry.surfaces.transient(name);
-    auto texture = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(renderer, surface.get()),SDL_DestroyTexture);
+    auto texture = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(renderer.get(), surface.get()),SDL_DestroyTexture);
     auto w = surface->w;
     auto h = surface->h;
     return std::make_tuple(texture, w, h);
@@ -39,7 +39,7 @@ std::tuple<std::shared_ptr<SDL_Texture>,int,int> UIContext::render_font_as_textu
     auto surface = TTF_RenderUTF8_Blended(font, text, (SDL_Color){255, 255, 255, 255});
     int w = surface->w;
     int h = surface->h;
-    auto texture = SDL_CreateTextureFromSurface(renderer, surface);
+    auto texture = SDL_CreateTextureFromSurface(renderer.get(), surface);
     SDL_FreeSurface(surface);
     return std::make_tuple(std::shared_ptr<SDL_Texture>(texture, SDL_DestroyTexture), w, h);
 };
@@ -47,7 +47,7 @@ std::tuple<std::shared_ptr<SDL_Texture>,int,int> UIContext::render_font_as_textu
 void UIContext::render()
 {
     for (auto i = render_funcs.begin(); i != render_funcs.end(); i++) {
-        (*i)(renderer, i == std::next(render_funcs.end(), -1));
+        (*i)(*this, i == std::next(render_funcs.end(), -1));
     }
 }
 

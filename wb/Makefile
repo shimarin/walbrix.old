@@ -6,7 +6,7 @@ HEADERS=$(call rwildcard,,*.h)
 CXXFLAGS ?= -std=c++2a
 LIBS ?= -lxenlight -lxentoollog -lxenstore -lpam -lpam_misc -liniparser4 -lsmartcols -lmount -lxlutil -lblkid -lsystemd -lutil -lPocoNet -lPocoNetSSL -lPocoFoundation -lPocoJSON -lssl -lcrypto -licuuc -lSDL2 -lSDL2_image -lSDL2_ttf -lvterm -lpam
 
-all: wb wbc walbrixd wg-walbrix
+all: wb wbc walbrixd wg-walbrix messages.mo
 
 libproj.a: $(OBJS)
 	ar r $@ $(OBJS)
@@ -32,12 +32,16 @@ walbrixd: walbrixd.cpp
 wg-walbrix: wg-walbrix.cpp
 	g++ $(CXXFLAGS) -o $@ -D__MAIN_MODULE__ $^ -lsystemd -lutil -lPocoNet -lPocoNetSSL -lPocoFoundation -lPocoJSON -lssl -lcrypto
 
-install: wb wbc walbrixd walbrixd.service walbrixd.conf wg-walbrix wg-walbrix.service wg-walbrix.conf
+messages.mo: messages.po
+	msgfmt -o $@ $<
+
+install: wb wbc walbrixd walbrixd.service walbrixd.conf wg-walbrix wg-walbrix.service wg-walbrix.conf messages.mo
 	cp -a wb wbc walbrixd wg-walbrix /usr/sbin/
 	cp -a walbrixd.service wg-walbrix.service /lib/systemd/system/
 	cp -a walbrixd.conf wg-walbrix.conf /etc/dbus-1/system.d/
 	mkdir -p /usr/share/wb/themes/default
 	cp -a default_theme/. /usr/share/wb/themes/default/
+	cp -a messages.mo /usr/share/locale/ja/LC_MESSAGES/
 
 clean:
 	rm -f $(BINS) $(OBJS) libproj.a wb wbc walbrixd wg-walbrix

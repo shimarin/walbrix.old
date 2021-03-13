@@ -282,4 +282,4 @@ static int _main(int argc, char* argv[])
 int main(int argc, char* argv[]) { return _main(argc, argv); }
 #endif
 
-// g++ -std=c++2a -o wg-walbrix wg-walbrix.cpp -lPocoNet -lPocoNetSSL -lPocoFoundation -lPocoJSON
+// g++ -std=c++2a -D__MAIN_MODULE__ -o wg-walbrix wg-walbrix.cpp -lPocoNet -lPocoNetSSL -lPocoFoundation -lPocoJSON

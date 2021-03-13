@@ -1,5 +1,7 @@
 [Unit]
 Description=Walbrix daemon
+Requires=local-fs.target
+After=local-fs.target
 
 [Service]
 ExecStart=-/usr/sbin/walbrixd --bridge br0

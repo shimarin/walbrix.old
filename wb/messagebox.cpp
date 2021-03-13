@@ -67,37 +67,27 @@ static std::tuple<std::shared_ptr<SDL_Surface>,int/*left*/,int/*top*/,int/*butto
 }
 
 std::tuple<std::shared_ptr<SDL_Texture>,int/*width*/,int/*height*/,SDL_Rect/*content_rect*/,int/*buttonarea_height*/> create_window_texture_from_surface(
-    UIContext& uicontext, std::function<std::shared_ptr<SDL_Surface>()> func)
+    UIContext& uicontext, std::function<std::shared_ptr<SDL_Surface>(UIContext&)> func)
 {
-    auto content = func();
+    auto content = func(uicontext);
     auto const& [window_frame, left, top, buttonarea_height] = generate_window_frame(uicontext, content->w, content->h);
     SDL_Rect content_rect { left, top, content->w, content->h };
     SDL_BlitSurface(content.get(), NULL, window_frame.get(), &content_rect);
-    return make_tuple(make_shared(SDL_CreateTextureFromSurface(uicontext.renderer, window_frame.get())), window_frame->w, window_frame->h, content_rect, buttonarea_height);
+    return make_tuple(make_shared(SDL_CreateTextureFromSurface(uicontext, window_frame.get())), window_frame->w, window_frame->h, content_rect, buttonarea_height);
 }
 
-bool messagebox_okcancel(UIContext& uicontext, std::function<std::shared_ptr<SDL_Surface>()> func, bool default_value/* = true*/, bool caution/* = false*/)
+bool messagebox_okcancel(UIContext& uicontext, std::function<std::shared_ptr<SDL_Surface>(UIContext&)> func, bool default_value/* = true*/)
 {
     auto dialog_button = uicontext.registry.surfaces("dialog_button.png");
     auto button_gap = 32;
 
-    auto const& [window_texture,width,height,content_rect,buttonarea_height] = create_window_texture_from_surface(uicontext, [&uicontext,caution,dialog_button,button_gap,func]() {
-        auto caution_sign = uicontext.registry.surfaces("caution_sign.png");
+    auto const& [window_texture,width,height,content_rect,buttonarea_height] = create_window_texture_from_surface(uicontext, [dialog_button,button_gap,func](auto uicontext) {
+        auto message_surface = func(uicontext);
+        auto content_width = std::max(message_surface->w, dialog_button->w * 2 + button_gap);
+        auto content_height = message_surface->h;
 
-        auto message_surface = func();
-
-        auto content_width = std::max(std::max(message_surface->w, caution_sign->w), dialog_button->w * 2 + button_gap);
-        auto content_height = message_surface->h + (caution? caution_sign->h : 0);
-
-        return with_transparent_surface(content_width, content_height, [message_surface,caution,caution_sign](auto surface) {
-            int y = 0;
-            if (caution) {
-                SDL_Rect rect { (surface->w - caution_sign->w) / 2, y, caution_sign->w, caution_sign->h};
-                SDL_BlitSurface(caution_sign, NULL, surface, &rect);
-                y += rect.h;
-            }
-            SDL_Rect rect { (surface->w - message_surface->w) / 2, y, message_surface->w, message_surface->h };
-            rect.x = (surface->w - message_surface->w) / 2;
+        return with_transparent_surface(content_width, content_height, [message_surface](auto surface) {
+            SDL_Rect rect { (surface->w - message_surface->w) / 2, 0, message_surface->w, message_surface->h };
             SDL_BlitSurface(message_surface.get(), NULL, surface, &rect);
         });
     });
@@ -115,20 +105,20 @@ bool messagebox_okcancel(UIContext& uicontext, std::function<std::shared_ptr<SDL
         dialog_button->w, dialog_button->h
     };
 
-    auto buttons_texture = create_texture_from_surface(uicontext.renderer, width, height, [dialog_button,&leftbutton_rect,&rightbutton_rect](auto surface) {
+    auto buttons_texture = create_texture_from_surface(uicontext, width, height, [dialog_button,&leftbutton_rect,&rightbutton_rect](auto surface) {
         SDL_BlitSurface(dialog_button, NULL, surface, &leftbutton_rect);
         SDL_BlitSurface(dialog_button, NULL, surface, &rightbutton_rect);
     });
 
-    auto leftbutton_selected_texture = create_texture_from_surface(uicontext.renderer, width, height, [dialog_button_selection,&leftbutton_rect](auto surface) {
+    auto leftbutton_selected_texture = create_texture_from_surface(uicontext, width, height, [dialog_button_selection,&leftbutton_rect](auto surface) {
         SDL_BlitSurface(dialog_button_selection, NULL, surface, &leftbutton_rect);
     });
 
-    auto rightbutton_selected_texture = create_texture_from_surface(uicontext.renderer, width, height, [dialog_button_selection,&rightbutton_rect](auto surface) {
+    auto rightbutton_selected_texture = create_texture_from_surface(uicontext, width, height, [dialog_button_selection,&rightbutton_rect](auto surface) {
         SDL_BlitSurface(dialog_button_selection, NULL, surface, &rightbutton_rect);
     });
 
-    auto buttontext_texture = create_texture_from_surface(uicontext.renderer, width, height, [&uicontext,&leftbutton_rect,&rightbutton_rect](auto surface) {
+    auto buttontext_texture = create_texture_from_surface(uicontext, width, height, [&uicontext,&leftbutton_rect,&rightbutton_rect](auto surface) {
         auto font = uicontext.registry.fonts({uicontext.FONT_PROPOTIONAL, 24});
         auto ok_surface = make_shared(TTF_RenderUTF8_Blended(font, "OK", {0,0,0,255}));
         auto cancel_surface = make_shared(TTF_RenderUTF8_Blended(font, "キャンセル", {0,0,0,255}));
@@ -146,22 +136,18 @@ bool messagebox_okcancel(UIContext& uicontext, std::function<std::shared_ptr<SDL
 
     bool ok = default_value;
 
-    uicontext.push_render_func([&uicontext,width,height,&window_texture,&buttons_texture,
+    RenderFunc rf(uicontext, [width,height,&window_texture,&buttons_texture,
         &leftbutton_selected_texture,&rightbutton_selected_texture,
-        &buttontext_texture,&ok](auto renderer,bool) {
-        SDL_Rect rect {
-            (uicontext.width - width) / 2,
-            (uicontext.height - height) / 2,
-            width, height
-        };
-        SDL_RenderCopy(renderer, window_texture.get(), NULL, &rect);
-        SDL_RenderCopy(renderer, buttons_texture.get(), NULL, &rect);
+        &buttontext_texture,&ok](auto uicontext,bool) {
+        SDL_Rect rect = uicontext.center_rect(width, height);
+        SDL_RenderCopy(uicontext, window_texture.get(), NULL, &rect);
+        SDL_RenderCopy(uicontext, buttons_texture.get(), NULL, &rect);
 
         blink(leftbutton_selected_texture.get());
         blink(rightbutton_selected_texture.get());
-        SDL_RenderCopy(renderer, ok? leftbutton_selected_texture.get() : rightbutton_selected_texture.get(), NULL, &rect);
+        SDL_RenderCopy(uicontext, ok? leftbutton_selected_texture.get() : rightbutton_selected_texture.get(), NULL, &rect);
 
-        SDL_RenderCopy(renderer, buttontext_texture.get(), NULL, &rect);
+        SDL_RenderCopy(uicontext, buttontext_texture.get(), NULL, &rect);
         return true;
     });
 
@@ -182,18 +168,138 @@ bool messagebox_okcancel(UIContext& uicontext, std::function<std::shared_ptr<SDL
             }
             return true;
         })) break;
-        SDL_RenderPresent(uicontext.renderer);
+        SDL_RenderPresent(uicontext);
     }
 
-    uicontext.pop_render_func();
     return ok;
 }
 
 bool messagebox_okcancel(UIContext& uicontext, const std::string& message, bool default_value/* = true*/, bool caution/* = false*/)
 {
-    return messagebox_okcancel(uicontext, [&uicontext,&message](){
-        return make_shared(TTF_RenderUTF8_Blended(uicontext.registry.fonts({uicontext.FONT_PROPOTIONAL, 24}), message.c_str(), {0,0,0,255}));
-    }, default_value, caution);
+    return messagebox_okcancel(uicontext, [&message,caution](auto uicontext){
+        auto caution_sign = uicontext.registry.surfaces("caution_sign.png");
+
+        auto message_surface = make_shared(TTF_RenderUTF8_Blended(uicontext.registry.fonts({uicontext.FONT_PROPOTIONAL, 24}), message.c_str(), {0,0,0,255}));
+
+        auto content_width = std::max(message_surface->w, caution_sign->w);
+        auto content_height = message_surface->h + (caution? caution_sign->h : 0);
+
+        return with_transparent_surface(content_width, content_height, [message_surface,caution,caution_sign](auto surface) {
+            int y = 0;
+            if (caution) {
+                SDL_Rect rect { (surface->w - caution_sign->w) / 2, y, caution_sign->w, caution_sign->h};
+                SDL_BlitSurface(caution_sign, NULL, surface, &rect);
+                y += rect.h;
+            }
+            SDL_Rect rect { (surface->w - message_surface->w) / 2, y, message_surface->w, message_surface->h };
+            rect.x = (surface->w - message_surface->w) / 2;
+            SDL_BlitSurface(message_surface.get(), NULL, surface, &rect);
+        });
+    }, default_value);
+}
+
+bool messagebox_ok(UIContext& uicontext, std::function<std::shared_ptr<SDL_Surface>(UIContext&)> func)
+{
+    auto dialog_button = uicontext.registry.surfaces("dialog_button.png");
+    auto const& [window_texture,width,height,content_rect,buttonarea_height] = create_window_texture_from_surface(uicontext, [dialog_button,func](auto uicontext) {
+        auto message_surface = func(uicontext);
+
+        auto content_width = std::max(message_surface->w, dialog_button->w);
+        auto content_height = message_surface->h;
+
+        return with_transparent_surface(content_width, content_height, [message_surface](auto surface) {
+            SDL_Rect rect { (surface->w - message_surface->w) / 2, 0, message_surface->w, message_surface->h };
+            SDL_BlitSurface(message_surface.get(), NULL, surface, &rect);
+        });
+    });
+
+     // buttons
+    auto dialog_button_selection = uicontext.registry.surfaces("dialog_button_selection.png");
+    SDL_Rect button_rect {
+        (width - dialog_button->w) / 2,
+        content_rect.y + content_rect.h + (buttonarea_height - dialog_button->h) / 2,
+        dialog_button->w, dialog_button->h
+    };
+
+    auto button_texture = create_texture_from_surface(uicontext, width, height, [dialog_button,&button_rect](auto surface) {
+        SDL_BlitSurface(dialog_button, NULL, surface, &button_rect);
+    });
+
+    auto button_selected_texture = create_texture_from_surface(uicontext, width, height, [dialog_button_selection,&button_rect](auto surface) {
+        SDL_BlitSurface(dialog_button_selection, NULL, surface, &button_rect);
+    });
+
+    auto buttontext_texture = create_texture_from_surface(uicontext, width, height, [&uicontext,&button_rect](auto surface) {
+        auto font = uicontext.registry.fonts({uicontext.FONT_PROPOTIONAL, 24});
+        auto ok_surface = make_shared(TTF_RenderUTF8_Blended(font, "OK", {0,0,0,255}));
+        SDL_Rect ok_rect {
+            button_rect.x + button_rect.w / 2 - ok_surface->w / 2, button_rect.y + button_rect.h / 2 - ok_surface->h / 2,
+            ok_surface->w, ok_surface->h
+        };
+        SDL_BlitSurface(ok_surface.get(), NULL, surface, &ok_rect);
+    });
+
+    bool ok = true;
+
+    RenderFunc rf(uicontext, [width,height,&window_texture,&button_texture,
+        &button_selected_texture,
+        &buttontext_texture,&ok](auto uicontext,bool) {
+        SDL_Rect rect = uicontext.center_rect(width, height);
+        SDL_RenderCopy(uicontext, window_texture.get(), NULL, &rect);
+        SDL_RenderCopy(uicontext, button_texture.get(), NULL, &rect);
+
+        blink(button_selected_texture.get());
+        SDL_RenderCopy(uicontext, button_selected_texture.get(), NULL, &rect);
+        SDL_RenderCopy(uicontext, buttontext_texture.get(), NULL, &rect);
+        return true;
+    });
+
+    while (true) {
+        uicontext.render();
+        if (!process_event([&ok](auto ev) {
+            if (ev.type == SDL_KEYDOWN) {
+                if (ev.key.keysym.sym == SDLK_RETURN || ev.key.keysym.sym == SDLK_KP_ENTER) {
+                    return false;
+                } else if (ev.key.keysym.sym == SDLK_ESCAPE) {
+                    ok = false;
+                    return false;
+                }
+            }
+            return true;
+        })) break;
+        SDL_RenderPresent(uicontext);
+    }
+
+    return ok;
+}
+
+bool messagebox_ok(UIContext& uicontext, const std::string& message, bool caution/* = false*/)
+{
+    return messagebox_ok(uicontext, [&message,caution](auto uicontext){
+        auto caution_sign = uicontext.registry.surfaces("caution_sign.png");
+
+        auto message_surface = make_shared(TTF_RenderUTF8_Blended(uicontext.registry.fonts({uicontext.FONT_PROPOTIONAL, 24}), message.c_str(), {0,0,0,255}));
+
+        auto content_width = std::max(message_surface->w, caution_sign->w);
+        auto content_height = message_surface->h + (caution? caution_sign->h : 0);
+
+        return with_transparent_surface(content_width, content_height, [message_surface,caution,caution_sign](auto surface) {
+            int y = 0;
+            if (caution) {
+                SDL_Rect rect { (surface->w - caution_sign->w) / 2, y, caution_sign->w, caution_sign->h};
+                SDL_BlitSurface(caution_sign, NULL, surface, &rect);
+                y += rect.h;
+            }
+            SDL_Rect rect { (surface->w - message_surface->w) / 2, y, message_surface->w, message_surface->h };
+            rect.x = (surface->w - message_surface->w) / 2;
+            SDL_BlitSurface(message_surface.get(), NULL, surface, &rect);
+        });
+    });
+}
+
+int messagebox_select(UIContext& uicontext, std::function<std::shared_ptr<SDL_Surface>(UIContext&)> message_func, std::function<std::shared_ptr<SDL_Surface>()> item_func)
+{
+    
 }
 
 static int _main(int,char*[])
@@ -206,15 +312,15 @@ static int _main(int,char*[])
     {
         auto window = make_shared(SDL_CreateWindow("messagebox_main",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,width,height,SDL_WINDOW_SHOWN));
         auto renderer = make_shared(SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_PRESENTVSYNC));
-        UIContext uicontext(renderer.get(), theme_dir);
+        UIContext uicontext(renderer, theme_dir);
 
         auto font =  uicontext.registry.fonts({uicontext.FONT_PROPOTIONAL, 32});
 
-        auto texture = create_texture_from_surface(uicontext.renderer, [font]() {
+        auto texture = create_texture_from_surface(uicontext, [font]() {
             return make_shared(TTF_RenderUTF8_Blended(font, __FILE__, {255,255,255,255}));
         });
 
-        uicontext.push_render_func([texture](auto renderer, bool) {
+        RenderFunc rf(uicontext, [texture](auto renderer, bool) {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
             SDL_RenderClear(renderer);
             auto const& [ t, w, h ] = texture;
@@ -223,9 +329,10 @@ static int _main(int,char*[])
             return true;
         });
 
-        messagebox_okcancel(uicontext, "メッセージボックス", false, true);
-
-        uicontext.pop_render_func();
+        messagebox_ok(uicontext, "メッセージボックス(OK)", false);
+        messagebox_okcancel(uicontext, "メッセージボックス(OK/CANCEL)", false, false);
+        messagebox_ok(uicontext, "メッセージボックス(OK)", true);
+        messagebox_okcancel(uicontext, "メッセージボックス(OK/CANCEL)", false, true);
     }
 
     TTF_Quit();

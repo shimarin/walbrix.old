@@ -1,0 +1,64 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Stopping LVM"
+msgstr "LVMを停止します"
+
+msgid "Warning: Data area won't be created due to too small disk"
+msgstr "警告: ディスク容量が小さいためデータ領域は作成されません"
+
+msgid "Creating partisions..."
+msgstr "パーティションを作成しています..."
+
+msgid "Done"
+msgstr "完了"
+
+msgid "Error: Unable to determine boot partition"
+msgstr "エラー: 起動パーティションを特定できません"
+
+msgid "Formatting boot partition with FAT32"
+msgstr "起動パーティションをFAT32でフォーマットします"
+
+msgid "Mouning boot partition..."
+msgstr "起動パーティションをマウントしています..."
+
+msgid "Installing UEFI bootloader"
+msgstr "ブートローダー(UEFI)をインストールします"
+
+msgid "Installing BIOS bootloader"
+msgstr "ブートローダー(BIOS)をインストールします"
+
+msgid "This system will be UEFI-only as this disk cannot be treated by BIOS"
+msgstr "BIOSで扱えないタイプのディスクなのでこのシステムはUEFI専用となります"
+
+msgid "Creating boot configuration file"
+msgstr "ブート設定ファイルを作成します"
+
+msgid "Copying system file"
+msgstr "システムファイルをコピーします"
+
+msgid "Copying..."
+msgstr "コピー中..."
+
+msgid "Unmounting boot partition..."
+msgstr "起動パーティションをアンマウントしています..."
+
+msgid "Constructing data area"
+msgstr "データ領域を構築します"
+
+msgid "Formatting partition for data area with BTRFS..."
+msgstr "データ領域用パーティションをBTRFSでフォーマットしています..."
+
+msgid "Warning: Unable to get UUID of boot partition. Data area won't be created"
+msgstr "警告: 起動パーティションのUUIDを取得できません。データ領域は作成されません"
+
+msgid "Warning: Unable to determine partition for data area. Data area won't be created"
+msgstr "警告: データ領域用のパーティションを特定できません。データ領域は作成されません"

@@ -25,7 +25,7 @@ void Status::draw()
     //else
     SDL_Rect rect = { uicontext.mainmenu_width, uicontext.header_height, width, height };
     //std::cout << rect.x << rect.y << rect.w << rect.h << std::endl;
-    SDL_RenderCopy(uicontext.renderer, content.get(), NULL, &rect);
+    SDL_RenderCopy(uicontext, content.get(), NULL, &rect);
 }
 
 static std::optional<std::string> get_interface_name_with_default_gateway()
@@ -189,7 +189,7 @@ void Status::on_select()
 
     // 中央サーバ
 
-    content = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(uicontext.renderer, panel.get()), SDL_DestroyTexture);
+    content = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(uicontext, panel.get()), SDL_DestroyTexture);
 }
 
 void Status::on_deselect()

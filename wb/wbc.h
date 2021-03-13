@@ -7,8 +7,18 @@ static const double pi = 3.141592653589793; // std::numbers::pi in C++20
 
 std::shared_ptr<SDL_Surface> create_transparent_surface(int w, int h);
 
-class PerformShutdown : public std::exception {};
-class PerformReboot : public std::exception {};
+class PerformShutdown : public std::exception {
+    bool force;
+public:
+    PerformShutdown(bool _force = false) : force(_force) {;}
+    bool is_force() const { return force; }
+};
+class PerformReboot : public std::exception {
+    bool force;
+public:
+    PerformReboot(bool _force = false) : force(_force) {;}
+    bool is_force() const { return force; }
+};
 class Terminated : public std::exception {};
 class UnrecoverableSDLError : public std::runtime_error {
 public:

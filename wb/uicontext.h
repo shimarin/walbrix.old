@@ -52,7 +52,8 @@ public:
 };
 
 class UIContext {
-    std::list<std::function<bool(SDL_Renderer*,bool)> > render_funcs;
+    std::list<std::function<bool(UIContext&,bool)> > render_funcs;
+    std::shared_ptr<SDL_Renderer> renderer;
 public:
     bool installer = false;
     int width, height;
@@ -70,23 +71,41 @@ public:
     struct R {
         SurfaceRegistry surfaces;
         FontRegistry fonts;
-        R(SDL_Renderer* renderer, const std::filesystem::path& resource_path) : surfaces(resource_path), fonts(resource_path) {;}
+        R(std::shared_ptr<SDL_Renderer> renderer, const std::filesystem::path& resource_path) : surfaces(resource_path), fonts(resource_path) {;}
     } registry;
 
-    SDL_Renderer* renderer;
     const std::filesystem::path resource_path;
 
-    UIContext(SDL_Renderer* _renderer, const std::filesystem::path& _resource_path, const char* _tty = NULL, bool _installer = false) : renderer(_renderer), resource_path(_resource_path), registry(_renderer, _resource_path), tty(_tty), installer(_installer) {
-        SDL_GetRendererOutputSize(renderer, &width, &height);
+    UIContext(std::shared_ptr<SDL_Renderer> _renderer, const std::filesystem::path& _resource_path, const char* _tty = NULL, bool _installer = false) : renderer(_renderer), resource_path(_resource_path), registry(_renderer, _resource_path), tty(_tty), installer(_installer) {
+        SDL_GetRendererOutputSize(renderer.get(), &width, &height);
     }
 
-    void push_render_func(std::function<bool(SDL_Renderer*,bool)> func) { render_funcs.push_back(func); }
+    operator SDL_Renderer*() const { return renderer.get(); }
+
+    void push_render_func(std::function<bool(UIContext&,bool)> func) { render_funcs.push_back(func); }
     void pop_render_func() { render_funcs.pop_back(); }
 
     std::tuple<std::shared_ptr<SDL_Texture>,int,int> create_texture_from_transient_surface(const char* name);
     std::tuple<std::shared_ptr<SDL_Texture>,int,int> render_font_as_texture(std::pair<std::string,uint8_t> font, const char* text, const SDL_Color& color);
 
+    SDL_Rect screen_rect() { return SDL_Rect { 0, 0, width, height }; }
+    SDL_Rect header_rect() { return SDL_Rect { 0, 0, width, header_height }; }
+    SDL_Rect mainmenu_rect() { return SDL_Rect { 0, 0, mainmenu_width, height - header_height - footer_height }; }
+    SDL_Rect footer_rect() { return SDL_Rect { 0, height - footer_height, width, footer_height }; }
+    SDL_Rect center_rect(int w, int h) { return SDL_Rect{ (width - w) / 2, (height - h) / 2, w, h }; }
+
     void render();
+};
+
+class RenderFunc {
+    UIContext& uicontext;
+public:
+    RenderFunc(UIContext& _uicontext, std::function<bool(UIContext&,bool)> func) : uicontext(_uicontext) {
+        uicontext.push_render_func(func);
+    }
+    ~RenderFunc() {
+        uicontext.pop_render_func();
+    }
 };
 
 #endif

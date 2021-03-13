@@ -15,3 +15,5 @@ public:
     void draw(SDL_Renderer* renderer = NULL);
     bool on_enter();
 };
+
+int install_cmdline(const std::vector<std::string>& args);
