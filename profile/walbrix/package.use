@@ -48,7 +48,8 @@ sys-cluster/drbd-utils xen
 app-emulation/qemu aio bzip2 curl fdt filecaps -gtk jpeg ncurses nls virtfs -oss pin-upstream-blobs png -pulseaudio -python -seccomp -usb -vhost-net vnc xattr xen -xfs -xkb -qemu_softmmu_targets_i386 -qemu_user_targets_i386
 
 # wbui
-media-libs/mesa X -wayland classic dri3 egl gallium gles2 llvm -vulkan -zstd
+media-libs/mesa X -wayland classic dri3 egl gallium gles2 llvm -vulkan -zstd video_cards_vmware
+x11-libs/libdrm video_cards_vmware
 media-libs/libsdl2 -X gles2 alsa kms cpu_flags_x86_3dnow
 media-libs/libglvnd X # for kmscon
 media-libs/sdl2-image jpeg png webp
