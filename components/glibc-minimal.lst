@@ -1,5 +1,6 @@
 /etc/nsswitch.conf
 /sbin/ldconfig
+/usr/bin/getent
 /$LIB/libnss_db.so.2
 /$LIB/libnss_dns.so.2
 /$LIB/libnss_files.so.2
