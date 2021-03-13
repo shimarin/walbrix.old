@@ -4,7 +4,7 @@ Conflicts=getty@tty1.service
 After=systemd-user-sessions.service getty@tty1.service plymouth-quit.service systemd-logind.service
 
 [Service]
-ExecStart=/usr/sbin/wbc login --installer tty1
+ExecStart=/usr/sbin/wb login --installer tty1
 Restart=always
 
 [Install]
