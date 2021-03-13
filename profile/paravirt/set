@@ -32,6 +32,7 @@ net-misc/s3cmd
 
 dev-python/matplotlib
 dev-python/pillow
+dev-python/xxhash
 
 app-misc/mosquitto
 app-misc/screen
@@ -79,6 +80,8 @@ media-fonts/urw-fonts
 dev-php/pecl-imagick
 dev-php/pecl-apcu
 dev-php/PEAR-PEAR
+dev-php/xdebug
+dev-php/composer
 
 dev-libs/iniparser
 net-fs/nfs-utils
@@ -149,3 +152,12 @@ dev-ruby/selenium-webdriver
 dev-ruby/simplecov-html
 dev-ruby/simplecov
 dev-ruby/yard
+
+#mssql
+sys-process/numactl
+sys-auth/sssd
+dev-db/unixODBC
+app-arch/deb2targz
+
+www-servers/tomcat
+

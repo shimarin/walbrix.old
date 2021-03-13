@@ -36,6 +36,7 @@ app-eselect/eselect-php fpm apache2
 dev-php/pecl-redis -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
 dev-php/pecl-imagick -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
 dev-php/pecl-apcu -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
+dev-php/xdebug -php_targets_php7-2 php_targets_php7-3 -php_targets_php7-4
 media-gfx/imagemagick -openmp postscript jpeg png svg xml tiff truetype webp # pecl-imagick hates openmp
 www-servers/apache apache2_modules_http2 apache2_modules_proxy apache2_modules_proxy_connect apache2_modules_proxy_http apache2_modules_proxy_ajp apache2_modules_remoteip
 www-apache/mod_extract_forwarded mod-proxy
@@ -44,7 +45,7 @@ mail-mta/postfix mysql sasl
 # samba
 net-fs/samba ldap client winbind zeroconf
 net-fs/cifs-utils -acl -ads -caps
-net-nds/openldap -tcpd samba
+net-nds/openldap -tcpd samba sasl
 
 #nfs
 net-fs/nfs-utils -tcpd
@@ -190,3 +191,12 @@ dev-ruby/roadie-rails -ruby_targets_ruby25
 dev-ruby/roadie -ruby_targets_ruby25
 dev-ruby/request_store -ruby_targets_ruby25
 dev-ruby/actionpack-xml_parser -ruby_targets_ruby25
+
+# ms sql server
+sys-auth/sssd -acl -locator -manpages -netlink
+net-dns/bind-tools gssapi
+dev-libs/cyrus-sasl kerberos
+sys-libs/glibc nscd
+
+# java
+dev-java/openjdk-bin headless-awt

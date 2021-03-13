@@ -4,6 +4,7 @@ $mkdir /boot/grub
 $write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
 
 $require php7.lst
+$require python.lst
 $require mysql.lst
 $require postfix.lst
 $require samba.lst
@@ -19,6 +20,7 @@ $sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1nextcloud\2/'
 
 $require zabbix-agent.lst
 $package dev-util/trace-cmd
+$package dev-python/xxhash
 
 $download https://download.nextcloud.com/server/releases/nextcloud-19.0.2.tar.bz2 /tmp/
 $exec "tar xvf /tmp/*.tar.bz2 -C /var/www/localhost"

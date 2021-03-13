@@ -1,0 +1,63 @@
+$require base-systemd.lst
+
+$mkdir /boot/grub
+$write /boot/grub/grub.cfg 'linux /boot/kernel\ninitrd /boot/initramfs\nboot'
+
+$require python.lst
+$require postfix.lst
+$require samba.lst
+$require redis.lst
+$package sys-fs/btrfs-progs
+$require xfsprogs.lst
+$package net-misc/rsync
+$sed /etc/conf.d/hostname 's/^\(hostname="\).*\("\)$/\1sqlserver\2/'
+
+$require zabbix-agent.lst
+
+$package sys-process/numactl
+$package sys-auth/sssd
+$package net-nds/openldap
+$package dev-db/unixODBC
+
+#dev-libs/ding-libs
+#net-libs/http-parser
+#dev-libs/jansson
+#dev-libs/libverto
+#dev-libs/libev
+#sys-apps/keyutils
+#dev-db/lmdb
+#sys-apps/tcp-wrappers
+#net-dns/c-ares
+#app-crypt/p11-kit
+#net-mail/mailbase
+#dev-util/itstool
+#dev-libs/elfutils
+#net-libs/rpcsvc-proto
+#sys-libs/talloc
+#app-crypt/mit-krb5
+#sys-libs/tevent
+#dev-libs/cyrus-sasl
+#sys-libs/tdb
+#net-dns/bind-tools
+#dev-util/cmocka
+#sys-libs/ldb
+#dev-libs/glib
+#x11-misc/shared-mime-info
+
+$download https://packages.microsoft.com/ubuntu/18.04/mssql-server-2019/pool/main/m/mssql-server/mssql-server_15.0.4102.2-4_amd64.deb /tmp/
+$download https://packages.microsoft.com/ubuntu/20.04/prod/pool/main/m/mssql-tools/mssql-tools_17.7.1.1-1_amd64.deb /tmp/
+$download https://packages.microsoft.com/ubuntu/20.04/prod/pool/main/m/msodbcsql17/msodbcsql17_17.7.1.1-1_amd64.deb /tmp/
+$exec --overlay 'deb2targz /tmp/*.deb'
+$exec 'for i in /tmp/*.tar.xz; do tar xvf $i -C /; done'
+$exec 'chmod -x /lib/systemd/system/mssql-server.service'
+
+$exec 'cat /opt/microsoft/msodbcsql17/etc/odbcinst.ini >> /etc/unixODBC/odbcinst.ini'
+
+$exec 'groupadd -g 1433 mssql'
+$exec 'useradd -u 1433 -M -s /bin/bash -d /var/opt/mssql -g mssql mssql'
+
+$download https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz /tmp/
+$exec --overlay 'cd /tmp && tar xvf Python-*.tar.xz && rm Python-*.tar.xz && cd Python-* && ./configure --prefix=/usr && make && make install'
+
+$require tomcat.lst
+

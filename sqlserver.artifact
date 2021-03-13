@@ -1,0 +1,4 @@
+{
+	"profile":"paravirt",
+	"main_lstfile":"components/sqlserver.lst"
+}

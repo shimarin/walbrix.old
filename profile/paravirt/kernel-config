@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.11.0-gentoo Kernel Configuration
+# Linux/x86 5.11.3-gentoo Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="x86_64-pc-linux-gnu-gcc (Gentoo 9.3.0-r2 p4) 9.3.0"
 CONFIG_CC_IS_GCC=y
@@ -230,6 +230,7 @@ CONFIG_ARCH_WANT_DEFAULT_BPF_JIT=y
 # CONFIG_BPF_PRELOAD is not set
 # CONFIG_USERFAULTFD is not set
 CONFIG_ARCH_HAS_MEMBARRIER_SYNC_CORE=y
+CONFIG_KCMP=y
 CONFIG_RSEQ=y
 # CONFIG_DEBUG_RSEQ is not set
 CONFIG_EMBEDDED=y

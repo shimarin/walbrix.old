@@ -1,31 +1,14 @@
-$require java.lst
-$set TOMCAT_VERSION 9.0
-$package dev-java/ant-core
-$require commons-dbcp.lst
-
-$package dev-java/slf4j-api  # needed by jdbc-mysql
-$package dev-java/jdbc-mysql
-
-$package dev-java/jdbc-postgresql
-
-$package dev-java/commons-dbcp
-$package dev-java/oracle-javamail
+$package dev-java/openjdk-bin
+$exec --overlay 'ln -sf `java-config -o`/bin/java /usr/bin/java'
 
 $package dev-java/tomcat-servlet-api
 $package dev-java/eclipse-ecj
-$package dev-java/ant-eclipse-ecj
-$package dev-java/sun-jaf
-/usr/share/java-config-2/virtuals/jaf
-$package dev-java/sun-javamail
-$package www-servers/tomcat-$(TOMCAT_VERSION).7
-$require nss-myhostname.lst
+$package www-servers/tomcat
 
-$exec "/usr/share/tomcat-$(TOMCAT_VERSION)/gentoo/tomcat-instance-manager.bash --create"
+#app-admin/pwgen
+#dev-java/ant-core
+#dev-java/ant-eclipse-ecj
 
-$sed /etc/tomcat-$(TOMCAT_VERSION)/server.xml 's/redirectPort="8443" /redirectPort="8443" URIEncoding="UTF-8" /'
-$copy tomcat/context.xml /etc/tomcat-$(TOMCAT_VERSION)/context.xml
-$exec "chmod g+w /var/lib/tomcat-$(TOMCAT_VERSION)/webapps"
-$sed /etc/conf.d/tomcat-$(TOMCAT_VERSION) 's/^#TOMCAT_EXTRA_JARS=""/TOMCAT_EXTRA_JARS="commons-dbcp-2,commons-pool-2,jdbc-mysql,jdbc-postgresql,sun-javamail"/'
-$patch /etc/tomcat-$(TOMCAT_VERSION)/server.xml tomcat/server.xml.patch
+$copy resource/tomcat/setup-tomcat-instance.sh /tmp/
+$exec --overlay '/tmp/setup-tomcat-instance.sh'
 
-$symlink /etc/runlevels/default/tomcat-$(TOMCAT_VERSION) /etc/init.d/tomcat-$(TOMCAT_VERSION)
