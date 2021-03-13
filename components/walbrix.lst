@@ -200,9 +200,9 @@ $require libsdl2.lst
 /usr/share/fonts/vlgothic/VL-PGothic-Regular.ttf
 
 $copy wb/. /tmp/
-$exec --overlay "cd /tmp && make clean && make && make install"
+$exec --overlay "cd /tmp && make clean && make -j && make install"
 $exec 'systemctl enable walbrixd'
-$exec 'rm -f /usr/sbin/wb'
+$exec 'mv /usr/sbin/wbc /usr/sbin/wb'
 /usr/bin/make
 $write /etc/issue "Welcome to Walbrix. Login as 'root' to proceed.\nPress Ctrl-Alt-Del to reboot system.\n"
 
