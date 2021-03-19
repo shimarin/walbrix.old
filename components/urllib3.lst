@@ -1,5 +1,5 @@
 $require python.lst
 $require cryptography.lst
 $package dev-python/PySocks
-$require pyopenssl.lst
+#$require pyopenssl.lst
 $package dev-python/urllib3
