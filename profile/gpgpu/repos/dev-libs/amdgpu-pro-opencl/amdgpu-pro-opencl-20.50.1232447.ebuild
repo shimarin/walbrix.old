@@ -48,6 +48,7 @@ src_unpack() {
 
 multilib_src_unpack() {
 	local libdrm_ver="2.4.100"
+	local llvm_ver="11.0"
 	local patchlevel=$(ver_cut 3)
 	local deb_abi
 	[[ ${ABI} == x86 ]] && deb_abi=i386
@@ -67,14 +68,14 @@ multilib_src_unpack() {
 	unpack_deb "${S}/hsa-runtime-rocr-amdgpu_1.2.0-${patchlevel}_amd64.deb"
 	unpack_deb "${S}/hsakmt-roct-amdgpu_1.0.9-${patchlevel}_amd64.deb"
 	unpack_deb "${S}/ocl-icd-libopencl1-amdgpu-pro_${MY_PV}_amd64.deb"
-	unpack_deb "${S}/libllvm-amdgpu-pro-rocm_11.0-${patchlevel}_amd64.deb"
-	unpack_deb "${S}/libllvm10.0-amdgpu_10.0-${patchlevel}_amd64.deb"
-	unpack_deb "${S}/llvm-amdgpu-10.0-runtime_10.0-${patchlevel}_amd64.deb"
-	unpack_deb "${S}/llvm-amdgpu-10.0_10.0-${patchlevel}_amd64.deb"
-	unpack_deb "${S}/llvm-amdgpu-pro-rocm-dev_11.0-${patchlevel}_amd64.deb"
-	unpack_deb "${S}/llvm-amdgpu-runtime_10.0-${patchlevel}_amd64.deb"
-	unpack_deb "${S}/llvm-amdgpu_10.0-${patchlevel}_amd64.deb"
-	unpack_deb "${S}/comgr-amdgpu-pro_1.7.0-${patchlevel}_${deb_abi:-${ABI}}.deb"
+	unpack_deb "${S}/libllvm-amdgpu-pro-rocm_12.0-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/libllvm${llvm_ver}-amdgpu_${llvm_ver}-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/llvm-amdgpu-${llvm_ver}-runtime_${llvm_ver}-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/llvm-amdgpu-${llvm_ver}_${llvm_ver}-${patchlevel}_amd64.deb"
+#	unpack_deb "${S}/llvm-amdgpu-pro-rocm-dev_11.0-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/llvm-amdgpu-runtime_${llvm_ver}-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/llvm-amdgpu_${llvm_ver}-${patchlevel}_amd64.deb"
+	unpack_deb "${S}/comgr-amdgpu-pro_1.9.0-${patchlevel}_${deb_abi:-${ABI}}.deb"
 	#unpack_deb "${S}/libdrm-amdgpu-amdgpu1_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
 	#unpack_deb "${S}/libdrm-amdgpu-radeon1_${libdrm_ver}-${patchlevel}_${deb_abi:-${ABI}}.deb"
 	#unpack_deb "${S}/libdrm-amdgpu-common_1.0.0-${patchlevel}_all.deb"
