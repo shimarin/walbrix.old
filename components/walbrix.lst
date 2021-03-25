@@ -42,6 +42,7 @@ $package app-editors/bvi
 $package app-admin/sysstat
 $package app-crypt/chntpw
 $package sys-process/lsof
+$package sys-process/iotop
 #$require ansible.lst
 
 # hardware
