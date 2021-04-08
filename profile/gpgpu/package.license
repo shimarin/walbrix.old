@@ -1,6 +1,0 @@
-x11-drivers/nvidia-drivers NVIDIA-r2
-dev-util/nvidia-cuda-toolkit NVIDIA-CUDA
-dev-libs/amdgpu-pro-opencl AMD-GPU-PRO-EULA
-dev-libs/amdgpu-pro-opencl-legacy AMD-GPU-PRO-EULA
-dev-libs/hsa-ext-rocr AMD-GPU-PRO-EULA
-sys-kernel/linux-firmware no-source-code linux-fw-redistributable
